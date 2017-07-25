@@ -1,0 +1,170 @@
+.login-page {
+  width: 360px;
+  padding: 8% 0 0;
+  margin: auto;
+}
+
+.reg-page {
+  width: 360px;
+  padding: 8% 0 0;
+  margin: auto;
+  margin-top:100px;
+}
+.form1 {
+  position: relative;
+  z-index: 1;
+  background: #FFFFFF;
+  max-width: 360px;
+  margin: 0 auto 100px;
+  padding: 45px;
+  text-align: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+.form1 input {
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #f2f2f2;
+  width: 100%;
+  border: 0;
+  margin: 0 0 15px;
+  padding: 15px;
+  box-sizing: border-box;
+  font-size: 14px;
+  color:black;
+}
+.form1 button {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #4CAF50;
+  width: 100%;
+  border: 0;
+  padding: 15px;
+  color: #FFFFFF;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+.form1 button:hover,.form button:active,.form button:focus {
+  background: #43A047;
+}
+.form1 .message {
+  margin: 15px 0 0;
+  color: #b3b3b3;
+  font-size: 12px;
+}
+.form1 .message a {
+  color: #4CAF50;
+  text-decoration: none;
+}
+.form1 .register-form1 {
+  display: none;
+}
+
+
+
+.form2 {
+  position: relative;
+  z-index: 1;
+  background: #FFFFFF;
+  max-width: 360px;
+  margin: 0 auto 100px;
+  padding: 45px;
+  text-align: center;
+  box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+.form2 input {
+  font-family: "Roboto", sans-serif;
+  outline: 0;
+  background: #f2f2f2;
+  width: 100%;
+  border: 0;
+  margin: 0 0 15px;
+  padding: 15px;
+  box-sizing: border-box;
+  font-size: 14px;
+  color:black;
+}
+.form2 button {
+  font-family: "Roboto", sans-serif;
+  text-transform: uppercase;
+  outline: 0;
+  background: #4CAF50;
+  width: 100%;
+  border: 0;
+  padding: 15px;
+  color: #FFFFFF;
+  font-size: 14px;
+  -webkit-transition: all 0.3 ease;
+  transition: all 0.3 ease;
+  cursor: pointer;
+}
+.form2 button:hover,.form button:active,.form button:focus {
+  background: #43A047;
+}
+.form2 .message {
+  margin: 15px 0 0;
+  color: #b3b3b3;
+  font-size: 12px;
+}
+.form2 .message a {
+  color: #4CAF50;
+  text-decoration: none;
+}
+.form2 .register-form1 {
+  display: none;
+}
+
+
+.sidenav {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    right: 0;
+    background-color:white;
+    overflow-x: hidden;
+    transition: 0.5s;
+    opacity:0.9;
+    padding-top: 60px;
+}
+.header{
+  background-color: #eaeded;
+  margin:0px;
+  z-index: 500; position: fixed; right:0px; top: 0px; height: 100px; width:1370px;
+    border-bottom: 5px solid #2ecc71;
+  
+}
+
+.sidenav a {
+    /*padding: 8px 8px 8px 8px;*/
+    text-decoration: none;
+    font-size: 25px;
+    color: #818181;
+    display: block;
+    transition: 0.3s;
+    padding-left: 40px;
+}
+
+.sidenav a:hover, .offcanvas a:focus{
+    color: #30BB6D;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
+a{
+    font-family:Lato Light;
+    text-decoration: none;
+}
