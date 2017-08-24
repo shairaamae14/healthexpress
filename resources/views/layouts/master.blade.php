@@ -12,20 +12,20 @@
     <title>Health Express</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{asset('vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
 
     <!-- Custom Fonts -->
-    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href="{{asset('vendor/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet" type="text/css">
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
 
     <!-- Plugin CSS -->
-    <link href="vendor/magnific-popup/magnific-popup.css" rel="stylesheet">
+    <link href="{{asset('vendor/magnific-popup/magnific-popup.css')}}" rel="stylesheet">
 
     <!-- Theme CSS -->
-    <link href="css/creative.min.css" rel="stylesheet">
+    <link href="{{asset('css/creative.min.css')}}" rel="stylesheet">
 
-    <link rel="stylesheet" href="css/login.css" type="text/css">
+    <link rel="stylesheet" href="{{asset('css/login.css')}}" type="text/css">
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -34,12 +34,16 @@
         <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+
+
 </head>
 
-<body id="page-top">
+<body id="page-top" style="background-image:url('{{asset('img/bgindextry.png')}}')
+fixed center">
 
         @include ('layouts.nav')
-        <header style="background-image: url('img/bgindextry.png');">
+        
+        <header style="background-image:url('{{asset('img/bgindextry.png')}}')">
             <div class="header-content">
         @yield('content')
 

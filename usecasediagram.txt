@@ -1,0 +1,44 @@
+Cook
+>Create Account
+>Manage Dish
+-Add Dish
+   -Add Ingredients
+       -Calculate Nutritional Facts
+-Update Dish
+-Delete Dish
+-View Dish
+    -View Nutritional Facts
+-View Ratings
+
+>Manage Order(s)
+-View Order
+    -Change Order Status
+
+
+Customer
+>Create Account
+>Order Meal
+    -Express Meal
+       -Choose Dish
+       -Change Order
+       -Place Order
+       -Pay Order
+       -Give Dish Review/Rate
+       -Give Cook Review/Rate
+    -Planned Meal
+       -Fill up some details
+       -Choose Dishes
+            -Choose Schedule
+       -Change Dishes
+       -Place Orders
+       -Pay Order
+       -Give Meal Review/Rate
+       -Give Cook Review/Rate
+
+
+Admin
+>Add Ingredients Database
+
+
+
+            

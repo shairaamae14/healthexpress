@@ -27,6 +27,7 @@
     </section>
 
     <section id="howitworks">
+       
         <div class="container">
             <div class="row">
                 <div class="col-lg-12 text-center">
@@ -39,21 +40,21 @@
             <div class="row">
                 <div class="col-lg-3 col-md-6 text-center">
                     <div class="service-box">
-                        <i class="fa fa-4x fa-diamond text-primary sr-icons"></i>
+                        <i class="fa fa-4x fa-plus-square text-primary sr-icons"></i>
                         <h3>Create an account</h3>
                         <p class="text-muted">Lorem ipsum dolor sit amet, eos et alia nostro argumentum.</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 text-center">
                     <div class="service-box">
-                        <i class="fa fa-4x fa-paper-plane text-primary sr-icons"></i>
+                        <i class="fa fa-4x fa-mouse-pointer text-primary sr-icons"></i>
                         <h3>Choose an option</h3>
                         <p class="text-muted">Lorem ipsum dolor sit amet, eos et alia nostro argumentum.</p>
                     </div>
                 </div>
                 <div class="col-lg-3 col-md-6 text-center">
                     <div class="service-box">
-                        <i class="fa fa-4x fa-newspaper-o text-primary sr-icons"></i>
+                        <i class="fa fa-4x  fa-shopping-cart text-primary sr-icons"></i>
                         <h3>Choose food and pay</h3>
                         <p class="text-muted">Lorem ipsum dolor sit amet, eos et alia nostro argumentum.</p>
                     </div>
@@ -65,6 +66,11 @@
                         <p class="text-muted">Lorem ipsum dolor sit amet, eos et alia nostro argumentum.</p>
                     </div>
                 </div>
+               
+                </div>
+
+            </div>
+        </div>
                
                 </div>
 
