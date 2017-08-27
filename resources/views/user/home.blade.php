@@ -1,187 +1,298 @@
 @extends('user-layouts.master')
+<style>
+@import url('http://fonts.googleapis.com/css?family=Lobster');
+@import url('http://fonts.googleapis.com/css?family=Anton');
+@import url('https://fonts.googleapis.com/css?family=Ubuntu+Condensed');
+@import url('https://fonts.googleapis.com/css?family=Archivo+Black');
+
+#ordermode{
+  padding:20px;
+}
+#ordermode:hover{
+  background-color: white !important;
+  color:#30BB6D !important;
+}
+#rate{
+  color:orange;
+}
+ul,li{
+text-decoration: none;
+display: inline-block;
+
+}
+
+#cat:hover{
+  color:black !important;
+  text-decoration: none !important;
+}
+
+#cat{
+  font-family: 'Ubuntu Condensed', sans-serif; color:#30BB6D;
+  text-decoration: none;
+}
+
+
+
+
+/*Resize the wrap to see the search bar change!*/
+
+}
+
+</style>
 @section('content')
 <div class="wrapper">
-        <div class="header header-filter" style="background-image: url('{{asset('img/bgindex.jpg')}}')">
-            <div class="container">
-                <div class="row">
-          <div class="col-md-6">
-            <h1 class="title">Loren Ipsum</h1>
-                      <h4>Every landing page needs a small description after the big bold title, that's why we added this text here. Add here all the information that can make you or your product create the first impression.</h4>
-                      <br />
-                      <!-- <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class="btn btn-danger btn-raised btn-lg">
-              <i class="fa fa-play"></i> Watch video -->
+  <div class="header header-filter" style="background-image: url('{{asset('img/bgindex.jpg')}}')"">
+    <div class="container">
+      <div class="row">
+      <center>
+        <div class="col-md-6">
+        <br>
+          <h1 class="title text-center" style="font-family: 'Lobster', cursive; font-size: 30px;">Choose your order mode:</h1>
+
+    <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class=" btn btn-danger btn-raised btn-lg" style="background-color:transparent;border:2px solid white; font-family: 'Anton', sans-serif; font-size: 20px " id="ordermode">
+            <center> Express Meal</center>
             </a>
-          </div>
-                </div>
-            </div>
+                <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class=" btn btn-danger btn-raised btn-lg" id="ordermode" style="background-color:transparent;  border:2px solid white; font-family: 'Anton', sans-serif; font-size: 20px ">
+             <center>Planned Meal</center>
+            </a>
+
         </div>
 
-
+      
+      </div>
+    </div>
+  </div>
 
     <div class="main main-raised">
-      <div class="container">
-          <div class="section text-center section-landing">
-                  <div class="row">
-                      <div class="col-md-8 col-md-offset-2">
-                          <h2 class="title">Let's talk product</h2>
-                         <!--  <h5 class="description">This is the paragraph where you can write more details about your product. Keep you user engaged by providing meaningful information. Remember that by this time, the user is curious, otherwise he wouldn't scroll to get here. Add a button if you want the user to see more.</h5> -->
-                      </div>
-                  </div>
+        <div class="section">
+    <div class="container">
+        <div class="row">
+<ul style="display:inline-block;">
+<li><a href="#" id="cat">Breakfast&nbsp </h5></a></li>
+<li><a href="#" id="cat">Lunch&nbsp </h5></a></li>
+<li><a href="#" id="cat">Dinner&nbsp </h5></a></li>
 
-          <div class="features">
-            <div class="row">
-                        <div class="col-md-3">
-                <div class="info">
-                  <div class="icon icon-primary">
-                    <img src="{{asset('img/shrimpandbroccolipenne.jpg')}}" style="width:150px; height:120px"></img>
-                  </div>
-                  <h4 class="info-title">Caldereta</h4>
-                  <p>Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.</p>
-                </div>
-                        </div>
-                        <div class="col-md-3">
-                <div class="info">
-                  <div class="icon icon-success">
-                    <i class="material-icons">verified_user</i>
-                  </div>
-                  <h4 class="info-title">Second Feature</h4>
-                  <p>Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.</p>
-                </div>
-                        </div>
-                        <div class="col-md-3">
-                <div class="info">
-                  <div class="icon icon-danger">
-                    <i class="material-icons">fingerprint</i>
-                  </div>
-                  <h4 class="info-title">Third Feature</h4>
-                  <p>Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.</p>
-                </div>
-                        </div>
+</ul>
+
+   <div class="search" style="float:right; margin-right: 50px; display: inline-block;">
+      <input type="text" class="searchTerm" placeholder="Search" style="height:30px">
+      <button type="submit" style="background-color: transparent; border:none; color:black">
+       <i class="material-icons">search</i>
+     </button>
+   </div>
+</div>
+<br>
+<div class="index-content" style="border-top:2px solid #30BB6D; border-bottom: 2px solid #30BB6D">
+    <div class="container">
+            <a href="blog-ici.html">
+                <div class="col-md-3">
+                    <div class="card">
+                        <img src="{{asset('img/shrimpandbroccolipenne.jpg')}}">
+                       <center> <h4 style="font-size: 18px; border-top: 1px solid #30BB6D; color:#30BB6D; border-bottom: 1px solid #30BB6D">Caldereta</h4></center>
+                         <center><small>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star-o" id="rate"></i>
+                      <i class="fa fa-star-o" id="rate"></i>
+                      </small><br>
+                          <a href="blog-ici.html" class="blue-button">View Details</a>
+                         
+                    
                     </div>
-          </div>
-              </div>
-
-            <div class="section text-center">
-                  <h2 class="title">Here is our team</h2>
-
-          <div class="team">
-            <div class="row">
-              <div class="col-md-4">
-                          <div class="team-player">
-                              <img src="../assets/img/avatar.jpg" alt="Thumbnail Image" class="img-raised img-circle">
-                              <h4 class="title">Gigi Hadid <br />
-                    <small class="text-muted">Model</small>
-                  </h4>
-                              <p class="description">You can write here details about one of your team members. You can give more details about what they do. Feel free to add some <a href="#">links</a> for people to be able to follow them outside the site.</p>
-                  <a href="#pablo" class="btn btn-simple btn-just-icon"><i class="fa fa-twitter"></i></a>
-                  <a href="#pablo" class="btn btn-simple btn-just-icon"><i class="fa fa-instagram"></i></a>
-                  <a href="#pablo" class="btn btn-simple btn-just-icon btn-default"><i class="fa fa-facebook-square"></i></a>
-                          </div>
-                      </div>
-                      <div class="col-md-4">
-                          <div class="team-player">
-                              <img src="../assets/img/christian.jpg" alt="Thumbnail Image" class="img-raised img-circle">
-                              <h4 class="title">Christian Louboutin<br />
-                    <small class="text-muted">Designer</small>
-                  </h4>
-                              <p class="description">You can write here details about one of your team members. You can give more details about what they do. Feel free to add some <a href="#">links</a> for people to be able to follow them outside the site.</p>
-                  <a href="#pablo" class="btn btn-simple btn-just-icon"><i class="fa fa-twitter"></i></a>
-                  <a href="#pablo" class="btn btn-simple btn-just-icon"><i class="fa fa-linkedin"></i></a>
-                          </div>
-                      </div>
-                      <div class="col-md-4">
-                          <div class="team-player">
-                              <img src="../assets/img/kendall.jpg" alt="Thumbnail Image" class="img-raised img-circle">
-                              <h4 class="title">Kendall Jenner<br />
-                    <small class="text-muted">Model</small>
-                  </h4>
-                              <p>You can write here details about one of your team members. You can give more details about what they do. Feel free to add some <a href="#">links</a> for people to be able to follow them outside the site.</p>
-                  <a href="#pablo" class="btn btn-simple btn-just-icon"><i class="fa fa-google-plus"></i></a>
-                  <a href="#pablo" class="btn btn-simple btn-just-icon"><i class="fa fa-youtube-play"></i></a>
-                  <a href="#pablo" class="btn btn-simple btn-just-icon btn-default"><i class="fa fa-twitter"></i></a>
-                          </div>
-                      </div>
-            </div>
-          </div>
-
-              </div>
-
-
-            <div class="section landing-section">
-                  <div class="row">
-                      <div class="col-md-8 col-md-offset-2">
-                          <h2 class="text-center title">Work with us</h2>
-              <h4 class="text-center description">Divide details about your product or agency work into parts. Write a few lines about each one and contact us about any further collaboration. We will responde get back to you in a couple of hours.</h4>
-                          <form class="contact-form">
-                              <div class="row">
-                                  <div class="col-md-6">
-                    <div class="form-group label-floating">
-                      <label class="control-label">Your Name</label>
-                      <input type="email" class="form-control">
-                    </div>
-                                  </div>
-                                  <div class="col-md-6">
-                    <div class="form-group label-floating">
-                      <label class="control-label">Your Email</label>
-                      <input type="email" class="form-control">
-                    </div>
-                                  </div>
-                              </div>
-
-                <div class="form-group label-floating">
-                  <label class="control-label">Your Messge</label>
-                  <textarea class="form-control" rows="4"></textarea>
                 </div>
+            </a>
 
-                              <div class="row">
-                                  <div class="col-md-4 col-md-offset-4 text-center">
-                                      <button class="btn btn-primary btn-raised">
-                      Send Message
-                    </button>
-                                  </div>
-                              </div>
-                          </form>
-                      </div>
-                  </div>
+            <a href="blog-ici.html">
+                <div class="col-md-3">
+                    <div class="card">
+                        <img src="{{asset('img/shrimpandbroccolipenne.jpg')}}">
+                       <center> <h4 style="font-size: 18px; border-top: 1px solid #30BB6D; color:#30BB6D; border-bottom: 1px solid #30BB6D">Caldereta</h4></center>
+                         <center><small>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star-o" id="rate"></i>
+                      <i class="fa fa-star-o" id="rate"></i>
+                      </small><br>
+                          <center><a href="blog-ici.html" class="blue-button">View Details</a>
+                       
+                    
+                    </div>
+                </div>
+            </a>
 
-              </div>
-          </div>
+            <a href="blog-ici.html">
+                <div class="col-md-3">
+                    <div class="card">
+                        <img src="{{asset('img/shrimpandbroccolipenne.jpg')}}">
+                       <center> <h4 style="font-size: 18px; border-top: 1px solid #30BB6D; color:#30BB6D; border-bottom: 1px solid #30BB6D">Caldereta</h4></center>
+                         <center><small>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star-o" id="rate"></i>
+                      <i class="fa fa-star-o" id="rate"></i>
+                      </small><br>
+                          <center><a href="blog-ici.html" class="blue-button">View Details</a>
+                       
+                    
+                    </div>
+                </div>
+            </a>
+
+            <a href="blog-ici.html">
+                <div class="col-md-3">
+                    <div class="card">
+                        <img src="{{asset('img/shrimpandbroccolipenne.jpg')}}">
+                       <center> <h4 style="font-size: 18px; border-top: 1px solid #30BB6D; color:#30BB6D; border-bottom: 1px solid #30BB6D">Caldereta</h4></center>
+                         <center><small>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star-o" id="rate"></i>
+                      <i class="fa fa-star-o" id="rate"></i>
+                      </small><br>
+                          <center><a href="blog-ici.html" class="blue-button">View Details</a>
+                       
+                    
+                    </div>
+                </div>
+            </a>
+
+                <a href="blog-ici.html">
+                <div class="col-md-3">
+                    <div class="card">
+                        <img src="{{asset('img/shrimpandbroccolipenne.jpg')}}">
+                       <center> <h4 style="font-size: 18px; border-top: 1px solid #30BB6D; color:#30BB6D; border-bottom: 1px solid #30BB6D">Caldereta</h4></center>
+                         <center><small>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star-o" id="rate"></i>
+                      <i class="fa fa-star-o" id="rate"></i>
+                      </small><br>
+                          <center><a href="blog-ici.html" class="blue-button">View Details</a>
+                       
+                    
+                    </div>
+                </div>
+            </a>
+
+        <a href="blog-ici.html">
+                <div class="col-md-3">
+                    <div class="card">
+                        <img src="{{asset('img/shrimpandbroccolipenne.jpg')}}">
+                       <center> <h4 style="font-size: 18px; border-top: 1px solid #30BB6D; color:#30BB6D; border-bottom: 1px solid #30BB6D">Caldereta</h4></center>
+                         <center><small>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star-o" id="rate"></i>
+                      <i class="fa fa-star-o" id="rate"></i>
+                      </small><br>
+                          <center><a href="blog-ici.html" class="blue-button">View Details</a>
+                       
+                    
+                    </div>
+                </div>
+            </a>
+
+                <a href="blog-ici.html">
+                <div class="col-md-3">
+                    <div class="card">
+                        <img src="{{asset('img/shrimpandbroccolipenne.jpg')}}">
+                       <center> <h4 style="font-size: 18px; border-top: 1px solid #30BB6D; color:#30BB6D; border-bottom: 1px solid #30BB6D">Caldereta</h4></center>
+                         <center><small>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star-o" id="rate"></i>
+                      <i class="fa fa-star-o" id="rate"></i>
+                      </small><br>
+                          <center><a href="blog-ici.html" class="blue-button">View Details</a>
+                       
+                    
+                    </div>
+                </div>
+            </a>
+
+                <a href="blog-ici.html">
+                <div class="col-md-3">
+                    <div class="card">
+                        <img src="{{asset('img/shrimpandbroccolipenne.jpg')}}">
+                       <center> <h4 style="font-size: 18px; border-top: 1px solid #30BB6D; color:#30BB6D; border-bottom: 1px solid #30BB6D">Caldereta</h4></center>
+                         <center><small>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star-o" id="rate"></i>
+                      <i class="fa fa-star-o" id="rate"></i>
+                      </small><br>
+                          <center><a href="blog-ici.html" class="blue-button">View Details</a>
+                       
+                    
+                    </div>
+                </div>
+            </a>
+
+     <center><a href="#" style="font-family: verdana; color:#30BB6D; font-size: 15px">See all ></a>
+
 
     </div>
+</div>
 
-      <footer class="footer">
-          <div class="container">
-              <nav class="pull-left">
-                  <ul>
-                      <li>
-                          <a href="http://www.creative-tim.com">
-                              Creative Tim
-                          </a>
-                      </li>
-            <li>
-                          <a href="http://presentation.creative-tim.com">
-                             About Us
-                          </a>
-                      </li>
-                      <li>
-                          <a href="http://blog.creative-tim.com">
-                             Blog
-                          </a>
-                      </li>
-                      <li>
-                          <a href="http://www.creative-tim.com/license">
-                              Licenses
-                          </a>
-                      </li>
-                  </ul>
-              </nav>
-              <div class="copyright pull-right">
-                  &copy; 2016, made with <i class="fa fa-heart heart"></i> by Creative Tim
-              </div>
-          </div>
-      </footer>
 
-  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     </div><!--row!-->
+       </div><!--container!-->
+         </div><!--section!-->
+    </div><!--main raised!-->
+  
+  
+   
+
+
+             
+
+
+
+
 @endsection
 @section('addtl_scripts')
 <!--   Core JS Files   -->
