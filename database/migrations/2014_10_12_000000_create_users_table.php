@@ -14,6 +14,7 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('fname');
             $table->string('lname');
@@ -22,15 +23,14 @@ class CreateUsersTable extends Migration
             $table->string('contact_no', 11);
             $table->integer('weight');
             $table->integer('height');
-            $table->integer('age');
-            $table->string('health_goal');
-            $table->text('allergens');  
-            $table->text('medical_condition');
-            $table->string('lifestyle');
+            $table->date('birthday');
+            $table->string('gender');
             $table->string('location');
             $table->string('longitude');
-            $table->string('latitude'); 
+            $table->string('latitude');
+            $table->integer('status');
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -89,18 +89,11 @@ fieldset{
 
            <div class="form-group col-md-8">
               <label>Best Eaten during:</label><br>
-               <label>
-                  <input type="checkbox" name="dish_cat" value="Breakfast" class="flat-red" checked > 
-                  Breakfast
-                </label>
-                <label>
-                  <input type="checkbox" name="dish_cat" value="Lunch" class="flat-red">
-                  Lunch
-                </label>
-                <label>
-                  <input type="checkbox" name="dish_cat" value="Dinner" class="flat-red">
-                  Dinner
-                </label>
+              <select multiple class="form-control" name="dish_cat[]">
+                  <option value="1">Breakfast</option>
+                  <option value="2">Lunch</option>
+                  <option value="3">Dinner</option>
+              </select>
                
             </div>
 

@@ -20,6 +20,20 @@
                             <br>
                            <h1 style="border:2px solid #30BB6D"></h1>
                             <br>
+                            <div class="f1-steps">
+                                <div class="f1-progress">
+                                    <div class="f1-progress-line" data-now-value="16.66" data-number-of-steps="3" style="width: 16.66%; background-color:#30BB6D"></div>
+                                </div>
+                                <div class="f1-step active">
+                                    <div class="f1-step-icon" style="background-color: #30BB6D;"><i class="fa fa-user"></i></div>
+                                    <p style="color:#30BB6D">About</p>
+                                </div>
+                                <div class="f1-step">
+                                    <div class="f1-step-icon" style="background-color: #30BB6D;"><i class="fa fa-phone"></i></div>
+                                    <p style="color:#30BB6D">Contacts</p>
+                                </div>
+                            </div>
+                            
                             <fieldset>
 
                             <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
@@ -81,12 +95,6 @@
                                     <input type="password" type="password" name="password_confirmation" class="f1-last-name form-control" id="f1-last-name" placeholder="Confirm password">
 
                                 </div>
-
-                                 <div class="form-group">
-                                    <label class="sr-only" for="loc">Contact no</label>
-                                    <input type="text" id="contact" name="contact_no" placeholder="Contact Number" class="f1-last-name form-control">
-                                  
-                                </div>
                                
                                 <div class="form-group">
                                     <label class="sr-only" for="loc">Location</label>
@@ -99,17 +107,25 @@
                                 <div id="map"></div>
                                 
                             
-
                                 <div class="f1-buttons">
-                                    <button type="submit" class="btn btn-next" style="background-color:#30BB6D">Register</button>
+                                    <button type="button" class="btn btn-next" style="background-color:#30BB6D">Next</button>
                                 </div>
+                                
                           
-
-                           
+                            </fieldset>
+                            <fieldset>
+                                <div class="form-group">
+                                    <label class="sr-only" for="loc">Primary Number</label>
+                                    <input type="text" class="form-control" name="cnumber" placeholder="Primary Number">
+                                    <label class="sr-only" for="loc">Service Provider</label>
+                                    <input type="text" class="form-control" name="detail" placeholder="Service Provider">
                                     
                                 </div>
+                                <div class="f1-buttons">
+                                    <button type="button" class="btn btn-previous">Previous</button>
+                                    <button type="submit" class="btn btn-next" style="background-color:#30BB6D">Register</button>
+                                </div>
                             </fieldset>
-                        
                         </form>
                     </div>
                 </div>

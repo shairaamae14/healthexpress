@@ -3,6 +3,14 @@
 namespace App\Http\Controllers\Auth;
 
 use App\User;
+use App\HealthGoals;
+use App\Lifestyles;
+use App\Allergens;
+use App\MedicalConditions;
+use App\UserAllergen;
+use App\UserHGoals;
+use App\UserLifestyle;
+use App\UserMCondition;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -45,6 +53,7 @@ class RegisterController extends Controller
      * @param  array  $data
      * @return \Illuminate\Contracts\Validation\Validator
      */
+   
     protected function validator(array $data)
     {
         return Validator::make($data, [
@@ -63,8 +72,8 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        // dd($data);
-        return User::create([
+       
+        $user = User::create([
             'fname' => $data['fname'],
             'lname' => $data['lname'],
             'email' => $data['email'],
@@ -72,15 +81,44 @@ class RegisterController extends Controller
             'contact_no' => $data['contact_no'],
             'weight' => $data['weight'],
             'height' => $data['height'],
-            'age' => $data['age'],
-            'health_goal' => $data['goal'],
-            'allergens' => $data['allergen'],
-            'medical_condition' => $data['med_condition'],
-            'lifestyle' => $data['lifestyle'],
+            'birthday' => $data['bday'],
+            'gender' => $data['gender'],
             'location' => $data['location'],
             'longitude' => $data['cityLat'],
-            'latitude' => $data['cityLng']
+            'latitude' => $data['cityLng'],
+            'status' => 1
         ]);
+        
+        $goal = UserHGoals::create(['hg_id' => $data['goal'],
+                                    'user_id' => $user->id,
+                                    'date_started' => $data['dateStarted'],
+                                    'status' => 1]);
+        
+        $lifestyle= UserLifestyle::create(['user_id' => $user->id,
+                                            'lifestyle_id' =>$data['lifestyle'],
+                                            'status' => 1 ]);
+        for($i =0; $i < count($data['allergen']); $i++) {
+            $allergen = UserAllergen::create(['user_id' => $user->id,
+                                           'allergen_id' => $data['allergen'][$i],
+                                           'tolerance_level' => $data['tolerance'],
+                                            'status' => 1]);
+        }
+        for($j = 0; $j < count($data['med_condition']); $j++) {
+            $condition = UserMCondition::create(['user_id' => $user->id,
+                                             'medcon_id' => $data['med_condition'][$j],
+                                             'status' => 1]);
+        }
+       
+
+        return $user;
+    }
+    
+    public function index() {
+        $goals = HealthGoals::all();
+        $lifestyles = Lifestyles::all();
+        $allergens = Allergens::all();
+        $mconditions = MedicalConditions::all();
+        return view('auth.register', compact('goals', 'lifestyles', 'allergens', 'mconditions'));
     }
 
 }

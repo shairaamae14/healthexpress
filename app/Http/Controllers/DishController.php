@@ -5,11 +5,14 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Dish;
+use App\DishDetail;
+use App\DishCategories;
 use Illuminate\Http\Request;
 use App\Cook;
 use Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+
 class DishController extends Controller
 {
     /**
@@ -25,11 +28,21 @@ class DishController extends Controller
     public function index()
     {
         $id = Auth::id();
+        
+        $dishes = Dish::where('cook_id', $id)
+                        ->get();
+                        
+          
+       
+        //dd($dish_details);
+//        foreach($category as $cat) {
+//            $dcategories = DishCategories::where('id',$cat)->get();
+//            
+//        }
      
-
-        $dishes = Dish::where('cook_id', $id)->get();
-
-      return view('cook.dishes', compact('dishes'));
+//        dd($dcategories);
+        
+      return view('cook.dishes', compact('dishes', 'dish_details', 'image', 'dcategories'));
     
     }
 
@@ -62,22 +75,33 @@ class DishController extends Controller
                         ->withInput();
 
        }
-
+    
         $file = $request->file('img');
-
+        
         $image = $this->uploadImage($file);
-
-       
-        $cook = Dish::create(['cook_id' => $id,
+        
+        $cat = $request['dish_cat'];
+        $dish = Dish::create(['cook_id' => $id,
             'dish_name' => $request['dish_name'],
-            'dish_category' => $request['dish_cat'],
+            'status' => 1
+            ]);
+        
+        for($i= 0; $i < count($cat) ; $i++) {
+ 
+            $details = DishDetail::create([
+            'dish_id' => $dish->id,
+            'dcat_id' => $cat[$i],
             'dish_price' => $request['price'],
             'dish_desc' => $request['dish_desc'],
             'dish_img' => $image,
             'dish_leadTime' => $request['lead_time'],
-            'serving_size' => $request['serving']
+            'serving_size' => $request['serving'],       
             ]);
-
+             
+        }
+        
+        
+            
         return redirect()->route('cook.dishes');
         // dd($cook);
     }
@@ -136,19 +160,21 @@ class DishController extends Controller
         }
         
         
-       
-
-        $dishes = Dish::where('id', $id)
-            ->where('cook_id', $cook)
-            ->update(['dish_name' => $request->dish_name,
-                      'dish_category' => $request->dish_cat,
+       $cat = $request['dish_cat'];
+       $dishes = Dish::where('id', $id)
+                       ->where('cook_id', $cook)
+                       ->update(['dish_name' => $request->dish_name,]);
+        for($i= 0; $i < count($cat) ; $i++) {
+        $dishes = DishDetail::where('dish_id', $id)
+            ->update([
+                      'dcat_id' => $cat[$i],
                       'dish_price' => $request->price,
                       'dish_desc' => $request->dish_desc,
                       'dish_img' => $img,
                       'dish_leadTime' => $request->lead_time,
                       'serving_size' => $request->serving
                     ]);
-
+        }
       
         return redirect()->route('cook.dishes');
     }

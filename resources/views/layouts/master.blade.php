@@ -38,8 +38,8 @@
 
 </head>
 
-<body id="page-top" style="background-image:url('{{asset('img/bgindextry.png')}}')
-fixed center">
+<body id="page-top" style="background-image:url('{{asset('img/bgindextry.png')}}')no-repeat center center
+fixed">
 
         @include ('layouts.nav')
         

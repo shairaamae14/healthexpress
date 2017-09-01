@@ -36,10 +36,13 @@ dt{
     <!--    <div class="box box-solid"> -->
             <div class="box-body">
            @foreach($dishes as $dish)
+           
                 <div class="col-sm-3">
                                  <div class="box box-solid" style="border-radius: 20px;">
                         <div class="box-header with-border">
-                         <center><img src="{{url('./dish_imgs/'.$dish->dish_img)}}" style="width:150px; height:150px; border:2px solid #F0F0F0"></center>
+                        
+                            <center><img src="{{url('./dish_imgs/'.$dish->dish_img)}}" style="width:150px; height:150px; border:2px solid #F0F0F0"></center>
+
                         </div>
 
                         <center><h4 class="openModal box-title" style="margin-top: 5px; font-size: 15px;"><a href="" style="color:#30BB6D" data-toggle="modal" data-target="#modal-default{{$dish->id}}">{{$dish['dish_name']}}</a><br>
@@ -70,7 +73,6 @@ dt{
                 </div>
             @endforeach
 
-
       <!-- Default box -->
    
     
@@ -81,6 +83,7 @@ dt{
 
   <!--MODAL FOR VIEW DETAILS!-->
   @foreach($dishes as $dish)
+
   <div class="modal fade" id="modal-default{{$dish->id}}">
 
     <div class="modal-dialog"  style="width:350px; float:center;">
@@ -96,6 +99,7 @@ dt{
           <center><p style="border-top:2px solid #30BB6D;  margin-top: 10px">{{$dish->dish_desc}}</p></center>
    
              <center> <dl>
+                   
                 <dt>Price:</dt>
                 <dd>Php {{$dish->dish_price}}</dd>
                 <dt>Lead Time:</dt>
@@ -103,7 +107,16 @@ dt{
                 <dt>Serving size:</dt>
                 <dd>{{$dish->serving_size}} serving(s)</dd>
                  <dt>Best eaten:</dt>
-                <dd>{{$dish->dish_category}}</dd>
+
+                  @if($dish->dcat_id == 1)
+                <dd>Breakfast</dd>
+                @elseif($dish->dcat_id == 2)
+                <dd>Lunch</dd>
+                @elseif($dish->dcat_id == 3)
+                <dd>Dinner</dd>
+                @endif
+
+                 
               </dl>
           </div>
        
@@ -113,10 +126,12 @@ dt{
           <!-- /.modal-dialog -->
   </div>
         <!-- /.modal -->
+
 @endforeach
 
 <!--MODAL FOR EDIT!-->
   @foreach($dishes as $dish)
+
  <div class="modal fade" id="modal-default2{{$dish->id}}">
           <div class="modal-dialog" style="float:center;">
             <div class="modal-content">
@@ -152,9 +167,15 @@ dt{
             </div>
 
 
-                  <div class="form-group col-md-6">
-              <label>Category:</label>
-                <input type="text" class="form-control" name="dish_cat" placeholder="Category" value="{{$dish->dish_category}}"> 
+                <div class="form-group col-md-6">
+                <label>Best Eaten during:</label><br>
+                
+                <select multiple class="form-control" name="dish_cat[]">
+                <option value="{{$dish->dcat_id}}" selected>{{$dish->dcategory_name}}</option>
+                
+                
+                 
+              </select>
             </div>
 
             <div class="form-group col-md-6">
@@ -193,6 +214,7 @@ dt{
           <!-- /.modal-dialog -->
         </div>
         <!-- /.modal -->
+
 @endforeach
 
 <!--MODAL FOR DELETE!-->

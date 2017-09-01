@@ -107,16 +107,23 @@
                             <div class="row">
                                 <div class="form-group">
                                 <div class="col-md-4">
-                                    <label for="f1-facebook">Age</label>
-                                    <input id="age" type="number" class="form-control" name="age" min="1" required>
+                                    <label for="f1-facebook">Birthday</label>
+                                    <input id="age" type="date" class="form-control" name="bday" min="1" required>
                                 </div>
                                 <div class="col-md-4">
                                     <label for="f1-facebook">Weight</label>
                                     <input id="weight" type="number" class="form-control" name="weight" min="1" required><label class="col-md-4 control-label" style="color:black">kg</label>
                                 </div>
-                                <div class="col-md-4    ">
+                                <div class="col-md-4">
                                     <label for="f1-facebook">Height</label>
                                     <input id="height" type="number" class="form-control" name="height" min="1" required><label class="col-md-4 control-label" style="color:black">cm</label>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="f1-facebook">Gender</label>
+                                    <select name="gender" class="form-control">
+                                        <option value="Male">M</option>
+                                        <option value="Female">F</option>
+                                    </select>
                                 </div>
                                 </div>
                             </div>
@@ -124,11 +131,13 @@
                                 <div class="form-group">
                                 <div class="col-md-12">
                                     <label for="f1-twitter">Health Goal</label>
+                                    
                                      <select class="col-md-4 form-control" name="goal" style="color:black">
-                                        <option value="Lose Weight">Lose Weight</option>
-                                        <option value="Maintain Weight">Maintain Weight</option>
-                                        <option value="Gain Weight">Gain Weight</option>
+                                         @foreach($goals as $goal)
+                                         <option value="{{$goal->hg_id}}">{{$goal->hgoal_name}}</option>
+                                         @endforeach
                                     </select>
+                                    <input type="hidden" value="{{ \Carbon\Carbon::now() }}" name="dateStarted">
                                      <a data-toggle="tooltip" data-placement="right" title="What is your aim with your body"><i class="fa fa-question-circle"></i></a>     
                                 </div> 
                                 </div>
@@ -138,12 +147,13 @@
                                 <div class="form-group">
                                 <div class="col-md-12">
                                     <label for="f1-twitter">Lifestyle/Activeness</label>
+                                    
                                      <select class="col-md-4 form-control" name="lifestyle" style="color:black">
-                                        <option value="Sedentary Lifestyle">Sedentary Lifestyle</option>
-                                        <option value="Sedentary Lifestyle">Lightly Active</option>
-                                        <option value="Active">Active</option>
-                                        <option value="Extremely Active">Extremely Active</option>
+                                         @foreach($lifestyles as $lstyles)
+                                         <option value="{{$lstyles->lifestyle_id}}">{{$lstyles->lifestyle_name}}</option>
+                                        @endforeach
                                     </select>
+                                   
                                       <a data-toggle="tooltip" data-placement="right" title="Sedentary:gets little to no exercise;
                                       Lightly Active:daily exercise for 30 mins;
                                       Active:daily exercise for 1hr and 45mins;
@@ -155,61 +165,36 @@
                             <div class="row">
                                     <label>Allergens</label>
                                 <div class="form-group">
-                                    <div class="col-md-4">
-                                    <div class="checkbox">
-                                        <label> <input type="checkbox" name="allergen" value="Peanut"> Peanut </label>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label> <input type="checkbox" name="allergen" value="Eggs"> Eggs </label>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label> <input type="checkbox" name="allergen" value="Milk"> Milk </label>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label> <input type="checkbox" name="allergen" value="Tree nuts"> Tree nuts </label>
-                                    </div>
-                                    </div>
-                                      <div class="col-md-4">
-
-                                    <div class="checkbox">
-                                        <label> <input type="checkbox" name="allergen" value="Fish"> Fish </label>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label> <input type="checkbox" name="allergen" value="Shellfish"> Shellfish </label>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label> <input type="checkbox" name="allergen" value="Wheat"> Wheat </label>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label> <input type="checkbox" name="allergen" value="Soy"> Soy </label>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label> <input type="checkbox" name="allergen" value="None"> None </label>
-                                    </div>
-                                    </div>
+                               
+                                    <select multiple name="allergen[]" class="form-control">
+                                        @foreach($allergens as $allgen)
+                                        <option value="{{$allgen->allergen_id}}">{{$allgen->allergen_name}}</option>
+                                        @endforeach
+                                    </select>
+                                
+                                </div>
+                                    <label>Tolerance Level (Allergens)</label>
+                                <div class="form-group">
+                               
+                                    <select name="tolerance" class="form-control">
+                                        <option value="Low">Low</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="High">High</option>
+                                    </select>
+                                
                                 </div>
                             </div>
 
                                <div class="row">
                                     <label>Medical Conditions</label>
                                 <div class="form-group">
-                                    <div class="col-md-4">
-                                    <div class="checkbox">
-                                        <label> <input type="checkbox" name="med_condition" value="Asthma"> Asthma </label>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label> <input type="checkbox" name="med_condition" value="Arthritis"> Arthritis </label>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label> <input type="checkbox" name="med_condition" value="High Cholesterol"> High Cholesterol </label>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label> <input type="checkbox" name="med_condition" value="High Blood Pressure"> High Blood Pressure </label>
-                                    </div>
-                                    <div class="checkbox">
-                                        <label> <input type="checkbox" name="med_condition" value="None"> None </label>
-                                    </div>
-                                    </div>
+                                
+                                    <select multiple name="med_condition[]" class="form-control">
+                                        @foreach($mconditions as $conditions)
+                                        <option value="{{$conditions->medcon_id}}">{{$conditions->medcon_name}}</option>
+                                        @endforeach
+                                    </select>
+                                
                                 </div>
                             </div>
                                 <div class="f1-buttons">

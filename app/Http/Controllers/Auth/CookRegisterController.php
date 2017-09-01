@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Cook;
+use App\CookContact;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -69,7 +70,7 @@ class CookRegisterController extends Controller
      */
     protected function create(Request $data)
     {
-         Cook::create([
+        $cook= Cook::create([
             'first_name' => $data['fname'],
             'last_name' => $data['lname'],
             'email' => $data['email'],
@@ -77,9 +78,17 @@ class CookRegisterController extends Controller
             'location' => $data['location'],
             'longitude' => $data['cityLat'],
             'latitude' => $data['cityLng'],
-            'contact_no' => $data['contact_no'],
-            'status' => 'Offline'
+            'cook_status' => 'Offline',
+            'status' => 1
         ]);
+        
+        $contact = CookContact::create(['cook_id' => $cook->id,
+                                        'contact_number' => $data['cnumber'],
+                                        'contact_detail' => $data['detail'],
+                                        'isPrimary' => 1,
+                                        'status' => 1]);
+
+            
 
          return redirect()->route('cook.login');
     }

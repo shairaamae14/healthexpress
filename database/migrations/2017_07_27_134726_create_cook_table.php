@@ -14,6 +14,7 @@ class CreateCookTable extends Migration
     public function up()
     {
         Schema::create('cooks', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
             $table->increments('id');
             $table->string('first_name');
             $table->string('last_name');
@@ -22,9 +23,10 @@ class CreateCookTable extends Migration
             $table->string('location');
             $table->string('longitude');
             $table->string('latitude');
-            $table->string('contact_no');
-            $table->string('status');
+            $table->string('cook_status');
+            $table->integer('status');
             $table->rememberToken();
+            $table->softDeletes(); 
             $table->timestamps();
         });
     }

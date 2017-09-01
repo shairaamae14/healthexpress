@@ -67,10 +67,28 @@ display: inline-block;
         <div class="section">
     <div class="container">
         <div class="row">
-<ul style="display:inline-block;">
-<li><a href="#" id="cat">Breakfast&nbsp </h5></a></li>
-<li><a href="#" id="cat">Lunch&nbsp </h5></a></li>
-<li><a href="#" id="cat">Dinner&nbsp </h5></a></li>
+            <div id="sortDiv" class="col-md-4">
+                <label  style="display:inline-block;">Sort by:</label>
+                
+                  
+                    <select id="sort" name="sortBy" class="form-control"  style="display:inline-block;">
+                         <option disabled selected value> -- select an option -- </option>
+                        <option value="Best Eaten">Best Eaten</option>
+                        <option value="Calorie Count">Calorie Count</option>
+                    </select>
+                
+                <div id="bestEaten" style="display:none">
+                <form id="sortBy" action ="{{url('/home') }}" method="POST">
+                      {{csrf_field()}}
+                    <select id="category" name='category' class='form-control'>
+                        <option disabled selected value> -- select an option -- </option>
+                        <option value='Breakfast'>Breakfast</option>
+                        <option value='Lunch'>Lunch</option>
+                        <option value='Dinner'>Dinner</option>
+                    </select>
+                </form>
+                </div>
+            </div>
 
 </ul>
 
@@ -84,11 +102,13 @@ display: inline-block;
 <br>
 <div class="index-content" style="border-top:2px solid #30BB6D; border-bottom: 2px solid #30BB6D">
     <div class="container">
+        @if(!$sortDishes)
+        @foreach($sortDishes as $sdish)
             <a href="blog-ici.html">
                 <div class="col-md-3">
                     <div class="card">
-                        <img src="{{asset('img/shrimpandbroccolipenne.jpg')}}">
-                       <center> <h4 style="font-size: 18px; border-top: 1px solid #30BB6D; color:#30BB6D; border-bottom: 1px solid #30BB6D">Caldereta</h4></center>
+                        <img src="{{asset('dish_imgs/'.$sdish->dish_img)}}">
+                       <center> <h4 style="font-size: 18px; border-top: 1px solid #30BB6D; color:#30BB6D; border-bottom: 1px solid #30BB6D">{{$sdish->dish_name}}</h4></center>
                          <center><small>
                       <i class="fa fa-star" id="rate"></i>
                       <i class="fa fa-star" id="rate"></i>
@@ -102,8 +122,32 @@ display: inline-block;
                     </div>
                 </div>
             </a>
-
+        @endforeach
+        @else
+        @foreach($sortDishes as $dish)
             <a href="blog-ici.html">
+                <div class="col-md-3">
+                    <div class="card">
+                        <img src="{{asset('dish_imgs/'.$dish->dish_img)}}">
+                       <center> <h4 style="font-size: 18px; border-top: 1px solid #30BB6D; color:#30BB6D; border-bottom: 1px solid #30BB6D">{{$dish->dish_name}}</h4></center>
+                         <center><small>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star" id="rate"></i>
+                      <i class="fa fa-star-o" id="rate"></i>
+                      <i class="fa fa-star-o" id="rate"></i>
+                      </small><br>
+                          <a href="blog-ici.html" class="blue-button">View Details</a>
+                         
+                    
+                    </div>
+                </div>
+            </a>
+        @endforeach
+        @endif
+        
+        
+<!--            <a href="blog-ici.html">
                 <div class="col-md-3">
                     <div class="card">
                         <img src="{{asset('img/shrimpandbroccolipenne.jpg')}}">
@@ -234,7 +278,7 @@ display: inline-block;
                     
                     </div>
                 </div>
-            </a>
+            </a>-->
 
      <center><a href="#" style="font-family: verdana; color:#30BB6D; font-size: 15px">See all ></a>
 
@@ -242,56 +286,10 @@ display: inline-block;
     </div>
 </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
      </div><!--row!-->
        </div><!--container!-->
          </div><!--section!-->
     </div><!--main raised!-->
-  
-  
-   
-
-
-             
-
-
-
 
 @endsection
 @section('addtl_scripts')
@@ -308,4 +306,31 @@ display: inline-block;
 
   <!-- Control Center for Material Kit: activating the ripples, parallax effects, scripts from the example pages etc -->
   <script src="{{asset('customer/assets/js/material-kit.js')}}" type="text/javascript"></script>
+  
+  <script>
+      $(document).ready(function() {
+          $('#sort').on('change', function() {
+              $value = $('#sort').val();
+              if($value == "Best Eaten") {
+                 $('#bestEaten').show();
+              }
+          });
+          $('#category').on('change', function() {
+              $('#sortBy').submit();
+          });
+          var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+//          $.ajax({
+//              method: "post",
+//              data: { '_token': CSRF_TOKEN,
+//                  
+//              },
+//            success: function() {
+//                
+//            },
+//            error: function() {
+//                alert('An error occured');
+//            }
+//          });
+      });
+  </script>
 @endsection

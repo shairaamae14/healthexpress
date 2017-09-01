@@ -34,7 +34,12 @@
 </style>
     </head>
 
-    <body style="background-image:url('{{asset('img/bgsignin.jpg')}}')">
+    <body style="background-image:url('{{asset('img/bgsignin.jpg')}}');
+    min-height:100%;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    -moz-background-size: cover;">
  
         @include('wiz-layouts.navbar')
 
