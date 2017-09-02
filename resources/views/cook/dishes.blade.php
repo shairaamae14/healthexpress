@@ -101,20 +101,21 @@ dt{
              <center> <dl>
                    
                 <dt>Price:</dt>
-                <dd>Php {{$dish->dish_price}}</dd>
-                <dt>Lead Time:</dt>
+                <dd>Php {{$dish->basePrice}}</dd>
+                <dt>Preparation Time:</dt>
                 <dd><?php echo date('h:i A', strtotime($dish->dish_leadTime)); ?></dd>
                 <dt>Serving size:</dt>
-                <dd>{{$dish->serving_size}} serving(s)</dd>
+                <dd>{{$dish->no_of_servings}} serving(s)</dd>
                  <dt>Best eaten:</dt>
-
-                  @if($dish->dcat_id == 1)
+                 @foreach($dbestEaten as $dbe)
+                  @if($dbe->dbe_id == 1)
                 <dd>Breakfast</dd>
-                @elseif($dish->dcat_id == 2)
+                @elseif($dbe->dbe_id == 2)
                 <dd>Lunch</dd>
-                @elseif($dish->dcat_id == 3)
+                @elseif($dbe->dbe_id == 3)
                 <dd>Dinner</dd>
                 @endif
+                @endforeach
 
                  
               </dl>
@@ -143,7 +144,7 @@ dt{
               <div class="modal-body" style="background-color: white">
                  
                  <!--START!-->
-                 <form method="post" action="{{route('cook.dishes.update', ['id' => $dish->id])}}" enctype="multipart/form-data">
+                 <form method="post" action="{{route('cook.dishes.update', ['id' => $dish->did])}}" enctype="multipart/form-data">
                     {{csrf_field()}}    
 
                 <div class="form-group col-md-6">
@@ -153,28 +154,31 @@ dt{
 
                   <div class="form-group col-md-6">
               <label>Price:</label>
-                <input type="text" class="form-control" name="price" placeholder="Price" value="{{$dish->dish_price}}"> 
+                <input type="text" class="form-control" name="price" placeholder="Price" value="{{$dish->basePrice}}"> 
                  </div>
 
                   <div class="form-group col-md-6">
-              <label>Serving:</label>
-                <input type="number" class="form-control" name="serving" placeholder="Number of serving" min="1" value="{{$dish->serving_size}}"> 
+              <label>No. of servings:</label>
+                <input type="number" class="form-control" name="serving" placeholder="Number of serving" min="1" value="{{$dish->no_of_servings}}"> 
+            </div>
+                    <div class="form-group col-md-6">
+              <label>Serving size:</label>
+                <input type="number" class="form-control" name="ssize" placeholder="Serving Size" min="1" value="{{$dish->serving_size}}"> 
             </div>
 
            <div class="form-group col-md-6">
-              <label>Lead Time:</label>
-                <input type="time" class="form-control" name="lead_time" value="{{$dish->dish_leadTime}}"> 
+              <label>Preparation Time:</label>
+                <input type="time" class="form-control" name="ptime" value="{{$dish->preparation_time}}"> 
             </div>
 
 
                 <div class="form-group col-md-6">
                 <label>Best Eaten during:</label><br>
                 
-                <select multiple class="form-control" name="dish_cat[]">
-                <option value="{{$dish->dcat_id}}" selected>{{$dish->dcategory_name}}</option>
-                
-                
-                 
+                <select multiple class="form-control" name="best[]">
+                    @foreach($dbestEaten as $db)
+                    <option value="{{$db->dbe_id}}" selected>{{$db->name}}</option>
+                    @endforeach
               </select>
             </div>
 

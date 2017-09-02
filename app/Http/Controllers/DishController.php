@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 
 use App\User;
 use App\Dish;
-use App\DishDetail;
-use App\DishCategories;
+use App\BestEaten;
+use App\DishBestEaten;
 use Illuminate\Http\Request;
 use App\Cook;
 use Validator;
@@ -29,11 +29,14 @@ class DishController extends Controller
     {
         $id = Auth::id();
         
-        $dishes = Dish::where('cook_id', $id)
-                        ->get();
-                        
-          
-       
+        $dishes = Dish::where('authorCook_id', $id)
+                        ->get();  
+        foreach($dishes as $dish) {
+            $dbestEaten = DishBestEaten::join('besteaten_at' , 'besteaten_at.be_id', '=' , 'dish_besteaten.be_id')
+                                        ->where('dish_id', $dish->did)->get();
+        }               
+        
+      
         //dd($dish_details);
 //        foreach($category as $cat) {
 //            $dcategories = DishCategories::where('id',$cat)->get();
@@ -42,7 +45,7 @@ class DishController extends Controller
      
 //        dd($dcategories);
         
-      return view('cook.dishes', compact('dishes', 'dish_details', 'image', 'dcategories'));
+      return view('cook.dishes', compact('dishes', 'dbestEaten'));
     
     }
 
@@ -53,7 +56,9 @@ class DishController extends Controller
      */
     public function create()
     {
-        return view('cook.adddish');
+        $beaten = BestEaten::all();
+      
+        return view('cook.adddish' , compact('beaten'));
     }
 
     /**
@@ -65,7 +70,7 @@ class DishController extends Controller
     public function store(Request $request)
     {
         $id = Auth::id();
-          
+      
        $validator =  Validator::make($request->all(), [
             'img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048']);
        if($validator->fails())
@@ -80,25 +85,28 @@ class DishController extends Controller
         
         $image = $this->uploadImage($file);
         
-        $cat = $request['dish_cat'];
-        $dish = Dish::create(['cook_id' => $id,
+        $additional = $request['price'] * .10;
+        $sPrice = $request['price'] + $additional;
+       
+        $dish = Dish::create(['authorCook_id' => $id,
             'dish_name' => $request['dish_name'],
+            'basePrice' => $request['price'],
+            'sellingPrice' => $sPrice,
+            'dish_desc' => $request['dish_desc'],   
+            'dish_img' => $image,
+            'preparation_time' => $request['ptime'],
+            'serving_size' => $request['serveSize'],
+            'no_of_servings' => $request['serving'],
             'status' => 1
             ]);
-        
-        for($i= 0; $i < count($cat) ; $i++) {
- 
-            $details = DishDetail::create([
-            'dish_id' => $dish->id,
-            'dcat_id' => $cat[$i],
-            'dish_price' => $request['price'],
-            'dish_desc' => $request['dish_desc'],
-            'dish_img' => $image,
-            'dish_leadTime' => $request['lead_time'],
-            'serving_size' => $request['serving'],       
-            ]);
-             
+
+        for($i = 0 ; $i < count($request['best']); $i++) {
+            $bestEaten = DishBestEaten::create(['dish_id' => $dish->id,
+                                            'be_id' => $request['best'][$i],
+                                            'status' => 1]);
         }
+        
+      
         
         
             
@@ -159,21 +167,23 @@ class DishController extends Controller
             $img = $file2;
         }
         
-        
-       $cat = $request['dish_cat'];
-       $dishes = Dish::where('id', $id)
-                       ->where('cook_id', $cook)
-                       ->update(['dish_name' => $request->dish_name,]);
-        for($i= 0; $i < count($cat) ; $i++) {
-        $dishes = DishDetail::where('dish_id', $id)
-            ->update([
-                      'dcat_id' => $cat[$i],
-                      'dish_price' => $request->price,
-                      'dish_desc' => $request->dish_desc,
-                      'dish_img' => $img,
-                      'dish_leadTime' => $request->lead_time,
-                      'serving_size' => $request->serving
-                    ]);
+        $additional = $request['price'] * .10;
+        $sPrice = $request['price'] + $additional;
+
+       $dishes = Dish::where('did', $id)
+                       ->where('authorCook_id', $cook)
+                       ->update(['dish_name' => $request->dish_name,
+                                 'basePrice' => $request->price,
+                                 'sellingPrice' => $sPrice,
+                                 'dish_desc' => $request->dish_desc,
+                                 'dish_img' =>  $img,
+                                 'preparation_time' => $request->ptime,
+                                 'serving_size' => $request->ssize,
+                                 'no_of_servings' => $request->serving]);
+     
+        for($i= 0; $i < count($request['best']) ; $i++) {
+        $dishes = DishBestEaten::where('dish_id', $dishes)
+            ->update(['be_id' => $request['best'][$i]]);
         }
       
         return redirect()->route('cook.dishes');

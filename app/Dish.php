@@ -7,14 +7,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Dish extends Model
 {
     protected $table= 'dishes';
-    protected $guard = ['cook_id'];
-    protected $fillable = ['cook_id','dish_name', 'status'];
+    protected $fillable = ['authorCook_id','dish_name','basePrice', 'sellingPrice', 'dish_desc', 'dish_img',
+        'preparation_time', 'serving_size', 'no_of_servings', 'status'];
     protected $dates = ['deleted_at'];
+    
     public function cook() {
-    	return $this->belongsTo('App\Cook');
+    	return $this->belongsTo('App\Cook', 'authorCook_id', 'id');
     }
     
-    public function dish_details(){
-        return $this->hasMany('App\DishDetail', 'dish_id', 'id');
-    }
+    
 }

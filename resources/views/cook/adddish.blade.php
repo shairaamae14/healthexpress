@@ -73,8 +73,8 @@ fieldset{
                 <input type="number" class="form-control" name="serving" placeholder="No. of serving(s)" min="1" required>
             </div>
               <div class="form-group col-md-6">
-              <label>Lead Time:</label> 
-                <input type="time" class="form-control" name="lead_time" placeholder="Lead time">
+              <label>Preparation Time:</label> 
+                <input type="time" class="form-control" name="ptime" placeholder="Lead time">
             </div>
             <div class="form-group col-md-4">
               <label>Price:</label>
@@ -89,12 +89,16 @@ fieldset{
 
            <div class="form-group col-md-8">
               <label>Best Eaten during:</label><br>
-              <select multiple class="form-control" name="dish_cat[]">
-                  <option value="1">Breakfast</option>
-                  <option value="2">Lunch</option>
-                  <option value="3">Dinner</option>
+              <select multiple class="form-control" name="best[]">
+                  @foreach($beaten as $be)
+                  <option value="{{$be->be_id}}">{{$be->name}}</option>
+                  @endforeach
               </select>
                
+            </div>
+          <div class="form-group col-md-4">
+              <label>Serving Size:</label>
+                <input type="number" class="form-control" name="serveSize" placeholder="Serving Size" min="1" required>
             </div>
 
             <div class="form-group col-md-5">
