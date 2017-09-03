@@ -17,6 +17,7 @@ class CreateDishIngredientTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('ding_id');
             $table->integer('um_id')->unsigned();
+            $table->integer('dish_id')->unsigned();
             $table->integer('quantity');
             $table->string('preparation');
             $table->softDeletes();
@@ -24,6 +25,7 @@ class CreateDishIngredientTable extends Migration
         });
         Schema::table('dish_ingredients', function (Blueprint $table) {
            $table->foreign('um_id')->references('um_id')->on('unit_measurement');
+           $table->foreign('dish_id')->references('did')->on('dishes');
         });
     }
 
