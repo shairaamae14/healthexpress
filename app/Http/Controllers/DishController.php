@@ -106,7 +106,14 @@ class DishController extends Controller
                                             'status' => 1]);
         }
         
-      
+        for($j = 0 ; $j < count($request['unit']); $j++) {
+            $ingredients = DishIngredient::create(['um_id'=> $request['unit'][$i],
+                'dish_id' => $dish->id;
+                'quantity' => $request['quantity'],
+                'preparation' => $request['preparation']
+                ]);
+        }
+        
         
         
             
