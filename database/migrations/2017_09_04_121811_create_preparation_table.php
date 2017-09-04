@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateUnitMeasurementTable extends Migration
+class CreatePreparationTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,10 @@ class CreateUnitMeasurementTable extends Migration
      */
     public function up()
     {
-        Schema::create('unit_measurements', function (Blueprint $table) {
-            $table->engine = 'InnoDB';
-            $table->increments('um_id');
-            $table->string('um_name');
-            $table->string('status');
+        Schema::create('preparations', function (Blueprint $table) {
+            $table->increments('p_id');
+            $table->string('p_name');
+            $table->integer('status');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -30,6 +29,6 @@ class CreateUnitMeasurementTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('unit_measurements');
+        Schema::dropIfExists('preparations');
     }
 }

@@ -20,6 +20,7 @@ class CreateDishIngredientTable extends Migration
             $table->integer('dish_id')->unsigned();
             $table->integer('quantity');
             $table->string('preparation');
+            $table->integer('status');
             $table->softDeletes();
             $table->timestamps();
         });
