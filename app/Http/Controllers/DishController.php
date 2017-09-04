@@ -13,6 +13,7 @@ use Validator;
 use App\IngredientList;
 use App\UnitMeasurement;
 use App\DishIngredient;
+use App\Preparation;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Input;
@@ -63,8 +64,9 @@ class DishController extends Controller
         $beaten = BestEaten::all();
         $list = IngredientList::all();
         $units = UnitMeasurement::all();
+        $preps = Preparation::all();
       
-        return view('cook.adddish' , compact('beaten', 'list', 'units'));
+        return view('cook.adddish' , compact('beaten', 'list', 'units', 'preps'));
     }
 
     /**
@@ -111,12 +113,14 @@ class DishController extends Controller
                                             'be_id' => $request['best'][$i],
                                             'status' => 1]);
         }
-        $um=Input::get('unit');
+        $um = Input::get('unit');
+        $prep = Input::get('preparation');
         for($j = 0 ; $j < count($request['unit']); $j++) {
             $ingredients = DishIngredient::create(['um_id'=> $um,
                 'dish_id' => $dish->id,
                 'quantity' => $request['quantity'],
-                'preparation' => $request['preparation']
+                'preparation' => $prep,
+                'status' => 1
                 ]);
         }
         
