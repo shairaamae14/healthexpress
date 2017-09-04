@@ -61,58 +61,30 @@ display: inline-block;
                 <div class="row">
                     <div id="sortDiv" class="col-md-4">
                         <label  style="display:inline-block;">Sort by:</label>
-                        <dl>
                         <dt>Best Eaten</dt>
                         <ul>
                             <dd><li><a href="{{url('./home/express/breakfast')}}">Breakfast</a></li></dd>
-                            <dd><li><a href="{{url('./home/express/lunch')}}">Lunch</a></li></dd>
+                            <dd><li active><a href="#">Lunch</a></li></dd>
                             <dd><li><a href="{{url('./home/express/dinner')}}">Dinner</a></li></dd
                         </ul>
-                        </dl>
-                        <dt>Price</dt>
-                        <div id="sliderDouble" class="slider slider-success"></div>
-
-<!--                            <select id="sort" name="sortBy" class="form-control"  style="display:inline-block;">
-                                 <option disabled selected value> -- select an option -- </option>
-                                <option value="Best Eaten">Best Eaten</option>
-                                <option value="Calorie Count">Calorie Count</option>
-                            </select>-->
-<!--                            <div id="bestEaten" style="display:none">
-                            <form id="sortBy" action ="{{url('/home') }}" method="POST">
-                                  {{csrf_field()}}
-                                <select id="category" name='category' class='form-control'>
-                                    <option disabled selected value> -- select an option -- </option>
-                                    <option value='Breakfast'>Breakfast</option>
-                                    <option value='Lunch'>Lunch</option>
-                                    <option value='Dinner'>Dinner</option>
-                                </select>
-                            </form>
-                            </div>-->
                     </div>
 
-
                     <div class="search" style="float:right; margin-right: 50px; display: inline-block;">
-                       <input type="text" id="input" class="searchTerm" placeholder="Search" style="height:30px">
+                       <input type="text" class="searchTerm" placeholder="Search" style="height:30px">
                        <button type="submit" style="background-color: transparent; border:none; color:black">
                         <i class="material-icons">search</i>
                       </button>
-                       
-                       <ul id="dishNames" style="display:none">
-                           @foreach($dishes as $dish)
-                           <li><a href="#"></a>{{$dish->dish_name}}</li>
-                           @endforeach
-                       </ul>
                     </div>
                 </div>
 <br>
 <div class="index-content" style="border-top:2px solid #30BB6D; border-bottom: 2px solid #30BB6D">
     <div class="container">
-        @if($dishes)
-        @foreach($dishes as $dish)
-            
+        @if($lunch)
+        @foreach($lunch as $dish)
+            <a href="blog-ici.html">
                 <div class="col-md-3">
                     <div class="card">
-                        <img src="{{asset('dish_imgs/'.$dish->dish_img)}}" style="width:85%; height:240px; border-radius: 10px">
+                        <img src="{{asset('dish_imgs/'.$dish->dish_img)}}">
                        <center> <h4 style="font-size: 18px; border-top: 1px solid #30BB6D; color:#30BB6D; border-bottom: 1px solid #30BB6D">{{$dish->dish_name}}</h4></center>
                          <center><small>
                       <i class="fa fa-star" id="rate"></i>
@@ -121,13 +93,16 @@ display: inline-block;
                       <i class="fa fa-star-o" id="rate"></i>
                       <i class="fa fa-star-o" id="rate"></i>
                       </small><br>
-                          <button class="btn btn-success" data-toggle="modal" data-target="#dtlModal{{$dish->did}}">View Details</button>
+                          <a href="blog-ici.html" class="blue-button">View Details</a>
+                         
+                    
                     </div>
                 </div>
-            
+            </a>
         @endforeach
         @endif
-
+        
+        
 
 
      <center><a href="#" style="font-family: verdana; color:#30BB6D; font-size: 15px">See all ></a>
@@ -141,39 +116,8 @@ display: inline-block;
     </div><!--section!-->
 </div><!--main raised!-->
 
-<!-- View Details -->       
-       @foreach($dishes as $dish)
-        <div class="modal fade" id="dtlModal{{$dish->did}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog" style="width:350px; float:center;">
-            <div class="modal-content">
-                <div class="modal-header">
-                        <h4 class="modal-title" style="color:white"><i class="fa fa-cutlery"></i><strong> Dish Details</strong></h4>
-                </div>
-                    <div class="modal-body">
-                        <center><h4 style="color:#30BB6D;"><strong>{{$dish->dish_name}}</strong></h1></center>
-                        <center><img src="{{url('./dish_imgs/'.$dish->dish_img)}}"></center>
-                        <center><p style="border-top:2px solid #30BB6D;  margin-top: 10px">{{$dish->dish_desc}}</p></center>
-                        <center> 
-                        <dl>
-                            <dt>Price:</dt>
-                            <dd>Php {{$dish->sellingPrice}}</dd>
-                            <dt>Preparation Time:</dt>
-                            <dd><?php echo date('h:i A', strtotime($dish->preparation_time)); ?></dd>
-                            <dt>Serving size:</dt>
-                            <dd>{{$dish->no_of_servings}} serving(s)</dd>
-                        </dl>
-                    </div>
-                    <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Close</button>
-                    </div>
-            </div>
-	</div>
-        </div>
-       @endforeach
-<!--  End View Details -->
 @endsection
 @section('addtl_scripts')
-
 <!--   Core JS Files   -->
   <script src="{{asset('customer/assets/js/jquery.min.js')}}" type="text/javascript"></script>
   <script src="{{asset('customer/assets/js/bootstrap.min.js')}}" type="text/javascript"></script>
@@ -189,39 +133,16 @@ display: inline-block;
   <script src="{{asset('customer/assets/js/material-kit.js')}}" type="text/javascript"></script>
   
   <script>
-
       $(document).ready(function() {
-       $('#input').on('keyup', function() {
-           var input, filter, ul, li, a, i;
-            input = document.getElementById("input");
-            filter = input.value.toUpperCase();
-            ul = document.getElementById("dishNames");
-            li = ul.getElementsByTagName("li");
-            for ( i = 0; i < li.length; i++) {
-             a = li[i].getElementsByTagName("a")[0];
-            if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                li[i].style.display = "";
-            } else {
-                li[i].style.display = "none";
-
-            }
-        }
-       });
-        $('#sliderDouble').noUiSlider({
-	start: [20, 60] ,
-	connect: true,
-	range: {
-	    min: 20,
-	    max: 100
-	}
-});
           $('#sort').on('change', function() {
               $value = $('#sort').val();
               if($value == "Best Eaten") {
                  $('#bestEaten').show();
               }
           });
-
+          $('#category').on('change', function() {
+              $('#sortBy').submit();
+          });
           $('#bfast').on('click', function() {
               $('#sortBy').submit();
           });
@@ -241,3 +162,4 @@ display: inline-block;
       });
   </script>
 @endsection
+
