@@ -118,40 +118,44 @@ fieldset{
       </div>
     </div>
     <div class="row setup-content" id="step-2">
-      <div class="col-xs-6 col-md-offset-3">
+      <div class="col-xs-2 col-md-offset-3">
         <div class="col-md-12">
           <h3> Ingredient Details</h3>
-              <div class="search">
-        <h3 class="text-center title-color">Search food ingredients</h3>
-        <p>&nbsp;</p>
-        <div class="row">
-            <div class="col-lg-10 col-lg-offset-1">
-                <div class="input-group">
-                    <span class="input-group-addon" style="color: white; background-color: rgb(124,77,255);">INGREDIENT SEARCH</span>
-                    <input type="text" autocomplete="off" id="search" class="form-control input-lg" placeholder="Enter Ingredient Name Here">
-                </div>
-            </div>
-        </div>   
-    </div>  
-<!-- search box container ends  -->
-<div id="txtHint" class="title-color" style="padding-top:50px; text-align:center;" ><b>Ingredient name will be listed here...</b></div>
 
-<div id="quan" class="quan">
-  <input type="text" id="quantity" name="quantity" placeholder="Quantity">
-  <select name="uom" id="uom">
-    <option value="">Measure</option>
-    <option value="Teaspoon">Teaspoon</option>
-    <option value="Tablespoon">Tablespoon</option>
-    <option value="Pinch">Pinch</option>
-    <option value="Cup">Cup</option>
-    <option value="Pint">Pint</option>
-    <option value="Quart">Quart</option>
-    <option value="mL">mL</option>
-    <option value="Litre">Litre</option>
-    <option value="Dash">Dash</option>
-  </select>
-  <button type="submit">ADD</button>
-</div>
+          <div class="container">
+
+      <div ng-app="angularjs-starter" ng-controller="MainCtrl" style="background-color: transparent;">
+           <fieldset  data-ng-repeat="choice in choices" style="background-color: transparent; margin-bottom: 20px">
+      <select class="form-control" style="width:500px;">
+      @foreach($list as $row)
+        <option>{{$row->Shrt_Desc}}</option>
+      @endforeach
+
+        <!-- <option data-subtext="Rep California">Tom Foolery</option>
+        <option data-subtext="Sen California">Bill Gordon</option>
+        <option data-subtext="Sen Massacusetts">Elizabeth Warren</option>
+        <option data-subtext="Rep Alabama">Mario Flores</option>
+        <option data-subtext="Rep Alaska">Don Young</option>
+        <option data-subtext="Rep California" disabled="disabled">Marvin Martinez</option> -->
+
+      </select><br>
+       <input type="text" id="quantity" name="quantity" placeholder="Quantity" ng-model="choice.name" required  style="width: 100px">
+       <input type="text"  id="preparation" name="preparation" placeholder="Preparation" ng-model="choice.name" required>
+      <select class="form-control" id="unit" name="unit" style="width:100px;">
+      @foreach($units as $unit)
+          <option value="{{$unit->um_id}}">{{$unit->um_name}}</option>
+      @endforeach
+      </select>
+    
+
+
+         <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
+           </fieldset>
+           <button class="addfields" ng-click="addNewChoice()">Add fields</button>
+               
+         
+        </div>
+        
 
           <button class="btn btn-primary nextBtn btn-lg pull-right" type="button" >Next</button>
         </div>
@@ -163,7 +167,7 @@ fieldset{
       <div class="col-xs-6 col-md-offset-3">
         <div class="col-md-12">
           <h3> Step 3</h3>
-        <button type="submit" class="btn btn-block btn-success submit"><i class="fa fa-plus"></i> Add Dish</button> 
+        <button type="submit" class="btn btn-block btn-success submit" href="{{route('cook.dishes.create')}}"><i class="fa fa-plus"></i>Add Dish</button> 
         </div>
       </div>
     </div>
