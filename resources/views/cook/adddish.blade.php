@@ -1,6 +1,5 @@
 @extends('cook-layouts.cook-master')
 <style>
-
 fieldset{
     background: #FCFCFC;
     padding: 16px;
@@ -18,7 +17,6 @@ fieldset{
     vertical-align: top;
     line-height: 100%;   
 }
-
 </style>
 
 
@@ -140,7 +138,11 @@ fieldset{
 
       </select><br>
        <input type="text" id="quantity" name="quantity" placeholder="Quantity" ng-model="choice.name" required  style="width: 100px">
-       <input type="text"  id="preparation" name="preparation" placeholder="Preparation" ng-model="choice.name" required>
+      <select class="form-control" id="preparation" name="preparation" style="width:100px;">
+      @foreach($preps as $prep)
+          <option value="{{ $prep->p_id }}">{{$prep->p_name}}</option> 
+      @endforeach
+      </select>
       <select class="form-control" id="unit" name="unit" style="width:100px;">
       @foreach($units as $unit)
           <option value="{{$unit->um_id}}">{{$unit->um_name}}</option>
@@ -196,7 +198,6 @@ fieldset{
 $(document).ready(function(){
   document.getElementById('quan').style.display="none";
 })
-
 </script>
 
 <script type="text/javascript">
@@ -221,25 +222,19 @@ function readURL(input) {
     $("#img").change(function(){
         readURL(this);
     });
-
 $(document).ready(function () {
   
-
     $('#cancel').on('click', function() {
       window.location = '{{url("/cook/dishes")}}';
     });
-
   var navListItems = $('div.setup-panel div a'),
           allWells = $('.setup-content'),
           allNextBtn = $('.nextBtn');
-
   allWells.hide();
-
   navListItems.click(function (e) {
       e.preventDefault();
       var $target = $($(this).attr('href')),
               $item = $(this);
-
       if (!$item.hasClass('disabled')) {
           navListItems.removeClass('btn-primary').addClass('btn-default');
           $item.addClass('btn-primary');
@@ -248,14 +243,12 @@ $(document).ready(function () {
           $target.find('input:eq(0)').focus();
       }
   });
-
   allNextBtn.click(function(){
       var curStep = $(this).closest(".setup-content"),
           curStepBtn = curStep.attr("id"),
           nextStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().next().children("a"),
           curInputs = curStep.find("input[type='text'],input[type='url']"),
           isValid = true;
-
       $(".form-group").removeClass("has-error");
       for(var i=0; i<curInputs.length; i++){
           if (!curInputs[i].validity.valid){
@@ -263,15 +256,11 @@ $(document).ready(function () {
               $(curInputs[i]).closest(".form-group").addClass("has-error");
           }
       }
-
       if (isValid)
           nextStepWizard.removeAttr('disabled').trigger('click');
   });
-
   $('div.setup-panel div a.btn-primary').trigger('click');
 });
-
-
    $("#search").keyup(function(){
        var str=  $("#search").val();
        if(str == "") {
@@ -282,10 +271,8 @@ $(document).ready(function () {
             });
        }
    });  
-
 function adding(){
   document.getElementById("quan").style.display="block";
 }
 </script>
 @endsection
-
