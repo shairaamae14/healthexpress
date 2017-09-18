@@ -1,5 +1,6 @@
 @extends('cook-layouts.cook-master')
 <style>
+
 fieldset{
     background: #FCFCFC;
     padding: 16px;
@@ -17,6 +18,7 @@ fieldset{
     vertical-align: top;
     line-height: 100%;   
 }
+
 </style>
 
 
@@ -62,32 +64,39 @@ fieldset{
       <div class="col-xs-6 col-md-offset-3">
         <div class="col-md-12">
           <h3>Dish Details</h3>
+
         <div class="form-group col-md-6">
               <label>Name:</label>
-                <input type="text" class="form-control" name="dish_name" placeholder="Name" required>
+                <input type="text" class="form-control" id="dish_name" name="dish_name" placeholder="Name" required>
             </div>
                 <div class="form-group col-md-4">
               <label>Serving:</label>
-                <input type="number" class="form-control" name="serving" placeholder="No. of serving(s)" min="1" required>
+                <input type="number" class="form-control" id="serving" name="serving" placeholder="No. of serving(s)" min="1" required>
             </div>
-              <div class="form-group col-md-6">
-              <label>Preparation Time:</label> 
-                <input type="time" class="form-control" name="ptime" placeholder="Lead time">
+              <div class="form-group col-md-3">
+              <label>Preparation Time:(Start)</label> 
+                <input type="time" class="form-control" id="ptime" name="ptime" placeholder="Lead time">
             </div>
+          <div class="form-group col-md-3">
+              <label>Preparation Time:(End)</label>
+                <input type="time" class="form-control" id="pend" name="pend" placeholder="Lead time">
+            </div>
+ 
             <div class="form-group col-md-4">
               <label>Price:</label>
-                <input type="text" class="form-control" name="price" placeholder="Price" required>
+                <input type="text" class="form-control" id="price" name="price" placeholder="Price" required>
             </div>
              <div class="form-group col-md-10 ">
               <label>Description:</label>
-                <textarea class="form-control" rows="3" name="dish_desc" placeholder="Description" required></textarea>                
+                <textarea class="form-control" rows="3" id="dish_desc" name="dish_desc" placeholder="Description" required></textarea>                
             </div>
+                
              
 
 
            <div class="form-group col-md-8">
               <label>Best Eaten during:</label><br>
-              <select multiple class="form-control" name="best[]">
+              <select multiple class="form-control" id="best" name="best[]">
                   @foreach($beaten as $be)
                   <option value="{{$be->be_id}}">{{$be->name}}</option>
                   @endforeach
@@ -96,7 +105,7 @@ fieldset{
             </div>
           <div class="form-group col-md-4">
               <label>Serving Size:</label>
-                <input type="number" class="form-control" name="serveSize" placeholder="Serving Size" min="1" required>
+                <input type="number" class="form-control" id="serveSize" name="serveSize" placeholder="Serving Size" min="1" required>
             </div>
 
             <div class="form-group col-md-5">
@@ -115,60 +124,83 @@ fieldset{
         </div>
       </div>
     </div>
+
+
+    
     <div class="row setup-content" id="step-2">
-      <div class="col-xs-2 col-md-offset-3">
-        <div class="col-md-12">
+      <div class="col-xs-6 col-md-offset-3" style="margin-left:0px;width:50%">
+        <div class="col-md-14">
           <h3> Ingredient Details</h3>
 
-          <div class="container">
+          <!-- <div class="container"> -->
 
       <div ng-app="angularjs-starter" ng-controller="MainCtrl" style="background-color: transparent;">
-           <fieldset  data-ng-repeat="choice in choices" style="background-color: transparent; margin-bottom: 20px">
-      <select class="form-control" style="width:500px;">
-      @foreach($list as $row)
-        <option>{{$row->Shrt_Desc}}</option>
-      @endforeach
 
-        <!-- <option data-subtext="Rep California">Tom Foolery</option>
-        <option data-subtext="Sen California">Bill Gordon</option>
-        <option data-subtext="Sen Massacusetts">Elizabeth Warren</option>
-        <option data-subtext="Rep Alabama">Mario Flores</option>
-        <option data-subtext="Rep Alaska">Don Young</option>
-        <option data-subtext="Rep California" disabled="disabled">Marvin Martinez</option> -->
+      <fieldset  data-ng-repeat="choice in choices" style="background-color: transparent; margin-bottom: 20px">
+      <!-- <div class="form-group col-md-3"> -->
+              <select class="selectpicker" data-show-subtext="true" data-live-search="true">
+                  @foreach($list as $part)
+                    <option value="{{$part->id}}">{{$part->Shrt_Desc}}</option>
+                  @endforeach
+              </select>
+              
+       <div class="form-group col-md-3">
 
-      </select><br>
-       <input type="text" id="quantity" name="quantity" placeholder="Quantity" ng-model="choice.name" required  style="width: 100px">
-      <select class="form-control" id="preparation" name="preparation" style="width:100px;">
-      @foreach($preps as $prep)
-          <option value="{{ $prep->p_id }}">{{$prep->p_name}}</option> 
-      @endforeach
-      </select>
-      <select class="form-control" id="unit" name="unit" style="width:100px;">
+      <input type="text" class="form-control" id="quantity" multiple name="quantity[]" placeholder="Quantity" ng-model="choice.name" required>
+      </div>
+      <div class="form-group col-md-3">
+       <select class="form-control" id="preparation" multiple name="preparation[]" id="preparation" name="preparation" style="width:100px;">
+          @foreach($preps as $prep)
+              <option value="{{ $prep->p_id }}">{{$prep->p_name}}</option> 
+          @endforeach
+          </select></div>
+      
+
+        <div class="form-group col-md-5">
+        <select  class="form-control" id="unit" multiple name="um[]">
       @foreach($units as $unit)
           <option value="{{$unit->um_id}}">{{$unit->um_name}}</option>
       @endforeach
       </select>
-    
-
-
-         <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
-           </fieldset>
-           <button class="addfields" ng-click="addNewChoice()">Add fields</button>
-               
-         
+      </div>
+        <div class="form-group col-md-1">
+      <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
+      </div>
+           <!-- </fieldset> -->
+           <button class="addfields remove" onclick="addChoice(); return false;" ng-click="addNewChoice()">+</button>    
         </div>
-        
-
-          <button class="btn btn-primary nextBtn btn-lg pull-right" type="button" >Next</button>
         </div>
       </div>
-    </div>
 
+      <div class="col-xs-6 col-md-offset-3" style="margin-left:0px;width:50%">
+        <table id="part">
+            <tr>
+              <th style="width:150px">Ingredient Name</th>
+              <th style="width:150px">Quantity</th>
+              <th style="width:150px">Preparation</th>
+              <th style="width:150px">Unit of Measure</th>
+            </tr>
+           <!-- <div id="part"></div> -->
+        </table>
+        <br>
+
+        
+          <button class="btn btn-primary nextBtn btn-lg pull-right"  onClick="summary()" type="button" >Next</button>
+      </div>
+    </div>
+  
     
     <div class="row setup-content" id="step-3">
       <div class="col-xs-6 col-md-offset-3">
         <div class="col-md-12">
           <h3> Step 3</h3>
+          <div>
+          <p>Dish Details</p>
+          <div id="summary">
+            
+          </div>
+          <p>Ingredient Details</p>
+
         <button type="submit" class="btn btn-block btn-success submit" href="{{route('cook.dishes.create')}}"><i class="fa fa-plus"></i>Add Dish</button> 
         </div>
       </div>
@@ -194,11 +226,13 @@ fieldset{
   </footer>
 
 <script src="{{ asset('js/app.js') }}"></script>
-<script>
+
+<!-- <script>
 $(document).ready(function(){
   document.getElementById('quan').style.display="none";
 })
-</script>
+
+</script> -->
 
 <script type="text/javascript">
     // $(document).ready(function(){
@@ -222,19 +256,25 @@ function readURL(input) {
     $("#img").change(function(){
         readURL(this);
     });
+
 $(document).ready(function () {
   
+
     $('#cancel').on('click', function() {
       window.location = '{{url("/cook/dishes")}}';
     });
+
   var navListItems = $('div.setup-panel div a'),
           allWells = $('.setup-content'),
           allNextBtn = $('.nextBtn');
+
   allWells.hide();
+
   navListItems.click(function (e) {
       e.preventDefault();
       var $target = $($(this).attr('href')),
               $item = $(this);
+
       if (!$item.hasClass('disabled')) {
           navListItems.removeClass('btn-primary').addClass('btn-default');
           $item.addClass('btn-primary');
@@ -243,12 +283,14 @@ $(document).ready(function () {
           $target.find('input:eq(0)').focus();
       }
   });
+
   allNextBtn.click(function(){
       var curStep = $(this).closest(".setup-content"),
           curStepBtn = curStep.attr("id"),
           nextStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().next().children("a"),
           curInputs = curStep.find("input[type='text'],input[type='url']"),
           isValid = true;
+
       $(".form-group").removeClass("has-error");
       for(var i=0; i<curInputs.length; i++){
           if (!curInputs[i].validity.valid){
@@ -256,23 +298,103 @@ $(document).ready(function () {
               $(curInputs[i]).closest(".form-group").addClass("has-error");
           }
       }
+
       if (isValid)
           nextStepWizard.removeAttr('disabled').trigger('click');
   });
+
   $('div.setup-panel div a.btn-primary').trigger('click');
 });
-   $("#search").keyup(function(){
-       var str=  $("#search").val();
-       if(str == "") {
-               $( "#txtHint" ).html("<b>Ingredient name will be listed here...</b>"); 
-       }else {
-               $.get( "{{ url('cook/adddish?id=') }}"+str, function( data ) {
-                   $( "#txtHint" ).html( data );  
-            });
-       }
-   });  
-function adding(){
-  document.getElementById("quan").style.display="block";
+
+
+   // $("#search").keyup(function(){
+   //     var str=  $("#search").val();
+   //     if(str == "") {
+   //             $( "#txtHint" ).html("<b>Ingredient name will be listed here...</b>"); 
+   //     }else {
+   //             $.get( "{{ url('cook/adddish?id=') }}"+str, function( data ) {
+   //                 $( "#txtHint" ).html( data );  
+   //          });
+   //     }
+   // }); 
+
+   // $("#search").change(function(){
+   //    alert("change");
+   // });
+
+function addChoice()
+{
+    // var ingred = document.getElementById('ingredients').value;
+    var quan = document.getElementById('quantity').value;
+    // var prep = document.getElementById('preparation').value;
+    // var um = document.getElementById('um').value;
+
+    var ingred = $("#ingredients option:selected").map(function() {
+        return $(this).text();
+      }).get();
+
+    var prep = $("#preparation option:selected").map(function() {
+        return $(this).text();
+      }).get();
+    var um = $("#unit option:selected").map(function() {
+        return $(this).text();
+      }).get();
+    
+    var div = document.getElementById("part");
+
+    div.innerHTML += 
+                      '<tr style="text-align:center">'+
+                          '<td>'+ingred+'</td>'+
+                          '<td>'+quan+'</td>'+
+                          '<td>'+prep+'</td>'+
+                          '<td>'+um+'</td>'+
+                      '</tr>';
+
+                      return false;
 }
+
+function summary(){
+
+      var name = document.getElementById("dish_name").value;
+      var serving = document.getElementById("serving").value;
+      var ptime = document.getElementById("ptime").value;
+      var pend = document.getElementById("pend").value;
+      var price = document.getElementById("price").value;
+      var desc = document.getElementById("dish_desc").value;
+      var best = $("#best option:selected").map(function() {
+        return $(this).text();
+      }).get();
+      var serveSize = document.getElementById("serveSize").value;
+      // var ingred = $('ingredients').val();
+      var ingred=[];
+      var ingred = $("#ingredients option:selected").map(function() {
+        return $(this).text();
+      }).get();
+      var quan = $('quantity').val();
+      var prep = $('preparation').val();
+      var um = $('um').value;
+
+      var div = document.getElementById('summary');
+      var div2 = document.getElementById('ingred-part');
+      // var i;
+        div.innerHTML += 'Name: '+name+'<br>'+
+                          'Serving: '+serving+'<br>'+
+                          'Preparation Time: '+ptime+'<br>'+
+                          'Preparation End: '+pend+'<br>'+
+                          'Price: '+price+'<br>'+
+                          'Description: '+desc+'<br>'+
+                          'Best Eaten: '+best+'<br>'+
+                          'Serving Size: '+serveSize+'<br>';
+      
+} 
+
+
+
+
 </script>
+
+
+
+
 @endsection
+

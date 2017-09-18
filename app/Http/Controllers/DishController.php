@@ -61,6 +61,7 @@ class DishController extends Controller
      */
     public function create()
     {
+        ini_set('memory_limit', '2048M');
         $beaten = BestEaten::all();
         $list = IngredientList::all();
         $units = UnitMeasurement::all();
@@ -113,20 +114,33 @@ class DishController extends Controller
                                             'be_id' => $request['best'][$i],
                                             'status' => 1]);
         }
-        $um = Input::get('unit');
+        // $um = Input::get('unit');
+        // $prep = Input::get('preparation');
+        // for($j = 0 ; $j < count($request['unit']); $j++) {
+        //     $ingredients = DishIngredient::create(['um_id'=> $um,
+        //         'dish_id' => $dish->id,
+        //         'quantity' => $request['quantity'],
+        //         'preparation' => $prep,
+        //         'status' => 1
+        //         ]);
+        // }
+        $ingred = Input::get('ingredients');
+        $quan = Input::get('quantity');
         $prep = Input::get('preparation');
-        for($j = 0 ; $j < count($request['unit']); $j++) {
-            $ingredients = DishIngredient::create(['um_id'=> $um,
-                'dish_id' => $dish->id,
-                'quantity' => $request['quantity'],
-                'preparation' => $prep,
-                'status' => 1
-                ]);
-        }
-        
-        
-        
+        $um = Input::get('um');
+
+        for($i=0; $i<count($ingred);$i++)
+        {
             
+            $ing = DishIngredient::create([
+                'um_id' => $um[$i],
+                'dish_id' => $dish->id,
+                'quantity' => $request['quantity'][$i],
+                'preparation' => $prep[$i],
+                'status' => 1
+
+                ]);
+        }   
         return redirect()->route('cook.dishes');
         // dd($cook);
     }

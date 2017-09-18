@@ -45,7 +45,7 @@ dt{
 
                         </div>
 
-                        <center><h4 class="openModal box-title" style="margin-top: 5px; font-size: 15px;"><a href="" style="color:#30BB6D" data-toggle="modal" data-target="#modal-default{{$dish->id}}">{{$dish['dish_name']}}</a><br>
+                        <center><h4 class="openModal box-title" style="margin-top: 5px; font-size: 15px;"><a href="" style="color:#30BB6D" data-toggle="modal" data-target="#modal-default{{$dish->did}}">{{$dish['dish_name']}}</a><br>
                         <br>
                       <center><small>
                       <i class="fa fa-star" id="rate"></i>
@@ -55,13 +55,18 @@ dt{
                       <i class="fa fa-star-o" id="rate"></i>
                       </small><br>
                       <a href="{{route('cook.rating')}}"><p style="font-size: 12px; color:#30BB6D; background-color:#E3E3E3">See Reviews</p></a>
+                      <!--  <button class="btn btn-success viewDetails" id="viewDetails" value="{{$dish->did}}">View Details</button> -->
+
+                          <a class="btn btn-success" href="{{route('cook.dishes.det', ['id' => $dish->did])}}">View Details</a>
+
                       </center>
                        <br>
                         <center>
-                         <button type="button" class="btn btn-flat btn-primary edit" style="background-color:#30BB6D; border:none" data-toggle="modal" data-target="#modal-default2{{$dish->id}}"><i class="fa fa-edit"></i></button>
-                      <button type="button" class="btn btn-flat btn-danger delete" style="background-color:#30BB6D; border:none" data-toggle="modal" data-target="#modal-default3{{$dish->id}}"><i class="fa fa-times"></i></button>
+                         <button type="button" class="btn btn-flat btn-primary edit" style="background-color:#30BB6D; border:none" data-toggle="modal" data-target="#modal-default2{{$dish->did}}"><i class="fa fa-edit"></i></button>
+                      <button type="button" class="btn btn-flat btn-danger delete" style="background-color:#30BB6D; border:none" data-toggle="modal" data-target="#modal-default3{{$dish->did}}"><i class="fa fa-times"></i></button>
                         <button type="button" class="btn btn-flat btn-danger delete" style="background-color:#30BB6D; border:none; color:white;"><i class="fa fa-list-ul"></i></button>
 
+                      <!--   <button type="button" class="btn btn-flat btn-primary edit" style="background-color:#30BB6D; border:none" value="">Dish Details</button> -->
 
                       </center>
                       </br>
@@ -84,7 +89,7 @@ dt{
   <!--MODAL FOR VIEW DETAILS!-->
   @foreach($dishes as $dish)
 
-  <div class="modal fade" id="modal-default{{$dish->id}}">
+  <div class="modal fade" id="modal-default{{$dish->did}}" data-backdrop="false" data-dismiss="modal">
 
     <div class="modal-dialog"  style="width:350px; float:center;">
       <div class="modal-content">
@@ -95,7 +100,7 @@ dt{
           </div>
           <div class="modal-body">
             <center><h4 style="color:#30BB6D; margin-top: 2px"><strong>{{$dish->dish_name}}</strong></h1></center>
-               <center><img src="{{url('./dish_imgs/'.$dish->dish_img)}}" style="width:85%; height:240px; border-radius: 10px"></center>
+               <center><img src="{{url('./dish_imgs/'.$dish->dish_img)}}" style="width:85%; height:240px; border-radius: 10px"></center><br>
           <center><p style="border-top:2px solid #30BB6D;  margin-top: 10px">{{$dish->dish_desc}}</p></center>
    
              <center> <dl>
@@ -108,13 +113,13 @@ dt{
                 <dd>{{$dish->no_of_servings}} serving(s)</dd>
                  <dt>Best eaten:</dt>
                  @foreach($dbestEaten as $dbe)
-                  @if($dbe->dbe_id == 1)
-                <dd>Breakfast</dd>
-                @elseif($dbe->dbe_id == 2)
-                <dd>Lunch</dd>
-                @elseif($dbe->dbe_id == 3)
-                <dd>Dinner</dd>
-                @endif
+                  @if($dbe->be_id == 1)
+                    <dd>Breakfast</dd>
+                  @elseif($dbe->be_id == 2)
+                    <dd>Lunch</dd>
+                  @elseif($dbe->be_id == 3)
+                    <dd>Dinner</dd>
+                  @endif
                 @endforeach
 
                  
@@ -133,7 +138,7 @@ dt{
 <!--MODAL FOR EDIT!-->
   @foreach($dishes as $dish)
 
- <div class="modal fade" id="modal-default2{{$dish->id}}">
+ <div class="modal fade" id="modal-default2{{$dish->did}}" data-backdrop="false" data-dismiss="modal">
           <div class="modal-dialog" style="float:center;">
             <div class="modal-content">
               <div class="modal-header" style="background-color:#30BB6D;">
@@ -177,8 +182,8 @@ dt{
                 
                 <select multiple class="form-control" name="best[]">
                     @foreach($dbestEaten as $db)
-                    <option value="{{$db->dbe_id}}" selected>{{$db->name}}</option>
-                    @endforeach
+                    <option value="{{$db->be_id}}" selected>{{$db->name}}</option> 
+                     @endforeach
               </select>
             </div>
 
@@ -223,7 +228,7 @@ dt{
 
 <!--MODAL FOR DELETE!-->
   @foreach($dishes as $dish)
- <div class="modal fade" id="modal-default3{{$dish->id}}">
+ <div class="modal fade" id="modal-default3{{$dish->did}}" data-backdrop="false" data-dismiss="modal">
           <div class="modal-dialog"  style="float:center">
             <div class="modal-content">
               <div class="modal-header" style="background-color:#30BB6D;">
@@ -236,7 +241,7 @@ dt{
                 <p>Are you sure you want to delete  this dish? Do you wish to proceed?</p>
               </div>
               <div class="modal-footer">
-                <form method="post" action="{{route('cook.dishes.destroy', ['id' => $dish->id])}}">
+                <form method="post" action="{{route('cook.dishes.destroy', ['id' => $dish->did])}}">
                     {{csrf_field()}}
                 <button type="button" class="btn btn-default pull-left" data-dismiss="modal" style="background-color:#30BB6D; color:white; border:none">Cancel</button>
                 <button type="submit" class="btn btn-primary" style="background-color: #F56D65; border:none">Delete</button>
@@ -294,13 +299,9 @@ dt{
 <script src="{{asset('adminlte/bower_components/fastclick/lib/fastclick.js')}}"></script>
 <!-- AdminLTE App -->
 <script src="{{asset('adminlte/dist/js/adminlte.min.js')}}"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="{{asset('adminlte/dist/js/pages/dashboard.js')}}"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="{{asset('adminlte/dist/js/demo.js')}}"></script>
 
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
- <script src="{{asset('wizard/assets/js/jquery-1.11.1.min.js')}}"></script>
+  
+
 <script type="text/javascript">
     
        $(".delete").on('click', function(){
@@ -313,8 +314,12 @@ dt{
        //  var id =  $(this).val();
        //   $('#modal').modal('show');
        //  });
-    });
 
+
+function viewdetails(){
+  var id = document.getElementById('viewDetails').value;
+  alert("hey");
+}
 function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -328,10 +333,4 @@ function readURL(input) {
     $("#img").change(function(){
         readURL(this);
     });
-
-
-
-</script>
-
 @endsection
-
