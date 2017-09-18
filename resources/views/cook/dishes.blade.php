@@ -45,7 +45,7 @@ dt{
 
                         </div>
 
-                        <center><h4 class="openModal box-title" style="margin-top: 5px; font-size: 15px;"><a href="" style="color:#30BB6D" data-toggle="modal" data-target="#modal-default{{$dish->did}}">{{$dish['dish_name']}}</a><br>
+                        <center><h4 class="openModal box-title" style="margin-top: 5px; font-size: 15px;"><a href="{{route('cook.dishes.det', ['id' => $dish->did])}}" style="color:#30BB6D">{{$dish['dish_name']}}</a><br>
                         <br>
                       <center><small>
                       <i class="fa fa-star" id="rate"></i>
@@ -61,15 +61,8 @@ dt{
 
                       </center>
                        <br>
-                        <center>
-                         <button type="button" class="btn btn-flat btn-primary edit" style="background-color:#30BB6D; border:none" data-toggle="modal" data-target="#modal-default2{{$dish->did}}"><i class="fa fa-edit"></i></button>
-                      <button type="button" class="btn btn-flat btn-danger delete" style="background-color:#30BB6D; border:none" data-toggle="modal" data-target="#modal-default3{{$dish->did}}"><i class="fa fa-times"></i></button>
-                        <button type="button" class="btn btn-flat btn-danger delete" style="background-color:#30BB6D; border:none; color:white;"><i class="fa fa-list-ul"></i></button>
-
-                      <!--   <button type="button" class="btn btn-flat btn-primary edit" style="background-color:#30BB6D; border:none" value="">Dish Details</button> -->
-
-                      </center>
-                      </br>
+                  
+                   
 
 
                         <!-- <center><i class="fa fa-angle-right"></i></center> -->
@@ -86,175 +79,6 @@ dt{
   </div>
   <!-- /.content-wrapper -->
 
-  <!--MODAL FOR VIEW DETAILS!-->
-  @foreach($dishes as $dish)
-
-  <div class="modal fade" id="modal-default{{$dish->did}}" data-backdrop="false" data-dismiss="modal">
-
-    <div class="modal-dialog"  style="width:350px; float:center;">
-      <div class="modal-content">
-          <div class="modal-header" style="background-color:#30BB6D;">
-            <button type="button" class="close"  data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" style="color:white"><i class="fa fa-cutlery"></i><strong> Dish Details</strong></h4>
-          </div>
-          <div class="modal-body">
-            <center><h4 style="color:#30BB6D; margin-top: 2px"><strong>{{$dish->dish_name}}</strong></h1></center>
-               <center><img src="{{url('./dish_imgs/'.$dish->dish_img)}}" style="width:85%; height:240px; border-radius: 10px"></center><br>
-          <center><p style="border-top:2px solid #30BB6D;  margin-top: 10px">{{$dish->dish_desc}}</p></center>
-   
-             <center> <dl>
-                   
-                <dt>Price:</dt>
-                <dd>Php {{$dish->basePrice}}</dd>
-                <dt>Preparation Time:</dt>
-                <dd><?php echo date('h:i A', strtotime($dish->dish_leadTime)); ?></dd>
-                <dt>Serving size:</dt>
-                <dd>{{$dish->no_of_servings}} serving(s)</dd>
-                 <dt>Best eaten:</dt>
-                 @foreach($dbestEaten as $dbe)
-                  @if($dbe->be_id == 1)
-                    <dd>Breakfast</dd>
-                  @elseif($dbe->be_id == 2)
-                    <dd>Lunch</dd>
-                  @elseif($dbe->be_id == 3)
-                    <dd>Dinner</dd>
-                  @endif
-                @endforeach
-
-                 
-              </dl>
-          </div>
-       
-      </div>
-            <!-- /.modal-content -->
-    </div>
-          <!-- /.modal-dialog -->
-  </div>
-        <!-- /.modal -->
-
-@endforeach
-
-<!--MODAL FOR EDIT!-->
-  @foreach($dishes as $dish)
-
- <div class="modal fade" id="modal-default2{{$dish->did}}" data-backdrop="false" data-dismiss="modal">
-          <div class="modal-dialog" style="float:center;">
-            <div class="modal-content">
-              <div class="modal-header" style="background-color:#30BB6D;">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span></button>
-                   <h4 class="modal-title" style="color:white"><i class="fa fa-edit"></i><strong> Edit Dish</strong></h4>
-              </div>
-              <div class="modal-body" style="background-color: white">
-                 
-                 <!--START!-->
-                 <form method="post" action="{{route('cook.dishes.update', ['id' => $dish->did])}}" enctype="multipart/form-data">
-                    {{csrf_field()}}    
-
-                <div class="form-group col-md-6">
-                  <label>Name:</label>
-                  <input type="text" class="form-control" name="dish_name" placeholder="Name" value="{{$dish->dish_name}}"> 
-                 </div>
-
-                  <div class="form-group col-md-6">
-              <label>Price:</label>
-                <input type="text" class="form-control" name="price" placeholder="Price" value="{{$dish->basePrice}}"> 
-                 </div>
-
-                  <div class="form-group col-md-6">
-              <label>No. of servings:</label>
-                <input type="number" class="form-control" name="serving" placeholder="Number of serving" min="1" value="{{$dish->no_of_servings}}"> 
-            </div>
-                    <div class="form-group col-md-6">
-              <label>Serving size:</label>
-                <input type="number" class="form-control" name="ssize" placeholder="Serving Size" min="1" value="{{$dish->serving_size}}"> 
-            </div>
-
-           <div class="form-group col-md-6">
-              <label>Preparation Time:</label>
-                <input type="time" class="form-control" name="ptime" value="{{$dish->preparation_time}}"> 
-            </div>
-
-
-                <div class="form-group col-md-6">
-                <label>Best Eaten during:</label><br>
-                
-                <select multiple class="form-control" name="best[]">
-                    @foreach($dbestEaten as $db)
-                    <option value="{{$db->be_id}}" selected>{{$db->name}}</option> 
-                     @endforeach
-              </select>
-            </div>
-
-            <div class="form-group col-md-6">
-              <label>Description:</label>
-                <textarea class="form-control" rows="3" name="dish_desc" placeholder="Description">{!! $dish->dish_desc !!}</textarea>
-                 </div>
-
-
-                   <div class="form-group col-md-6">
-              <label for="exampleInputFile">Dish Image</label>
-                <input type="file" id="dish" name="img">
-                <input type="hidden" name="img" value="{{$dish->dish_img}}">
-                  <p class="help-block">jpg., jpeg., png. extension only</p>
-                        </div>
-
-                   <div class="form-group col-md-6">
-                    <img src="{{url('./dish_imgs/'.$dish->dish_img)}}" id="img-tag" width="200px" />
-            </div>
-              
-                    <div class="modal-footer">
-               <div class="col-md-12">
-                    <center><button type="submit" class="btn btn-block btn-success submit"><i class="fa fa-plus"></i> Update Dish</button> 
-       
-              </div>
-              </div>
-
-
-                  </form>
-              
-
-              </div>
-
-            </div>
-            <!-- /.modal-content -->
-          </div>
-          <!-- /.modal-dialog -->
-        </div>
-        <!-- /.modal -->
-
-@endforeach
-
-<!--MODAL FOR DELETE!-->
-  @foreach($dishes as $dish)
- <div class="modal fade" id="modal-default3{{$dish->did}}" data-backdrop="false" data-dismiss="modal">
-          <div class="modal-dialog"  style="float:center">
-            <div class="modal-content">
-              <div class="modal-header" style="background-color:#30BB6D;">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title"  style="color:white"><i class="fa fa-times"></i> Confirm Delete</h4>
-              </div>
-             
-              <div class="modal-body">
-                <p>Are you sure you want to delete  this dish? Do you wish to proceed?</p>
-              </div>
-              <div class="modal-footer">
-                <form method="post" action="{{route('cook.dishes.destroy', ['id' => $dish->did])}}">
-                    {{csrf_field()}}
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal" style="background-color:#30BB6D; color:white; border:none">Cancel</button>
-                <button type="submit" class="btn btn-primary" style="background-color: #F56D65; border:none">Delete</button>
-                </form>
-              </div>
-              
-            </div>
-            <!-- /.modal-content -->
-          </div>
-          <!-- /.modal-dialog -->
-        </div>
-        <!-- /.modal -->
-@endforeach
 
   <footer class="main-footer">
     <div class="pull-right hidden-xs">

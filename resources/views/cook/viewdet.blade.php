@@ -37,23 +37,23 @@ a:hover{
             </div>
             <!-- /.box-header -->
             <div class="box-body">
-             
+             @foreach($dishes as $dish)
               <div class="alert  alert-dismissible" style="float:left; width:50%">
-              <center><img src="{{asset('img/spag.jpg')}}" style="width:200px; height:200px; border:2px solid #F0F0F0; border-radius: 10px;"></img></center> <br>
-                         <center><h3 style="color:#30BB6D"> Spaghetti Italiana </h3> <br>
-                         <h5>One-Pan Pesto Chicken and Veggies – boneless, skinless chicken thighs with sun-dried tomatoes, asparagus, cherry tomatoes in a delicious basil pesto sauce.</h5></center>
+              <center><img src="{{url('./dish_imgs/'.$dish->dish_img)}}" style="width:200px; height:200px; border:2px solid #F0F0F0; border-radius: 10px;"></img></center> <br>
+                         <center><h3 style="color:#30BB6D"> {{$dish->dish_name}} </h3> <br>
+                         <h5>{{$dish->dish_desc}}</h5></center>
               </div>
               <div class="alert alert-dismissible" style="float:right; width:50%; padding-bottom: 20px">
               <ul class="todo-list">
                 <li>
-                  <span class="text"><label style="font-size:18px">Price:</label>&nbsp;Php 100.00</span>
+                  <span class="text"><label style="font-size:18px">Price:</label>&nbsp;Php {{$dish->basePrice}}</span>
                   </li>
 
                       <li>
                   <span class="text"><label style="font-size:18px">Preparation time:</label>&nbsp;1 hr 15 mins</span>
                   </li>
                       <li>
-                  <span class="text"><label style="font-size:18px">No. of Serving:</label>&nbsp;2 serving(s)</span>
+                  <span class="text"><label style="font-size:18px">No. of Serving:</label>&nbsp;{{$dish->no_of_servings}} serving(s)</span>
                   </li>
 
                       <li>
@@ -67,6 +67,7 @@ a:hover{
 
                 </ul>
               </div>
+              @endforeach
             </div>
             <!-- /.box-body -->
           </div>

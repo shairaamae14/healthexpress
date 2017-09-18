@@ -257,5 +257,10 @@ class DishController extends Controller
     return view('cook.reviews');
    }
 
+   public function viewdet($id){
+    
+       $dishes = Dish::where('did', $id)->get();
+        return view('cook.viewdet', compact('dishes'));
+   }
 
 }

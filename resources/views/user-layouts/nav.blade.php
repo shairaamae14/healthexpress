@@ -1,4 +1,4 @@
-  <nav class="navbar navbar-transparent navbar-absolute">
+  <nav class="navbar navbar-success navbar-absolute" style="background-color:transparent; box-shadow: none">
       <div class="container">
           <!-- Brand and toggle get grouped for better mobile display -->
           <div class="navbar-header">
@@ -12,7 +12,7 @@
                <a href="http://www.creative-tim.com">
            <div class="logo-container">
                 <div class="logo" style="width: 165px; height:90px; border-radius: 0px; border:none">
-            <a class="navbar-brand" href="#"><img src="{{asset('img/healthexpress.png')}}" style="width:160px; height:90px; "></img></a>
+            <a class="navbar-brand" href="/home"><img src="{{asset('img/healthexpress.png')}}" style="width:160px; height:90px;"></img></a>
            </div>
            </div>
 
@@ -23,11 +23,10 @@
                <li><a href="#"><i class="material-icons">help</i>Help</a></li>
               <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                <i class="material-icons">account_circle</i>Beatrice Ylaya
-                                </a>
+                                <i class="material-icons">account_circle</i> {{ Auth::user()->fname}} {{Auth::user()->lname}}</a>
                                 <ul class="dropdown-menu" role="menu">
 
-                                 <li><a href="#">Profile</a></li>
+                                 <li><a href="{{route('user.profile', ['id'=> Auth::id()])}}">Profile</a></li>
                                  <li><a href="#">Order History</a></li>
 
 
@@ -45,7 +44,7 @@
                                 </ul>
                             </li>
                           
-                            <li>  <a href="#" style="float:right; color:white; margin-left:5px" id="cart"> <i class="material-icons">shopping_cart</i> Cart is empty </a></li>
+                            
 
                           
           
