@@ -24,8 +24,8 @@ class CreateDishBestEatenAtTable extends Migration
         });
         
         Schema::table('dish_bestEaten', function (Blueprint $table) {
-           $table->foreign('dish_id')->references('did')->on('dishes');
-           $table->foreign('be_id')->references('be_id')->on('bestEaten_at');
+           $table->foreign('dish_id')->references('did')->on('dishes')->onDelete('cascade');
+           $table->foreign('be_id')->references('be_id')->on('bestEaten_at')->onDelete('cascade');
         });
     }
 

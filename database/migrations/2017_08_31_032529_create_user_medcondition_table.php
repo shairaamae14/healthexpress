@@ -24,8 +24,8 @@ class CreateUserMedconditionTable extends Migration
         });
         
         Schema::table('user_medcondition', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('medcon_id')->references('medcon_id')->on('medical_conditions');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('medcon_id')->references('medcon_id')->on('medical_conditions')->onDelete('cascade');
         });
     }
 

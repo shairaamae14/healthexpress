@@ -2557,7 +2557,7 @@ a:focus {
   background: transparent;
   color: #999;
 }
-.nav-tabs-custom.tab-primary > .nav-tabs > li.active {
+.nav-tabs-custom.tprimary > .nav-tabs > li.active {
   border-top-color: #3c8dbc;
 }
 .nav-tabs-custom.tab-info > .nav-tabs > li.active {

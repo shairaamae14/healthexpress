@@ -1,4 +1,49 @@
 @extends('cook-layouts.cook-master')
+<style>
+
+fieldset{
+    background: #FCFCFC;
+    padding: 16px;
+    border: 1px solid #D5D5D5;
+}
+.remove{
+    background: #C76868;
+    color: #FFF;
+    font-weight: bold;
+    font-size: 24px;
+    border: 0;
+    cursor: pointer;
+    display: inline-block;
+    padding: 4px 9px;
+    vertical-align: top;
+    line-height: 100%;
+}   
+.durationpicker-container {
+    background-color: white;
+    border: 1px solid darkgrey;
+    display: inline-block;
+    width: auto;
+}
+
+.durationpicker-innercontainer {
+    display: inline-block;
+    width: auto;
+    padding-right: 5px;
+}
+
+.durationpicker-duration {
+    width: 50px;
+    display: inline-block;
+    border: none;
+    padding-left: 10%;
+    text-align: right;
+}
+
+.durationpicker-label {
+    display: inline-block;
+}
+</style>
+
 
 @section('content')
 
@@ -17,67 +62,165 @@
 
     <!-- Main content -->
     <section class="content">
-
-      <!-- Default box -->
-      <div class="box">
-        <div class="box-header with-border">
-          <h3 class="box-title">Edit Dish</h3>
-
-        </div>
-        <form method="post" action="{{route('cook.dishes.update', ['id' => $dish->id])}}">
-        {{csrf_field()}}
-        <div class="box-body">
-        <div class="row">
-          
-            <div class="form-group col-md-3">
-              <label>Name:</label>
-                <input type="text" class="form-control" name="dish_name" placeholder="Name" value="{{$dish->dish_name}}"> 
-            </div>
-
-           <div class="form-group col-md-3">
-              <label>Category:</label>
-                <input type="text" class="form-control" name="dish_cat" placeholder="Category" value="{{$dish->dish_category}}"> 
-            </div>
-
-           <div class="form-group col-md-3">
-              <label>Serving:</label>
-                <input type="number" class="form-control" name="serving" placeholder="Number of serving" min="1" value="{{$dish->serving_size}}"> 
-            </div>
-
-            <div class="form-group col-md-3">
-              <label>Price:</label>
-                <input type="text" class="form-control" name="price" placeholder="Price" value="{{$dish->dish_price}}"> 
-            </div>
-
-           <div class="form-group col-md-3">
-              <label>Lead Time:</label>
-                <input type="datetime-local" class="form-control" name="lead_time" value="{{$dish->dish_leadTime}}"> 
-            </div>
-
-            <div class="form-group col-md-3">
-              <label>Description:</label>
-                <textarea class="form-control" rows="3" name="dish_desc" placeholder="Description">{!! $dish->dish_desc !!}</textarea>                
-            </div>
-
-            <div class="form-group col-md-3">
-              <label for="exampleInputFile">Dish Image</label>
-                <input type="file" id="dish_img" name="dish_img">
-                  <p class="help-block">jpg., jpeg., png. extension only</p>
-            </div>
-          </div> <!-- row -->
-       
-        </div>
-        <!-- /.box-body -->
-        <div class="box-footer">
-        <div class="col-md-2">
-         <button type="submit" class="btn btn-block btn-success submit"><i class="fa fa-plus"></i> Update Dish</button> 
-        </div>
-        
-        </div>
-        <!-- /.box-footer-->
-        </form>
+<div class="container">
+  
+<div class="stepwizard col-md-offset-3">
+    <div class="stepwizard-row setup-panel">
+      <div class="stepwizard-step">
+        <a href="#step-1"  class="btn-primary" style="background-color: #30BB6D; color:white; border-radius:150px"><center><img src="{{asset('img/food.svg')}}" style="width:55px; height:45px"/></center></a>
+        <p>Dish Details</p>
       </div>
-      <!-- /.box -->
+      <div class="stepwizard-step">
+        <a href="#step-2" class="btn-default" style="background-color: #30BB6D; color:white; border-radius:150px" disabled="disabled"><center><img src="{{asset('img/ingredients.svg')}}" style="width:75px; height:55px"/></center></a>
+        <p>Ingredients</p>
+      </div>
+      <div class="stepwizard-step">
+        <a href="#step-3" class="btn-default" style="background-color: #30BB6D; color:white; border-radius:150px" disabled="disabled"><center><img src="{{asset('img/plus.svg')}}" style="width:55px; height:45px"/></center></a>
+        <p>Save Dish</p>
+      </div>
+    </div>
+  </div>
+ @foreach($dishes as $dish)
+  <form role="form"  method="post" action="{{route('cook.dishes.update', ['id' => $dish->did])}}" enctype="multipart/form-data">
+   {{csrf_field()}}
+    <div class="row setup-content" id="step-1">
+      <div class="col-xs-6 col-md-offset-3">
+        <div class="col-md-12">
+          <h3>Dish Details</h3>
+          
+        <div class="form-group col-md-6">
+              <label>Name:</label>
+                <input type="text" class="form-control" id="dish_name" name="dish_name" placeholder="Name" value="{{$dish['dish_name']}}" required>
+            </div>
+                <div class="form-group col-md-4">
+              <label>Serving:</label>
+                <input type="number" class="form-control" id="serving" name="serving" placeholder="No. of serving(s)" min="1" value="{{$dish['no_of_servings']}}" required>
+            </div>
+              <div class="form-group col-md-3">
+              <label>Preparation Time:</label> 
+                <input type="text" id="duration" name="duration" value="{{$dish['preparation_time']}}">
+            </div>
+ 
+            <div class="form-group col-md-4">
+              <label>Price:</label>
+                <input type="text" class="form-control" id="price" name="price" placeholder="Price" value="{{$dish['basePrice']}}" required>
+            </div>
+             <div class="form-group col-md-10 ">
+              <label>Description:</label>
+                <textarea class="form-control" rows="3" id="dish_desc" name="dish_desc" placeholder="Description" required>{!!$dish['dish_desc']!!}</textarea>                
+            </div>
+
+           <div class="form-group col-md-8">
+              <label>Best Eaten during:</label><br>
+
+
+                  <input type="checkbox" class="flat-red"  name="best[]">Lunch</option>
+               
+            </div>
+
+            <div class="form-group col-md-5">
+              <label for="exampleInputFile">Dish Image</label>
+                <input type="file" id="img" name="img">
+                  <p class="help-block">jpg., jpeg., png. extension only</p>
+                  </div>
+                   <div class="form-group col-md-5">
+                  <img src="{{asset('img/chooseimg.jpg')}}" id="img-tag" width="200px" />
+            </div>
+       <div class="col-md-10">
+       <button type="button" class="btn btn-primary nextBtn btn-lg" id="cancel">Cancel</button>
+          <button class="btn btn-primary nextBtn btn-lg pull-right" type="button" style="background-color: #30BB6D " >Next</button>
+        </div>
+         
+        </div>
+      </div>
+    </div>
+
+
+    
+    <div class="row setup-content" id="step-2">
+      <div class="col-xs-6 col-md-offset-3" style="margin-left:0px;width:50%">
+        <div class="col-md-14">
+          <h3> Ingredient Details</h3>
+
+          <!-- <div class="container"> -->
+
+      <div ng-app="angularjs-starter" ng-controller="MainCtrl" style="background-color: transparent;">
+
+      <fieldset  data-ng-repeat="choice in choices" style="background-color: transparent; margin-bottom: 20px">
+      <!-- <div class="form-group col-md-3"> -->
+              <select class="selectpicker" data-show-subtext="true" data-live-search="true">
+                  @foreach(App\IngredientList::cursor() as $part)
+                    <option value="{{$part->id}}">{{$part->Shrt_Desc}}</option>
+                  @endforeach
+              </select>
+              
+       <div class="form-group col-md-3">
+
+      <input type="text" class="form-control" id="quantity" multiple name="quantity[]" placeholder="Quantity" ng-model="choice.name" required>
+      </div>
+      <div class="form-group col-md-3">
+       <select class="form-control" id="preparation" multiple name="preparation[]" id="preparation" name="preparation" style="width:100px;">
+          @foreach($preps as $prep)
+              <option value="{{ $prep->p_id }}">{{$prep->p_name}}</option> 
+          @endforeach
+          </select></div>
+      
+
+        <div class="form-group col-md-5">
+        <select  class="form-control" id="unit" multiple name="um[]">
+      @foreach($units as $unit)
+          <option value="{{$unit->um_id}}">{{$unit->um_name}}</option>
+      @endforeach
+      </select>
+      </div>
+        <div class="form-group col-md-1">
+      <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
+      </div>
+           <!-- </fieldset> -->
+           <button class="addfields remove" onclick="addChoice(); return false;" ng-click="addNewChoice()">+</button>    
+        </div>
+        </div>
+      </div>
+
+      <div class="col-xs-6 col-md-offset-3" style="margin-left:0px;width:50%">
+        <table id="part">
+            <tr>
+              <th style="width:150px">Ingredient Name</th>
+              <th style="width:150px">Quantity</th>
+              <th style="width:150px">Preparation</th>
+              <th style="width:150px">Unit of Measure</th>
+            </tr>
+           <!-- <div id="part"></div> -->
+        </table>
+        <br>
+
+        
+          <button class="btn btn-primary nextBtn btn-lg pull-right"  onClick="summary()" type="button" >Next</button>
+      </div>
+    </div>
+  
+    
+    <div class="row setup-content" id="step-3">
+      <div class="col-xs-6 col-md-offset-3">
+        <div class="col-md-12">
+          <h3> Step 3</h3>
+          <div>
+          <p>Dish Details</p>
+          <div id="summary">
+            
+          </div>
+          <p>Ingredient Details</p>
+
+        <button type="submit" class="btn btn-block btn-success submit"><i class="fa fa-plus"></i>Update Dish</button> 
+        </div>
+      </div>
+    </div>
+  </form>
+  @endforeach
+</div>
+
+
+
 
     </section>
     <!-- /.content -->
@@ -92,211 +235,185 @@
     reserved.
   </footer>
 
-  <!-- Control Sidebar -->
-  <aside class="control-sidebar control-sidebar-dark">
-    <!-- Create the tabs -->
-    <ul class="nav nav-tabs nav-justified control-sidebar-tabs">
-      <li><a href="#control-sidebar-home-tab" data-toggle="tab"><i class="fa fa-home"></i></a></li>
+@endsection
+@section('addtl_scripts')
+<!-- jQuery 3 -->
+<script src="{{asset('adminlte/bower_components/jquery/dist/jquery.min.js')}}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="{{asset('adminlte/bower_components/jquery-ui/jquery-ui.min.js')}}"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!-- Bootstrap 3.3.7 -->
+<script src="{{asset('adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+<!-- daterangepicker -->
+<script src="{{asset('adminlte/bower_components/moment/min/moment.min.js')}}"></script>
+<script src="{{asset('adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
+<!-- datepicker -->
+<script src="{{asset('adminlte/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
+<!-- Bootstrap WYSIHTML5 -->
+<script src="{{asset('adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}"></script>
+<!-- Slimscroll -->
+<script src="{{asset('adminlte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
+<!-- FastClick -->
+<script src="{{asset('adminlte/bower_components/fastclick/lib/fastclick.js')}}"></script>
+<!-- AdminLTE App -->
+<script src="{{asset('adminlte/dist/js/adminlte.min.js')}}"></script>
 
-      <li><a href="#control-sidebar-settings-tab" data-toggle="tab"><i class="fa fa-gears"></i></a></li>
-    </ul>
-    <!-- Tab panes -->
-    <div class="tab-content">
-      <!-- Home tab content -->
-      <div class="tab-pane" id="control-sidebar-home-tab">
-        <h3 class="control-sidebar-heading">Recent Activity</h3>
-        <ul class="control-sidebar-menu">
-          <li>
-            <a href="javascript:void(0)">
-              <i class="menu-icon fa fa-birthday-cake bg-red"></i>
+<script src="{{asset('js/durationpicker.js')}}"></script>
 
-              <div class="menu-info">
-                <h4 class="control-sidebar-subheading">Langdon's Birthday</h4>
 
-                <p>Will be 23 on April 24th</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">
-              <i class="menu-icon fa fa-user bg-yellow"></i>
-
-              <div class="menu-info">
-                <h4 class="control-sidebar-subheading">Frodo Updated His Profile</h4>
-
-                <p>New phone +1(800)555-1234</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">
-              <i class="menu-icon fa fa-envelope-o bg-light-blue"></i>
-
-              <div class="menu-info">
-                <h4 class="control-sidebar-subheading">Nora Joined Mailing List</h4>
-
-                <p>nora@example.com</p>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">
-              <i class="menu-icon fa fa-file-code-o bg-green"></i>
-
-              <div class="menu-info">
-                <h4 class="control-sidebar-subheading">Cron Job 254 Executed</h4>
-
-                <p>Execution time 5 seconds</p>
-              </div>
-            </a>
-          </li>
-        </ul>
-        <!-- /.control-sidebar-menu -->
-
-        <h3 class="control-sidebar-heading">Tasks Progress</h3>
-        <ul class="control-sidebar-menu">
-          <li>
-            <a href="javascript:void(0)">
-              <h4 class="control-sidebar-subheading">
-                Custom Template Design
-                <span class="label label-danger pull-right">70%</span>
-              </h4>
-
-              <div class="progress progress-xxs">
-                <div class="progress-bar progress-bar-danger" style="width: 70%"></div>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">
-              <h4 class="control-sidebar-subheading">
-                Update Resume
-                <span class="label label-success pull-right">95%</span>
-              </h4>
-
-              <div class="progress progress-xxs">
-                <div class="progress-bar progress-bar-success" style="width: 95%"></div>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">
-              <h4 class="control-sidebar-subheading">
-                Laravel Integration
-                <span class="label label-warning pull-right">50%</span>
-              </h4>
-
-              <div class="progress progress-xxs">
-                <div class="progress-bar progress-bar-warning" style="width: 50%"></div>
-              </div>
-            </a>
-          </li>
-          <li>
-            <a href="javascript:void(0)">
-              <h4 class="control-sidebar-subheading">
-                Back End Framework
-                <span class="label label-primary pull-right">68%</span>
-              </h4>
-
-              <div class="progress progress-xxs">
-                <div class="progress-bar progress-bar-primary" style="width: 68%"></div>
-              </div>
-            </a>
-          </li>
-        </ul>
-        <!-- /.control-sidebar-menu -->
-
-      </div>
-      <!-- /.tab-pane -->
-      <!-- Stats tab content -->
-      <div class="tab-pane" id="control-sidebar-stats-tab">Stats Tab Content</div>
-      <!-- /.tab-pane -->
-      <!-- Settings tab content -->
-      <div class="tab-pane" id="control-sidebar-settings-tab">
-        <form method="post">
-          <h3 class="control-sidebar-heading">General Settings</h3>
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              Report panel usage
-              <input type="checkbox" class="pull-right" checked>
-            </label>
-
-            <p>
-              Some information about this general settings option
-            </p>
-          </div>
-          <!-- /.form-group -->
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              Allow mail redirect
-              <input type="checkbox" class="pull-right" checked>
-            </label>
-
-            <p>
-              Other sets of options are available
-            </p>
-          </div>
-          <!-- /.form-group -->
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              Expose author name in posts
-              <input type="checkbox" class="pull-right" checked>
-            </label>
-
-            <p>
-              Allow the user to show his name in blog posts
-            </p>
-          </div>
-          <!-- /.form-group -->
-
-          <h3 class="control-sidebar-heading">Chat Settings</h3>
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              Show me as online
-              <input type="checkbox" class="pull-right" checked>
-            </label>
-          </div>
-          <!-- /.form-group -->
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              Turn off notifications
-              <input type="checkbox" class="pull-right">
-            </label>
-          </div>
-          <!-- /.form-group -->
-
-          <div class="form-group">
-            <label class="control-sidebar-subheading">
-              Delete chat history
-              <a href="javascript:void(0)" class="text-red pull-right"><i class="fa fa-trash-o"></i></a>
-            </label>
-          </div>
-          <!-- /.form-group -->
-        </form>
-      </div>
-      <!-- /.tab-pane -->
-    </div>
-  </aside>
-  <!-- /.control-sidebar -->
-  <!-- Add the sidebar's background. This div must be placed
-       immediately after the control sidebar -->
-  <div class="control-sidebar-bg"></div>
-</div>
-<!-- ./wrapper -->
-<script src="{{ asset('js/app.js') }}"></script>
 <script type="text/javascript">
-    $(document).ready(function(){
-        $(".add-dish").on('click', function(){
-          var url =  $(this).val();
-          alert(url);
-          // window.location= 
-        });
-    })
+    // Duration
+    $('#duration').durationPicker();
+    $('#button').on('click', function() {
+    var input= $('#duration').val();
+    alert(input);
+    });
+    
+    //Change image
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#img-tag').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    
+    $("#img").change(function(){
+        readURL(this);
+    });
+
+$(document).ready(function () {
+  
+    $('#cancel').on('click', function() {
+      window.location = '{{url("/cook/dishes")}}';
+    });
+// Wizard Step
+var navListItems = $('div.setup-panel div a'),
+        allWells = $('.setup-content'),
+        allNextBtn = $('.nextBtn');
+
+allWells.hide();
+
+    navListItems.click(function (e) {
+        e.preventDefault();
+        var $target = $($(this).attr('href')),
+                $item = $(this);
+
+        if (!$item.hasClass('disabled')) {
+            navListItems.removeClass('btn-primary').addClass('btn-default');
+            $item.addClass('btn-primary');
+            allWells.hide();
+            $target.show();
+            $target.find('input:eq(0)').focus();
+        }
+    });
+
+    allNextBtn.click(function(){
+        var curStep = $(this).closest(".setup-content"),
+            curStepBtn = curStep.attr("id"),
+            nextStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().next().children("a"),
+            curInputs = curStep.find("input[type='text'],input[type='url']"),
+            isValid = true;
+
+        $(".form-group").removeClass("has-error");
+        for(var i=0; i<curInputs.length; i++){
+            if (!curInputs[i].validity.valid){
+                isValid = false;
+                $(curInputs[i]).closest(".form-group").addClass("has-error");
+            }
+        }
+
+        if (isValid)
+            nextStepWizard.removeAttr('disabled').trigger('click');
+    });
+
+    $('div.setup-panel div a.btn-primary').trigger('click');
+    });
+
+
+    $("#search").keyup(function(){
+         var str=  $("#search").val();
+         if(str == "") {
+                 $( "#txtHint" ).html("<b>Ingredient name will be listed here...</b>"); 
+         }else {
+                 $.get( "{{ url('cook/adddish?id=') }}"+str, function( data ) {
+                     $( "#txtHint" ).html( data );  
+              });
+         }
+    });
+
+    function addChoice()
+    {
+        // var ingred = document.getElementById('ingredients').value;
+        var quan = document.getElementById('quantity').value;
+        // var prep = document.getElementById('preparation').value;
+        // var um = document.getElementById('um').value;
+
+        var ingred = $("#ingredients option:selected").map(function() {
+            return $(this).text();
+          }).get();
+
+        var prep = $("#preparation option:selected").map(function() {
+            return $(this).text();
+          }).get();
+        var um = $("#unit option:selected").map(function() {
+            return $(this).text();
+          }).get();
+
+        var div = document.getElementById("part");
+
+        div.innerHTML += 
+                        '<tr style="text-align:center">'+
+                        '<td>'+ingred+'</td>'+
+                        '<td>'+quan+'</td>'+
+                        '<td>'+prep+'</td>'+
+                        '<td>'+um+'</td>'+
+                        '</tr>';
+
+                        return false;
+    }
+
+    function summary(){
+
+          var name = document.getElementById("dish_name").value;
+          var serving = document.getElementById("serving").value;
+          var ptime = document.getElementById("ptime").value;
+          var pend = document.getElementById("pend").value;
+          var price = document.getElementById("price").value;
+          var desc = document.getElementById("dish_desc").value;
+          var best = $("#best option:selected").map(function() {
+            return $(this).text();
+          }).get();
+          var serveSize = document.getElementById("serveSize").value;
+          // var ingred = $('ingredients').val();
+          var ingred=[];
+          var ingred = $("#ingredients option:selected").map(function() {
+            return $(this).text();
+          }).get();
+          var quan = $('quantity').val();
+          var prep = $('preparation').val();
+          var um = $('um').value;
+
+          var div = document.getElementById('summary');
+          var div2 = document.getElementById('ingred-part');
+          // var i;
+            div.innerHTML += 'Name: '+name+'<br>'+
+                              'Serving: '+serving+'<br>'+
+                              'Preparation Time: '+ptime+'<br>'+
+                              'Preparation End: '+pend+'<br>'+
+                              'Price: '+price+'<br>'+
+                              'Description: '+desc+'<br>'+
+                              'Best Eaten: '+best+'<br>'+
+                              'Serving Size: '+serveSize+'<br>';
+
+    }
 </script>
 @endsection
+
 

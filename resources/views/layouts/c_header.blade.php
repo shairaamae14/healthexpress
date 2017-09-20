@@ -224,7 +224,7 @@
                 <img src="{{asset('adminlte/dist/img/user2-160x160.jpg')}}" class="img-circle" alt="User Image">
 
                 <p>
-                  {{ Auth::user()->first_name }}
+                  {{ Auth::user()->first_name." ".Auth::user()->last_name }}
                <!--    <small>Member since Nov. 2012</small> -->
                 </p>
               </li>

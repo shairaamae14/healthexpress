@@ -1,5 +1,4 @@
 @extends('cook-layouts.cook-master')
-
 <style>
 a:hover{
   color:black;
@@ -17,76 +16,67 @@ dt{
 @section('content')
 
 <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <section class="content-header">
-      <h1>
-        Dishes
-      </h1>
-      <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-        <li class="active">Dishes</li>
-      </ol>
-    </section>
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>Dishes</h1>
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+                    <li class="active">Dishes</li>
+                </ol>
+        </section>
 
-    <!-- Main content -->
-    <section class="content">
- <button type="button" class="btn btn-flat btn-success add-dish" value="./dishes/add" onclick="window.location.href='{{route('cook.dishes.add')}}'" style="margin-bottom:20px"><i class="fa fa-plus"></i> Add Dish</button>
+        <!-- Main content -->
+        <section class="content">
+            <button type="button" class="btn btn-flat btn-success add-dish" value="./dishes/add" onclick="window.location.href='{{route('cook.dishes.add')}}'" style="margin-bottom:20px"><i class="fa fa-plus"></i> Add Dish</button>
 
-    <!--    <div class="box box-solid"> -->
+        <div class="box box-solid"> 
             <div class="box-body">
-           @foreach($dishes as $dish)
-           
-                <div class="col-sm-3">
-                                 <div class="box box-solid" style="border-radius: 20px;">
-                        <div class="box-header with-border">
-                        
-                            <center><img src="{{url('./dish_imgs/'.$dish->dish_img)}}" style="width:150px; height:150px; border:2px solid #F0F0F0"></center>
+                @foreach($dishes as $dish)
+                    <div class="col-sm-3">
+                        <div class="box box-solid" style="border-radius: 20px;">
+                            <div class="box-header with-border">
+                                <center>
+                                <img src="{{url('./dish_imgs/'.$dish->dish_img)}}" style="width:150px; height:150px; border:2px solid #F0F0F0">
+                                </center>
+                            </div>
 
+                                <center>
+                                    <h4 class="openModal box-title" style="margin-top: 5px; font-size: 15px;"><a href="{{route('cook.dishes.show', ['id' => $dish->did])}}" style="color:#30BB6D">{{$dish['dish_name']}}</a></h4><br>
+                                </center>
+                                    <br>
+                          <center><small>
+                          <i class="fa fa-star" id="rate"></i>
+                          <i class="fa fa-star" id="rate"></i>
+                          <i class="fa fa-star" id="rate"></i>
+                          <i class="fa fa-star-o" id="rate"></i>
+                          <i class="fa fa-star-o" id="rate"></i>
+                          </small><br>
+                          <a href="{{route('cook.rating')}}"><p style="font-size: 12px; color:#30BB6D;">See Reviews</p></a>
+
+                            <a class="btn btn-success" href="{{route('cook.dishes.show', ['id' => $dish->did])}}">View Details</a>
+
+                          </center>
+                           <br>
                         </div>
-
-                        <center><h4 class="openModal box-title" style="margin-top: 5px; font-size: 15px;"><a href="{{route('cook.dishes.det', ['id' => $dish->did])}}" style="color:#30BB6D">{{$dish['dish_name']}}</a><br>
-                        <br>
-                      <center><small>
-                      <i class="fa fa-star" id="rate"></i>
-                      <i class="fa fa-star" id="rate"></i>
-                      <i class="fa fa-star" id="rate"></i>
-                      <i class="fa fa-star-o" id="rate"></i>
-                      <i class="fa fa-star-o" id="rate"></i>
-                      </small><br>
-                      <a href="{{route('cook.rating')}}"><p style="font-size: 12px; color:#30BB6D; background-color:#E3E3E3">See Reviews</p></a>
-                      <!--  <button class="btn btn-success viewDetails" id="viewDetails" value="{{$dish->did}}">View Details</button> -->
-
-                          <a class="btn btn-success" href="{{route('cook.dishes.det', ['id' => $dish->did])}}">View Details</a>
-
-                      </center>
-                       <br>
-                  
-                   
-
-
-                        <!-- <center><i class="fa fa-angle-right"></i></center> -->
                     </div>
-                </a>
-                </div>
             @endforeach
-
+            </div>
+        </div>
       <!-- Default box -->
-   
-    
-      </section>
+        </section>
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
 
 
-  <footer class="main-footer">
-    <div class="pull-right hidden-xs">
-      <b>Version</b> 2.4.0
-    </div>
-    <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
-    reserved.
-  </footer>
+    <footer class="main-footer">
+      <div class="pull-right hidden-xs">
+        <b>Version</b> 2.4.0
+      </div>
+      <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
+      reserved.
+    </footer>
 
 @endsection
 @section('addtl_scripts')
@@ -128,33 +118,14 @@ dt{
 
 <script type="text/javascript">
     
-       $(".delete").on('click', function(){
-        var id =  $(this).val();
-         window.location= './dishes/'+id+'/delete';
-        });
-
-
-       // $(".view").on('click', function(){
-       //  var id =  $(this).val();
-       //   $('#modal').modal('show');
-       //  });
-
-
-function viewdetails(){
-  var id = document.getElementById('viewDetails').value;
-  alert("hey");
-}
-function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            
-            reader.onload = function (e) {
-                $('#img-tag').attr('src', e.target.result);
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-    $("#img").change(function(){
-        readURL(this);
+    $(".delete").on('click', function(){
+     var id =  $(this).val();
+      window.location= './dishes/'+id+'/delete';
     });
+
+    function viewdetails(){
+      var id = document.getElementById('viewDetails').value;
+      alert("hey");
+    }
+</script>
 @endsection

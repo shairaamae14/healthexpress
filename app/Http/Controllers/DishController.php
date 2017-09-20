@@ -41,14 +41,6 @@ class DishController extends Controller
                                         ->where('dish_id', $dish->did)->get();
         }               
         
-      
-        //dd($dish_details);
-//        foreach($category as $cat) {
-//            $dcategories = DishCategories::where('id',$cat)->get();
-//            
-//        }
-     
-//        dd($dcategories);
         
       return view('cook.dishes', compact('dishes', 'dbestEaten'));
     
@@ -103,8 +95,7 @@ class DishController extends Controller
             'sellingPrice' => $sPrice,
             'dish_desc' => $request['dish_desc'],   
             'dish_img' => $image,
-            'preparation_time' => $request['ptime'],
-            'serving_size' => $request['serveSize'],
+            'preparation_time' => $request['duration'],
             'no_of_servings' => $request['serving'],
             'status' => 1
             ]);
@@ -154,9 +145,8 @@ class DishController extends Controller
      */
     public function show($id)
     {
-        $dish = Dish::findOrFail($id);
-        
-        return view('cook.viewdish', compact('dish'));
+        $dishes = Dish::where('did', $id)->get();
+        return view('cook.viewdet', compact('dishes'));
     }
 
     /**
@@ -167,8 +157,11 @@ class DishController extends Controller
      */
     public function edit($id)
     {
-        $dish = Dish::find($id);
-        return view('cook.editdish',compact('dish'));
+        $dishes = Dish::where('did',$id)->get();
+        $list = IngredientList::all();
+        $units = UnitMeasurement::all();
+        $preps = Preparation::all();
+        return view('cook.editdish',compact('dishes', 'list', 'units', 'preps'));
     }
 
     /**
@@ -208,8 +201,7 @@ class DishController extends Controller
                                  'sellingPrice' => $sPrice,
                                  'dish_desc' => $request->dish_desc,
                                  'dish_img' =>  $img,
-                                 'preparation_time' => $request->ptime,
-                                 'serving_size' => $request->ssize,
+                                 'preparation_time' => $request->duration,
                                  'no_of_servings' => $request->serving]);
      
         for($i= 0; $i < count($request['best']) ; $i++) {
@@ -228,8 +220,11 @@ class DishController extends Controller
      */
     public function destroy($id)
     {
-        $dish = Dish::findOrFail($id);
-        $dish->delete();
+//        $dish = Dish::where('did', $id)->get();
+//        $dish->update('status' => 0);        
+//        $dish->delete();
+        $dish = Dish::where('did', $id)->delete();
+
 
         return redirect()->route('cook.dishes');
     }
@@ -255,12 +250,6 @@ class DishController extends Controller
 
    public function viewrating(){
     return view('cook.reviews');
-   }
-
-   public function viewdet($id){
-    
-       $dishes = Dish::where('did', $id)->get();
-        return view('cook.viewdet', compact('dishes'));
    }
 
 }
