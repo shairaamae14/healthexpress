@@ -22,8 +22,7 @@ class CreateDishesTable extends Migration
             $table->decimal('sellingPrice', 10,2);
             $table->text('dish_desc');
             $table->text('dish_img');
-            $table->time('preparation_time');
-            $table->integer('serving_size');
+            $table->string('preparation_time');
             $table->integer('no_of_servings');
             $table->integer('status');
             $table->softDeletes();
@@ -31,7 +30,7 @@ class CreateDishesTable extends Migration
         });
         
         Schema::table('dishes', function (Blueprint $table) {
-           $table->foreign('authorCook_id')->references('id')->on('cooks');
+           $table->foreign('authorCook_id')->references('id')->on('cooks')->onDelete('cascade');
         });
     }
 

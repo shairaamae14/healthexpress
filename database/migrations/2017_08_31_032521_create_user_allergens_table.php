@@ -25,8 +25,8 @@ class CreateUserAllergensTable extends Migration
         });
         
         Schema::table('user_allergens', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('allergen_id')->references('allergen_id')->on('allergens');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('allergen_id')->references('allergen_id')->on('allergens')->onDelete('cascade');
         });
     }
 

@@ -24,7 +24,7 @@ class CreateCookContactsTable extends Migration
             $table->timestamps();
         });
         Schema::table('cook_contacts', function (Blueprint $table) {
-            $table->foreign('cook_id')->references('id')->on('cooks');
+            $table->foreign('cook_id')->references('id')->on('cooks')->onDelete('cascade');
         });
     }
 

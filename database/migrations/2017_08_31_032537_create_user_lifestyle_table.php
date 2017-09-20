@@ -24,8 +24,8 @@ class CreateUserLifestyleTable extends Migration
         });
         
         Schema::table('user_lifestyle', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('lifestyle_id')->references('lifestyle_id')->on('lifestyles');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('lifestyle_id')->references('lifestyle_id')->on('lifestyles')->onDelete('cascade');
         });
     }
 

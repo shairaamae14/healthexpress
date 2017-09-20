@@ -8,7 +8,7 @@ class Dish extends Model
 {
     protected $table= 'dishes';
     protected $fillable = ['authorCook_id','dish_name','basePrice', 'sellingPrice', 'dish_desc', 'dish_img',
-        'preparation_time', 'serving_size', 'no_of_servings', 'status'];
+        'preparation_time','no_of_servings', 'status'];
     protected $dates = ['deleted_at'];
     
     public function cook() {

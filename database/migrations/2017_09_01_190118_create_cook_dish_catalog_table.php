@@ -25,8 +25,8 @@ class CreateCookDishCatalogTable extends Migration
         });
         
         Schema::table('cook_dishcatalog', function (Blueprint $table) {
-           $table->foreign('cook_id')->references('id')->on('cooks');
-           $table->foreign('dish_id')->references('did')->on('dishes');
+           $table->foreign('cook_id')->references('id')->on('cooks')->onDelete('cascade');
+           $table->foreign('dish_id')->references('did')->on('dishes')->onDelete('cascade');
         });
     }
 

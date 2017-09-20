@@ -17,11 +17,7 @@
   <link rel="stylesheet" href="{{asset('adminlte/dist/css/AdminLTE.min.css')}}">
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
-  <link rel="stylesheet" href="{{asset('adminlte/dist/css/skins/_all-skins.min.css')}}">
-  <!-- Morris chart -->
-  <link rel="stylesheet" href="{{asset('adminlte/bower_components/morris.js/morris.css')}}">
-  <!-- jvectormap -->
-  <link rel="stylesheet" href="{{asset('adminlte/bower_components/jvectormap/jquery-jvectormap.css')}}">
+  <link rel="stylesheet" href="{{asset('adminlte/dist/css/skins/skin-green-light.min.css')}}">
   <!-- Date Picker -->
   <link rel="stylesheet" href="{{asset('adminlte/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css')}}">
   <!-- Daterange picker -->
@@ -29,9 +25,6 @@
   <!-- bootstrap wysihtml5 - text editor -->
   <link rel="stylesheet" href="{{asset('adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')}}">
 
-  <link rel="stylesheet" href="{{asset('css/wizard.css')}}">
-
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -41,64 +34,50 @@
 
   <!-- Google Font -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.min.css">
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.5.1/chosen.jquery.min.js"></script>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js">
-  </script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
 
-<script src="https://api.data.gov/nrel/alt-fuel-stations/v1/nearest.json?api_key=rxdzWPm1ebJJDlpUfpmC7B9bQtRSWA8AJ3OQrnox&location=Denver+CO"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
 
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/js/bootstrap-select.min.js"></script>
 
-  <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" rel="stylesheet">
-
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css" />
+  <link rel="stylesheet" href="{{asset('css/wizard.css')}}">
   
-  <script type="text/javascript">
-      $(".livesearch").chosen();
-</script>
-    <!-- <link rel="stylesheet" type="text/css" href="css/style.css"> -->
 <style>
-  h1{
-    color:#30BB6D;
-  }
+    h1{
+      color:#30BB6D;
+    }
 
-  </style>
+</style>
 <script type="text/javascript">
-
+    
     function changeImage1() {
-document.getElementById('pickup').src="{{asset('/img/take-away.svg')}}";  
-document.getElementById('cooking').src="{{asset('img/cooking.svg')}}";
-}
+        document.getElementById('pickup').src="{{asset('/img/take-away.svg')}}";  
+        document.getElementById('cooking').src="{{asset('img/cooking.svg')}}";
+    }
 
     function changeImage2() {
+        document.getElementById('cooking').src="{{asset('/img/readycook.svg')}}";
+        document.getElementById('pickup').src="{{asset('img/tk.svg')}}";
+    }
 
- document.getElementById('cooking').src="{{asset('/img/readycook.svg')}}";
- document.getElementById('pickup').src="{{asset('img/tk.svg')}}";
-}
+    function btnCook(){
+        document.getElementById('header').style.backgroundColor="#DC3131";
+        document.getElementById('stats').innerText="Cooking";
+    }
 
-function btnCook(){
-document.getElementById('header').style.backgroundColor="#DC3131";
-document.getElementById('stats').innerText="Cooking";
-}
+    function btnDel(){
+        document.getElementById('header').style.backgroundColor="#31A0DC";
+        document.getElementById('stats').innerText="Delivering";
+    }
 
-
-function btnDel(){
-  document.getElementById('header').style.backgroundColor="#31A0DC";
-  document.getElementById('stats').innerText="Delivering";
-}
-
-function btnDone(){
-  document.getElementById('header').style.backgroundColor="#30BB6D";
-  document.getElementById('stats').innerText="Order Done";
-}
+    function btnDone(){
+        document.getElementById('header').style.backgroundColor="#30BB6D";
+        document.getElementById('stats').innerText="Order Done";
+    }
 
 /* ------------------------------------------------------- 
 
@@ -109,54 +88,35 @@ function btnDone(){
 
 ---------------------------------------------------------*/
 
-var app = angular.module('shanidkvApp', []);
+    var app = angular.module('shanidkvApp', []);
 
-  app.controller('MainCtrl', function($scope) {
+    app.controller('MainCtrl', function($scope) {
 
-  $scope.choices = [{id: 'choice1'}];
-  
-  $scope.addNewChoice = function() {
-    var newItemNo = $scope.choices.length+1;
-    $scope.choices.push({'id':'choice'+newItemNo});
-  };
-    
-  $scope.removeChoice = function() {
-    var lastItem = $scope.choices.length-1;
-    $scope.choices.splice(lastItem);
-  };
+    $scope.choices = [{id: 'choice1'}];
+
+    $scope.addNewChoice = function() {
+        var newItemNo = $scope.choices.length+1;
+        $scope.choices.push({'id':'choice'+newItemNo});
+    };
+
+    $scope.removeChoice = function() {
+        var lastItem = $scope.choices.length-1;
+        $scope.choices.splice(lastItem);
+    };
   
 });
-
-
-
-
-
-
-
 </script>
-
 
 </head>
 <body class="sidebar-mini skin-green-light fixed sidebar-collapse">
 <div class="wrapper">
 
-
   @include('layouts.c_header')
   @include('layouts.sidebar')
   @yield('content')
 
-  @include('layouts.c_footer')
 </div>
 <!-- ./wrapper -->  
-
-
-
-
-
+  @yield('addtl_scripts')
 </body>
-
-
-
-
-
 </html>

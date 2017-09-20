@@ -12,7 +12,7 @@ a:hover{
 
 </style>
 @section('content')
-
+<meta name ="csrf-token" content = "{{csrf_token() }}"/>
 <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -28,14 +28,64 @@ a:hover{
 
     <!-- Main content -->
     <section class="content">
-      
-        <div class="row">
+       <div class="row">
+        <div class="col-xs-6 col-md-offset-3">
+          <!-- Custom Tabs -->
+          @foreach($dishes as $dish)
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#tab_1" data-toggle="tab">Dish Details</a></li>
+              <li><a href="#tab_2" data-toggle="tab">Ingredients</a></li>
+              <li><a href="#tab_3" data-toggle="tab">Nutritional Facts</a></li>
+              <li class="pull-right"> <button class="btn btn-box-tool delete" data-toggle="tooltip" title="Remove" value="{{$dish->did}}"><i class="fa fa-times"></i></button></li>
+              <li class="pull-right"><button class="btn btn-box-tool edit" data-toggle="tooltip" title="Edit" value="{{$dish->did}}"><i class="fa fa-edit"></i></button></li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active text-align" id="tab_1">
+                   
+                        <center>
+                        <img src="{{url('./dish_imgs/'.$dish->dish_img)}}" style="width:200px; height:200px; border:2px solid #F0F0F0; border-radius: 10px;"></img></center> <br>
+                        <center>
+                        <h3 style="color:#30BB6D"> {{$dish->dish_name}} </h3>
+                        <h5>{{$dish->dish_desc}}</h5>
+                        </center>
+
+                        <dl class="dl-horizontal">
+                            <dt>Price:</dt>
+                            <dd>&nbsp;Php {{$dish->basePrice}}</dd>
+                            <dt>Preparation time:</dt>
+                            <dd>&nbsp;{{$dish->preparation_time}}</dd>
+                            <dt>No. of Serving:</dt>
+                            <dd>&nbsp;{{$dish->no_of_servings}} serving(s)</dd>
+                            <dt>Best Eaten:</dt>
+                            <dd>&nbsp;Lunch</dd>
+                        </dl>
+              
+              </div>
+              <!-- /.tab-pane -->
+              <div class="tab-pane" id="tab_2">
+                
+              </div>
+              <!-- /.tab-pane -->
+              <div class="tab-pane" id="tab_3">
+                Nutritional Facts goes here
+              </div>
+              <!-- /.tab-pane -->
+            </div>
+            <!-- /.tab-content -->
+          </div>
+          @endforeach
+          <!-- nav-tabs-custom -->
+        </div>
+        <!-- /.col -->
+    </div>    
+<!--        <div class="row">
         <div class="col-md-6">
           <div class="box box-default" style="border-top: none">
             <div class="box-header with-border" style="border-top: none">
              
             </div>
-            <!-- /.box-header -->
+             /.box-header 
             <div class="box-body">
              @foreach($dishes as $dish)
               <div class="alert  alert-dismissible" style="float:left; width:50%">
@@ -69,51 +119,14 @@ a:hover{
               </div>
               @endforeach
             </div>
-            <!-- /.box-body -->
+             /.box-body 
           </div>
-          <!-- /.box -->
+           /.box 
         </div>
-        <!-- /.col -->
-
-        <div class="col-md-6">
-          <div class="box box-default">
-            <div class="box-header with-border">
-              <i class="fa fa-bullhorn"></i>
-
-              <h3 class="box-title">Callouts</h3>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body">
-              <div class="callout callout-danger">
-                <h4>I am a danger callout!</h4>
-
-                <p>There is a problem that we need to fix. A wonderful serenity has taken possession of my entire soul,
-                  like these sweet mornings of spring which I enjoy with my whole heart.</p>
-              </div>
-              <div class="callout callout-info">
-                <h4>I am an info callout!</h4>
-
-                <p>Follow the steps to continue to payment.</p>
-              </div>
-              <div class="callout callout-warning">
-                <h4>I am a warning callout!</h4>
-
-                <p>This is a yellow callout.</p>
-              </div>
-              <div class="callout callout-success">
-                <h4>I am a success callout!</h4>
-
-                <p>This is a green callout.</p>
-              </div>
-            </div>
-            <!-- /.box-body -->
-          </div>
-          <!-- /.box -->
-        </div>
-        <!-- /.col -->
+         /.col 
       </div>
-      <!-- /.row -->
-      <!-- END ALERTS AND CALLOUTS -->
+       /.row -->
+   
 
 
     
@@ -142,64 +155,44 @@ a:hover{
 </script>
 <!-- Bootstrap 3.3.7 -->
 <script src="{{asset('adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
-<!-- Morris.js charts -->
-<script src="{{asset('adminlte/bower_components/raphael/raphael.min.js')}}"></script>
-<script src="{{asset('adminlte/bower_components/morris.js/morris.min.js')}}"></script>
 <!-- Sparkline -->
 <script src="{{asset('adminlte/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js')}}"></script>
-<!-- jvectormap -->
-<script src="{{asset('adminlte/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js')}}"></script>
-<script src="{{asset('adminlte/plugins/jvectormap/jquery-jvectormap-world-mill-en.js')}}"></script>
-<!-- jQuery Knob Chart -->
-<script src="{{asset('adminlte/bower_components/jquery-knob/dist/jquery.knob.min.js')}}"></script>
-<!-- daterangepicker -->
-<script src="{{asset('adminlte/bower_components/moment/min/moment.min.js')}}"></script>
-<script src="{{asset('adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
-<!-- datepicker -->
-<script src="{{asset('adminlte/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
-<!-- Bootstrap WYSIHTML5 -->
-<script src="{{asset('adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}"></script>
 <!-- Slimscroll -->
 <script src="{{asset('adminlte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
 <!-- FastClick -->
 <script src="{{asset('adminlte/bower_components/fastclick/lib/fastclick.js')}}"></script>
 <!-- AdminLTE App -->
 <script src="{{asset('adminlte/dist/js/adminlte.min.js')}}"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="{{asset('adminlte/dist/js/pages/dashboard.js')}}"></script>
-<!-- AdminLTE for demo purposes -->
-<script src="{{asset('adminlte/dist/js/demo.js')}}"></script>
 
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
- <script src="{{asset('wizard/assets/js/jquery-1.11.1.min.js')}}"></script>
 <script type="text/javascript">
     
-       $(".delete").on('click', function(){
-        var id =  $(this).val();
-         window.location= './dishes/'+id+'/delete';
-        });
-
-
-       // $(".view").on('click', function(){
-       //  var id =  $(this).val();
-       //   $('#modal').modal('show');
-       //  });
+$(document).ready(function() {
+    $('.edit').on('click', function() {
+    var id = $(this).val();
+    window.location = '../dishes/edit/'+id;
     });
-
-function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            
-            reader.onload = function (e) {
-                $('#img-tag').attr('src', e.target.result);
-            }
-            reader.readAsDataURL(input.files[0]);
+    
+    $(".delete").on('click', function(){
+    
+        if(confirm("Are you sure you want to delete this dish?")) {
+            var id =  $(this).val();
+            var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+                $.ajax({
+                    url: './delete/'+id,
+                    method: 'POST',
+                    data: {
+                        '_token': CSRF_TOKEN
+                        },
+                    success: function() {
+                     window.location = './cook/dishes';   
+                    },
+                    error: function() {
+                        console.log('an error occured');
+                    }
+                });
         }
-    }
-    $("#img").change(function(){
-        readURL(this);
-    });
-
+     });
+});
 
 
 </script>

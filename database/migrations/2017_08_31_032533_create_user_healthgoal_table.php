@@ -25,8 +25,8 @@ class CreateUserHealthgoalTable extends Migration
         });
         
         Schema::table('user_healthgoals', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users');
-            $table->foreign('hg_id')->references('hg_id')->on('health_goals');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('hg_id')->references('hg_id')->on('health_goals')->onDelete('cascade');
         });
     }
 

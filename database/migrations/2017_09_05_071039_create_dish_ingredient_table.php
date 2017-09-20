@@ -18,6 +18,7 @@ class CreateDishIngredientTable extends Migration
             $table->increments('ding_id');
             $table->integer('um_id')->unsigned();
             $table->integer('dish_id')->unsigned();
+            $table->integer('ing_id')->unsigned();
             $table->integer('quantity');
             $table->string('preparation');
             $table->integer('status');
@@ -25,8 +26,9 @@ class CreateDishIngredientTable extends Migration
             $table->timestamps();
         });
         Schema::table('dish_ingredients', function (Blueprint $table) {
-           $table->foreign('um_id')->references('um_id')->on('unit_measurement');
-           $table->foreign('dish_id')->references('did')->on('dishes');
+           $table->foreign('um_id')->references('um_id')->on('unit_measurements')->onDelete('cascade');
+           $table->foreign('dish_id')->references('did')->on('dishes')->onDelete('cascade');
+           $table->foreign('ing_id')->references('id')->on('ingredient_list')->onDelete('cascade');
         });
     }
 

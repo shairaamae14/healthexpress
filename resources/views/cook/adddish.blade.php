@@ -16,9 +16,32 @@ fieldset{
     display: inline-block;
     padding: 4px 9px;
     vertical-align: top;
-    line-height: 100%;   
+    line-height: 100%;
+}   
+.durationpicker-container {
+    background-color: white;
+    border: 1px solid darkgrey;
+    display: inline-block;
+    width: auto;
 }
 
+.durationpicker-innercontainer {
+    display: inline-block;
+    width: auto;
+    padding-right: 5px;
+}
+
+.durationpicker-duration {
+    width: 50px;
+    display: inline-block;
+    border: none;
+    padding-left: 10%;
+    text-align: right;
+}
+
+.durationpicker-label {
+    display: inline-block;
+}
 </style>
 
 
@@ -74,12 +97,8 @@ fieldset{
                 <input type="number" class="form-control" id="serving" name="serving" placeholder="No. of serving(s)" min="1" required>
             </div>
               <div class="form-group col-md-3">
-              <label>Preparation Time:(Start)</label> 
-                <input type="time" class="form-control" id="ptime" name="ptime" placeholder="Lead time">
-            </div>
-          <div class="form-group col-md-3">
-              <label>Preparation Time:(End)</label>
-                <input type="time" class="form-control" id="pend" name="pend" placeholder="Lead time">
+              <label>Preparation Time:</label> 
+                <input type="text" id="duration" name="duration">
             </div>
  
             <div class="form-group col-md-4">
@@ -90,24 +109,14 @@ fieldset{
               <label>Description:</label>
                 <textarea class="form-control" rows="3" id="dish_desc" name="dish_desc" placeholder="Description" required></textarea>                
             </div>
-                
-             
-
 
            <div class="form-group col-md-8">
               <label>Best Eaten during:</label><br>
-              <select multiple class="form-control" id="best" name="best[]">
                   @foreach($beaten as $be)
-                  <option value="{{$be->be_id}}">{{$be->name}}</option>
+                  <input type="checkbox" class="flat-red" value="{{$be->be_id}}" name="best[]">{{$be->name}}</option>
                   @endforeach
-              </select>
-               
-            </div>
-          <div class="form-group col-md-4">
-              <label>Serving Size:</label>
-                <input type="number" class="form-control" id="serveSize" name="serveSize" placeholder="Serving Size" min="1" required>
-            </div>
 
+            </div>
             <div class="form-group col-md-5">
               <label for="exampleInputFile">Dish Image</label>
                 <input type="file" id="img" name="img">
@@ -225,176 +234,187 @@ fieldset{
     reserved.
   </footer>
 
-<script src="{{ asset('js/app.js') }}"></script>
+@endsection
+@section('addtl_scripts')
+<!-- jQuery 3 -->
+<script src="{{asset('adminlte/bower_components/jquery/dist/jquery.min.js')}}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="{{asset('adminlte/bower_components/jquery-ui/jquery-ui.min.js')}}"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!-- Bootstrap 3.3.7 -->
+<script src="{{asset('adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+<!-- Sparkline -->
+<script src="{{asset('adminlte/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js')}}"></script>
+<!-- daterangepicker -->
+<script src="{{asset('adminlte/bower_components/moment/min/moment.min.js')}}"></script>
+<script src="{{asset('adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
+<!-- datepicker -->
+<script src="{{asset('adminlte/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
+<!-- Bootstrap WYSIHTML5 -->
+<script src="{{asset('adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}"></script>
+<!-- Slimscroll -->
+<script src="{{asset('adminlte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
+<!-- FastClick -->
+<script src="{{asset('adminlte/bower_components/fastclick/lib/fastclick.js')}}"></script>
+<!-- AdminLTE App -->
+<script src="{{asset('adminlte/dist/js/adminlte.min.js')}}"></script>
 
-<!-- <script>
-$(document).ready(function(){
-  document.getElementById('quan').style.display="none";
-})
+<script src="{{asset('js/durationpicker.js')}}"></script>
 
-</script> -->
 
 <script type="text/javascript">
-    // $(document).ready(function(){
-    //     $(".add-dish").on('click', function(){
-    //       var url =  $(this).val();
-    //       alert(url);
-    //       // window.location= 
-    //     });
-    // })
-//FOR WIZARD
-function readURL(input) {
+    // Duration
+    $('#duration').durationPicker();
+    $('#button').on('click', function() {
+    var input= $('#duration').val();
+    alert(input);
+    });
+    
+    //Change image
+    function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
-            
+
             reader.onload = function (e) {
                 $('#img-tag').attr('src', e.target.result);
             }
             reader.readAsDataURL(input.files[0]);
         }
     }
+    
     $("#img").change(function(){
         readURL(this);
     });
 
 $(document).ready(function () {
   
-
     $('#cancel').on('click', function() {
       window.location = '{{url("/cook/dishes")}}';
     });
+// Wizard Step
+var navListItems = $('div.setup-panel div a'),
+        allWells = $('.setup-content'),
+        allNextBtn = $('.nextBtn');
 
-  var navListItems = $('div.setup-panel div a'),
-          allWells = $('.setup-content'),
-          allNextBtn = $('.nextBtn');
+allWells.hide();
 
-  allWells.hide();
+    navListItems.click(function (e) {
+        e.preventDefault();
+        var $target = $($(this).attr('href')),
+                $item = $(this);
 
-  navListItems.click(function (e) {
-      e.preventDefault();
-      var $target = $($(this).attr('href')),
-              $item = $(this);
+        if (!$item.hasClass('disabled')) {
+            navListItems.removeClass('btn-primary').addClass('btn-default');
+            $item.addClass('btn-primary');
+            allWells.hide();
+            $target.show();
+            $target.find('input:eq(0)').focus();
+        }
+    });
 
-      if (!$item.hasClass('disabled')) {
-          navListItems.removeClass('btn-primary').addClass('btn-default');
-          $item.addClass('btn-primary');
-          allWells.hide();
-          $target.show();
-          $target.find('input:eq(0)').focus();
-      }
-  });
+    allNextBtn.click(function(){
+        var curStep = $(this).closest(".setup-content"),
+            curStepBtn = curStep.attr("id"),
+            nextStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().next().children("a"),
+            curInputs = curStep.find("input[type='text'],input[type='url']"),
+            isValid = true;
 
-  allNextBtn.click(function(){
-      var curStep = $(this).closest(".setup-content"),
-          curStepBtn = curStep.attr("id"),
-          nextStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().next().children("a"),
-          curInputs = curStep.find("input[type='text'],input[type='url']"),
-          isValid = true;
+        $(".form-group").removeClass("has-error");
+        for(var i=0; i<curInputs.length; i++){
+            if (!curInputs[i].validity.valid){
+                isValid = false;
+                $(curInputs[i]).closest(".form-group").addClass("has-error");
+            }
+        }
 
-      $(".form-group").removeClass("has-error");
-      for(var i=0; i<curInputs.length; i++){
-          if (!curInputs[i].validity.valid){
-              isValid = false;
-              $(curInputs[i]).closest(".form-group").addClass("has-error");
-          }
-      }
+        if (isValid)
+            nextStepWizard.removeAttr('disabled').trigger('click');
+    });
 
-      if (isValid)
-          nextStepWizard.removeAttr('disabled').trigger('click');
-  });
-
-  $('div.setup-panel div a.btn-primary').trigger('click');
-});
-
-
-   // $("#search").keyup(function(){
-   //     var str=  $("#search").val();
-   //     if(str == "") {
-   //             $( "#txtHint" ).html("<b>Ingredient name will be listed here...</b>"); 
-   //     }else {
-   //             $.get( "{{ url('cook/adddish?id=') }}"+str, function( data ) {
-   //                 $( "#txtHint" ).html( data );  
-   //          });
-   //     }
-   // }); 
-
-   // $("#search").change(function(){
-   //    alert("change");
-   // });
-
-function addChoice()
-{
-    // var ingred = document.getElementById('ingredients').value;
-    var quan = document.getElementById('quantity').value;
-    // var prep = document.getElementById('preparation').value;
-    // var um = document.getElementById('um').value;
-
-    var ingred = $("#ingredients option:selected").map(function() {
-        return $(this).text();
-      }).get();
-
-    var prep = $("#preparation option:selected").map(function() {
-        return $(this).text();
-      }).get();
-    var um = $("#unit option:selected").map(function() {
-        return $(this).text();
-      }).get();
-    
-    var div = document.getElementById("part");
-
-    div.innerHTML += 
-                      '<tr style="text-align:center">'+
-                          '<td>'+ingred+'</td>'+
-                          '<td>'+quan+'</td>'+
-                          '<td>'+prep+'</td>'+
-                          '<td>'+um+'</td>'+
-                      '</tr>';
-
-                      return false;
-}
-
-function summary(){
-
-      var name = document.getElementById("dish_name").value;
-      var serving = document.getElementById("serving").value;
-      var ptime = document.getElementById("ptime").value;
-      var pend = document.getElementById("pend").value;
-      var price = document.getElementById("price").value;
-      var desc = document.getElementById("dish_desc").value;
-      var best = $("#best option:selected").map(function() {
-        return $(this).text();
-      }).get();
-      var serveSize = document.getElementById("serveSize").value;
-      // var ingred = $('ingredients').val();
-      var ingred=[];
-      var ingred = $("#ingredients option:selected").map(function() {
-        return $(this).text();
-      }).get();
-      var quan = $('quantity').val();
-      var prep = $('preparation').val();
-      var um = $('um').value;
-
-      var div = document.getElementById('summary');
-      var div2 = document.getElementById('ingred-part');
-      // var i;
-        div.innerHTML += 'Name: '+name+'<br>'+
-                          'Serving: '+serving+'<br>'+
-                          'Preparation Time: '+ptime+'<br>'+
-                          'Preparation End: '+pend+'<br>'+
-                          'Price: '+price+'<br>'+
-                          'Description: '+desc+'<br>'+
-                          'Best Eaten: '+best+'<br>'+
-                          'Serving Size: '+serveSize+'<br>';
-      
-} 
+    $('div.setup-panel div a.btn-primary').trigger('click');
+    });
 
 
+    $("#search").keyup(function(){
+         var str=  $("#search").val();
+         if(str == "") {
+                 $( "#txtHint" ).html("<b>Ingredient name will be listed here...</b>"); 
+         }else {
+                 $.get( "{{ url('cook/adddish?id=') }}"+str, function( data ) {
+                     $( "#txtHint" ).html( data );  
+              });
+         }
+    });
 
+    function addChoice()
+    {
+        // var ingred = document.getElementById('ingredients').value;
+        var quan = document.getElementById('quantity').value;
+        // var prep = document.getElementById('preparation').value;
+        // var um = document.getElementById('um').value;
 
+        var ingred = $("#ingredients option:selected").map(function() {
+            return $(this).text();
+          }).get();
+
+        var prep = $("#preparation option:selected").map(function() {
+            return $(this).text();
+          }).get();
+        var um = $("#unit option:selected").map(function() {
+            return $(this).text();
+          }).get();
+
+        var div = document.getElementById("part");
+
+        div.innerHTML += 
+                        '<tr style="text-align:center">'+
+                        '<td>'+ingred+'</td>'+
+                        '<td>'+quan+'</td>'+
+                        '<td>'+prep+'</td>'+
+                        '<td>'+um+'</td>'+
+                        '</tr>';
+
+                        return false;
+    }
+
+    function summary(){
+
+          var name = document.getElementById("dish_name").value;
+          var serving = document.getElementById("serving").value;
+          var ptime = document.getElementById("duration").value;
+          var pend = document.getElementById("pend").value;
+          var price = document.getElementById("price").value;
+          var desc = document.getElementById("dish_desc").value;
+          var best = $("#best option:selected").map(function() {
+            return $(this).text();
+          }).get();
+          var serveSize = document.getElementById("serveSize").value;
+          // var ingred = $('ingredients').val();
+          var ingred=[];
+          var ingred = $("#ingredients option:selected").map(function() {
+            return $(this).text();
+          }).get();
+          var quan = $('quantity').val();
+          var prep = $('preparation').val();
+          var um = $('um').value;
+
+          var div = document.getElementById('summary');
+          var div2 = document.getElementById('ingred-part');
+          // var i;
+            div.innerHTML += 'Name: '+name+'<br>'+
+                              'Serving: '+serving+'<br>'+
+                              'Preparation Time: '+ptime+'<br>'+
+                              'Preparation End: '+pend+'<br>'+
+                              'Price: '+price+'<br>'+
+                              'Description: '+desc+'<br>'+
+                              'Best Eaten: '+best+'<br>'+
+                              'Serving Size: '+serveSize+'<br>';
+
+    }
 </script>
-
-
-
-
 @endsection
+
 
