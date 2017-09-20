@@ -27,6 +27,7 @@ Route::get('home/express', 'HomeController@express');
 Route::get('/home/express/breakfast', 'HomeController@showBfast');
 Route::get('/home/express/lunch', 'HomeController@showLunch');
 Route::get('/home/express/dinner', 'HomeController@showDinner');
+Route::get('/home/dish/details/{id}','HomeController@showDetails')->name('home.details');
 
 
 

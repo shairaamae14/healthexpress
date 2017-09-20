@@ -78,6 +78,7 @@
       min-width: 130px;
     }
   </style>
+  
 </head>
 
 <body class="components-page">

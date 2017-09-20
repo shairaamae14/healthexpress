@@ -136,4 +136,11 @@ class HomeController extends Controller
         return $dishes;
         
     }
+    
+  public function showDetails($id){
+        $det = Dish::where('did', $id)->get();
+
+        return view('user.details', compact('det'));
+    }
+
 }

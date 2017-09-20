@@ -46,6 +46,11 @@ display: inline-block;
   font-size: 20px !important;
 }
 
+#rev:hover{
+  text-decoration: none !important;
+  color:black !important;
+}
+
 
 
 /*Resize the wrap to see the search bar change!*/
@@ -108,7 +113,7 @@ display: inline-block;
 
                         </div>
 
-                        <center><h4 class="openModal box-title" style="margin-top: 5px; font-size: 12px;"><a href="" style="border-top: 1px solid #30BB6D; border-bottom: 1px solid #30BB6D; color:#30BB6D; " data-toggle="modal" data-target="#modal-default{{$dish->did}}"><b>{{$dish->dish_name}}</b></a><br>
+                        <center><h4 class="openModal box-title" style="margin-top: 5px; font-size: 12px;"><a href="{{route('home.details', ['id' => $dish->did])}}" style="border-top: 1px solid #30BB6D; border-bottom: 1px solid #30BB6D; color:#30BB6D;" value="{{$dish->dish_name}}"  id="dish_name"><b>{{$dish->dish_name}}</b></a><br>
                         <br>
                       <center><small>
                       <i class="fa fa-star" id="rate"></i>
@@ -117,18 +122,13 @@ display: inline-block;
                       <i class="fa fa-star-o" id="rate"></i>
                       <i class="fa fa-star-o" id="rate"></i>
                       </small><br>
-                      <a href="{{route('cook.rating')}}"><p style="font-size: 12px; color:#30BB6D; background-color:#E3E3E3">See Reviews</p></a>
+                      <a href="{{route('cook.rating')}}" id="rev"><p style="font-size: 12px; color:#30BB6D; background-color:#E3E3E3">See Reviews</p></a>
                       </center>
-                       <br>
-                        <center> 
-                   <!--       <button type="button" class="btn btn-flat btn-primary edit" style="background-color:#30BB6D; border:none" data-toggle="modal" data-target="#modal-default2{{$dish->did}}"><i class="fa fa-edit"></i></button>
-                      <button type="button" class="btn btn-flat btn-danger delete" style="background-color:#30BB6D; border:none" data-toggle="modal" data-target="#modal-default3{{$dish->did}}"><i class="fa fa-times"></i></button>
-                        <button type="button" class="btn btn-flat btn-danger delete" style="background-color:#30BB6D; border:none; color:white;"><i class="fa fa-list-ul"></i></button>
-!-->
-
-                      </center>
+                      
+                         <p style="float:left; margin-left:5px; margin-top: 12px; font-size: 20px; font-family: 'Lobster', cursive; color:gray;" id="tots">Php {{$dish->basePrice}}</p>
+                          <p onclick="myFunction('{{$dish->dish_name}}', '{{$dish->basePrice}}')" id="addme"><i class="material-icons" style="color:#30BB6D; font-size: 30px">add_circle</i></p>
                       </br>
-
+                   
 
                   </div>
                 </a>
@@ -166,80 +166,27 @@ display: inline-block;
 
                 <div class="row" style="padding-right:8px; padding-left: 8px">
                    <dl class="dl-horizontal">
-                           
-                          <dt style="float: left; padding-left:0px; width:300px"><label style="float: left; margin-left:0px; margin-right: 0px; font-size: 15px; color:black"><b>Avocado Salad</b></label></dt>
-                            <dd style="margin-left: 2px">
-                            <label style="font-size: 10px">Quantity</label>
-                               <input type="number" min="1" placeholder="1" style="width: 45px; height:20px"></input>                      
-                           </dd>
+                             <div id="cartdiv">
+                       
+                        
+                            
+                           </div>
 
-                            <dd style="margin-left: 2px">
-                              <label style="font-size: 10px; color:black">Total Amount</label>
-                            <label style="font-size: 12px; color: black ">56.00</label>               
-                           </dd>
-                            <dt style="float: left; padding-left:0px; width:300px"><label style="float: left; margin-left: 0px; margin-right: 0px; font-size: 15px; color:black"><b>Vegetable Salad</b></label></dt>
-                           <dd style="margin-left: 2px">
-                           <label style="font-size: 10px">Quantity</label>
-                            <input type="number" min="1" placeholder="1" style="width: 45px; height:20px"></input>               
-                           </dd>
-                              <dd style="margin-left: 2px">
-                              <label style="font-size: 10px; color:black">Total Amount</label>
-                            <label style="font-size: 12px; color: black ">56.00</label>
-                                              
-                           </dd>
-
-
-                            <dt style="float: left; padding-left:0px; width:300px"><label style="float: left; margin-left:0px; margin-right: 0px; font-size: 15px; color:black"><b>Tuna Patties</b></label></dt>
-                            <dd style="margin-left: 2px">
-                            <label style="font-size: 10px">Quantity</label>
-                               <input type="number" min="1" placeholder="1" style="width: 45px; height:20px"></input>                      
-                           </dd>
-
-                            <dd style="margin-left: 2px">
-                              <label style="font-size: 10px; color:black">Total Amount</label>
-                            <label style="font-size: 12px; color: black ">56.00</label>               
-                           </dd>
-                             <dt style="float: left; padding-left:0px; width:300px"><label style="float: left; margin-left: 0px; margin-right: 0px; font-size: 15px; color:black"><b>Teriyaki Chicken Casserole</b></label></dt>
-                           <dd style="margin-left: 2px">
-                           <label style="font-size: 10px">Quantity</label>
-                            <input type="number" min="1" placeholder="1" style="width: 45px; height:20px"></input>               
-                           </dd>
-                              <dd style="margin-left: 2px">
-                              <label style="font-size: 10px; color:black">Total Amount</label>
-                            <label style="font-size: 12px; color: black ">56.00</label>
-                                              
-                           </dd>
-
-                          <dt style="float: left; padding-left:0px; width:300px"><label style="float: left; margin-left:0px; margin-right: 0px; font-size: 15px; color:black"><b>Avocado Salad</b></label></dt>
-                            <dd style="margin-left: 2px">
-                            <label style="font-size: 10px">Quantity</label>
-                               <input type="number" min="1" placeholder="1" style="width: 45px; height:20px"></input>                      
-                           </dd>
-
-                            <dd style="margin-left: 2px">
-                              <label style="font-size: 10px; color:black">Total Amount</label>
-                            <label style="font-size: 12px; color: black ">56.00</label>               
-                           </dd>
-                            <dt style="float: left; padding-left:0px; width:300px"><label style="float: left; margin-left: 0px; margin-right: 0px; font-size: 15px; color:black"><b>Vegetable Salad</b></label></dt>
-                           <dd style="margin-left: 2px">
-                           <label style="font-size: 10px">Quantity</label>
-                            <input type="number" min="1" placeholder="1" style="width: 45px; height:20px"></input>               
-                           </dd>
-                              <dd style="margin-left: 2px">
-                              <label style="font-size: 10px; color:black">Total Amount</label>
-                            <label style="font-size: 12px; color: black ">56.00</label>
-                                              
-                           </dd>
-                          
+                         
                         </dl>
 
 
 
 
         <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-       <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lobster', cursive;" id="tots"><b>Total:</b> 150.00</p>
+         <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lobster', cursive;" id="tots"><b>Subtotal:</b> Php 56.00</p><br>
+         </div>
+          <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+         <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lobster', cursive;" id="tots"><b>Delivery Fee:</b> Php 40 .00</p><br></div>
+          <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+       <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lobster', cursive;" id="tots"><b>Total:</b> Php 150.00</p>
      
-          <button type="button" class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:left; margin-top: 2px; border:none">Checkout</button>
+          <button type="button" class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:left; margin-top: 2px; border:none" id="chkt">Checkout</button>
         </div>
 
                 </div>
@@ -308,59 +255,23 @@ display: inline-block;
 
   <!-- Control Center for Material Kit: activating the ripples, parallax effects, scripts from the example pages etc -->
   <script src="{{asset('customer/assets/js/material-kit.js')}}" type="text/javascript"></script>
-  
+  <script type="text/javascript">
+      
+  </script>
   <script>
 
-      $(document).ready(function() {
-       $('#input').on('keyup', function() {
-           var input, filter, ul, li, a, i;
-            input = document.getElementById("input");
-            filter = input.value.toUpperCase();
-            ul = document.getElementById("dishNames");
-            li = ul.getElementsByTagName("li");
-            for ( i = 0; i < li.length; i++) {
-             a = li[i].getElementsByTagName("a")[0];
-            if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                li[i].style.display = "";
-            } else {
-                li[i].style.display = "none";
+     function myFunction(name, price){
+        // alert("ALERT NA PLEASE");
 
-            }
-        }
-       });
-       
+        var div = document.getElementById("cartdiv");
       
        
-        var slider = $('#sliderDouble').noUiSlider({
-	start: [20, 60] ,
-	connect: true,
-	range: {
-	    min: 20,
-	    max: 100
-	}
-        
-        });
-        
-        slider.on('change', function() {
-            alert('hey');
-        });
-        
+        div.innerHTML+='<button type="button" class="close" data-dismiss="alert" aria-hidden="true" style="color:black; font-size:20px">&times;</button><dt style="margin-left:-120px"><input type="number" min="1" placeholder="1" style="width: 45px; height:20px"></dt><dd style="margin-left: 2px"><label style="float: left; margin-left:0px; margin-right: 0px; font-size: 15px; color:black"><b>&nbsp;&nbsp;'+name+'</b></label> '+
+           ' <label style="font-size: 15px; color: black; float:right"><b>'+price+'</b></label></dd>';
+     
 
-          $('#bfast').on('click', function() {
-              $('#sortBy').submit();
-          });
-          var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-//          $.ajax({
-//              method: "post",
-//              data: { '_token': CSRF_TOKEN,
-//                  
-//              },
-//            success: function() {
-//                
-//            },
-//            error: function() {
-//                alert('An error occured');
-//            }
-//          });
-      });
-  </script>
+           }
+     
+
+</script>
+
