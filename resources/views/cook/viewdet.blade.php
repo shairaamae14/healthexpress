@@ -37,7 +37,7 @@ a:hover{
               <li class="active"><a href="#tab_1" data-toggle="tab">Dish Details</a></li>
               <li><a href="#tab_2" data-toggle="tab">Ingredients</a></li>
               <li><a href="#tab_3" data-toggle="tab">Nutritional Facts</a></li>
-              <li class="pull-right"> <button class="btn btn-box-tool delete" data-toggle="tooltip" title="Remove" value="{{$dish->did}}"><i class="fa fa-times"></i></button></li>
+              <li class="pull-right"> <button class="btn btn-box-tool" data-toggle="modal" title="Remove" value="{{$dish->did}}" data-target="#dish-del"><i class="fa fa-times"></i></button></li>
               <li class="pull-right"><button class="btn btn-box-tool edit" data-toggle="tooltip" title="Edit" value="{{$dish->did}}"><i class="fa fa-edit"></i></button></li>
             </ul>
             <div class="tab-content">
@@ -142,7 +142,26 @@ a:hover{
     <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
     reserved.
   </footer>
-
+<div class="modal modal-danger fade" id="dish-del">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Delete Dish</h4>
+              </div>
+              <div class="modal-body">
+                <p>Are you sure you want to delete dish?</p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-outline" class="delete">Delete</button>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
 @endsection
 @section('addtl_scripts')
 <!-- jQuery 3 -->
@@ -174,7 +193,6 @@ $(document).ready(function() {
     
     $(".delete").on('click', function(){
     
-        if(confirm("Are you sure you want to delete this dish?")) {
             var id =  $(this).val();
             var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
                 $.ajax({
@@ -183,14 +201,11 @@ $(document).ready(function() {
                     data: {
                         '_token': CSRF_TOKEN
                         },
-                    success: function() {
-                     window.location = './cook/dishes';   
-                    },
                     error: function() {
                         console.log('an error occured');
                     }
                 });
-        }
+
      });
 });
 

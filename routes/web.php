@@ -18,10 +18,12 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
-Route::post('/home', 'HomeController@index');
+Route::post('/home', 'HomeController@index')->name('user.index');
+Route::get('/home/dish/details/{id}', 'HomeController@showDetails')->name('home.details');
+Route::get('addToCart/{id}', 'HomeController@addToCart')->name('dish.addtocart');
 
 
-
+<<<<<<< HEAD
 Route::get('/home', 'HomeController@index')->name('user.index');
 Route::get('home/express', 'HomeController@express');
 Route::get('/home/express/breakfast', 'HomeController@showBfast');
@@ -31,15 +33,16 @@ Route::get('/home/dish/details/{id}','HomeController@showDetails')->name('home.d
 Route::get('/add-to-cart/{id}', 'HomeController@addToCart')->name('dish.addtocart');
 Route::get('/cart', 'HomeController@getCart')->name('user.cart');
 
+=======
+Route::get('/home', 'HomeController@index');
+Route::post('/home/express', 'HomeController@express');
+Route::get('/home/express', 'HomeController@express');
+Route::get('/displayDishes', 'HomeController@searchDishes')->name('search.dish');
+>>>>>>> 41fa27b38dd921b6a1db2a35137b7edb56b3a2cb
 
 
 Route::get('/user/{id}', 'UserProfController@show')->name('user.profile');
-// Route::post('user/{id}', 'UserProfController@store')->name('user.profile.create');
 Route::post('user/{id}', 'UserProfController@update')->name('user.profile.update');
-
-// Route::get('/user/password/reset{id}', 'Auth\ResetPasswordController@editform')->name('user.profile.reset');
-
-
 Route::get('/user/logout', 'Auth\LoginController@userLogout')->name('user.logout');
 
 
@@ -69,8 +72,9 @@ Route::prefix('cook')->group(function() {
 
 	
 	//Dishes
-
-    Route::get('dishes', 'DishController@index')->name('cook.dishes');
+        Route::get('/dishes/addCatalog', 'DishController@addCatalog')->name('dish.catalog');
+        Route::post('/dishes/createCatalog', 'DishController@createCatalog')->name('dish.catalog.create');
+        Route::get('dishes', 'DishController@index')->name('cook.dishes');
 	Route::get('dishes/add', 'DishController@create')->name('cook.dishes.add');
 	Route::post('dishes/create', 'DishController@store')->name('cook.dishes.create');
 	Route::get('dishes/{id}', 'DishController@show')->name('cook.dishes.show');
@@ -78,9 +82,17 @@ Route::prefix('cook')->group(function() {
         Route::post('dishes/delete/{id}', 'DishController@destroy')->name('cook.dishes.delete');
 	Route::get('dishes/edit/{id}', 'DishController@edit')->name('cook.dishes.edit');
 	Route::get('dishes/reviews', 'DishController@viewrating')->name('cook.rating');
+        
+        Route::get('/displayDishes', 'DishController@searchDishes')->name('display');
+        Route::get('/previewDishes/{id}', 'DishController@previewDish')->name('preview');
+        Route::get('/searchIngredients', 'DishController@searchIngredient')->name('search.ingredient');
 	// Route::get('dishes/addingredients', 'DishController@adding')->name('cook.addingredients');
+<<<<<<< HEAD
 
 
+=======
+        
+>>>>>>> 41fa27b38dd921b6a1db2a35137b7edb56b3a2cb
 });
 
 Route::prefix('user')->group(function() {

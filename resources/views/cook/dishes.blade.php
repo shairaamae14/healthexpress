@@ -29,7 +29,7 @@ dt{
         <!-- Main content -->
         <section class="content">
             <button type="button" class="btn btn-flat btn-success add-dish" value="./dishes/add" onclick="window.location.href='{{route('cook.dishes.add')}}'" style="margin-bottom:20px"><i class="fa fa-plus"></i> Add Dish</button>
-
+            <button type="button" class="btn btn-flat btn-success add-dish" onclick="window.location.href='{{route('dish.catalog')}}'" style="margin-bottom:20px"><i class="fa fa-plus"></i> Add to Catalog</button>
         <div class="box box-solid"> 
             <div class="box-body">
                 @foreach($dishes as $dish)

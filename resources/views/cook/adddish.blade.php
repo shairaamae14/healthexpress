@@ -102,12 +102,20 @@ fieldset{
                             </div>
                             <div class="form-group col-md-4">
                                 <label>Preparation Time:</label> 
+<<<<<<< HEAD
                                 <input type="text" id="duration" name="duration" autofocus>
+=======
+                                <input type="text" id="duration" name="duration" required>
+>>>>>>> 41fa27b38dd921b6a1db2a35137b7edb56b3a2cb
                             </div>
 
                             <div class="form-group col-md-4">
                                 <label>Price:</label>
+<<<<<<< HEAD
                                 <input type="text" class="form-control" id="price" name="price" placeholder="Price" required autofocus>
+=======
+                                <input type="text" class="form-control" id="price" name="price" placeholder="Price" required>
+>>>>>>> 41fa27b38dd921b6a1db2a35137b7edb56b3a2cb
                             </div>
                             <div class="form-group col-md-8">
                                 <label>Best Eaten during:</label><br>
@@ -138,19 +146,39 @@ fieldset{
                 <div class="col-xs-6 col-md-offset-3">
                     <div class="col-md-12">
                         <h3>Ingredient Details</h3>
+<<<<<<< HEAD
                             <div class="form-group">
                               <input type="text" class="form-control" name="ingredients" id="ingredients" placeholder="Search">
+=======
+                            <div class="form-group ui-widget">
+                              <input type="text" class="form-control" name="ingredients" id="ingredients" placeholder="Search" required autofocus>
+>>>>>>> 41fa27b38dd921b6a1db2a35137b7edb56b3a2cb
                             </div>
                             <div class="form-group col-md-4">
                                 <input type="number" class="form-control" id="quantity" name="quantity[]" placeholder="Quantity" ng-model="choice.name" min="0" autofocus required>
                             </div>
+<<<<<<< HEAD
                             <div class="form-group">
                                 <select class="form-control" id="preparation" name="preparation[]" id="preparation" name="preparation" style="width:100px;">
+=======
+                            <div class="form-group col-md-3">
+                                <select class="form-control" id="preparation" name="preparation[]" id="preparation" name="preparation" style="width:100px;" required autofocus>
+>>>>>>> 41fa27b38dd921b6a1db2a35137b7edb56b3a2cb
                                     @foreach($preps as $prep)
                                         <option value="{{ $prep->p_id }}">{{$prep->p_name}}</option> 
                                     @endforeach
                                 </select>
                             </div>
+<<<<<<< HEAD
+=======
+                            <div class="form-group col-md-4">
+                                <select class="form-control" id="um" name="um[]" name="um" style="width:150px;">
+                                  @foreach($units as $um)
+                                    <option value="{{ $um->um_id }}">{{$um->um_name}}</option> 
+                                  @endforeach
+                                </select>
+                            </div>
+>>>>>>> 41fa27b38dd921b6a1db2a35137b7edb56b3a2cb
                             <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
                             
                             <button class="addfields remove" onclick="addChoice(); return false;" ng-click="addNewChoice()">+</button>  
@@ -185,7 +213,11 @@ fieldset{
                     
                     </div>
                         
+<<<<<<< HEAD
                     <button type="submit" class="btn btn-block btn-success submit pull-right" href="{{route('cook.dishes.create')}}"><i class="fa fa-plus"></i>Add Dish</button> 
+=======
+                    <button type="submit" class="btn btn-block btn-success pull-right" href="{{route('cook.dishes.create')}}"><i class="fa fa-plus"></i>Add Dish</button> 
+>>>>>>> 41fa27b38dd921b6a1db2a35137b7edb56b3a2cb
                     </div>
                 </div>
          
@@ -198,6 +230,17 @@ fieldset{
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
+<<<<<<< HEAD
+=======
+
+    <footer class="main-footer">
+        <div class="pull-right hidden-xs">
+          <b>Version</b> 2.4.0
+        </div>
+        <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
+        reserved.
+    </footer>
+>>>>>>> 41fa27b38dd921b6a1db2a35137b7edb56b3a2cb
 
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
@@ -295,14 +338,8 @@ allWells.hide();
 
     function addChoice()
     {
-        // var ingred = document.getElementById('ingredients').value;
+        var ingred = document.getElementById('ingredients').value;
         var quan = document.getElementById('quantity').value;
-        // var prep = document.getElementById('preparation').value;
-        // var um = document.getElementById('um').value;
-
-        var ingred = $("#ingredients option:selected").map(function() {
-            return $(this).text();
-          }).get();
 
         var prep = $("#preparation option:selected").map(function() {
             return $(this).text();
@@ -359,7 +396,12 @@ allWells.hide();
 
     }
 </script>
+<<<<<<< HEAD
 
+=======
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.js"></script>
+>>>>>>> 41fa27b38dd921b6a1db2a35137b7edb56b3a2cb
 <script>
 
 $(document).ready(function(){
