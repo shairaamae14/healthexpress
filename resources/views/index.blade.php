@@ -2,207 +2,88 @@
 
 @section('content')
 
+                    <div class="row">
+                        <div class="col-md-8 col-md-offset-2">
+                            <h2 class="title">Let's talk product</h2>
+                            <h5 class="description">This is the paragraph where you can write more details about your product. Keep you user engaged by providing meaningful information. Remember that by this time, the user is curious, otherwise he wouldn't scroll to get here. Add a button if you want the user to see more.</h5>
+                        </div>
+                    </div>
 
-<div class="header-content-inner">
-                <h1 id="homeHeading">HEALTH EXPRESS</h1>
-                <hr style="border-color: #30BB6D">
-                <p>A web-responsive application that provides healthier option
-                meals</p>
-                <a href="#about" class="btn btn-primary btn-xl page-scroll" style="background-color:#30BB6D">Find Out More</a>
-            </div>
-        </div>
-    </header>
-    
- <section class="bg-primary" id="about" style="background-color:#30BB6D">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-lg-offset-2 text-center">
-                    <h2 class="section-heading">We got what your body needs!</h2>
-                    <hr class="light">
-                    <p class="text-faded">Lorem ipsum dolor sit amet, eos et alia nostro argumentum. Liber graecis delicatissimi usu cu, ne eam lobortis disputando, eu soluta reformidans eam. Suas decore alterum quo ei. Ex pro unum eius dicunt. Eligendi platonem mei no, ei alia diceret fabulas qui.</p>
-                    <a href="#howitworks" class="page-scroll btn btn-default btn-xl sr-button">Get Started!</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <section id="howitworks">
-       
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <h2 class="section-heading">4 Easy Steps</h2>
-                    <hr class="primary" style="border-color:#30BB6D">
-                </div>
-            </div>
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3 col-md-6 text-center">
-                    <div class="service-box">
-                        <i class="fa fa-4x fa-plus-square text-primary sr-icons"></i>
-                        <h3>Create an account</h3>
-                        <p class="text-muted">Lorem ipsum dolor sit amet, eos et alia nostro argumentum.</p>
+                    <div class="features">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="info">
+                                    <div class="icon icon-primary">
+                                        <i class="material-icons">chat</i>
+                                    </div>
+                                    <h4 class="info-title">First Feature</h4>
+                                    <p>Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="info">
+                                    <div class="icon icon-success">
+                                        <i class="material-icons">verified_user</i>
+                                    </div>
+                                    <h4 class="info-title">Second Feature</h4>
+                                    <p>Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="info">
+                                    <div class="icon icon-danger">
+                                        <i class="material-icons">fingerprint</i>
+                                    </div>
+                                    <h4 class="info-title">Third Feature</h4>
+                                    <p>Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="col-lg-3 col-md-6 text-center">
-                    <div class="service-box">
-                        <i class="fa fa-4x fa-mouse-pointer text-primary sr-icons"></i>
-                        <h3>Choose an option</h3>
-                        <p class="text-muted">Lorem ipsum dolor sit amet, eos et alia nostro argumentum.</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 text-center">
-                    <div class="service-box">
-                        <i class="fa fa-4x  fa-shopping-cart text-primary sr-icons"></i>
-                        <h3>Choose food and pay</h3>
-                        <p class="text-muted">Lorem ipsum dolor sit amet, eos et alia nostro argumentum.</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 text-center">
-                    <div class="service-box">
-                        <i class="fa fa-4x fa-heart text-primary sr-icons"></i>
-                        <h3>Happy Eating</h3>
-                        <p class="text-muted">Lorem ipsum dolor sit amet, eos et alia nostro argumentum.</p>
-                    </div>
-                </div>
-               
-                </div>
 
-            </div>
-        </div>
-               
-                </div>
+                <div class="section text-center">
+                    <h2 class="title">Here is our team</h2>
 
-            </div>
-        </div>
-    </section>
+                    <div class="team">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="team-player">
+                                    <img src="../assets/img/avatar.jpg" alt="Thumbnail Image" class="img-raised img-circle">
+                                    <h4 class="title">Gigi Hadid <br />
+                                        <small class="text-muted">Model</small>
+                                    </h4>
+                                    <p class="description">You can write here details about one of your team members. You can give more details about what they do. Feel free to add some <a href="#">links</a> for people to be able to follow them outside the site.</p>
+                                    <a href="#pablo" class="btn btn-simple btn-just-icon"><i class="fa fa-twitter"></i></a>
+                                    <a href="#pablo" class="btn btn-simple btn-just-icon"><i class="fa fa-instagram"></i></a>
+                                    <a href="#pablo" class="btn btn-simple btn-just-icon btn-default"><i class="fa fa-facebook-square"></i></a>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="team-player">
+                                    <img src="../assets/img/christian.jpg" alt="Thumbnail Image" class="img-raised img-circle">
+                                    <h4 class="title">Christian Louboutin<br />
+                                        <small class="text-muted">Designer</small>
+                                    </h4>
+                                    <p class="description">You can write here details about one of your team members. You can give more details about what they do. Feel free to add some <a href="#">links</a> for people to be able to follow them outside the site.</p>
+                                    <a href="#pablo" class="btn btn-simple btn-just-icon"><i class="fa fa-twitter"></i></a>
+                                    <a href="#pablo" class="btn btn-simple btn-just-icon"><i class="fa fa-linkedin"></i></a>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="team-player">
+                                    <img src="../assets/img/kendall.jpg" alt="Thumbnail Image" class="img-raised img-circle">
+                                    <h4 class="title">Kendall Jenner<br />
+                                        <small class="text-muted">Model</small>
+                                    </h4>
+                                    <p>You can write here details about one of your team members. You can give more details about what they do. Feel free to add some <a href="#">links</a> for people to be able to follow them outside the site.</p>
+                                    <a href="#pablo" class="btn btn-simple btn-just-icon"><i class="fa fa-google-plus"></i></a>
+                                    <a href="#pablo" class="btn btn-simple btn-just-icon"><i class="fa fa-youtube-play"></i></a>
+                                    <a href="#pablo" class="btn btn-simple btn-just-icon btn-default"><i class="fa fa-twitter"></i></a>
+                                </div>
+                            </div>
+                    
 
-    <section class="no-padding" id="portfolio">
-        <div class="container-fluid">
-            <div class="row no-gutter popup-gallery">
-                <div class="col-lg-4 col-sm-6">
-                    <a href="img/portfolio/fullsize/1.jpg" class="portfolio-box">
-                        <img src="img/portfolio/thumbnails/1.jpg" class="img-responsive" alt="">
-                        <div class="portfolio-box-caption">
-                            <div class="portfolio-box-caption-content">
-                                <div class="project-category text-faded">
-                                     Italian
-                                </div>
-                                <div class="project-name">
-                                  Erwan Huessaf
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-sm-6">
-                    <a href="img/portfolio/fullsize/2.jpg" class="portfolio-box">
-                        <img src="img/portfolio/thumbnails/2.jpg" class="img-responsive" alt="">
-                        <div class="portfolio-box-caption">
-                            <div class="portfolio-box-caption-content">
-                                <div class="project-category text-faded">
-                                Vegetarian
-                                </div>
-                                <div class="project-name">
-                                    Chef Dexter Solar
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>  
-                <div class="col-lg-4 col-sm-6">
-                    <a href="img/portfolio/fullsize/3.jpg" class="portfolio-box">
-                        <img src="img/portfolio/thumbnails/3.jpg" class="img-responsive" alt="">
-                        <div class="portfolio-box-caption">
-                            <div class="portfolio-box-caption-content">
-                                <div class="project-category text-faded">
-                                   Mexican
-                                </div>
-                                <div class="project-name">
-                                    Chef Bea Ylaya
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>  
-                <div class="col-lg-4 col-sm-6">
-                    <a href="img/portfolio/fullsize/4.jpg" class="portfolio-box">
-                        <img src="img/portfolio/thumbnails/4.jpg" class="img-responsive" alt="">
-                        <div class="portfolio-box-caption">
-                            <div class="portfolio-box-caption-content">
-                                <div class="project-category text-faded">
-                                    Category
-                                </div>
-                                <div class="project-name">
-                                    Project Name
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-sm-6">
-                    <a href="img/portfolio/fullsize/5.jpg" class="portfolio-box">
-                        <img src="img/portfolio/thumbnails/5.jpg" class="img-responsive" alt="">
-                        <div class="portfolio-box-caption">
-                            <div class="portfolio-box-caption-content">
-                                <div class="project-category text-faded">
-                                    Category
-                                </div>
-                                <div class="project-name">
-                                    Project Name
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-                <div class="col-lg-4 col-sm-6">
-                    <a href="img/portfolio/fullsize/6.jpg" class="portfolio-box">
-                        <img src="img/portfolio/thumbnails/6.jpg" class="img-responsive" alt="">
-                        <div class="portfolio-box-caption">
-                            <div class="portfolio-box-caption-content">
-                                <div class="project-category text-faded">
-                                    Category
-                                </div>
-                                <div class="project-name">
-                                    Project Name
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-<!--     <aside class="bg-dark">
-        <div class="container text-center">
-            <div class="call-to-action">
-                <h2>Free Download at Start Bootstrap!</h2>
-                <a href="http://startbootstrap.com/template-overviews/creative/" class="btn btn-default btn-xl sr-button">Download Now!</a>
-            </div>
-        </div>
-    </aside> -->
-
-    <section id="contact">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-8 col-lg-offset-2 text-center">
-                    <h2 class="section-heading">Let's Get In Touch!</h2>
-                    <hr class="primary">
-                    <p>Ready to start your next project with us? That's great! Give us a call or send us an email and we will get back to you as soon as possible!</p>
-                </div>
-                <div class="col-lg-4 col-lg-offset-2 text-center">
-                    <i class="fa fa-phone fa-3x sr-contact"></i>
-                    <p>+63-933-144-2975</p>
-                </div>
-                <div class="col-lg-4 text-center">
-                    <i class="fa fa-envelope-o fa-3x sr-contact"></i>
-                    <p><a href="mailto:healthexpress@usjr.edu.ph">healthexpress@usjr.edu.ph</a></p>
-                </div>
-            </div>
-        </div>
-    </section>
 
 
 @endsection

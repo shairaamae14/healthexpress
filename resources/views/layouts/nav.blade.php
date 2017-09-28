@@ -1,54 +1,60 @@
-
-<nav id="mainNav" class="navbar navbar-default navbar-fixed-top" style="height:100px;">
-        <div class="container-fluid">
+  <nav class="navbar navbar-transparent navbar-fixed-top  navbar-color-on-scroll">
+        <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
-           <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navigation-example">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand page-scroll" href="./"><img src="{{asset('img/healthexpress.png')}}" width="160" height="80"></a></a>
+                <a  href="http://www.creative-tim.com"><img src="{{asset('img/healthexpress.png')}}" width="160" height="90" style="margin-top: 5px"></a>
             </div>
 
-            <!-- Collect <th></th>e nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="height:200px;">
-                <ul class="nav navbar-nav navbar-right" id="linkss">
+              <div class="collapse navbar-collapse" id="navigation-success">
+                <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a class="page-scroll" href="#help" style="color:white"><img src="{{asset('img/help.png')}}" width="20" height="15"></img> Help</a>
-                    </li>
-            @if(Auth::guest())
-                    <li>
-                        <a class="page-scroll" href="#howitworks" style="color:white">How it Works</a>
+                        <a href="../components-documentation.html" target="_blank">
+                            Components
+                        </a>
                     </li>
                     <li>
-                        <a class="page-scroll" href="#about" style="color:white">About Us</a>
+                        <a href="http://demos.creative-tim.com/material-kit-pro/presentation.html?ref=utp-freebie" target="_blank">
+                            <i class="material-icons">unarchive</i> Upgrade to PRO
+                        </a>
                     </li>
-                    <li><a class="page-scroll" href="./login" style="color:white">Login</a></li>
-                     <li><a class="page-scroll" href="./register" style="color:white">Register</a></li>
-            @else
-
-               <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
-                                </a>
-
-                                <ul class="dropdown-menu" role="menu">
-                                    <li>
-                                        <a href="{{ route('logout') }}"
-                                            onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                            Logout
-                                        </a>
-
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                                            {{ csrf_field() }}
-                                        </form>
-                                    </li>
-                                </ul>
-                            </li>
-                            @endif
+                    <li>
+                        <a href="https://twitter.com/CreativeTim" target="_blank" class="btn btn-simple btn-white btn-just-icon">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.facebook.com/CreativeTim" target="_blank" class="btn btn-simple btn-white btn-just-icon">
+                            <i class="fa fa-facebook-square"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="https://www.instagram.com/CreativeTimOfficial" target="_blank" class="btn btn-simple btn-white btn-just-icon">
+                            <i class="fa fa-instagram"></i>
+                        </a>
+                    </li>
                 </ul>
             </div>
-            <!-- /.navbar-collapse -->
         </div>
-        <!-- /.container-fluid -->
     </nav>
+
+    <div class="wrapper">
+        <div class="header header-filter" style="background-image: url('{{asset('img/bgindextry.png')}}'">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h1 class="title">Write the best title for your page.</h1>
+                        <h4>Every landing page needs a small description after the big bold title, that's why we added this text here. Add here all the information that can make you or your product create the first impression.</h4>
+                        <br />
+                        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class="btn btn-danger btn-raised btn-lg">
+                            <i class="fa fa-play"></i> Watch video
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>

@@ -22,12 +22,14 @@ Route::post('/home', 'HomeController@index');
 
 
 
-Route::get('/home', 'HomeController@index');
+Route::get('/home', 'HomeController@index')->name('user.index');
 Route::get('home/express', 'HomeController@express');
 Route::get('/home/express/breakfast', 'HomeController@showBfast');
 Route::get('/home/express/lunch', 'HomeController@showLunch');
 Route::get('/home/express/dinner', 'HomeController@showDinner');
 Route::get('/home/dish/details/{id}','HomeController@showDetails')->name('home.details');
+Route::get('/add-to-cart/{id}', 'HomeController@addToCart')->name('dish.addtocart');
+Route::get('/cart', 'HomeController@getCart')->name('user.cart');
 
 
 
@@ -77,6 +79,7 @@ Route::prefix('cook')->group(function() {
 	Route::get('dishes/edit/{id}', 'DishController@edit')->name('cook.dishes.edit');
 	Route::get('dishes/reviews', 'DishController@viewrating')->name('cook.rating');
 	// Route::get('dishes/addingredients', 'DishController@adding')->name('cook.addingredients');
+
 
 });
 

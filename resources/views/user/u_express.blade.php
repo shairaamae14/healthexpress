@@ -47,6 +47,10 @@ display: inline-block;
 }
 
 
+.ui-autocomplete-loading {
+    background: white url("images/ui-anim_basic_16x16.gif") right center no-repeat;
+  }
+
 
 /*Resize the wrap to see the search bar change!*/
 
@@ -75,39 +79,25 @@ display: inline-block;
                 <div class="row">
                     <div id="sortDiv" class="col-md-4">
                         <label  style="display:inline-block;">Sort by:</label>
-                        <dl>
-                        <dt>Best Eaten</dt>
-                        <ul>
-                            <dd><li><a href="{{url('./home/express/breakfast')}}">Breakfast</a></li></dd>
-                            <dd><li><a href="{{url('./home/express/lunch')}}">Lunch</a></li></dd>
-                            <dd><li><a href="{{url('./home/express/dinner')}}">Dinner</a></li></dd
-                        </ul>
-                        </dl>
-                        <dt>Price</dt>
-                        <div id="sliderDouble" class="slider slider-success"></div>
-
-<!--                            <select id="sort" name="sortBy" class="form-control"  style="display:inline-block;">
-                                 <option disabled selected value> -- select an option -- </option>
-                                <option value="Best Eaten">Best Eaten</option>
-                                <option value="Calorie Count">Calorie Count</option>
-                            </select>-->
-<!--                            <div id="bestEaten" style="display:none">
-                            <form id="sortBy" action ="{{url('/home') }}" method="POST">
-                                  {{csrf_field()}}
-                                <select id="category" name='category' class='form-control'>
-                                    <option disabled selected value> -- select an option -- </option>
-                                    <option value='Breakfast'>Breakfast</option>
-                                    <option value='Lunch'>Lunch</option>
-                                    <option value='Dinner'>Dinner</option>
-                                </select>
-                            </form>
-                            </div>-->
+     <form method="POST" id="sortBy">
+                        <meta name ="csrf-token" content = "{{csrf_token() }}"/>
+                            {{csrf_field()}}
+                        <select class="form-control" id="sortOption" name="sortOption">
+                            <option disabled selected>- Select Option - </option>
+                            <option value="Breakfast">Breakfast</option>
+                            <option value="Lunch">Lunch</option>
+                            <option value="Dinner">Dinner</option>
+                        </select>
+                        </form>
+                        
                     </div>
 
-
+<form method="POST" action="{{route('user.index')}}">
+                        {{csrf_field()}}
                     <div class="search" style="float:right; margin-right: 50px; display: inline-block;">
-                       <input type="text" id="input" class="searchTerm" placeholder="Search" style="height:30px">
-                       <button type="submit" style="background-color: transparent; border:none; color:black">
+                       <input type="text" id="input" class="searchTerm form-control col-md-4" placeholder="Search">
+                       <input type="hidden" id="dish_id" name="id" value="">
+                       <button type="submit" class="btn btn-success">
                         <i class="material-icons">search</i>
                       </button>
                        
@@ -117,6 +107,7 @@ display: inline-block;
                            @endforeach
                        </ul>
                     </div>
+                    </form>
                 </div>
 
 
@@ -206,51 +197,6 @@ display: inline-block;
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-       @foreach($dishes as $dish)
-        <div class="modal fade" id="dtlModal{{$dish->did}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog" style="width:350px; float:center;">
-            <div class="modal-content">
-                 <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-cutlery"></i>&nbsp; Dish Details</h4>
-      </div>
-                    <div class="modal-body">
-                           <center><h4 style="color:#30BB6D; margin-top: 2px"><strong>{{$dish->dish_name}}</strong></h1></center>
-               <center><img src="{{url('./dish_imgs/'.$dish->dish_img)}}" style="width:85%; height:240px; border-radius: 10px"></center><br>
-          <center><p style="border-top:2px solid #30BB6D;  margin-top: 10px">{{$dish->dish_desc}}</p></center>
-   
-                        <center> 
-                        <dl>
-                            <dt>Price:</dt>
-                            <dd>Php {{$dish->sellingPrice}}</dd>
-                            <dt>Preparation Time:</dt>
-                            <dd><?php echo date('h:i A', strtotime($dish->preparation_time)); ?></dd>
-                            <dt>Serving size:</dt>
-                            <dd>{{$dish->no_of_servings}} serving(s)</dd>
-                        </dl>
-                    </div>
-                    <div class="modal-footer">
-                            <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Close</button>
-                    </div>
-            </div>
-  </div>
-        </div>
-       @endforeach<!--  End View Details -->
 @endsection
 @section('addtl_scripts')
 
@@ -263,61 +209,88 @@ display: inline-block;
   <script src="{{asset('customer/assets/js/nouislider.min.js')}}" type="text/javascript"></script>
 
   <!--  Plugin for the Datepicker, full documentation here: http://www.eyecon.ro/bootstrap-datepicker/ -->
-  <script src="{{asset('customer/assets/js/bootstrap-datepicker.js')}}" type="text/javascript"></script>
-
-  <!-- Control Center for Material Kit: activating the ripples, parallax effects, scripts from the example pages etc -->
-  <script src="{{asset('customer/assets/js/material-kit.js')}}" type="text/javascript"></script>
-  
-  <script>
-
-      $(document).ready(function() {
-       $('#input').on('keyup', function() {
-           var input, filter, ul, li, a, i;
-            input = document.getElementById("input");
-            filter = input.value.toUpperCase();
-            ul = document.getElementById("dishNames");
-            li = ul.getElementsByTagName("li");
-            for ( i = 0; i < li.length; i++) {
-             a = li[i].getElementsByTagName("a")[0];
-            if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                li[i].style.display = "";
-            } else {
-                li[i].style.display = "none";
-
-            }
-        }
-       });
-        $('#sliderDouble').noUiSlider({
-  start: [20, 60] ,
-  connect: true,
-  range: {
-      min: 20,
-      max: 100
-  }
-});
-          $('#sort').on('change', function() {
-              $value = $('#sort').val();
-              if($value == "Best Eaten") {
-                 $('#bestEaten').show();
-              }
-          });
-
-          $('#bfast').on('click', function() {
-              $('#sortBy').submit();
-          });
-          var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-//          $.ajax({
-//              method: "post",
-//              data: { '_token': CSRF_TOKEN,
-//                  
-//              },
-//            success: function() {
-//                
-//            },
-//            error: function() {
-//                alert('An error occured');
-//            }
-//          });
-      });
+  <script src="{{asset('customer/assets/js/bootstrap-datepicker.js')}}" type="text/javascript">
   </script>
 
+<!-- Control Center for Material Kit: activating the ripples, parallax effects, scripts from the example pages etc -->
+<!--<script src="{{asset('customer/assets/js/material-kit.js')}}" type="text/javascript"></script>-->
+  <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+  <script src="{{asset('js/jquery.easy-autocomplete.min.js')}}"></script> 
+  
+ <script>
+$(document).ready(function(){
+
+    $( "#input" ).autocomplete({
+        source: function( request, response ) {
+            $.ajax( {
+              url: "{{ url('/displayDishes') }}",
+              dataType: "json",
+              data: {
+                term: request.term
+              },
+              success: function( data ) {
+
+                response($.map(data,function(d) {
+                    if(d == 'No dishes found')
+                    {
+                        return { 
+                            label: 'No dishes found.'
+                        };
+                    }
+                    else {
+                        return {
+                            id: d.did,
+                            value: d.dish_name,
+                        };    
+                    }
+                }));
+              }
+            } );
+        },
+
+        select: function( event, ui) {
+
+            this.value = ui.item.value;
+            $(this).next("input").val(ui.item.value);
+            event.preventDefault();  
+
+            $('#dish_id').val(ui.item.id);
+
+            //displayPreviewDish(ui.item.id);
+            console.log( "Selected: " + ui.item.value + " id " + ui.item.id );
+        }
+        }).data("ui-autocomplete")._renderItem = function (ul, item) {
+
+            if(item.value == 'No dishes found.'){
+                return $('<li class="ui-state-disabled">'+item.label+'</li>').appendTo(ul);
+            }else{
+                return $("<li>")
+                .append("<a>" + item.label + "</a>")
+                .appendTo(ul);
+            }
+        };
+        
+        
+        
+        function displayPreviewDish(id) {
+           $.ajax({
+                url: "{{ url('/cook/previewDishes') }}",
+                dataType: "json",
+                data: id,
+                success: function(data) {
+                    $.each(data, function() {
+                        console.log(data.dish_name);
+                    });
+                  console.log('data sa gawas' + data);
+                    var info = "<h4>"+data.dish_name+"</h4>";
+
+                    $('#prevDiv').append(info);
+                }
+            });
+            
+        }
+    
+  } );
+
+</script>
+@endsection

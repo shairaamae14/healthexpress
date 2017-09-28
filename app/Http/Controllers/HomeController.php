@@ -5,10 +5,15 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Dish;
 use App\User;
+use App\Cart;
 use Illuminate\Support\Facades\DB;
 use Auth;   
 use App\UserAllergen;
 use App\Allergen;
+use App\Http\Requests;
+use Session;
+use Illuminate\Session\Store;
+
 class HomeController extends Controller
 {
     /**
@@ -90,18 +95,28 @@ class HomeController extends Controller
         return redirect()->back();
     }
     
-    public function search() {
-        $dishNames = [];
-        $dish = Dish::join('dish_besteaten','dish_besteaten.dish_id', '=', 'dishes.did')
-                ->join('besteaten_at', 'besteaten_at.be_id' , '=', 'dish_besteaten.be_id')
-                ->get();
-        foreach($dish as $d) {
-            array_push($dishNames, $d->dish_name);
+   public function searchDishes(Request $request) {
+       
+        $term = $request->term;
+        $lists = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+                    ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
+                    ->where('dishes.dish_name', 'LIKE', '%'.$term.'%')
+                    ->get();    
+        
+        if(count($lists) == 0) {
+            $search[] = 'No dishes found';
         }
-        $dishes = json_encode($dishNames);
-        return $dishes;
+        else {
+            foreach($lists as $key => $value)
+            {
+   
+                $search[] = $value;
+            }
+        }
+       
+        return $search;
+        
     }
-    
     public function allergyFilter() {
         $uid = Auth::id();
         $allergies = UserAllergen::join('allergens', 'allergens.allergen_id', '=', 'user_allergens.allergen_id')
@@ -138,9 +153,25 @@ class HomeController extends Controller
     }
     
   public function showDetails($id){
-        $det = Dish::where('did', $id)->get();
+        $dishes = Dish::where('did', $id)->get();
 
-        return view('user.details', compact('det'));
+        return view('user.details', compact('dishes'));
     }
+
+public function addToCart(Request $request, $id){
+    $dish=Dish::where('did', $id)->get();
+    $oldCart=Session::has('cart') ? Session::get('cart') : null;
+    $cart= new Cart($oldCart);
+    $cart->addCart($dish, $id);
+  $request->session()->put('cart', $cart);
+// dd($request->session()->get('cart'));
+// echo $request->$dish->get('dish_name');
+//   $item=$request->session()->get('cart')->items;
+// echo $item;
+
+ return redirect()->route('user.index');
+
+}
+
 
 }

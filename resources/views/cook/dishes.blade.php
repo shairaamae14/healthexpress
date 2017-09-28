@@ -53,6 +53,7 @@ dt{
                           <i class="fa fa-star-o" id="rate"></i>
                           </small><br>
                           <a href="{{route('cook.rating')}}"><p style="font-size: 12px; color:#30BB6D;">See Reviews</p></a>
+                          <br>
 
                             <a class="btn btn-success" href="{{route('cook.dishes.show', ['id' => $dish->did])}}">View Details</a>
 

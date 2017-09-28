@@ -75,25 +75,25 @@ display: inline-block;
         <div class="main main-raised"  style="width: 65%; float: left">
         <div class="section">
             <div class="container" style="width: 90%;">
-      <div class="profile-content">
+          <div class="row">
+  <div class="profile-content">
              <div class="card card-nav-tabs">
               <div class="content">
                 <div class="tab-content text-center">
                   <div class="box-body">
-             @foreach($det as $dets)
+             @foreach($dishes as $dets)
               
                  <img src="{{url('./dish_imgs/'.$dets->dish_img)}}" style="width:200px; height:200px; border:2px solid #F0F0F0; border-radius: 10px; float: left"></img></center>
-                
-              
-        
               
                 <div class="form-group col-md-8">   
                 <h2 style="color:#30BB6D; float:left; margin-left:10px; margin-top:-5px;"><b> {{$dets->dish_name}} </b></h2><br>
-                <h3 style="color:#30BB6D; float:left; margin-left:-240px;">{{$dets->dish_desc}}</h3>
-                </div>
+                    </div>
+                 <div class="form-group col-md-8">
+                <h3 style="color:#30BB6D; float:left; margin-left:10px;">{{$dets->dish_desc}}</h3>
+                        </div>
 
                 <div class="form-group col-md-8" style="margin-top: 0px;">   
-                         <h3 style="float:left; margin-left:10px; color:#DED6D4"><b>Php {{$dets->basePrice}}</b></h3>
+                         <h3 style="float:left; margin-left:10px; color:black"><b>Php {{$dets->basePrice}}</b></h3>
                          </div>
                          <center><button type="button" class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; margin-top: 2px; border:none; font-size: 20px">Add to cart</button></center>
 
@@ -101,20 +101,68 @@ display: inline-block;
               @endforeach
             </div>
 
+            </div>
+            </div>
+            </div>
+            </div>
+
+
+
+
+
+          </div><!--row!-->
+          </div><!--container!-->
+
+            <!-- Tabs with icons on Card -->
+            <div class="card card-nav-tabs">
+                <div class="header" style="background-color:#30BB6D">
+                <!-- colors: "header-primary", "header-info", "header-success", "header-warning", "header-danger" -->
+                <div class="nav-tabs-navigation" style="background-color:#30BB6D">
+                  <div class="nav-tabs-wrapper" style="background-color:#30BB6D">
+                    <ul class="nav nav-tabs" data-tabs="tabs">
+                      <li class="active">
+                        <a href="#profile" data-toggle="tab">
+                          <i class="material-icons">face</i>
+                          Dish Details
+                        </a>
+                      </li>
+                      <li>
+                        <a href="#messages" data-toggle="tab">
+                          <i class="material-icons">chat</i>
+                          Nutritional Facts
+                        </a>
+                      </li>
+                    </ul>
                   </div>
-
                 </div>
               </div>
-
-            </div>
-       
-
+              <div class="content">
+                <div class="tab-content text-center">
+                  <div class="tab-pane active" id="profile">
+                    <p> I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus. I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. </p>
+                  </div>
+                  <div class="tab-pane" id="messages">
+                    <p> I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus. I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at.</p>
+                  </div>
+                  <div class="tab-pane" id="settings">
+                    <p>I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. So when you get something that has the name Kanye West on it, it’s supposed to be pushing the furthest possibilities. I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus.</p>
+                  </div>
                 </div>
               </div>
-              <!-- End Profile Tabs -->              
             </div>
+            <!-- End Tabs with icons on Card -->
 
- </div>
+          </div>
+
+
+
+          </div><!--section!-->
+          </div><!--main-raised!-->
+
+
+
+
+
 
 
 
@@ -122,19 +170,33 @@ display: inline-block;
         <div class="section" style="padding-bottom: 2px">
             <div class="container" style="width: 100%">
 
-            <p style="color: black; float:left; margin-top: -60px;font-size: 20px; font-family: 'Lobster', cursive;"><i class="material-icons" style="font-size:20px">shopping_cart</i> &nbsp;Your Cart</p>
+            <p style="color: black; float:left; margin-top: -60px;font-size: 20px; font-family: 'Lobster', cursive;">
+            <i class="material-icons" style="font-size:20px">shopping_cart</i> &nbsp;Your Cart &nbsp; <span class="badge">{{Session::has('cart') ? Session::get('cart')->totalQty : '0' }}</span></p>
+          
 
                 <div class="row" style="padding-right:8px; padding-left: 8px">
-                   <dl class="dl-horizontal">
-                             <div id="cartdiv">
-                       
-                        
-                            
-                           </div>
 
-                         
-                        </dl>
-
+@if(isset(Session::get('cart')->items))
+@foreach(Session::get('cart')->items as $crt)
+@foreach($crt['item'] as $di)
+    <dl class="dl-horizontal">
+       <div id="cartdiv">  
+          <dt style="margin-left:-120px">
+                    <input type="number" min="1" value="{{$crt['qty']}}" style="width: 45px; height:20px">
+           </dt>
+           <dd style="margin-left: 2px">
+               <label style="float: left; margin-left:0px; margin-right: 0px; font-size: 15px; color:black">
+                <b>&nbsp;&nbsp;{{$di['dish_name']}}</b>
+                </label>
+                <label style="font-size: 15px; color: black; float:right"><b>{{$di['dish_price']}}</b></label>
+           </dd>
+       
+          </div>
+      </dl>
+@endforeach
+@endforeach
+ @endif
+               
 
 
 
@@ -153,32 +215,10 @@ display: inline-block;
                 </div>
                 </div>
                 </div>
+                  
 
 
-
-
- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
-                  </div>
+            </div>
 
               </div>
           </div>
