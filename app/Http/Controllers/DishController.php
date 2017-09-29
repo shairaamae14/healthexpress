@@ -14,11 +14,9 @@ use App\IngredientList;
 use App\UnitMeasurement;
 use App\DishIngredient;
 use App\Preparation;
-use App\CookCatalog;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Input;
-
 
 class DishController extends Controller
 {
@@ -57,11 +55,32 @@ class DishController extends Controller
     {
         ini_set('memory_limit', '2048M');
         $beaten = BestEaten::all();
-        $list = IngredientList::all();
+        $lists = IngredientList::all();
+        $chunks = $lists->chunk(3);
+        // $chunks->toArray();
+
+        // dump($chunks);
+        // print_r($chunks);
+        // $lists->chunk(10, function ($lists) {
+        //     $entity = IngredientList::
+        // });
+
+
+        // $lists = IngredientList::chunk(3, function ($query) {
+        //     foreach((array)$query as $chunk)
+        //     {
+        //         dump($chunk);
+        //     }
+         
+        // });
+        // foreach (IngredientList::all()->cursor() as $post)
+        // {
+        //     dump($post->toArray());
+        // }
         $units = UnitMeasurement::all();
         $preps = Preparation::all();
       
-        return view('cook.adddish' , compact('beaten', 'list', 'units', 'preps'));
+        return view('cook.adddish' , compact('beaten', 'lists', 'units', 'preps'));
     }
 
     /**
@@ -107,11 +126,6 @@ class DishController extends Controller
                                             'be_id' => $request['best'][$i],
                                             'status' => 1]);
         }
-        
-        $catalog = CookCatalog::create(['cook_id' => $dish->authorCook_id,
-                                        'dish_id' => $dish->id,
-                                        'isSignatureDish' => $request->signDish,
-                                        'status' => 1]);
         // $um = Input::get('unit');
         // $prep = Input::get('preparation');
         // for($j = 0 ; $j < count($request['unit']); $j++) {
@@ -139,7 +153,6 @@ class DishController extends Controller
 
                 ]);
         }   
-        
         return redirect()->route('cook.dishes');
         // dd($cook);
     }
@@ -165,12 +178,14 @@ class DishController extends Controller
      */
     public function edit($id)
     {
-        $beaten = BestEaten::all();
         $dishes = Dish::where('did',$id)->get();
         $list = IngredientList::all();
+        
+
+
         $units = UnitMeasurement::all();
         $preps = Preparation::all();
-        return view('cook.editdish',compact('dishes', 'list', 'units', 'preps', 'beaten'));
+        return view('cook.editdish',compact('dishes', 'list', 'units', 'preps'));
     }
 
     /**
@@ -260,96 +275,5 @@ class DishController extends Controller
    public function viewrating(){
     return view('cook.reviews');
    }
-   
-   public function addCatalog() {
-       return view('cook.catalog');
-   }
-   
-   public function createCatalog(Request $request) {
-       $cook = Auth::id();
-       $id = $request->dish_id;
-       $dishes = Dish::where('did', $id)->get();
-       
-       $checkCatalog = CookCatalog::where('cook_id', $cook)->where('dish_id', $id)->get();
 
-       if($checkCatalog->isEmpty()) {
-         foreach($dishes as $dish) {
-            $catalog = CookCatalog::create([
-                    'cook_id' => $cook,
-                    'dish_id' => $dish->did,
-                    'isSignatureDish' => $request->signDish,
-                    'status' => 1
-                ]);   
-         }
-           
-           
-           
-         return redirect()->route('cook.dishes'); 
-           
-       }
-       else {
-        
-         return redirect()->back()->with('error', 'Dish already exists in catalog.');
-       }
-       
-       
-       
-   }
-   
-   public function searchDishes(Request $request) {
-       
-        $term = $request->term;
-        $lists = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
-                    ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
-                    ->where('dishes.dish_name', 'LIKE', '%'.$term.'%')
-                    ->get();    
-        
-        if(count($lists) == 0) {
-            $search[] = 'No dishes found';
-        }
-        else {
-            foreach($lists as $key => $value)
-            {
-   
-                $search[] = $value;
-            }
-        }
-       
-        return $search;
-        
-    }
-    
-    public function previewDish($id) {
-//        $id = $request->input('id');
-        $dishes = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
-                    ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
-                    ->where('dishes.did', $id)
-                    ->get(); 
-        
-        return $dishes;
-    }
-    
-    public function searchIngredient(Request $request) {
-        $term = $request->term;
-        $items = IngredientList::where('Shrt_Desc', 'LIKE', '%'.$term.'%')->get()->take(10);
-        
-
-        if(count($items) == 0)
-        {
-            $result[] = 'Not Found';
-
-        }
-        else
-        {
-//            $count = 0;
-            foreach($items as $key => $value){
-                
-                    $result[] = $value->id;
-                    $result[] = $value->Shrt_Desc;
-//                    $count++;
-            }
-        }
-        //return response()->json($result);
-        return $result;
-    }
 }

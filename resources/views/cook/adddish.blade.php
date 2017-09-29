@@ -48,171 +48,193 @@ fieldset{
 @section('content')
 
 <!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
+  <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-        <h1>Dishes</h1>
-            <ol class="breadcrumb">
-            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li class="active">Dishes</li>
-            </ol>
+      <h1>
+        Dishes
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        <li class="active">Dishes</li>
+      </ol>
     </section>
 
     <!-- Main content -->
     <section class="content">
-        <div class="container">
-            <div class="stepwizard col-md-offset-3">
-                <div class="stepwizard-row setup-panel">
-                    <div class="stepwizard-step">
-                        <a href="#step-1"  class="btn-primary" style="background-color: #30BB6D; color:white; border-radius:150px"><center><img src="{{asset('img/food.svg')}}" style="width:55px; height:45px"/></center></a>
-                        <p>Dish Details</p>
-                    </div>
-                    <div class="stepwizard-step">
-                        <a href="#step-2" class="btn-default" style="background-color: #30BB6D; color:white; border-radius:150px" disabled="disabled"><center><img src="{{asset('img/ingredients.svg')}}" style="width:75px; height:55px"/></center></a>
-                        <p>Ingredients</p>
-                    </div>
-                    <div class="stepwizard-step">
-                        <a href="#step-3" class="btn-default" style="background-color: #30BB6D; color:white; border-radius:150px" disabled="disabled"><center><img src="{{asset('img/plus.svg')}}" style="width:55px; height:45px"/></center></a>
-                    <p>Save Dish</p>
-                    </div>
-                </div>
+<div class="container">
+  
+<div class="stepwizard col-md-offset-3">
+    <div class="stepwizard-row setup-panel">
+      <div class="stepwizard-step">
+        <a href="#step-1"  class="btn-primary" style="background-color: #30BB6D; color:white; border-radius:150px"><center><img src="{{asset('img/food.svg')}}" style="width:55px; height:45px"/></center></a>
+        <p>Dish Details</p>
+      </div>
+      <div class="stepwizard-step">
+        <a href="#step-2" class="btn-default" style="background-color: #30BB6D; color:white; border-radius:150px" disabled="disabled"><center><img src="{{asset('img/ingredients.svg')}}" style="width:75px; height:55px"/></center></a>
+        <p>Ingredients</p>
+      </div>
+      <div class="stepwizard-step">
+        <a href="#step-3" class="btn-default" style="background-color: #30BB6D; color:white; border-radius:150px" disabled="disabled"><center><img src="{{asset('img/plus.svg')}}" style="width:55px; height:45px"/></center></a>
+        <p>Save Dish</p>
+      </div>
+    </div>
+  </div>
+ 
+  <form role="form"  method="post" action="{{route('cook.dishes.create')}}" enctype="multipart/form-data">
+   {{csrf_field()}}
+    <div class="row setup-content" id="step-1">
+      <div class="col-xs-6 col-md-offset-3">
+        <div class="col-md-12">
+          <h3>Dish Details</h3>
+
+        <div class="form-group col-md-6">
+              <label>Name:</label>
+                <input type="text" class="form-control" id="dish_name" name="dish_name" placeholder="Name" required>
+            </div>
+                <div class="form-group col-md-4">
+              <label>Serving:</label>
+                <input type="number" class="form-control" id="serving" name="serving" placeholder="No. of serving(s)" min="1" required>
+            </div>
+              <div class="form-group col-md-3">
+              <label>Preparation Time:</label> 
+                <input type="text" id="duration" name="duration">
             </div>
  
-        <form role="form"  method="post" action="{{route('cook.dishes.create')}}" enctype="multipart/form-data">
-         {{csrf_field()}}
-            <div class="row setup-content" id="step-1">
-                <div class="col-xs-9 col-md-offset-3 ">
-                    <div class="col-md-12">
-                        <h3>Dish Details</h3>
-
-                            <div class="form-group col-md-5">
-                                <img src="{{asset('img/choose.png')}}" class="img-circle" id="img-tag" width="200px" />
-                                <br>
-                                <label for="exampleInputFile">Dish Image</label>
-                                <input type="file" id="img" name="img">
-                                  <p class="help-block">jpg., jpeg., png. extension only</p>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label>Name:</label>
-                                <input type="text" class="form-control" id="dish_name" name="dish_name" placeholder="Name" required autofocus>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label>No. of Serving:</label>
-                                <input type="number" class="form-control" id="serving" name="serving" placeholder="No. of serving(s)" min="1" required autofocus>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <label>Preparation Time:</label> 
-                                <input type="text" id="duration" name="duration" required>
-                            </div>
-
-                            <div class="form-group col-md-4">
-                                <label>Price:</label>
-                                <input type="text" class="form-control" id="price" name="price" placeholder="Price" required>
-                            </div>
-                            <div class="form-group col-md-8">
-                                <label>Best Eaten during:</label><br>
-                                @foreach($beaten as $be)
-                                <input type="checkbox" class="flat-red" value="{{$be->be_id}}" name="best[]">{{$be->name}}</option>
-                                @endforeach
-                            </div> 
-                            <div class="form-group col-md-8">
-                                <label>Signature Dish:</label><br>
-                                <input type="checkbox" id="signDish" name="signDish" value="1"> Yes
-                                <input type="checkbox" id="signDish" name="signDish" value="0"> No
-                            </div> 
-                            <div class="form-group col-md-9">
-                                <label>Description:</label>
-                                <textarea class="form-control" rows="3" id="dish_desc" name="dish_desc" placeholder="Description" required autofocus></textarea>                
-                           </div>
-
-                            <div class="col-md-10">
-                                <button type="button" class="btn btn-primary nextBtn btn-lg" id="cancel">Cancel</button>
-                                <button class="btn btn-success nextBtn btn-lg pull-right" type="button">Next</button>
-                            </div>
-
-                    </div>
-                </div>
+            <div class="form-group col-md-4">
+              <label>Price:</label>
+                <input type="text" class="form-control" id="price" name="price" placeholder="Price" required>
+            </div>
+             <div class="form-group col-md-10 ">
+              <label>Description:</label>
+                <textarea class="form-control" rows="3" id="dish_desc" name="dish_desc" placeholder="Description" required></textarea>                
             </div>
 
-            <div class="row setup-content" id="step-2">
-                <div class="col-xs-6 col-md-offset-3">
-                    <div class="col-md-12">
-                        <h3>Ingredient Details</h3>
-                            <div class="form-group ui-widget">
-                              <input type="text" class="form-control" name="ingredients" id="ingredients" placeholder="Search" required autofocus>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <input type="number" class="form-control" id="quantity" name="quantity[]" placeholder="Quantity" ng-model="choice.name" min="0" autofocus required>
-                            </div>
-                            <div class="form-group col-md-3">
-                                <select class="form-control" id="preparation" name="preparation[]" id="preparation" name="preparation" style="width:100px;" required autofocus>
-                                    @foreach($preps as $prep)
-                                        <option value="{{ $prep->p_id }}">{{$prep->p_name}}</option> 
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <select class="form-control" id="um" name="um[]" name="um" style="width:150px;">
-                                  @foreach($units as $um)
-                                    <option value="{{ $um->um_id }}">{{$um->um_name}}</option> 
-                                  @endforeach
-                                </select>
-                            </div>
-                            <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
-                            
-                            <button class="addfields remove" onclick="addChoice(); return false;" ng-click="addNewChoice()">+</button>  
-                            <div class="form-group">
-                            <table id="part">
-                                <tr>
-                                  <th style="width:150px">Ingredient Name</th>
-                                  <th style="width:150px">Quantity</th>
-                                  <th style="width:150px">Preparation</th>
-                                  <th style="width:150px">Unit of Measure</th>
-                                </tr>
-                            </table>
-                            </div>
-                            <div>    
-                                <button class="btn btn-primary btn-lg pull-left" type="button" href="step-1">Previous</button>    
-                                <button class="btn btn-success nextBtn btn-lg pull-right" type="button" >Next</button>
-                            </div>
-                    </div>
-                </div>
+           <div class="form-group col-md-8">
+              <label>Best Eaten during:</label><br>
+                  @foreach($beaten as $be)
+                  <input type="checkbox" class="flat-red" value="{{$be->be_id}}" name="best[]">{{$be->name}}</option>
+                  @endforeach
+
             </div>
-
-
-            <div class="row setup-content" id="step-3">
-                <div class="col-xs-6 col-md-offset-3">
-                    <div class="col-md-12">
-                        <h3> Step 3</h3>
-                    <div>
-                    <p>Dish Details</p>
-                    <div id="summary"></div>
-                    <p>Ingredient Details</p>
-
-                    
-                    </div>
-                        
-                    <button type="submit" class="btn btn-block btn-success pull-right" href="{{route('cook.dishes.create')}}"><i class="fa fa-plus"></i>Add Dish</button> 
-                    </div>
-                </div>
-         
+            <div class="form-group col-md-5">
+              <label for="exampleInputFile">Dish Image</label>
+                <input type="file" id="img" name="img">
+                  <p class="help-block">jpg., jpeg., png. extension only</p>
+                  </div>
+                   <div class="form-group col-md-5">
+                  <img src="{{asset('img/chooseimg.jpg')}}" id="img-tag" width="200px" />
             </div>
-            </form>
-
+       <div class="col-md-10">
+       <button type="button" class="btn btn-primary nextBtn btn-lg" id="cancel">Cancel</button>
+          <button class="btn btn-primary nextBtn btn-lg pull-right" type="button" style="background-color: #30BB6D " >Next</button>
         </div>
+         
+        </div>
+      </div>
+    </div>
+
+
+    
+    <div class="row setup-content" id="step-2">
+      <div class="col-xs-6 col-md-offset-3" style="margin-left:0px;width:50%">
+        <div class="col-md-14">
+          <h3> Ingredient Details</h3>
+
+          <!-- <div class="container"> -->
+
+      <div ng-app="angularjs-starter" ng-controller="MainCtrl" style="background-color: transparent;">
+
+      <fieldset  data-ng-repeat="choice in choices" style="background-color: transparent; margin-bottom: 20px">
+      <!-- <div class="form-group col-md-3"> -->
+              <select class="selectpicker" id="ingredients" data-live-search="true">
+    
+
+                    @foreach($lists->take(5) as $product)
+                            <option>{{ $product->Shrt_Desc }}</option>
+                    @endforeach
+              </select>
+
+       <div class="form-group col-md-3">
+
+      <input type="text" class="form-control" id="quantity" multiple name="quantity[]" placeholder="Quantity" ng-model="choice.name" required>
+      </div>
+      <div class="form-group col-md-3">
+       <select class="form-control" id="preparation" multiple name="preparation[]" id="preparation" name="preparation" style="width:100px;">
+          @foreach($preps as $prep)
+              <option value="{{ $prep->p_id }}">{{$prep->p_name}}</option> 
+          @endforeach
+          </select></div>
+      
+
+        <div class="form-group col-md-5">
+        <select  class="form-control" id="unit" multiple name="um[]">
+      @foreach($units as $unit)
+          <option value="{{$unit->um_id}}">{{$unit->um_name}}</option>
+      @endforeach
+      </select>
+      </div>
+        <div class="form-group col-md-1">
+      <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
+      </div>
+           <!-- </fieldset> -->
+           <button class="addfields remove" onclick="addChoice(); return false;" ng-click="addNewChoice()">+</button>    
+        </div>
+        </div>
+      </div>
+
+      <div class="col-xs-6 col-md-offset-3" style="margin-left:0px;width:50%">
+        <table id="part">
+            <tr>
+              <th style="width:150px">Ingredient Name</th>
+              <th style="width:150px">Quantity</th>
+              <th style="width:150px">Preparation</th>
+              <th style="width:150px">Unit of Measure</th>
+            </tr>
+           <!-- <div id="part"></div> -->
+        </table>
+        <br>
+
+        
+          <button class="btn btn-primary nextBtn btn-lg pull-right"  onClick="summary()" type="button" >Next</button>
+      </div>
+    </div>
+  
+    
+    <div class="row setup-content" id="step-3">
+      <div class="col-xs-6 col-md-offset-3">
+        <div class="col-md-12">
+          <h3> Step 3</h3>
+          <div>
+          <p>Dish Details</p>
+          <div id="summary">
+            
+          </div>
+          <p>Ingredient Details</p>
+
+        <button type="submit" class="btn btn-block btn-success submit" href="{{route('cook.dishes.create')}}"><i class="fa fa-plus"></i>Add Dish</button> 
+        </div>
+      </div>
+    </div>
+  </form>
+  
+</div>
+
+
+
 
     </section>
     <!-- /.content -->
-</div>
-<!-- /.content-wrapper -->
+  </div>
+  <!-- /.content-wrapper -->
 
-    <footer class="main-footer">
-        <div class="pull-right hidden-xs">
-          <b>Version</b> 2.4.0
-        </div>
-        <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
-        reserved.
-    </footer>
+  <footer class="main-footer">
+    <div class="pull-right hidden-xs">
+      <b>Version</b> 2.4.0
+    </div>
+    <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
+    reserved.
+  </footer>
 
 @endsection
 @section('addtl_scripts')
@@ -331,8 +353,14 @@ allWells.hide();
 
     function addChoice()
     {
-        var ingred = document.getElementById('ingredients').value;
+        // var ingred = document.getElementById('ingredients').value;
         var quan = document.getElementById('quantity').value;
+        // var prep = document.getElementById('preparation').value;
+        // var um = document.getElementById('um').value;
+
+        var ingred = $("#ingredients option:selected").map(function() {
+            return $(this).text();
+          }).get();
 
         var prep = $("#preparation option:selected").map(function() {
             return $(this).text();
@@ -388,17 +416,90 @@ allWells.hide();
                               'Serving Size: '+serveSize+'<br>';
 
     }
+  
 </script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.js"></script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script>
 <script>
 
 $(document).ready(function(){
+  // var cnt = 1;
+  // $('.selectpicker').selectpicker({
+  //     size: 4
+  // });
+  // $.ajax({
+  //   url:'https://api.nal.usda.gov/ndb/nutrients/?format=json&api_key=j85AIuWGCOOQo4L1he11etiHmKhSsSt6zRgJbycd&nutrients=205&nutrients=204&nutrients=208&nutrients=269',
+  //   // url:'https://api.nal.usda.gov/ndb/search/?format=json&api_key=j85AIuWGCOOQo4L1he11etiHmKhSsSt6zRgJbycd',
+  //   dataType:'json',
+  //   type:'post',
+  //   success:function(data){
+  //     // console.log(data);
 
-    $( "#ingredients" ).autocomplete({
-        source: "{{ url('/cook/searchIngredients') }}"
-    });
+  //     $(data.report.foods).each(function(index, foods){
+  //         $("#ingredients").append($('<option>',{
+  //           value: cnt,
+  //           text: foods.name
+  //         })).selectpicker("refresh");
+  //         // console.log(foods.name);
+  //         // cnt+=cnt;
+  //     });
+  //   }
+  // });
+  $("#searchItem").autocomplete({
+    source: "{{ url('cook/dishes/search') }}"
+  });
+        //   source: function(request,response){
+        //   $.ajax({
+        //     url: "{{ url('cook/dishes/search') }}",
+        //     datatType: "json",
+        //     data:  {
+        //       term: request.term
+        //     },
+        //     success: function(data){
+        //       response($.map(data,function(d){
+        //         if(d== 'Not found')
+        //         {
+        //           return{
+        //             label: 'Not found'
+        //           };
+        //         }
+        //         else
+        //         {
+        //           return{
+        //             id: d.id,
+        //             value: d.Shrt_Desc
+        //           };
+        //         }
+        //       }));
+        //       $(data).each(function(index,Shrt_Desc){
+        //         return{
+        //           value: data.Shrt_Desc
+        //         }
+        //       })
 
+        //     },
+        //     select: function(event, ui){
+        //       this.value=ui.item.value;
+        //       $(this).next("input").val(ui.item.value);
+        //       event.preventDefault();
+
+        //       var id=$(#dish_id).val(ui.item.id);
+        //       console.log(id);
+        //       displayPreviewDish(id);
+        //       console.log("Selected: "+ui.item.value+" id "+ui.item.id);
+        //     }
+
+        //   }).data("ui-autocomplete")._renderItem = function(ul,item){
+        //     if(item.value == 'No Dishes Found'){
+        //       return $('<li>'+item.label+'</li>').appendTo(ul);
+        //     }
+        //     else{
+        //       return $("<li>").append("<a>"+item.label+"</a>").appendTo(ul);
+        //     }
+        //   }
+        // }
+        // });
 
 
 });
