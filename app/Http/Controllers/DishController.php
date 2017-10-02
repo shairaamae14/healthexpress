@@ -112,20 +112,11 @@ class DishController extends Controller
                                         'dish_id' => $dish->id,
                                         'isSignatureDish' => $request->signDish,
                                         'status' => 1]);
-        // $um = Input::get('unit');
-        // $prep = Input::get('preparation');
-        // for($j = 0 ; $j < count($request['unit']); $j++) {
-        //     $ingredients = DishIngredient::create(['um_id'=> $um,
-        //         'dish_id' => $dish->id,
-        //         'quantity' => $request['quantity'],
-        //         'preparation' => $prep,
-        //         'status' => 1
-        //         ]);
-        // }
-        $ingred = Input::get('ingredients');
-        $quan = Input::get('quantity');
-        $prep = Input::get('preparation');
-        $um = Input::get('um');
+        
+        $ingred = Input::get('ingid');
+        $quan = Input::get('qtyy');
+        $prep = Input::get('prepp');
+        $um = Input::get('umm');
 
         for($i=0; $i<count($ingred);$i++)
         {
@@ -133,7 +124,8 @@ class DishController extends Controller
             $ing = DishIngredient::create([
                 'um_id' => $um[$i],
                 'dish_id' => $dish->id,
-                'quantity' => $request['quantity'][$i],
+                'ing_id' => $ingred[$i],
+                'quantity' => $quan[$i],
                 'preparation' => $prep[$i],
                 'status' => 1
 
@@ -334,22 +326,38 @@ class DishController extends Controller
         $items = IngredientList::where('Shrt_Desc', 'LIKE', '%'.$term.'%')->get()->take(10);
         
 
-        if(count($items) == 0)
-        {
-            $result[] = 'Not Found';
+        // if(count($items) == 0)
+        // {
+        //     $result[] = 'Not Found';
 
-        }
-        else
-        {
-//            $count = 0;
-            foreach($items as $key => $value){
+        // }
+        // else
+        // {
+        //     foreach($items as $key => $value){
                 
-                    $result[] = $value->id;
-                    $result[] = $value->Shrt_Desc;
-//                    $count++;
+        //             $result[] = $value->id;
+        //             $result[] = $value->Shrt_Desc;
+        //     }
+        // }
+        // return $result;
+
+
+        if(count($items) == 0) {
+            $result[] = 'No dishes found';
+        }
+        else {
+            foreach($items as $key => $value)
+            {
+   
+                $result[] = $value;
             }
         }
-        //return response()->json($result);
+       
         return $result;
+
+
+
+
+
     }
 }
