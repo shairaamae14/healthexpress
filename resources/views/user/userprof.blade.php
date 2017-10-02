@@ -1,4 +1,4 @@
-er-layouts.master')
+@extends('user-layouts.master')
 <style>
 @import url('https://fonts.googleapis.com/css?family=Lobster');
 @import url('https://fonts.googleapis.com/css?family=Anton');
@@ -78,7 +78,12 @@ display: inline-block;
                   <div class="row"> 
                       <div class="profile" >
                           <div class="avatar">
-                              <center><img src="{{asset('img/user.png')}}" alt="Circle Image" style="width:200px; height:200px; margin-top: -100px; " class="img-circle img-responsive img-raised">
+                              <center>
+                              <div style="width:200px; height:200px; margin-top: -100px; background-color:#30BB6D; border-radius: 100px; border:2px white solid; " >
+                              <label style="font-size: 150px; color:white; float:center"> {{Auth::user()->fname[0]}}
+                            </label>
+                            </div>
+                           <!--    <img src="{{asset('img/user.png')}}" alt="Circle Image" style="width:200px; height:200px; margin-top: -100px; " class="img-circle img-responsive img-raised"> -->
                           </div>
                            <div class="name">
                               <center><h3 class="title" style="color:#30BB6D">{{Auth::user()->fname." ".Auth::user()->lname}}</h3>

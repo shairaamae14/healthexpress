@@ -64,15 +64,15 @@ fieldset{
             <div class="stepwizard col-md-offset-3">
                 <div class="stepwizard-row setup-panel">
                     <div class="stepwizard-step">
-                        <a href="#step-1"  class="btn-primary" style="background-color: #30BB6D; color:white; border-radius:150px"><center><img src="{{asset('img/food.svg')}}" style="width:55px; height:45px"/></center></a>
+                        <a href="#step-1"  class="btn-success" style="background-color: #30BB6D; color:white; border-radius:150px"><center><img src="{{asset('img/food.svg')}}" style="width:55px; height:45px"/></center></a>
                         <p>Dish Details</p>
                     </div>
                     <div class="stepwizard-step">
-                        <a href="#step-2" class="btn-default" style="background-color: #30BB6D; color:white; border-radius:150px" disabled="disabled"><center><img src="{{asset('img/ingredients.svg')}}" style="width:75px; height:55px"/></center></a>
+                        <a href="#step-2" class="btn-success" style="background-color: #30BB6D; color:white; border-radius:150px" disabled="disabled"><center><img src="{{asset('img/ingredients.svg')}}" style="width:75px; height:55px"/></center></a>
                         <p>Ingredients</p>
                     </div>
                     <div class="stepwizard-step">
-                        <a href="#step-3" class="btn-default" style="background-color: #30BB6D; color:white; border-radius:150px" disabled="disabled"><center><img src="{{asset('img/plus.svg')}}" style="width:55px; height:45px"/></center></a>
+                        <a href="#step-3" class="btn-success" style="background-color: #30BB6D; color:white; border-radius:150px" disabled="disabled"><center><img src="{{asset('img/plus.svg')}}" style="width:55px; height:45px"/></center></a>
                     <p>Save Dish</p>
                     </div>
                 </div>
@@ -102,20 +102,12 @@ fieldset{
                             </div>
                             <div class="form-group col-md-4">
                                 <label>Preparation Time:</label> 
-<<<<<<< HEAD
-                                <input type="text" id="duration" name="duration" autofocus>
-=======
                                 <input type="text" id="duration" name="duration" required>
->>>>>>> 41fa27b38dd921b6a1db2a35137b7edb56b3a2cb
                             </div>
 
                             <div class="form-group col-md-4">
                                 <label>Price:</label>
-<<<<<<< HEAD
-                                <input type="text" class="form-control" id="price" name="price" placeholder="Price" required autofocus>
-=======
                                 <input type="text" class="form-control" id="price" name="price" placeholder="Price" required>
->>>>>>> 41fa27b38dd921b6a1db2a35137b7edb56b3a2cb
                             </div>
                             <div class="form-group col-md-8">
                                 <label>Best Eaten during:</label><br>
@@ -146,31 +138,20 @@ fieldset{
                 <div class="col-xs-6 col-md-offset-3">
                     <div class="col-md-12">
                         <h3>Ingredient Details</h3>
-<<<<<<< HEAD
-                            <div class="form-group">
-                              <input type="text" class="form-control" name="ingredients" id="ingredients" placeholder="Search">
-=======
+                        
                             <div class="form-group ui-widget">
                               <input type="text" class="form-control" name="ingredients" id="ingredients" placeholder="Search" required autofocus>
->>>>>>> 41fa27b38dd921b6a1db2a35137b7edb56b3a2cb
                             </div>
                             <div class="form-group col-md-4">
                                 <input type="number" class="form-control" id="quantity" name="quantity[]" placeholder="Quantity" ng-model="choice.name" min="0" autofocus required>
                             </div>
-<<<<<<< HEAD
-                            <div class="form-group">
-                                <select class="form-control" id="preparation" name="preparation[]" id="preparation" name="preparation" style="width:100px;">
-=======
                             <div class="form-group col-md-3">
                                 <select class="form-control" id="preparation" name="preparation[]" id="preparation" name="preparation" style="width:100px;" required autofocus>
->>>>>>> 41fa27b38dd921b6a1db2a35137b7edb56b3a2cb
                                     @foreach($preps as $prep)
                                         <option value="{{ $prep->p_id }}">{{$prep->p_name}}</option> 
                                     @endforeach
                                 </select>
                             </div>
-<<<<<<< HEAD
-=======
                             <div class="form-group col-md-4">
                                 <select class="form-control" id="um" name="um[]" name="um" style="width:150px;">
                                   @foreach($units as $um)
@@ -178,7 +159,6 @@ fieldset{
                                   @endforeach
                                 </select>
                             </div>
->>>>>>> 41fa27b38dd921b6a1db2a35137b7edb56b3a2cb
                             <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
                             
                             <button class="addfields remove" onclick="addChoice(); return false;" ng-click="addNewChoice()">+</button>  
@@ -213,11 +193,7 @@ fieldset{
                     
                     </div>
                         
-<<<<<<< HEAD
-                    <button type="submit" class="btn btn-block btn-success submit pull-right" href="{{route('cook.dishes.create')}}"><i class="fa fa-plus"></i>Add Dish</button> 
-=======
                     <button type="submit" class="btn btn-block btn-success pull-right" href="{{route('cook.dishes.create')}}"><i class="fa fa-plus"></i>Add Dish</button> 
->>>>>>> 41fa27b38dd921b6a1db2a35137b7edb56b3a2cb
                     </div>
                 </div>
          
@@ -230,17 +206,6 @@ fieldset{
     <!-- /.content -->
 </div>
 <!-- /.content-wrapper -->
-<<<<<<< HEAD
-=======
-
-    <footer class="main-footer">
-        <div class="pull-right hidden-xs">
-          <b>Version</b> 2.4.0
-        </div>
-        <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
-        reserved.
-    </footer>
->>>>>>> 41fa27b38dd921b6a1db2a35137b7edb56b3a2cb
 
     <footer class="main-footer">
         <div class="pull-right hidden-xs">
@@ -250,6 +215,35 @@ fieldset{
         reserved.
     </footer>
 
+@endsection
+@section('addtl_scripts')
+<!-- jQuery 3 -->
+<script src="{{asset('adminlte/bower_components/jquery/dist/jquery.min.js')}}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script src="{{asset('adminlte/bower_components/jquery-ui/jquery-ui.min.js')}}"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button);
+</script>
+<!-- Bootstrap 3.3.7 -->
+<script src="{{asset('adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
+<!-- Sparkline -->
+<script src="{{asset('adminlte/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js')}}"></script>
+<!-- daterangepicker -->
+<script src="{{asset('adminlte/bower_components/moment/min/moment.min.js')}}"></script>
+<script src="{{asset('adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
+<!-- datepicker -->
+<script src="{{asset('adminlte/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
+<!-- Bootstrap WYSIHTML5 -->
+<script src="{{asset('adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}"></script>
+<!-- Slimscroll -->
+<script src="{{asset('adminlte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
+<!-- FastClick -->
+<script src="{{asset('adminlte/bower_components/fastclick/lib/fastclick.js')}}"></script>
+<!-- AdminLTE App -->
+<script src="{{asset('adminlte/dist/js/adminlte.min.js')}}"></script>
+
+<script src="{{asset('js/durationpicker.js')}}"></script>
 
 
 <script type="text/javascript">
@@ -294,8 +288,8 @@ allWells.hide();
                 $item = $(this);
 
         if (!$item.hasClass('disabled')) {
-            navListItems.removeClass('btn-primary').addClass('btn-default');
-            $item.addClass('btn-primary');
+            navListItems.removeClass('btn-success').addClass('btn-success');
+            $item.addClass('btn-success');
             allWells.hide();
             $target.show();
             $target.find('input:eq(0)').focus();
@@ -321,7 +315,7 @@ allWells.hide();
             nextStepWizard.removeAttr('disabled').trigger('click');
     });
 
-    $('div.setup-panel div a.btn-primary').trigger('click');
+    $('div.setup-panel div a.btn-success').trigger('click');
     });
 
 
@@ -396,12 +390,8 @@ allWells.hide();
 
     }
 </script>
-<<<<<<< HEAD
-
-=======
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.js"></script>
->>>>>>> 41fa27b38dd921b6a1db2a35137b7edb56b3a2cb
 <script>
 
 $(document).ready(function(){
@@ -418,32 +408,3 @@ $(document).ready(function(){
 @endsection
 
 
-@section('addtl_scripts')
-<!-- jQuery 3 -->
-<script src="{{asset('adminlte/bower_components/jquery/dist/jquery.min.js')}}"></script>
-<!-- jQuery UI 1.11.4 -->
-<script src="{{asset('adminlte/bower_components/jquery-ui/jquery-ui.min.js')}}"></script>
-<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<script>
-  $.widget.bridge('uibutton', $.ui.button);
-</script>
-<!-- Bootstrap 3.3.7 -->
-<script src="{{asset('adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
-<!-- Sparkline -->
-<script src="{{asset('adminlte/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js')}}"></script>
-<!-- daterangepicker -->
-<script src="{{asset('adminlte/bower_components/moment/min/moment.min.js')}}"></script>
-<script src="{{asset('adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
-<!-- datepicker -->
-<script src="{{asset('adminlte/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
-<!-- Bootstrap WYSIHTML5 -->
-<script src="{{asset('adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}"></script>
-<!-- Slimscroll -->
-<script src="{{asset('adminlte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
-<!-- FastClick -->
-<script src="{{asset('adminlte/bower_components/fastclick/lib/fastclick.js')}}"></script>
-<!-- AdminLTE App -->
-<script src="{{asset('adminlte/dist/js/adminlte.min.js')}}"></script>
-
-<script src="{{asset('js/durationpicker.js')}}"></script>
-@endsection

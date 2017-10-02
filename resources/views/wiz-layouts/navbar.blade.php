@@ -1,34 +1,66 @@
+<!-- Navbar -->
+<nav class="navbar navbar-transparent navbar-absolute">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#example-navbar-success">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a href="./" id="brndhvr" style="font-size: 20px">
+                <div class="logo-container" style="color:white;">
+                    <div class="logo">
+                        <img src="{{asset('img/healthlogo.png')}}" width="80" height="40" style="margin-right:2px; margin-top:5px"  alt="Creative Tim Logo" rel="tooltip" title="Health Express" data-placement="bottom" data-html="true">
+                        <b style="color:white">HEALTH</b>EXPRESS
+                    </div>
+                    <!-- <div class="brand">
+                    
+                    </div> -->
 
-<nav id="mainNav" class="navbar navbar-default navbar-fixed-top" style="height:90px;">
-        <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-           <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
-                </button>
-                <a class="navbar-brand page-scroll" href="./"><img src="{{asset('img/healthexpress.png')}}" width="140" height="70" style="margin-top:-20px"></a></a>
-            </div>
 
-            <!-- Collect <th></th>e nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1" style="height:200px;">
-                <ul class="nav navbar-nav navbar-right" id="linkss">
+                </div>
+            </a>
+        </div>
+<div class="collapse navbar-collapse" id="example-navbar-success">
+            <ul class="nav navbar-nav navbar-right">
+               
+                <li>
+                    <a href="http://demos.creative-tim.com/material-kit-pro/presentation.html?ref=utp-freebie" target="_blank">
+                            <i class="material-icons">help</i> Help
+                    </a>
+                </li>
+                  @if(Auth::guest())
                     <li>
-                        <a class="page-scroll" href="#help" style="color:white"><img src="{{asset('img/help.png')}}" width="20" height="15"></img> Help</a>
+                        <a href="http://demos.creative-tim.com/material-kit-pro/presentation.html?ref=utp-freebie" target="_blank">
+                            How it works
+                        </a>
                     </li>
-            @if(Auth::guest())
+
                     <li>
-                        <a class="page-scroll" href="#howitworks" style="color:white">How it Works</a>
+                        <a href="http://demos.creative-tim.com/material-kit-pro/presentation.html?ref=utp-freebie" target="_blank">
+                         About us
+                        </a>
                     </li>
+
                     <li>
-                        <a class="page-scroll" href="#about" style="color:white">About Us</a>
+                        <a href="./login" target="_blank">
+                          Login
+                        </a>
                     </li>
-                    <li><a class="page-scroll" href="./login" style="color:white">Login</a></li>
-                     <li><a class="page-scroll" href="./register" style="color:white">Register</a></li>
-            @else
+
+                    <li>
+                        <a href="./register" target="_blank">
+                          Register
+                        </a>
+                    </li>
+
+                      @else
+                          
 
                <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                  <span class="caret">  {{ Auth::user()->fname }} </span>
                                 </a>
 
                                 <ul class="dropdown-menu" role="menu">
@@ -46,9 +78,11 @@
                                 </ul>
                             </li>
                             @endif
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
+                   
+
+            </ul>
         </div>
-        <!-- /.container-fluid -->
-    </nav>
+    </div>
+</nav>
+<!-- End Navbar -->
+

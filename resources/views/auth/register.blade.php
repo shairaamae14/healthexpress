@@ -6,9 +6,13 @@
 </style>
 
 @section('content')
- <div class="top-content" style="margin-top:50px;">
-            <div class="container">
-    
+  <div class="wrapper">
+    <div class="header header-filter" style="background-image: url('{{asset('img/bgsignin.jpg')}}');   min-height:100%;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    background-size: cover;
+    -moz-background-size: cover;">
+      <div class="container">
                 <div class="row">
                     <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3 form-box">
                         <form role="form" method="POST" action="{{route('register')}}" class="f1">
@@ -205,10 +209,10 @@
                         
                         </form>
                     </div>
+                </div>  </div>
+
                 </div>
-                    
-            </div>
-        </div>
+           </div>
 
 
 @endsection

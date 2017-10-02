@@ -1,18 +1,32 @@
-   <!--LOGIN!-->   
-    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-   <!-- jQuery -->
-    <script src="{{asset('vendor/jquery/jquery.min.js')}}"></script>
+<!--   Core JS Files   -->
+    <script src="{{asset('customer/assets/js/jquery.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('customer/assets/js/bootstrap.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('customer/assets/js/material.min.js')}}"></script>
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="{{asset('vendor/bootstrap/js/bootstrap.min.js')}}"></script>
+    <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
+    <script src="{{asset('customer/assets/js/nouislider.min.js')}}" type="text/javascript"></script>
 
-    <!-- Plugin JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
-    <script src="{{asset('vendor/scrollreveal/scrollreveal.min.js')}}"></script>
-    <script src="{{asset('vendor/magnific-popup/jquery.magnific-popup.min.js')}}"></script>
+    <!--  Plugin for the Datepicker, full documentation here: http://www.eyecon.ro/bootstrap-datepicker/ -->
+    <script src="{{asset('customer/assets/js/bootstrap-datepicker.js')}}" type="text/javascript"></script>
 
-    <!-- Theme JavaScript -->
-    <script src="j{{asset('s/creative.min.js')}}"></script>
+    <!-- Control Center for Material Kit: activating the ripples, parallax effects, scripts from the example pages etc -->
+    <script src="{{asset('customer/assets/js/material-kit.js')}}" type="text/javascript"></script>
+
+    <script type="text/javascript">
+
+        $().ready(function(){
+            // the body of this function is in assets/material-kit.js
+            materialKit.initSliders();
+            window_width = $(window).width();
+
+            if (window_width >= 992){
+                big_image = $('.wrapper > .header');
+
+                $(window).on('scroll', materialKitDemo.checkScrollForParallax);
+            }
+
+        });
+    </script>
 
 
 

@@ -38,11 +38,7 @@
 
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
 
-<<<<<<< HEAD
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.10.0/css/bootstrap-select.min.css" />
-=======
   
->>>>>>> 41fa27b38dd921b6a1db2a35137b7edb56b3a2cb
   <link rel="stylesheet" href="{{asset('css/wizard.css')}}">
   
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">

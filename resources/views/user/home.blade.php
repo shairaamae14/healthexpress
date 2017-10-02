@@ -4,6 +4,8 @@
 @import url('http://fonts.googleapis.com/css?family=Anton');
 @import url('https://fonts.googleapis.com/css?family=Ubuntu+Condensed');
 @import url('https://fonts.googleapis.com/css?family=Archivo+Black');
+@import url('https://fonts.googleapis.com/css?family=Lato');
+
 
 #ordermode{
   padding:20px;
@@ -51,6 +53,8 @@ display: inline-block;
   color:black !important;
 }
 
+    
+
 
 
 /*Resize the wrap to see the search bar change!*/
@@ -60,7 +64,7 @@ display: inline-block;
 </style>
 @section('content')
 <div class="wrapper">
-  <div class="header header-filter" style="background-image: url('{{asset('img/bgindex.jpg')}}')"">
+  <div class="header header-filter" style="background-image: url('{{asset('img/bgindex.jpg')}}')">
     <div class="container">
       <div class="row">
       <center>
@@ -88,10 +92,25 @@ display: inline-block;
                 <div class="row">
                   <form method="POST" action="{{route('user.index')}}">
                         {{csrf_field()}}
-                  <div class="search" style="float:right; margin-right: 50px; display: inline-block;">
+                  <div class="search" style="float:right">
+
+                  <input type="text" id="input" class="searchTerm search-query mac-style" placeholder="Search"  name="search" value="" style="height:40px" autofocus >
+                   <input type="hidden" id="dish_id" name="id" value="">
+                    <button type="submit" class="btn btn-success btnSearch" id="btnSearch"><i class="material-icons">search</i></button>
+                </div>
+                              <ul id="dishNames" style="display:none">
+                           @foreach($dishes as $dish)
+                           <li><a href="#"></a>{{$dish->dish_name}}</li>
+                           @endforeach
+                       </ul>
+                       </div>
+                            </form>
+
+
+                 <!--  <div class="search" style="float:right; margin-right: 50px; display: inline-block;">
                        <input type="text" id="input" class="searchTerm form-control" placeholder="Search" name="search" style="height:30px" value="" autofocus>
                        <input type="hidden" id="dish_id" name="id" value="">
-                       <button type="submit" class="btn btn-success btnSearch" id="btnSearch">
+                       <button type="submit" class="btn btn-success btnSearch" id="btnSearch" style="float:right">
                         <i class="material-icons">search</i>
                       </button>
                        
@@ -100,9 +119,9 @@ display: inline-block;
                            <li><a href="#"></a>{{$dish->dish_name}}</li>
                            @endforeach
                        </ul>
-                    </div>
-                    </form>
-                </div>
+                    </div> -->
+              <!--       </form>
+                </div> -->
 <br>
 
 
@@ -128,7 +147,7 @@ display: inline-block;
                       <a href="{{route('cook.rating')}}" id="rev"><p style="font-size: 12px; color:black; background-color:#E3E3E3">See Reviews</p></a>
                       </center>
                       
-                         <p style="float:left; margin-left:5px; margin-top: 12px; font-size: 20px; font-family: 'Lobster', cursive; color:black;" id="tots">Php {{$dish->basePrice}}</p>
+                         <p style="float:left; margin-left:5px; margin-top: 12px; font-size: 20px; font-family: 'Lobster', cursive; color:black;" id="tots">Php {{$dish->sellingPrice}}</p>
                          <a href="{{route('dish.addtocart', ['id'=> $dish->did])}}"><i class="material-icons" style="color:#30BB6D; font-size: 30px">add_circle</i></a>
                        <!--    <p onclick="myFunction('{{$dish->dish_name}}', '{{$dish->basePrice}}')" id="addme"><i class="material-icons" style="color:#30BB6D; font-size: 30px">add_circle</i></p> -->
                       </br>
@@ -181,10 +200,11 @@ display: inline-block;
             <div id="cartdiv" style="padding-left: 5px">  
               <dt style="margin-left:-69px">
                <div id="q">
-                 <input type="text" min="1" value="{{$crt['qty']}}"  style="width: 40px; height:25px;" id="number">
-                    <a href="{{route('dish.addtocart', ['id'=> $dish->did])}}" id="plus"><i class="material-icons" onclick="incrementValue()"  value="{{$di['did']}}" id="inc" style="color:#30BB6D">add_circle</i></a>
+                 <input type="text" min="1" value="{{$crt['qty']}}"  style="width: 40px; height:25px;" id="number"/>
+                    
+                    <a href="{{route('dish.addtocart', ['id'=> $di['did']])}}" id="plus"  onclick="incrementValue()" value="{{$dish->did}}"><i class="material-icons" value="{{$di['did']}}" id="inc" style="color:#30BB6D">add_circle</i></a>
                     </a>
-                   <a href="#" id="minus"><i class="material-icons" onclick="decrementValue()" style="color:#30BB6D" id="dec">remove_circle</i></a>
+                   <a href="#" id="minus" onclick="decrementValue()" ><i class="material-icons"  style="color:#30BB6D" id="dec">remove_circle</i></a>
                  
                </dt>
               <dd style="margin-left: 2px">
@@ -193,26 +213,28 @@ display: inline-block;
                 </label>
                </dd>
                  <dt style="margin-left:-2px">
-                <label style="font-size: 12px; color: gray; float:left"> Price: <b id="bprice"  name="price">{{$di['basePrice']}}</b></label>
+                 <input type="hidden" value="{{$di['basePrice']}}" name="price"/>
+                <label style="font-size: 12px; color: gray; float:left"> Price: <b id="bprice">{{$di['sellingPrice']}}</b></label>
                 </dt>
                  <dd style="margin-right: 2px">
-                <label style="font-size: 12px; color: gray; float:right">Total Amount:<b id="tAmount"></b><b>.00</b></label>
+                <label style="font-size: 12px; color: gray; float:right">Total Amount:<b>{{$crt['price1']}}</b></label>
                 </dd>
               </dt>
           </div>
       </dl>
+
 @endforeach
 @endforeach
  @endif
 
       <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-           <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lobster', cursive;" id="tots"><b>Subtotal:</b> {{Session::has('cart') ? Session::get('cart')->totalPrice : '' }}</p><br>
+           <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots"><b>Subtotal:</b> Php {{Session::has('cart') ? Session::get('cart')->totalPrice : '' }}</p><br>
         </div>
         <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-          <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lobster', cursive;" id="tots"><b>Delivery Fee:</b> Php 40 .00</p><br>
+          <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif', cursive;" id="tots"><b>Delivery Fee:</b> Php 40 .00</p><br>
         </div>
         <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-          <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lobster', cursive;" id="tots"><b>Total:</b> Php 150.00</p>
+          <p style="float:right; margin-right:2px; font-size: 17px; color:black;font-family: 'Lato', sans-serif" id="tots"><b>Total:</b>Php {{Session::has('cart') ? Session::get('cart')->AllTotal : '' }}</p>
         </div>
          <button type="button" class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:left; margin-top: 2px; border:none" id="chkt">Checkout</button>
         
@@ -243,50 +265,63 @@ display: inline-block;
 
   <!-- Control Center for Material Kit: activating the ripples, parallax effects, scripts from the example pages etc -->
   <script src="{{asset('customer/assets/js/material-kit.js')}}" type="text/javascript"></script>
-  <script type="text/javascript">
-  <script>
+<script>
+// function incrementValue(){
+  
 
-$(function() {
-  var amount = parseInt($("#bprice").text(), 10);
-  var qty = parseInt($("#number").val(), 10);
-    
-$("#tAmount").text(amount * qty);
-     // document.getElementById('tAmount').text(amount*qty);
-    
-});
-// $(".inc").on('click', function(){
-// var id =  $(this).val();
-//             var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-//                 $.ajax({
-//                     url: '{{ URL::route('dish.addtocart', '+ id +') }}',
-//                     method: 'GET',     
-//                     data: {
-//                         '_token': CSRF_TOKEN
-//                         },
-//                     success: function() {
-//                      window.location = './user/home';   
-//                     },
-//                     error: function() {
-//                         console.log('an error occured');
-//                     }
-//                 });
+//     //display modal form for task editing
+//     $('#plus').click(function(){
+//         var dish_id = $(this).val();
+//           var url = "addToCart/";
 
+//         $.get(url + '/' + dish_id, function (data) {
+//             //success data
+//             console.log(data);
+//             // $('#task_id').val(data.id);
+//             // $('#task').val(data.task);
+//             // $('#description').val(data.description);
+//             // $('#btn-save').val("update");
+
+//             // $('#myModal').modal('show');
+//         });
+
+// }
+
+// $(function() {
+//   var amount = parseInt($("#bprice").text(), 10);
+//   var qty = parseInt($("#number").val(), 10);
+    
+// $("#tAmount").text(amount * qty);
+//      document.getElementById('tAmount').text(amount*qty);
+    
 // });
-function incrementValue()
-{
-    var value = parseInt(document.getElementById('number').value, 10);
-    value = isNaN(value) ? 0 : value;
-    value++;
+// $('#inc').on('click', function(){
+   
+// });
 
-var id=$(this).attr("#data-id");
-    document.getElementById('number').value = value;
+// function incrementValue()
+// {
+//     var value = parseInt(document.getElementById('number').value, 10);
+//     value = isNaN(value) ? 0 : value;
+//     value++;
 
-  var amount = parseInt($("#bprice").text(), 10);
-  var qty = parseInt($("#number").val(), 10);
-    
-$("#tAmount").text(amount * qty);
 
-}
+//     document.getElementById('number').value = value;
+
+//     var id =document.getElementById('inc').value;
+// $.ajax({
+//             url: 'addToCart/{id}'+id,
+//             method: 'get',
+//             success: function () {
+//                 console.log("done");
+//                 //do something
+//             },error: function(xhr, ajaxOptions, thrownError){
+//                     console.log(xhr.status+" ,"+" "+ajaxOptions+", "+thrownError);
+//                 }
+//             }
+//         }); 
+
+// }
 
 function decrementValue()
 {
@@ -298,10 +333,7 @@ function decrementValue()
     }
     var id=$(this).attr("#data-id");
     document.getElementById('number').value = value;
-     var amount = parseInt($("#bprice").text(), 10);
-  var qty = parseInt($("#number").val(), 10);
     
-$("#tAmount").text(amount * qty);
 }
 
 

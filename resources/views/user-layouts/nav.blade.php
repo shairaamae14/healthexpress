@@ -9,7 +9,7 @@
                 <span class="icon-bar"></span>
             </button>
 
-               <a href="http://www.creative-tim.com">
+               <a href="./home">
            <div class="logo-container">
                 <div class="logo" style="width: 165px; height:90px; border-radius: 0px; border:none">
             <a class="navbar-brand" href="/home"><img src="{{asset('img/healthexpress.png')}}" style="width:160px; height:90px;"></img></a>

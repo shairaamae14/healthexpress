@@ -45,7 +45,7 @@ class HomeController extends Controller
     }
     
     public function express(Request $request) {
-        $this->allergyFilter();
+        // $this->allergyFilter();
 
         if(!$request->sortOption) {
 
@@ -160,15 +160,19 @@ class HomeController extends Controller
 
 public function addToCart(Request $request, $id){
     $dish=Dish::where('did', $id)->get();
+    foreach($dish as $d){
+     $price = $d->sellingPrice;
+    }
+
     $oldCart=Session::has('cart') ? Session::get('cart') : null;
     $cart= new Cart($oldCart);
-    $cart->addCart($dish, $id);
+    $cart->addCart($dish, $id, $price);
   $request->session()->put('cart', $cart);
-// dd($request->session()->get('cart'));
+// dd($request->session()->get('cart')->price1);
 // echo $request->$dish->get('dish_name');
 //   $item=$request->session()->get('cart')->items;
 // echo $item;
-
+// dd($price);
  return redirect()->route('user.index');
 
 }

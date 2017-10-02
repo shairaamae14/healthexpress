@@ -371,7 +371,7 @@ a .material-icons, a:hover .material-icons, a:focus .material-icons {
 .navbar .navbar-nav > li > a.btn.btn-success.dropdown-toggle, .open >
 .navbar .navbar-nav > li > a.btn.btn-success.dropdown-toggle:focus, .open >
 .navbar .navbar-nav > li > a.btn.btn-success.dropdown-toggle:hover {
-  background-color: #4caf50;
+  background-color:#30bb6d;
   color: #FFFFFF;
 }
 .btn.btn-success:focus, .btn.btn-success:active, .btn.btn-success:hover,
@@ -904,7 +904,7 @@ fieldset[disabled] .form-group.is-focused .checkbox label {
   opacity: 0.2;
 }
 .checkbox input[type=checkbox]:checked + .checkbox-material .check {
-  background: #9c27b0;
+  background: #30bb6d;
 }
 .checkbox input[type=checkbox]:checked + .checkbox-material .check:before {
   color: #FFFFFF;
@@ -1361,7 +1361,7 @@ output {
   background-color: #9c27b0;
 }
 .label.label-success {
-  background-color: #4caf50;
+  background-color: #30bb6d;
 }
 .label.label-info {
   background-color: #03a9f4;
@@ -1435,7 +1435,7 @@ output {
 }
 .form-group.is-focused .form-control {
   outline: none;
-  background-image: linear-gradient(#9c27b0, #9c27b0), linear-gradient(#D2D2D2, #D2D2D2);
+  background-image: transparent;
   background-size: 100% 2px, 100% 1px;
   box-shadow: none;
   transition-duration: 0.3s;
@@ -1482,7 +1482,7 @@ output {
 }
 .form-group.has-success label.control-label,
 .form-group.has-success .help-block {
-  color: #4caf50;
+  color: #30bb6d;
 }
 .form-group.has-info .form-control {
   box-shadow: none;
@@ -1840,7 +1840,7 @@ select.form-control[multiple], .form-group.is-focused select.form-control[multip
 .pagination.pagination-success > .active > span,
 .pagination.pagination-success > .active > span:focus,
 .pagination.pagination-success > .active > span:hover {
-  background-color: #4caf50;
+  background-color: #30bb6d;
   border-color: #4caf50;
   box-shadow: 0 4px 5px 0 rgba(76, 175, 80, 0.14), 0 1px 10px 0 rgba(76, 175, 80, 0.12), 0 2px 4px -1px rgba(76, 175, 80, 0.2);
 }
@@ -1899,7 +1899,7 @@ select.form-control[multiple], .form-group.is-focused select.form-control[multip
   box-shadow: 0 16px 26px -10px rgba(3, 169, 244, 0.56), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(3, 169, 244, 0.2);
 }
 .nav-pills.nav-pills-success > li.active > a, .nav-pills.nav-pills-success > li.active > a:focus, .nav-pills.nav-pills-success > li.active > a:hover {
-  background-color: #4caf50;
+  background-color: #30bb6d;
   box-shadow: 0 16px 26px -10px rgba(76, 175, 80, 0.56), 0 4px 25px 0px rgba(0, 0, 0, 0.12), 0 8px 10px -5px rgba(76, 175, 80, 0.2);
 }
 .nav-pills.nav-pills-warning > li.active > a, .nav-pills.nav-pills-warning > li.active > a:focus, .nav-pills.nav-pills-warning > li.active > a:hover {
@@ -2203,7 +2203,7 @@ legend {
   color: #ffffff;
 }
 .navbar.navbar-success {
-  background-color: #4caf50;
+  background-color: #30bb6d;
   color: #ffffff;
 }
 .navbar.navbar-success .navbar-form .form-group input.form-control::-moz-placeholder,
@@ -2223,10 +2223,10 @@ legend {
 }
 .navbar.navbar-success .dropdown-menu li > a:hover, .navbar.navbar-success .dropdown-menu li > a:focus {
   color: #FFFFFF;
-  background-color: #4caf50;
+  background-color: #30bb6d;
 }
 .navbar.navbar-success .dropdown-menu .active > a {
-  background-color: #4caf50;
+  background-color: #30bb6d;
   color: #ffffff;
 }
 .navbar.navbar-success .dropdown-menu .active > a:hover, .navbar.navbar-success .dropdown-menu .active > a:focus {
@@ -2548,7 +2548,7 @@ legend {
   background-color: #9c27b0;
 }
 .progress .progress-bar.progress-bar-success {
-  background-color: #4caf50;
+  background-color: #30bb6d;
 }
 .progress .progress-bar.progress-bar-info {
   background-color: #03a9f4;
@@ -3025,7 +3025,7 @@ h2.title {
   background-color: #9c27b0;
 }
 .panel.panel-success > .panel-heading {
-  background-color: #4caf50;
+  background-color: #30bb6d;
 }
 .panel.panel-info > .panel-heading {
   background-color: #03a9f4;
@@ -3270,7 +3270,7 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
   border-color: #03a9f4;
 }
 .slider.slider-success .noUi-connect, .slider.slider-success.noUi-connect {
-  background-color: #4caf50;
+  background-color: #30bb6d;
 }
 .slider.slider-success .noUi-handle {
   border-color: #4caf50;
@@ -3392,7 +3392,7 @@ input[type="file"] > input[type="button"]::-moz-focus-inner {
 }
 .datepicker td.success p,
 .datepicker td.success:hover p {
-  background-color: #4caf50;
+  background-color: #30bb6d;
 }
 .datepicker td.warning p,
 .datepicker td.warning:hover p {
