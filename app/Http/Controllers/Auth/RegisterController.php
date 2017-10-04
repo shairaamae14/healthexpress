@@ -72,7 +72,8 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-       
+        $bday = date('Y-m-d', strtotime($data['bday']));
+
         $user = User::create([
             'fname' => $data['fname'],
             'lname' => $data['lname'],
@@ -81,7 +82,7 @@ class RegisterController extends Controller
             'contact_no' => $data['contact_no'],
             'weight' => $data['weight'],
             'height' => $data['height'],
-            'birthday' => $data['bday'],
+            'birthday' => $bday,
             'gender' => $data['gender'],
             'location' => $data['location'],
             'longitude' => $data['cityLat'],

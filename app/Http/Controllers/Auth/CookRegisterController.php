@@ -90,7 +90,7 @@ class CookRegisterController extends Controller
 
             
 
-         return redirect()->route('cook.login');
+         return redirect()->route('cook.login');    
     }
 
 }

@@ -26,31 +26,31 @@
             <ul class="nav navbar-nav navbar-right">
                
                 <li>
-                    <a href="http://demos.creative-tim.com/material-kit-pro/presentation.html?ref=utp-freebie" target="_blank">
+                    <a href="" target="_blank">
                             <i class="material-icons">help</i> Help
                     </a>
                 </li>
                   @if(Auth::guest())
                     <li>
-                        <a href="http://demos.creative-tim.com/material-kit-pro/presentation.html?ref=utp-freebie" target="_blank">
+                        <a href="" target="_blank">
                             How it works
                         </a>
                     </li>
 
                     <li>
-                        <a href="http://demos.creative-tim.com/material-kit-pro/presentation.html?ref=utp-freebie" target="_blank">
+                        <a href="" target="_blank">
                          About us
                         </a>
                     </li>
 
                     <li>
-                        <a href="./login" target="_blank">
+                        <a href="{{url('login')}}">
                           Login
                         </a>
                     </li>
 
                     <li>
-                        <a href="./register" target="_blank">
+                        <a href="{{url('register')}}">
                           Register
                         </a>
                     </li>
@@ -77,7 +77,7 @@
                                     </li>
                                 </ul>
                             </li>
-                            @endif
+                    @endif
                    
 
             </ul>
