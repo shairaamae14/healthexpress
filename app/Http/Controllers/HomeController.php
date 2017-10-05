@@ -46,7 +46,26 @@ class HomeController extends Controller
                             ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
                             ->get();
 
-         return view('user.home', compact('user', 'dishes', 'sortDishes'));
+          $breakfast = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+                            ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
+                            ->where('dish_besteaten.be_id', 1)
+                            ->get();
+            // }
+        // else if($request->sortOption == 'Lunch') {
+            $lunch = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+                            ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
+                            ->where('dish_besteaten.be_id', 2)
+                            ->get();
+            
+        // }
+        // else if($request->sortOption == 'Dinner'){
+            $dinner = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+                            ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
+                            ->where('dish_besteaten.be_id', 3)
+                            ->get();
+
+
+         return view('user.home', compact('user', 'dishes', 'sortDishes', 'breakfast', 'lunch', 'dinner'));
     }
     
     public function express(Request $request) {
@@ -82,6 +101,7 @@ class HomeController extends Controller
         // }
         
         return view('user.u_express', compact('dishes', 'breakfast', 'lunch', 'dinner'));
+                            // return redirect()->route('user.index'); 
     }
     public function show() {
         return view('best');

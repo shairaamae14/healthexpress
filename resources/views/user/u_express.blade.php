@@ -95,47 +95,48 @@ div.tab {
     }
 
 </style>
-<script>
-  // $(document).ready(function(){
-    function openCity(evt, cityName) {
-      // Declare all variables
-      var i, tabcontent, tablinks;
-
-      // Get all elements with class="tabcontent" and hide them
-      tabcontent = document.getElementsByClassName("tabcontent");
-      for (i = 0; i < tabcontent.length; i++) {
-          tabcontent[i].style.display = "none";
-      }
-
-      // Get all elements with class="tablinks" and remove the class "active"
-      tablinks = document.getElementsByClassName("tablinks");
-      for (i = 0; i < tablinks.length; i++) {
-          tablinks[i].className = tablinks[i].className.replace(" active", "");
-      }
-
-      // Show the current tab, and add an "active" class to the button that opened the tab
-      document.getElementById(cityName).style.display = "block";
-      evt.currentTarget.className += " active";
-      }
-    document.getElementById("defaultOpen").click();
-  // });
-</script>
 @section('content')
 <div class="wrapper">
-  <div class="header header-filter" style="background-image: url('{{asset('img/bgindex.jpg')}}')"">
+  <div class="header header-filter" style="background-image: url('{{asset('img/bgindex.jpg')}}')">
     <div class="container">
       <div class="row">
       <center>
         <div class="col-md-6">
-        
-        </div>      
+        <br>
+       <!--    <h1 class="title text-center" style="font-family: 'Lobster', cursive; font-size: 30px;">Choose your order mode:</h1>
+
+            <a href="{{url('/home/express')}}" class=" btn btn-danger btn-raised btn-lg" style="background-color:transparent;border:2px solid white; font-family: 'Anton', sans-serif; font-size: 20px " id="ordermode">
+            <center> Express Meal</center>
+            </a>
+                <a href="{{url('/home/planned')}}" class=" btn btn-danger btn-raised btn-lg" id="ordermode" style="background-color:transparent;  border:2px solid white; font-family: 'Anton', sans-serif; font-size: 20px ">
+             <center>Planned Meal</center>
+            </a> -->
+
+        </div>
+
+      
       </div>
     </div>
-  </div><!-- header -->
-  <div class="main main-raised"  style="width: 65%; float: left">
-    <div class="section">
-      <div class="container" style="width: 90%;">
-        <div class="row">
+  </div>
+
+    <div class="main main-raised"  style="width: 65%; float: left">
+        <div class="section">
+            <div class="container" style="width: 90%;">
+                <div class="row">
+
+            <!--       <div id="bestEaten" style="float:left">
+                  <span class="label label-default" style="float:left; margin-bottom: 2px">Sort by</span>
+                <form id="sortBy" action ="{{url('/home') }}" method="POST">
+                      {{csrf_field()}}
+                    <select id="category" name='category' class='form-control' style="width:200px; height:40px">
+                        <option disabled selected value> -- select an option -- </option>
+                        <option value='Breakfast'>Breakfast</option>
+                        <option value='Lunch'>Lunch</option>
+                        <option value='Dinner'>Dinner</option>
+                    </select>
+                </form>
+                </div> -->
+
                   <div class="search" style="float:right">
                   <form method="POST" action="{{route('user.index')}}">
                         {{csrf_field()}}
@@ -150,18 +151,32 @@ div.tab {
                        </ul>
                         </form>
                        </div>
-  
-        </div><!-- row -->
-        <br>
+                           
 
-        <div ng-cloak="" class="tabsdemoDynamicHeight" ng-app="MyApp">
-          <md-content>
-            <md-tabs md-dynamic-height="" md-border-bottom="">
-              <md-tab label="all">
-                <md-content class="md-padding">
-                  <h1 class="md-display-2"></h1>
-                  <p>
-                    @if($dishes)
+                
+
+  <br>
+
+      <!-- Tabs on Plain Card -->
+            <div class="card card-nav-tabs card-plain">
+              <div class="header header-success" style="box-shadow: none">
+                <!-- colors: "header-primary", "header-info", "header-success", "header-warning", "header-danger" -->
+                <div class="nav-tabs-navigation">
+                  <div class="nav-tabs-wrapper">
+                    <ul class="nav nav-tabs" data-tabs="tabs">
+                      <li class="active"><a href="#all" data-toggle="tab">All</a></li>
+                      <li><a href="#home" data-toggle="tab">Breakfast</a></li>
+                      <li><a href="#updates" data-toggle="tab">Lunch</a></li>
+                      <li><a href="#history" data-toggle="tab">Dinner</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+              <div class="content">
+                <div class="tab-content text-center">
+
+                     <div class="tab-pane active" id="all">
+                 @if($dishes)
                       @foreach($dishes as $dish)
                         <div class="col-sm-3">
                          <div class="box box-solid" style="border-radius:5px; box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.3);">
@@ -179,19 +194,24 @@ div.tab {
                               </small><br>
                               <a href="{{route('cook.rating')}}"><p style="font-size: 12px; color:#30BB6D; background-color:#E3E3E3">See Reviews</p></a>
                               </center>
+                                <p style="float:left; margin-left:5px; margin-top: 12px; font-size: 20px; font-family: 'Lobster', cursive; color:black;" id="tots">Php {{$dish->sellingPrice}}</p>
+                       
+                                          <form method="POST" action="{{url('cart')}}">
+                                          <input type="hidden" name="dish_id" value="{{$dish->did}}">
+                                          <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            <button type="submit" style="width:10px; background-color:transparent; border:transparent; margin-right: 30px">
+                                               <i class="material-icons"  style="color:#30BB6D; font-size:40px">add_circle</i>
+                                            </button>
+                            </form>
                               </br>
                           </div>
                         </div>
                     @endforeach
                 @endif
-                  </p>
-                </md-content>
-              </md-tab>
+                  </div> 
 
-              <md-tab label="breakfast">
-                <md-content class="md-padding">
-                  <p>
-                     @if($breakfast)
+                  <div class="tab-pane active" id="home">
+                 @if($breakfast)
                       @foreach($breakfast as $dish)
                         <div class="col-sm-3">
                          <div class="box box-solid" style="border-radius:5px; box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.3);">
@@ -209,19 +229,24 @@ div.tab {
                               </small><br>
                               <a href="{{route('cook.rating')}}"><p style="font-size: 12px; color:#30BB6D; background-color:#E3E3E3">See Reviews</p></a>
                               </center>
+                              <p style="float:left; margin-left:5px; margin-top: 12px; font-size: 20px; font-family: 'Lobster', cursive; color:black;" id="tots">Php {{$dish->sellingPrice}}</p>
+                       
+                                          <form method="POST" action="{{url('cart')}}">
+                                          <input type="hidden" name="dish_id" value="{{$dish->did}}">
+                                          <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            <button type="submit" style="width:10px; background-color:transparent; border:transparent; margin-right: 30px">
+                                               <i class="material-icons"  style="color:#30BB6D; font-size:40px">add_circle</i>
+                                            </button>
+                            </form>
                               </br>
                           </div>
                         </div>
                     @endforeach
                 @endif
-                  </p>
-                </md-content>
-              </md-tab>
+                  </div>
 
-              <md-tab label="lunch">
-                <md-content class="md-padding">
-                  <p>
-                     @if($lunch)
+                  <div class="tab-pane" id="updates">
+                   @if($lunch)
                       @foreach($lunch as $dish)
                         <div class="col-sm-3">
                          <div class="box box-solid" style="border-radius:5px; box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.3);">
@@ -239,19 +264,24 @@ div.tab {
                               </small><br>
                               <a href="{{route('cook.rating')}}"><p style="font-size: 12px; color:#30BB6D; background-color:#E3E3E3">See Reviews</p></a>
                               </center>
+                              <p style="float:left; margin-left:5px; margin-top: 12px; font-size: 20px; font-family: 'Lobster', cursive; color:black;" id="tots">Php {{$dish->sellingPrice}}</p>
+                       
+                                          <form method="POST" action="{{url('cart')}}">
+                                          <input type="hidden" name="dish_id" value="{{$dish->did}}">
+                                          <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            <button type="submit" style="width:10px; background-color:transparent; border:transparent; margin-right: 30px">
+                                               <i class="material-icons"  style="color:#30BB6D; font-size:40px">add_circle</i>
+                                            </button>
+                            </form>
                               </br>
                           </div>
                         </div>
                       @endforeach
                      @endif
-                  </p>
-                </md-content>
-              </md-tab>
+                  </div>
 
-              <md-tab label="dinner">
-                <md-content class="md-padding">
-                  <p>
-                     @if($dinner)
+                  <div class="tab-pane" id="history">
+                             @if($dinner)
                       @foreach($dinner as $dish)
                         <div class="col-sm-3">
                          <div class="box box-solid" style="border-radius:5px; box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.3);">
@@ -269,23 +299,33 @@ div.tab {
                               </small><br>
                               <a href="{{route('cook.rating')}}"><p style="font-size: 12px; color:#30BB6D; background-color:#E3E3E3">See Reviews</p></a>
                               </center>
+                              <p style="float:left; margin-left:5px; margin-top: 12px; font-size: 20px; font-family: 'Lobster', cursive; color:black;" id="tots">Php {{$dish->sellingPrice}}</p>
+                       
+                                          <form method="POST" action="{{url('cart')}}">
+                                          <input type="hidden" name="dish_id" value="{{$dish->did}}">
+                                          <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            <button type="submit" style="width:10px; background-color:transparent; border:transparent; margin-right: 30px">
+                                               <i class="material-icons"  style="color:#30BB6D; font-size:40px">add_circle</i>
+                                            </button>
+                            </form>
                               </br>
                           </div>
                         </div>
                       @endforeach
                      @endif
-                  </p>
-                </md-content>
-              </md-tab>
-            </md-tabs>
-          </md-content>
-        </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- End Tabs on plain Card -->
 
-      <!-- </div> -->
-      <!--row!-->
-    </div><!--container!-->
-    <center>
-      <ul class="pagination pagination-success" style="float:right">
+
+
+        </div><!--row!-->
+       </div><!--container!-->
+
+<center>
+ <ul class="pagination pagination-success" style="float:right">
         <li><a href="javascript:void(0);">< prev</a></li>
         <li class="active"><a href="javascript:void(0);">1</a></li>
         <li><a href="javascript:void(0);">2</a></li>
@@ -293,12 +333,13 @@ div.tab {
         <li><a href="javascript:void(0);">4</a></li>
         <li><a href="javascript:void(0);">5</a></li>
         <li><a href="javascript:void(0);">next ></a></li>
-      </ul>
-    </center>
-  </div><!--section!-->
+    </ul>
+</center>
+
+    </div><!--section!-->
 </div><!--main raised!-->
 
-<!-- View Details -->       
+
 
 
  <div class="main main-raised"  style="width: 25%; float: right;">
@@ -376,6 +417,7 @@ div.tab {
           <label style="color:black">40.00</label>
           <br>
         </div>
+        
         <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
           <p style="float:right; margin-right:2px; font-size: 17px; color:black;font-family: 'Lato', sans-serif" id="tots">
           <b>Total:</b>&nbsp;Php
@@ -428,6 +470,12 @@ div.tab {
       </div>
          </div>
 
+
+
+
+
+
+
 @endsection
 @section('addtl_scripts')
 
@@ -446,13 +494,13 @@ div.tab {
   <!-- Control Center for Material Kit: activating the ripples, parallax effects, scripts from the example pages etc -->
   <script src="{{asset('customer/assets/js/material-kit.js')}}" type="text/javascript"></script>
 
-
+<!-- 
     <link href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.css" rel="stylesheet"/>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.min.js"></script>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.js"></script> -->
 
 
 
@@ -542,20 +590,6 @@ div.tab {
       });
 
 
-      angular.module("MyApp", ["ngMaterial", "ngAnimate"])
-
-.controller("tabCtrl", ["$scope", function($scope) {
-    $scope.selectedTab = 0;
-    
-    $scope.changeTab = function() {
-        if ($scope.selectedTab === 2) {
-            $scope.selectedTab = 0;
-        }
-        else {
-            $scope.selectedTab++;
-        }
-        
-    }
-}]);
+     
   </script>
 
