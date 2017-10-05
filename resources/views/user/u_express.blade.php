@@ -300,50 +300,134 @@ div.tab {
 
 <!-- View Details -->       
 
-<div class="main main-raised"  style="width: 25%; float: right;">
-  <div class="section" style="padding-bottom: 2px">
-    <div class="container" style="width: 100%">
-      <p style="color: black; float:left; margin-top: -60px;font-size: 20px; font-family: 'Lobster', cursive;"><i class="material-icons" style="font-size:20px">shopping_cart</i> &nbsp;Your Cart</p>
-      <div class="row" style="padding-right:8px; padding-left: 8px">
-        I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus. I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at.
-        <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-          <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lobster', cursive;" id="tots"><b>Total:</b> 150.00</p>
-          <button type="button" class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:left; margin-top: 2px; border:none">Checkout</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
-@foreach($dishes as $dish)
-  <div class="modal fade" id="dtlModal{{$dish->did}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog" style="width:350px; float:center;">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="myModalLabel"><i class="fa fa-cutlery"></i>&nbsp; Dish Details</h4>
+ <div class="main main-raised"  style="width: 25%; float: right;">
+    <div class="section" style="padding-bottom: 2px">
+        <div class="container" style="width: 100%">
+                <p style="color: black; float:left; margin-top: -60px;font-size: 21px; font-family: 'Lobster', cursive;">
+                <i class="material-icons" style="font-size:21px">shopping_cart</i> &nbsp;Your Cart &nbsp; 
+                <span class="badge" style="font-family: verdana; background-color:#30BB6D" id="totalqty">
+              {{Cart::count()}}
+                </span>
+                </p>
+
+                <!-- <span id="current">hello</span><br>
+                   <input type="number" min="1" value="1" style="width: 45px; height:20px;" id="qs"> -->
+
+  <div class="row" style="padding-right:8px; padding-left: 8px">
+  @if(count(Cart::content()))
+@foreach(Cart::content() as $item)
+        
+        <dl class="dl-horizontal">
+            <div id="cartdiv" style="padding-left: 5px">  
+              <dt style="margin-left:-65px">
+             
+         <!--       <input type="hidden" name="_token" value="{{ csrf_token() }}"> -->
+
+                 <input type="text" min="1"  style="width: 40px; height:25px;"  name="quantity" value="{{$item->qty}}" autocomplete="off"/>
+                  
+                   <a class="cart_quantity_up" href='{{url("cart/update?dish_id=$item->id&increment=1")}}'><i class="material-icons"  style="color:#30BB6D">add_circle</i></a>
+                   
+                  <a class="cart_quantity_down" href='{{url("cart/update?dish_id=$item->id&decrease=1")}}'><i class="material-icons"  style="color:#30BB6D" id="dec">remove_circle</i></a>
+                 
+               </dt>
+           
+              <dd style="margin-left: 2px">
+                <label style="float: left; margin-left:0px; margin-right: 0px; font-size: 15px; color:black">
+                <b>&nbsp;&nbsp;{{$item->name}}</b>
+                </label>
+                
+              
+              <a href='{{url("/cart/dish/remove?dish_id=$item->id&remove=true")}}' style="float:right"><i class="fa fa-times" style="color:red"></i></a>
+                 
+               </dd>
+
+                <dt style="margin-left:-2px">
+                <label style="font-size: 12px; color: gray; float:left"> Price: <b id="price">{{$item->price}}</b></label>
+                </dt>
+
+                 <dd style="margin-right: 2px">
+                <label style="font-size: 12px; color: gray; float:right">Total Amount:<b id="itemamount">{{sprintf("%.2f",$item->subtotal)}}</b></label>
+                </dd>
+
+               
+          </div>
+      </dl>   
+
+          @endforeach
+          
+
+          @else
+<center><label style="font-size: 30px">Your cart is empty</label>
+       
+          @endif
+      <div id="amounts">
+    <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+           <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots">
+           <b>Subtotal:</b>&nbsp;Php
+           <label style="color:black" id="subtotal">{{Cart::subtotal()}}</label>
+           </p>
+           <br>
         </div>
-        <div class="modal-body">
-          <center><h4 style="color:#30BB6D; margin-top: 2px"><strong>{{$dish->dish_name}}</strong></h1></center>
-          <center><img src="{{url('./dish_imgs/'.$dish->dish_img)}}" style="width:85%; height:240px; border-radius: 10px"></center><br>
-          <center><p style="border-top:2px solid #30BB6D;  margin-top: 10px">{{$dish->dish_desc}}</p></center>
-            <center> 
-              <dl>
-                <dt>Price:</dt>
-                  <dd>Php {{$dish->sellingPrice}}</dd>
-                <dt>Preparation Time:</dt>
-                  <dd><?php echo date('h:i A', strtotime($dish->preparation_time)); ?></dd>
-                <dt>Serving size:</dt>
-                  <dd>{{$dish->no_of_servings}} serving(s)</dd>
-              </dl>
+         @if(count(Cart::content()))
+        <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+          <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif', cursive;" id="tots">
+          <b>Delivery Fee:</b>&nbsp;Php
+          <label style="color:black">40.00</label>
+          <br>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-danger btn-simple" data-dismiss="modal">Close</button>
+        <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+          <p style="float:right; margin-right:2px; font-size: 17px; color:black;font-family: 'Lato', sans-serif" id="tots">
+          <b>Total:</b>&nbsp;Php
+          <label style="color:black" id="alltotal">{{sprintf("%.2f", Cart::subtotal()+40)}}</label>
+          </p>
         </div>
+        
+            <form method="POST" action="{{url('cart/checkout')}}">
+               <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:right; margin-top: 2px; border:none" id="chkt">Checkout</button>
+              </form>
+              
+            <form method="POST" action="{{url('cart/clear')}}">
+               <input type="hidden" name="_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-flat btn edit" style="float:left; margin-top: 2px; border:none" id="chkt">Clear Cart
+              </button>
+              </form>
+              
+
+            @else
+             <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+          <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif', cursive;" id="tots">
+          <b>Delivery Fee:</b>&nbsp;Php
+          <label style="color:black">0.00</label>
+          <br>
+        </div>
+              <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+          <p style="float:right; margin-right:2px; font-size: 17px; color:black;font-family: 'Lato', sans-serif" id="tots">
+          <b>Total:</b>&nbsp;Php
+          <label style="color:black" id="alltotal">{{sprintf("%.2f", Cart::subtotal())}}</label>
+          </p>
+        </div>
+              <a href="{{url('cart/checkout')}}">
+            <button type="submit" class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:right; margin-top: 2px; border:none" id="chkt" disabled>Checkout</button></a>
+
+              <form method="POST" action="{{url('cart/clear')}}">
+               <input type="hidden" name="_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-flat btn edit" style="float:left; margin-top: 2px; border:none" id="chkt" disabled>Clear Cart
+              </button>
+              </form>
+
+   @endif
+            
+       
+       
+        
+
+ </div>
+   </div>
       </div>
-    </div>
-  </div>
-@endforeach<!--  End View Details -->
+         </div>
+
 @endsection
 @section('addtl_scripts')
 
