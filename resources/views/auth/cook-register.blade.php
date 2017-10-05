@@ -1,4 +1,4 @@
-@extends('wiz-layouts.master')
+@extends('wiz-layouts.reg-master')
 <style>
     #map {
         height: 40%;
@@ -7,152 +7,188 @@
 </style>
 
 @section('content')
- <div class="top-content" style="margin-top:50px;">
-            <div class="container">
-    
-                <div class="row">
-                    <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3 form-box">
-                        <form role="form" method="POST" action="{{ route('cook.register.submit') }}" class="f1">
-                                  {{ csrf_field() }}
-
-                            <h3>Register</h3>
-                            <p>Be one of our cooks!</p>
-                            <br>
-                           <h1 style="border:2px solid #30BB6D"></h1>
-                            <br>
-                            <div class="f1-steps">
-                                <div class="f1-progress">
-                                    <div class="f1-progress-line" data-now-value="16.66" data-number-of-steps="3" style="width: 16.66%; background-color:#30BB6D"></div>
+  <div class="image-container set-full-height" style="background-image: url('{{asset('img/bgsignin.jpg')}}')">
+	    <!--   Big container   -->
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2">
+		            <!--      Wizard container        -->
+                    <div class="wizard-container">
+                        <div class="card wizard-card" data-color="green" id="wizardProfile">
+                            <form role="form" method="POST" action="{{ route('cook.register.submit') }}">
+                                {{csrf_field()}}
+                                <div class="wizard-header">
+                                        <h3 class="wizard-title">
+                                           Register
+                                        </h3>
+                                        <h5>Be one of our cooks!</h5>
                                 </div>
-                                <div class="f1-step active">
-                                    <div class="f1-step-icon" style="background-color: #30BB6D;"><i class="fa fa-user"></i></div>
-                                    <p style="color:#30BB6D">About</p>
-                                </div>
-                                <div class="f1-step">
-                                    <div class="f1-step-icon" style="background-color: #30BB6D;"><i class="fa fa-phone"></i></div>
-                                    <p style="color:#30BB6D">Contacts</p>
-                                </div>
-                            </div>
-                            
-                            <fieldset>
+                                <div class="wizard-navigation">
+                                    <ul>
+                                        <li><a href="#about" data-toggle="tab">About</a></li>
+                                        <li><a href="#contact" data-toggle="tab">Contact</a></li>
+                                    </ul>
+								</div>
 
-                            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                                <div class="form-group">
-                                    <label class="sr-only" for="f1-first-name">First name</label>
-                                    <input type="text" name="fname" value="{{ old('name') }}"" placeholder="First name..." class="f1-first-name form-control" id="f1-first-name" value="{{ old('name') }}">
+		                        <div class="tab-content">
+		                            <div class="tab-pane" id="about">
+                                                <div class="row">
+                                                    <h4 class="info-text"> Tell us who you are:</h4>
+		                                	<div class="col-sm-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon">
+                                                                        <i class="material-icons">face</i>
+                                                                </span>
+                                                                <div class="form-group has-success">
+                                                                    <label class="control-label">First Name <small>(required)</small></label>
+                                                                    <input name="fname" type="text" class="form-control" value="{{ old('name') }}">
+                                                                    
+                                                                    @if ($errors->has('name'))
+                                                                        <span class="help-block">
+                                                                            <strong>{{ $errors->first('name') }}</strong>
+                                                                        </span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
 
-                                            @if ($errors->has('name'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                @endif
+                                                            <div class="input-group">
+                                                                    <span class="input-group-addon">
+                                                                            <i class="material-icons">record_voice_over</i>
+                                                                    </span>
+                                                                    <div class="form-group has-success">
+                                                                      <label class="control-label">Last Name <small>(required)</small></label>
+                                                                      <input name="lname" type="text" class="form-control">
+                                                                    </div>
+                                                            </div>
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon">
+                                                                        <i class="material-icons">email</i>
+                                                                </span>
+                                                                <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}  has-success">
+                                                                    <label class="control-label">Email <small>(required)</small></label>
+                                                                    <input name="email" type="email" class="form-control" value="{{ old('email') }}">
+                                                                        @if ($errors->has('email'))
+                                                                           <span class="help-block">
+                                                                               <strong>{{ $errors->first('email') }}</strong>
+                                                                           </span>
+                                                                       @endif
+                                                                </div>
+                                                            </div>
+                                                             <div class="input-group">
+                                                                    <span class="input-group-addon">
+                                                                            <i class="material-icons">lock</i>
+                                                                    </span>
+                                                                    <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}  has-success">
+                                                                      <label class="control-label">Password <small>(required)</small></label>
+                                                                      <input type="password" name="password"  class="form-control">
+                                                                    </div>
+                                                            </div>
+                                                            <div class="input-group">
+                                                                    <span class="input-group-addon">
+                                                                            <i class="material-icons">lock_outline</i>
+                                                                    </span>
+                                                                    <div class="form-group has-success">
+                                                                      <label class="control-label">Confirm Password</label>
+                                                                      <input type="password" name="password_confirmation" class="form-control">
+                                                                    </div>
+                                                            </div>
+                                                            </div>
+                                                            
+                                                            <div class="col-md-6">
+                                                            <div class="input-group">
+                                                                    <span class="input-group-addon">
+                                                                            <i class="material-icons">place</i>
+                                                                    </span>
+                                                                    <div class="form-group has-success">
+                                                                      <input type="text" id="location" name="location" class="form-control">
+                                                                      <input type="hidden" id="city" name="city" />
+                                                                      <input type="hidden" id="cityLat" name="cityLat" />
+                                                                      <input type="hidden" id="cityLng" name="cityLng" />
+                                                                    </div>
+                                                            </div>
+                                                            <div id="map"></div>
+                                                            </div>
+		                                	
+		                            	</div>
+		                            </div>
+		                            <div class="tab-pane" id="contact">
+		                                <h4 class="info-text">Contact Numbers</h4>
+		                                <div class="row">
+		                                   <div class="col-sm-10 col-sm-offset-1">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">
+                                                                    <i class="material-icons">phone</i>
+                                                            </span>
+                                                            <div class="form-group has-success">
+                                                              <label class="control-label">Primary Number</label>
+                                                              <input type="text" name="cnumber" class="form-control">
+                                                            </div>
+                                                        </div>
+                                                       <div class="input-group">
+                                                            <span class="input-group-addon">
+                                                                    <i class="material-icons">dialpad</i>
+                                                            </span>
+                                                            <div class="form-group label-floating has-success">
+                                                              <label class="control-label">Service Provider</label>
+                                                              <select class="form-control" name="detail">
+                                                                  <option value="Sun">Sun</option>
+                                                                  <option value="Smart">Smart</option>
+                                                                  <option value="Globe">Globe</option>
+                                                                  <option value="TnT">Talk n Text</option>
+                                                              </select>
+                                                            </div>
+                                                        </div>
 
-                                </div>
-                                     </div>
+                                                           
+                                                    </div>
+		                                </div>
+		                            </div>
+		                        </div>
+		                        <div class="wizard-footer">
+		                            <div class="pull-right">
+		                                <input type='button' class='btn btn-next btn-fill btn-success btn-wd' name='next' value='Next' />
+		                                <input type='submit' class='btn btn-finish btn-fill btn-success btn-wd' name='finish' value='Register' />
+		                            </div>
 
-                            <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                                <div class="form-group">
-                                  
-                                    <input type="text" name="lname" placeholder="Last name..." class="f1-last-name form-control" id="f1-last-name" value="{{ old('name') }}">
-                                        @if ($errors->has('name'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                @endif
-                                </div>
-                                   </div>
+		                            <div class="pull-left">
+		                                <input type='button' class='btn btn-previous btn-fill btn-default btn-wd' name='previous' value='Previous' />
+		                            </div>
+		                            <div class="clearfix"></div>
+		                        </div>
+		                    </form>
+		                </div>
+		            </div> <!-- wizard container -->
+		        </div>
+	        </div><!-- end row -->
+	    </div> <!--  big container -->
 
-                            <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                                <div class="form-group">
-                                    <input type="text" name="email" placeholder="Email" class="f1-last-name form-control" id="f1-last-name"  value="{{ old('email') }}">
-
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-
-                                </div>
-
-
-                              <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                                <div class="form-group">
-                                   
-                                    <input type="password" name="password" placeholder="Password" class="f1-last-name form-control" id="f1-last-name">
-
-                             @if ($errors->has('password'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                                </div>
-
-
-                                <div class="form-group">
-                                    <label class="sr-only" for="lname">Email Address</label>
-                                    <input type="password" type="password" name="password_confirmation" class="f1-last-name form-control" id="f1-last-name" placeholder="Confirm password">
-
-                                </div>
-                               
-                                <div class="form-group">
-                                    <label class="sr-only" for="loc">Location</label>
-                                    <input type="text" id="location" name="location" placeholder="Location" class="f1-last-name form-control" id="f1-last-name">
-                                    <input type="hidden" id="city" name="city" />
-                                    <input type="hidden" id="cityLat" name="cityLat" />
-                                    <input type="hidden" id="cityLng" name="cityLng" />  
-                                </div>
-
-                                <div id="map"></div>
-                                
-                            
-                                <div class="f1-buttons">
-                                    <button type="button" class="btn btn-next" style="background-color:#30BB6D">Next</button>
-                                </div>
-                                
-                          
-                            </fieldset>
-                            <fieldset>
-                                <div class="form-group">
-                                    <label class="sr-only" for="loc">Primary Number</label>
-                                    <input type="text" class="form-control" name="cnumber" placeholder="Primary Number">
-                                    <label class="sr-only" for="loc">Service Provider</label>
-                                    <input type="text" class="form-control" name="detail" placeholder="Service Provider">
-                                    
-                                </div>
-                                <div class="f1-buttons">
-                                    <button type="button" class="btn btn-previous">Previous</button>
-                                    <button type="submit" class="btn btn-next" style="background-color:#30BB6D">Register</button>
-                                </div>
-                            </fieldset>
-                        </form>
-                    </div>
-                </div>
-                    
-            </div>
-        </div>
-
+	    <div class="footer">
+	        <div class="container text-center">
+	             Made with <i class="fa fa-heart heart"></i> by <a href="http://www.creative-tim.com">Creative Tim</a>.
+	        </div>
+	    </div>
+	</div>
 
 @endsection
 
 
 @section('addtl_scripts')
-<script src="{{asset('adminlte/bower_components/jquery-ui/jquery-ui.min.js')}}"></script>
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="{{asset('wizard/js/jquery-1.11.1.min.js')}}"></script>
-<script src="{{asset('wizard/bootstrap/js/bootstrap.min.js')}}"></script>
-<script src="{{asset('wizard/js/jquery.backstretch.min.js')}}"></script>
-<script src="{{asset('wizard/js/retina-1.1.0.min.js')}}"></script>
-<script src="{{asset('wizard/js/scripts.js')}}"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <script src="{{asset('mbootstrap-wizard/assets/js/jquery-2.2.4.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('mbootstrap-wizard/assets/js/bootstrap.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('mbootstrap-wizard/assets/js/jquery.bootstrap.js')}}" type="text/javascript"></script>
+    <!--  Plugin for the Wizard -->
+    <script src="{{asset('mbootstrap-wizard/assets/js/material-bootstrap-wizard.js')}}"></script>
+    <!--  More information about jquery.validate here: http://jqueryvalidation.org/	 -->
+    <script src="{{asset('mbootstrap-wizard/assets/js/jquery.validate.min.js')}}"></script>
+
 <script type="text/javascript">
     $(document).ready(function() {
          $('[data-toggle="tooltip"]').tooltip(); 
     });
 </script>
-
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOkRKO79rw8RrYgfrMgqIz2du240Uyz6U&libraries=places&callback=initMap"
+        async defer></script>
 <script>
       // This example requires the Places library. Include the libraries=places
       // parameter when you first load the API. For example:
@@ -234,7 +270,6 @@
         //     });
       }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOkRKO79rw8RrYgfrMgqIz2du240Uyz6U&libraries=places&callback=initMap"
-        async defer></script>
+
 
 @endsection
