@@ -1,239 +1,275 @@
-@extends('wiz-layouts.master')
+@extends('wiz-layouts.reg-master')
 <style>
     #map {
         height: 40%;
-      }
+    }
+    
+    .help{
+        color:#4caf50;
+    }
+ 
 </style>
-
 @section('content')
-  <div class="wrapper">
-    <div class="header header-filter" style="background-image: url('{{asset('img/bgsignin.jpg')}}');   min-height:100%;
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    background-size: cover;
-    -moz-background-size: cover;">
-      <div class="container">
-                <div class="row">
-                    <div class="col-sm-10 col-sm-offset-1 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3 form-box">
-                        <form role="form" method="POST" action="{{route('register')}}" class="f1">
-                            {{csrf_field()}}
-                            <h3>Register</h3>
-                            <p>Fill in the form to get instant access</p>
-                            <div class="f1-steps">
-                                <div class="f1-progress">
-                                    <div class="f1-progress-line" data-now-value="16.66" data-number-of-steps="3" style="width: 16.66%; background-color:#30BB6D"></div>
+    <div class="image-container set-full-height" style="background-image: url('{{asset('img/bgsignin.jpg')}}')">
+	    <!--   Big container   -->
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2">
+		            <!--      Wizard container        -->
+                    <div class="wizard-container">
+                        <div class="card wizard-card" data-color="green" id="wizardProfile">
+                            <form role="form" method="POST" action="{{route('register')}}" class="f1">
+                                {{csrf_field()}}
+                                <div class="wizard-header">
+                                        <h3 class="wizard-title">
+                                           Register
+                                        </h3>
+<!--                                    <h5>This information will let us know more about you.</h5>-->
                                 </div>
-                                <div class="f1-step active">
-                                    <div class="f1-step-icon" style="background-color: #30BB6D;"><i class="fa fa-user"></i></div>
-                                    <p style="color:#30BB6D">About</p>
-                                </div>
-                                <div class="f1-step">
-                                    <div class="f1-step-icon" style="background-color: #30BB6D;"><i class="fa fa-key"></i></div>
-                                    <p style="color:#30BB6D">Personal Information</p>
-                                </div>
-                                <div class="f1-step">
-                                    <div class="f1-step-icon" style="background-color: #30BB6D;"><i class="fa fa-stethoscope"></i></div>
-                                    <p style="color:#30BB6D">Health Information</p>
-                                </div>
-                            </div>
-                            
-                            <fieldset>
-                                <h4>Tell us who you are:</h4>
-                                <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                                    <label class="sr-only" for="f1-first-name">First name</label>
-                                    <input type="text" name="fname" placeholder="First name..." class="form-control" value="{{ old('name') }}">
+                                <div class="wizard-navigation">
+                                    <ul>
+                                        <li><a href="#about" data-toggle="tab">About</a></li>
+                                        <li><a href="#personal" data-toggle="tab">Personal Information</a></li>
+                                        <li><a href="#health" data-toggle="tab">Health Information</a></li>
+                                    </ul>
+								</div>
 
-                                    @if ($errors->has('name'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                                <div class="form-group">
-                                    <label class="sr-only" for="lname">Last name</label>
-                                    <input type="text" name="lname" placeholder="Last name..." class="form-control" id="f1-last-name">
-                                </div>
+		                        <div class="tab-content">
+		                            <div class="tab-pane" id="about">
+                                                <div class="row">
+                                                    <h4 class="info-text"> Tell us who you are:</h4>
+		                                	<div class="col-sm-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon">
+                                                                        <i class="material-icons">face</i>
+                                                                </span>
+                                                                <div class="form-group has-success">
+                                                                    <label class="control-label">First Name <small>(required)</small></label>
+                                                                    <input name="fname" type="text" class="form-control" value="{{ old('name') }}">
+                                                                    
+                                                                    @if ($errors->has('name'))
+                                                                        <span class="help-block">
+                                                                            <strong>{{ $errors->first('name') }}</strong>
+                                                                        </span>
+                                                                    @endif
+                                                                </div>
+                                                            </div>
 
-                                <div class="form-group">
-                                    <label class="sr-only" for="contact">Contact no:</label>
-                                    <input type="text" name="contact_no" placeholder="Contact number" class=" form-control" id="f1-last-name">
-                                </div>
+                                                            <div class="input-group">
+                                                                    <span class="input-group-addon">
+                                                                            <i class="material-icons">record_voice_over</i>
+                                                                    </span>
+                                                                    <div class="form-group has-success">
+                                                                      <label class="control-label">Last Name <small>(required)</small></label>
+                                                                      <input name="lname" type="text" class="form-control">
+                                                                    </div>
+                                                            </div>
+                                                            <div class="input-group">
+                                                                    <span class="input-group-addon">
+                                                                            <i class="material-icons">contact_phone</i>
+                                                                    </span>
+                                                                    <div class="form-group has-success">
+                                                                      <label class="control-label">Contact Number<small>(required)</small></label>
+                                                                      <input type="text" name="contact_no" class="form-control">
+                                                                    </div>
+                                                            </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                            <div class="input-group">
+                                                                    <span class="input-group-addon">
+                                                                            <i class="material-icons">place</i>
+                                                                    </span>
+                                                                    <div class="form-group has-success">
+                                                                      <input type="text" id="location" name="location" class="form-control">
+                                                                      <input type="hidden" id="city" name="city" />
+                                                                      <input type="hidden" id="cityLat" name="cityLat" />
+                                                                      <input type="hidden" id="cityLng" name="cityLng" />
+                                                                    </div>
+                                                            </div>
+                                                            <div id="map"></div>
+                                                            </div>
+		                                	
+		                            	</div>
+		                            </div>
+		                            <div class="tab-pane" id="personal">
+		                                <h4 class="info-text"> Set up your account:</h4>
+		                                <div class="row">
+		                                   <div class="col-sm-10 col-sm-offset-1">
+                                                        <div class="input-group">
+                                                            <span class="input-group-addon">
+                                                                    <i class="material-icons">email</i>
+                                                            </span>
+                                                            <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }} label-floating has-success">
+                                                                <label class="control-label">Email <small>(required)</small></label>
+                                                                <input name="email" type="email" class="form-control" value="{{ old('email') }}">
+                                                                    @if ($errors->has('email'))
+                                                                       <span class="help-block">
+                                                                           <strong>{{ $errors->first('email') }}</strong>
+                                                                       </span>
+                                                                   @endif
+                                                            </div>
+                                                        </div>
+		
 
-                                <div class="form-group">
-                                    <label class="sr-only" for="loc">Location</label>
-                                    <input type="text" id="location" name="location" placeholder="Location" class="f1-last-name form-control" id="f1-last-name">
-                                    <input type="hidden" id="city" name="city" />
-                                    <input type="hidden" id="cityLat" name="cityLat" />
-                                    <input type="hidden" id="cityLng" name="cityLng" />  
-                                </div>
+                                                            <div class="input-group">
+                                                                    <span class="input-group-addon">
+                                                                            <i class="material-icons">lock</i>
+                                                                    </span>
+                                                                    <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }} label-floating has-success">
+                                                                      <label class="control-label">Password <small>(required)</small></label>
+                                                                      <input type="password" name="password"  class="form-control">
+                                                                    </div>
+                                                            </div>
+                                                            <div class="input-group">
+                                                                    <span class="input-group-addon">
+                                                                            <i class="material-icons">lock_outline</i>
+                                                                    </span>
+                                                                    <div class="form-group label-floating has-success">
+                                                                      <label class="control-label">Confirm Password</label>
+                                                                      <input type="password" name="password_confirmation" class="form-control">
+                                                                    </div>
+                                                            </div>
+                                                        </div>
+		                                </div>
+		                            </div>
+		                            <div class="tab-pane" id="health">
+		                                <div class="row">
+		                                    <div class="col-sm-12">
+		                                        <h4 class="info-text">Tell us about your health:</h4>
+		                                    </div>
+		                                    <div class="col-sm-3">
+	                                        	<div class="form-group has-success">
+	                                        		<label class="control-label">Birthday</label>
+	                                    			<input type="text" id="date" class="form-control datepicker" name="bday">
+	                                        	</div>
+		                                    </div>
+		                                    <div class="col-sm-3">
+		                                        <div class="form-group has-success">
+		                                            <label class="control-label">Weight (kg)</label>
+		                                            <input id="weight" type="number" class="form-control" name="weight" min="1" required>
+		                                        </div>
+		                                    </div>
+		                                    <div class="col-sm-3">
+		                                        <div class="form-group  has-success">
+		                                            <label class="control-label">Height (cm)</label>
+                                                            <input id="height" type="number" class="form-control" name="height" min="1" required>
+		                                        </div>
+		                                    </div>
+                                                    <div class="col-sm-3">
+		                                        <div class="form-group has-success">
+		                                            <label class="control-label">Gender</label>
+                                                            <select name="gender" class="form-control">
+                                                                <option value="Male">Male</option>
+                                                                <option value="Female">Female</option>
+                                                            </select>
+		                                        </div>
+		                                    </div>  
+		                                </div>
+                                                <div class="row">
+                                                    <div class="col-sm-5 col-sm-offset-1">
+		                                        <div class="form-group has-success">
+		                                            <label class="control-label">Health Goal<a data-toggle="tooltip" data-placement="right" title="What is your aim with your body"><i class="material-icons md-dark md-18 help">help</i></i></a> </label>
+                                                            <select class="col-md-4 form-control" name="goal" style="color:black">
+                                                                @foreach($goals as $goal)
+                                                                <option value="{{$goal->hg_id}}">{{$goal->hgoal_name}}</option>
+                                                                @endforeach
+                                                            </select>
+                                                            <input type="hidden" value="{{ \Carbon\Carbon::now() }}" name="dateStarted">
+                                                            
+		                                        </div>
+                                                    </div>
+                                                    <div class="col-sm-5">
+                                                        <div class="form-group has-success">
+		                                            <label class="control-label">Lifestyle/Activeness<a data-toggle="tooltip" data-placement="right" title="Sedentary:gets little to no exercise;Lightly Active:daily exercise for 30 mins;
+                                                            Active:daily exercise for 1hr and 45mins;Extremly Active:daily exercise for 4 hrs and 15mins"><i class="material-icons md-dark md-18 help">help</i></a></label>
+                                                            <select class="col-md-4 form-control" name="lifestyle" style="color:black">
+                                                                @foreach($lifestyles as $lstyles)
+                                                                <option value="{{$lstyles->lifestyle_id}}">{{$lstyles->lifestyle_name}}</option>
+                                                               @endforeach
+                                                            </select>
 
-                                <div id="map"></div>
-                            
+                                                            
+		                                        </div>
+                                                    </div>
+                                                    </div>
+                                                
+                                                    <div class="row">
+                                                    <div class="col-sm-4 col-sm-offset-1">
+                                                        <div class="form-group has-success">
+		                                            <label class="control-label">Allergens</label>
+                                                           
+                                                                @foreach($allergens as $allgen)
+                                                                <input type="checkbox" value="{{$allgen->allergen_id}}" name="allergen[]" >{{$allgen->allergen_name}}
+                                                                @endforeach  
+                                                            
+		                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="col-sm-4 col-sm-offset-1">
+                                                        
+                                                        <div class="form-group has-success">
+		                                            <label class="control-label">Tolerance Level (Allergens)</label>
+                                                            <select name="tolerance" class="form-control">
+                                                                <option value="Low">Low</option>
+                                                                <option value="Medium">Medium</option>
+                                                                <option value="High">High</option>
+                                                            </select>
+                                                            
+		                                        </div>
+                                                    </div>
+                                                    
+                                                    <div class="col-sm-4">
+                                                        
+                                                        <div class="form-group has-success">
+		                                            <label class="control-label">Medical Conditions</label>
+                                                            
+                                                                @foreach($mconditions as $conditions)
+                                                                <input type="checkbox" value="{{$conditions->medcon_id}}" name="med_condition[]">{{$conditions->medcon_name}}
+                                                                @endforeach
+                                                            
+		                                        </div>
+                                                    </div>
+                                                    </div>
+		                            </div>
+		                        </div>
+		                        <div class="wizard-footer">
+		                            <div class="pull-right">
+		                                <input type='button' class='btn btn-next btn-fill btn-success btn-wd' name='next' value='Next' />
+		                                <input type='submit' class='btn btn-finish btn-fill btn-success btn-wd' name='finish' value='Register' />
+		                            </div>
 
-                                <div class="f1-buttons">
-                                    <button type="button" class="btn btn-next" style="background-color:#30BB6D">Next</button>
-                                </div>
-                            </fieldset>
+		                            <div class="pull-left">
+		                                <input type='button' class='btn btn-previous btn-fill btn-default btn-wd' name='previous' value='Previous' />
+		                            </div>
+		                            <div class="clearfix"></div>
+		                        </div>
+		                    </form>
+		                </div>
+		            </div> <!-- wizard container -->
+		        </div>
+	        </div><!-- end row -->
+	    </div> <!--  big container -->
 
-                            <fieldset>
-                                <h4>Set up your account:</h4>
-                                <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                                    <label class="sr-only" for="f1-email">Email</label>
-                                    <input type="text" name="email" placeholder="Email..." class="form-control" value="{{ old('email') }}">
-                                     @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                                <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                                    <label class="sr-only" for="f1-password">Password</label>
-                                    <input type="password" name="password" placeholder="Password..." class="f1-password form-control" id="f1-password">
-
-                                      @if ($errors->has('password'))
-                                        <span class="help-block">
-                                            <strong>{{ $errors->first('password') }}</strong>
-                                        </span>
-                                    @endif
-                                </div>
-                                <div class="form-group">
-                                    <label class="sr-only" for="f1-repeat-password">Confirm password</label>
-                                    <input type="password" name="password_confirmation" placeholder="Repeat password..." class="f1-repeat-password form-control" id="f1-repeat-password">
-                                </div>
-                                <div class="f1-buttons">
-                                    <button type="button" class="btn btn-previous">Previous</button>
-                                    <button type="button" class="btn btn-next">Next</button>
-                                </div>
-                            </fieldset>
-
-                            <fieldset>
-                                <h4>Tell us about your health:</h4>
-                            <div class="row">
-                                <div class="form-group">
-                                <div class="col-md-4">
-                                    <label for="f1-facebook">Birthday</label>
-                                    <input id="age" type="date" class="form-control" name="bday" min="1" required>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="f1-facebook">Weight</label>
-                                    <input id="weight" type="number" class="form-control" name="weight" min="1" required><label class="col-md-4 control-label" style="color:black">kg</label>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="f1-facebook">Height</label>
-                                    <input id="height" type="number" class="form-control" name="height" min="1" required><label class="col-md-4 control-label" style="color:black">cm</label>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="f1-facebook">Gender</label>
-                                    <select name="gender" class="form-control">
-                                        <option value="Male">M</option>
-                                        <option value="Female">F</option>
-                                    </select>
-                                </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="form-group">
-                                <div class="col-md-12">
-                                    <label for="f1-twitter">Health Goal</label>
-                                    
-                                     <select class="col-md-4 form-control" name="goal" style="color:black">
-                                         @foreach($goals as $goal)
-                                         <option value="{{$goal->hg_id}}">{{$goal->hgoal_name}}</option>
-                                         @endforeach
-                                    </select>
-                                    <input type="hidden" value="{{ \Carbon\Carbon::now() }}" name="dateStarted">
-                                     <a data-toggle="tooltip" data-placement="right" title="What is your aim with your body"><i class="fa fa-question-circle"></i></a>     
-                                </div> 
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="form-group">
-                                <div class="col-md-12">
-                                    <label for="f1-twitter">Lifestyle/Activeness</label>
-                                    
-                                     <select class="col-md-4 form-control" name="lifestyle" style="color:black">
-                                         @foreach($lifestyles as $lstyles)
-                                         <option value="{{$lstyles->lifestyle_id}}">{{$lstyles->lifestyle_name}}</option>
-                                        @endforeach
-                                    </select>
-                                   
-                                      <a data-toggle="tooltip" data-placement="right" title="Sedentary:gets little to no exercise;
-                                      Lightly Active:daily exercise for 30 mins;
-                                      Active:daily exercise for 1hr and 45mins;
-                                      Extremly Active:daily exercise for 4 hrs and 15mins"><i class="fa fa-question-circle"></i></a>
-                                </div>
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                    <label>Allergens</label>
-                                <div class="form-group">
-                               
-                                    <select multiple name="allergen[]" class="form-control">
-                                        @foreach($allergens as $allgen)
-                                        <option value="{{$allgen->allergen_id}}">{{$allgen->allergen_name}}</option>
-                                        @endforeach
-                                    </select>
-                                
-                                </div>
-                                    <label>Tolerance Level (Allergens)</label>
-                                <div class="form-group">
-                               
-                                    <select name="tolerance" class="form-control">
-                                        <option value="Low">Low</option>
-                                        <option value="Medium">Medium</option>
-                                        <option value="High">High</option>
-                                    </select>
-                                
-                                </div>
-                            </div>
-
-                               <div class="row">
-                                    <label>Medical Conditions</label>
-                                <div class="form-group">
-                                
-                                    <select multiple name="med_condition[]" class="form-control">
-                                        @foreach($mconditions as $conditions)
-                                        <option value="{{$conditions->medcon_id}}">{{$conditions->medcon_name}}</option>
-                                        @endforeach
-                                    </select>
-                                
-                                </div>
-                            </div>
-                                <div class="f1-buttons">
-                                    <button type="button" class="btn btn-previous">Previous</button>
-                                    <button type="submit" class="btn btn-submit">Submit</button>
-                                </div>
-                            </fieldset>
-                        
-                        </form>
-                    </div>
-                </div>  </div>
-
-                </div>
-           </div>
-
-
+	    <div class="footer">
+	        <div class="container text-center">
+	             Made with <i class="fa fa-heart heart"></i> by <a href="http://www.creative-tim.com">Creative Tim</a>.
+	        </div>
+	    </div>
+	</div>
 @endsection
-
 @section('addtl_scripts')
-<script src="{{asset('adminlte/bower_components/jquery-ui/jquery-ui.min.js')}}"></script>
- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script src="{{asset('wizard/js/jquery-1.11.1.min.js')}}"></script>
-<script src="{{asset('wizard/bootstrap/js/bootstrap.min.js')}}"></script>
-<script src="{{asset('wizard/js/jquery.backstretch.min.js')}}"></script>
-<script src="{{asset('wizard/js/retina-1.1.0.min.js')}}"></script>
-<script src="{{asset('wizard/js/scripts.js')}}"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-<script type="text/javascript">
-    $(document).ready(function() {
-         $('[data-toggle="tooltip"]').tooltip(); 
-    });
-</script>
-
-<script>
+    <!--   Core JS Files   -->
+    <script src="{{asset('mbootstrap-wizard/assets/js/jquery-2.2.4.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('mbootstrap-wizard/assets/js/bootstrap.min.js')}}" type="text/javascript"></script>
+    <script src="{{asset('mbootstrap-wizard/assets/js/jquery.bootstrap.js')}}" type="text/javascript"></script>
+    <!--  Plugin for the Wizard -->
+    <script src="{{asset('mbootstrap-wizard/assets/js/material-bootstrap-wizard.js')}}"></script>
+    <!--  More information about jquery.validate here: http://jqueryvalidation.org/	 -->
+    <script src="{{asset('mbootstrap-wizard/assets/js/jquery.validate.min.js')}}"></script>
+    <script src="{{asset('customer/assets/js/bootstrap-datepicker.js')}}" type="text/javascript"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOkRKO79rw8RrYgfrMgqIz2du240Uyz6U&libraries=places&callback=initMap"
+    async defer></script>
+    <script>
       // This example requires the Places library. Include the libraries=places
       // parameter when you first load the API. For example:
       // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
@@ -314,6 +350,14 @@
         //     });
       }
     </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOkRKO79rw8RrYgfrMgqIz2du240Uyz6U&libraries=places&callback=initMap"
-        async defer></script>
+
+    
+    <script>
+        $(document).ready(function() {
+            $('.datepicker').datepicker({
+                weekStart:1
+            });
+        });
+    </script>
+
 @endsection
