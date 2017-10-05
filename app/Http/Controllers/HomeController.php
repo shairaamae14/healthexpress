@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Dish;
 use App\User;
-use App\Cart;
 use Illuminate\Support\Facades\DB;
 use Auth;   
 use App\UserAllergen;
@@ -13,6 +12,12 @@ use App\Allergen;
 use App\Http\Requests;
 use Session;
 use Illuminate\Session\Store;
+
+// use Request;
+// use Illuminate\Routing\Redirector;
+// // use Illuminate\Support\Facades\Request;
+// use Illuminate\Support\Facades\Redirect;
+// use Cart;
 
 class HomeController extends Controller
 {
@@ -47,38 +52,37 @@ class HomeController extends Controller
     public function express(Request $request) {
         // $this->allergyFilter();
 
-        if(!$request->sortOption) {
+        // if(!$request->sortOption) {
 
             $dishes = Dish::join('dish_besteaten','dish_besteaten.dish_id', '=', 'dishes.did')
                             ->join('besteaten_at', 'besteaten_at.be_id' , '=', 'dish_besteaten.be_id')
                             ->get();
-        }
-        else {
+        // }
+        // else {
             
-         if($request->sortOption == 'Breakfast') {
-            $dishes = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+         // if($request->sortOption == 'Breakfast') {
+            $breakfast = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
                             ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
                             ->where('dish_besteaten.be_id', 1)
                             ->get();
-            }
-        else if($request->sortOption == 'Lunch') {
-            $dishes = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+            // }
+        // else if($request->sortOption == 'Lunch') {
+            $lunch = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
                             ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
                             ->where('dish_besteaten.be_id', 2)
                             ->get();
             
-        }
-        else if($request->sortOption == 'Dinner'){
-            $dishes = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+        // }
+        // else if($request->sortOption == 'Dinner'){
+            $dinner = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
                             ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
                             ->where('dish_besteaten.be_id', 3)
                             ->get();
-        }
-        }
+        // }
+        // }
         
-        return view('user.u_express', compact('dishes'));
+        return view('user.u_express', compact('dishes', 'breakfast', 'lunch', 'dinner'));
     }
-
     public function show() {
         return view('best');
     }
@@ -158,24 +162,23 @@ class HomeController extends Controller
         return view('user.details', compact('dishes'));
     }
 
-public function addToCart(Request $request, $id){
-    $dish=Dish::where('did', $id)->get();
-    foreach($dish as $d){
-     $price = $d->sellingPrice;
-    }
+// public function addToCart(Request $request, $id){
+ 
+//     $dish=Dish::where('did', $id)->get();
+//     foreach($dish as $d){
+//      $price = $d->sellingPrice;
+//     }
 
-    $oldCart=Session::has('cart') ? Session::get('cart') : null;
-    $cart= new Cart($oldCart);
-    $cart->addCart($dish, $id, $price);
-  $request->session()->put('cart', $cart);
-// dd($request->session()->get('cart')->price1);
-// echo $request->$dish->get('dish_name');
-//   $item=$request->session()->get('cart')->items;
-// echo $item;
-// dd($price);
- return redirect()->route('user.index');
+//     $oldCart=Session::has('cart') ? Session::get('cart') : null;
+//     $cart= new Cart($oldCart);  
+//     $cart->addCart($dish, $id, $price);
+//     $request->session()->put('cart', $cart);
 
-}
+//     return redirect()->route('user.index');
+
+
+// }
+
 
 
 }

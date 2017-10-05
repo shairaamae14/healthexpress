@@ -90,10 +90,23 @@ display: inline-block;
         <div class="section">
             <div class="container" style="width: 90%;">
                 <div class="row">
+
+                  <div id="bestEaten" style="float:left">
+                  <span class="label label-default" style="float:left; margin-bottom: 2px">Sort by</span>
+                <form id="sortBy" action ="{{url('/home') }}" method="POST">
+                      {{csrf_field()}}
+                    <select id="category" name='category' class='form-control' style="width:200px; height:40px">
+                        <option disabled selected value> -- select an option -- </option>
+                        <option value='Breakfast'>Breakfast</option>
+                        <option value='Lunch'>Lunch</option>
+                        <option value='Dinner'>Dinner</option>
+                    </select>
+                </form>
+                </div>
+
+                  <div class="search" style="float:right">
                   <form method="POST" action="{{route('user.index')}}">
                         {{csrf_field()}}
-                  <div class="search" style="float:right">
-
                   <input type="text" id="input" class="searchTerm search-query mac-style" placeholder="Search"  name="search" value="" style="height:40px" autofocus >
                    <input type="hidden" id="dish_id" name="id" value="">
                     <button type="submit" class="btn btn-success btnSearch" id="btnSearch"><i class="material-icons">search</i></button>
@@ -103,32 +116,19 @@ display: inline-block;
                            <li><a href="#"></a>{{$dish->dish_name}}</li>
                            @endforeach
                        </ul>
+                        </form>
                        </div>
-                            </form>
+                           
 
+                
 
-                 <!--  <div class="search" style="float:right; margin-right: 50px; display: inline-block;">
-                       <input type="text" id="input" class="searchTerm form-control" placeholder="Search" name="search" style="height:30px" value="" autofocus>
-                       <input type="hidden" id="dish_id" name="id" value="">
-                       <button type="submit" class="btn btn-success btnSearch" id="btnSearch" style="float:right">
-                        <i class="material-icons">search</i>
-                      </button>
-                       
-                       <ul id="dishNames" style="display:none">
-                           @foreach($dishes as $dish)
-                           <li><a href="#"></a>{{$dish->dish_name}}</li>
-                           @endforeach
-                       </ul>
-                    </div> -->
-              <!--       </form>
-                </div> -->
 <br>
 
 
   @if($dishes)
         @foreach($dishes as $dish)
   <div class="col-sm-3">
-                 <div class="box box-solid" style="border-radius:5px; box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.3); padding-bottom: 5px; margin-top: 20px">
+                 <div class="box box-solid" style="border-radius:5px; box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.3); padding-bottom:0px; margin-top: 20px">
                         <div class="box-header with-border">
                         
                             <center><img src="{{asset('dish_imgs/'.$dish->dish_img)}}" style="width:100%; height:150px; border:1px solid #F0F0F0;"></center>
@@ -148,8 +148,15 @@ display: inline-block;
                       </center>
                       
                          <p style="float:left; margin-left:5px; margin-top: 12px; font-size: 20px; font-family: 'Lobster', cursive; color:black;" id="tots">Php {{$dish->sellingPrice}}</p>
-                         <a href="{{route('dish.addtocart', ['id'=> $dish->did])}}"><i class="material-icons" style="color:#30BB6D; font-size: 30px">add_circle</i></a>
+                       <!--   <a href="{{url('cart')}}" id="dishadd"><i class="material-icons" style="color:#30BB6D; font-size: 30px">add_circle</i></a> -->
                        <!--    <p onclick="myFunction('{{$dish->dish_name}}', '{{$dish->basePrice}}')" id="addme"><i class="material-icons" style="color:#30BB6D; font-size: 30px">add_circle</i></p> -->
+                        <form method="POST" action="{{url('cart')}}">
+                                          <input type="hidden" name="dish_id" value="{{$dish->did}}">
+                                          <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                            <button type="submit" style="width:10px; background-color:transparent; border:transparent; margin-right: 30px">
+                                               <i class="material-icons"  style="color:#30BB6D; font-size:40px">add_circle</i>
+                                            </button>
+                            </form>
                       </br>
                    
 
@@ -185,58 +192,121 @@ display: inline-block;
         <div class="container" style="width: 100%">
                 <p style="color: black; float:left; margin-top: -60px;font-size: 21px; font-family: 'Lobster', cursive;">
                 <i class="material-icons" style="font-size:21px">shopping_cart</i> &nbsp;Your Cart &nbsp; 
-                <span class="badge" style="font-family: verdana; background-color:#30BB6D">{{Session::has('cart') ? Session::get('cart')->totalQty : '0' }}</span>
+                <span class="badge" style="font-family: verdana; background-color:#30BB6D" id="totalqty">
+              {{Cart::count()}}
+                </span>
                 </p>
 
                 <!-- <span id="current">hello</span><br>
                    <input type="number" min="1" value="1" style="width: 45px; height:20px;" id="qs"> -->
 
   <div class="row" style="padding-right:8px; padding-left: 8px">
-
-@if(isset(Session::get('cart')->items))
-@foreach(Session::get('cart')->items as $crt)
-@foreach($crt['item'] as $di)
+  @if(count(Cart::content()))
+@foreach(Cart::content() as $item)
+        
         <dl class="dl-horizontal">
             <div id="cartdiv" style="padding-left: 5px">  
-              <dt style="margin-left:-69px">
-               <div id="q">
-                 <input type="text" min="1" value="{{$crt['qty']}}"  style="width: 40px; height:25px;" id="number"/>
-                    
-                    <a href="{{route('dish.addtocart', ['id'=> $di['did']])}}" id="plus"  onclick="incrementValue()" value="{{$dish->did}}"><i class="material-icons" value="{{$di['did']}}" id="inc" style="color:#30BB6D">add_circle</i></a>
-                    </a>
-                   <a href="#" id="minus" onclick="decrementValue()" ><i class="material-icons"  style="color:#30BB6D" id="dec">remove_circle</i></a>
+              <dt style="margin-left:-65px">
+             
+         <!--       <input type="hidden" name="_token" value="{{ csrf_token() }}"> -->
+
+                 <input type="text" min="1"  style="width: 40px; height:25px;"  name="quantity" value="{{$item->qty}}" autocomplete="off"/>
+                  
+                   <a class="cart_quantity_up" href='{{url("cart/update?dish_id=$item->id&increment=1")}}'><i class="material-icons"  style="color:#30BB6D">add_circle</i></a>
+                   
+                  <a class="cart_quantity_down" href='{{url("cart/update?dish_id=$item->id&decrease=1")}}'><i class="material-icons"  style="color:#30BB6D" id="dec">remove_circle</i></a>
                  
                </dt>
+           
               <dd style="margin-left: 2px">
                 <label style="float: left; margin-left:0px; margin-right: 0px; font-size: 15px; color:black">
-                <b>&nbsp;&nbsp;{{$di->dish_name}}</b>
+                <b>&nbsp;&nbsp;{{$item->name}}</b>
                 </label>
+                
+              
+              <a href='{{url("/cart/dish/remove?dish_id=$item->id&remove=true")}}' style="float:right"><i class="fa fa-times" style="color:red"></i></a>
+                 
                </dd>
-                 <dt style="margin-left:-2px">
-                 <input type="hidden" value="{{$di['basePrice']}}" name="price"/>
-                <label style="font-size: 12px; color: gray; float:left"> Price: <b id="bprice">{{$di['sellingPrice']}}</b></label>
+
+                <dt style="margin-left:-2px">
+                <label style="font-size: 12px; color: gray; float:left"> Price: <b id="price">{{$item->price}}</b></label>
                 </dt>
+
                  <dd style="margin-right: 2px">
-                <label style="font-size: 12px; color: gray; float:right">Total Amount:<b>{{$crt['price1']}}</b></label>
+                <label style="font-size: 12px; color: gray; float:right">Total Amount:<b id="itemamount">{{sprintf("%.2f",$item->subtotal)}}</b></label>
                 </dd>
-              </dt>
+
+               
           </div>
-      </dl>
+      </dl>   
 
-@endforeach
-@endforeach
- @endif
+          @endforeach
+          
 
-      <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-           <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots"><b>Subtotal:</b> Php {{Session::has('cart') ? Session::get('cart')->totalPrice : '' }}</p><br>
+          @else
+<center><label style="font-size: 30px">Your cart is empty</label>
+       
+          @endif
+      <div id="amounts">
+    <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+           <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots">
+           <b>Subtotal:</b>&nbsp;Php
+           <label style="color:black" id="subtotal">{{Cart::subtotal()}}</label>
+           </p>
+           <br>
+        </div>
+         @if(count(Cart::content()))
+        <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+          <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif', cursive;" id="tots">
+          <b>Delivery Fee:</b>&nbsp;Php
+          <label style="color:black">40.00</label>
+          <br>
         </div>
         <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-          <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif', cursive;" id="tots"><b>Delivery Fee:</b> Php 40 .00</p><br>
+          <p style="float:right; margin-right:2px; font-size: 17px; color:black;font-family: 'Lato', sans-serif" id="tots">
+          <b>Total:</b>&nbsp;Php
+          <label style="color:black" id="alltotal">{{sprintf("%.2f", Cart::subtotal()+40)}}</label>
+          </p>
         </div>
-        <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-          <p style="float:right; margin-right:2px; font-size: 17px; color:black;font-family: 'Lato', sans-serif" id="tots"><b>Total:</b>Php {{Session::has('cart') ? Session::get('cart')->AllTotal : '' }}</p>
+        
+            <form method="POST" action="{{url('cart/checkout')}}">
+               <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:right; margin-top: 2px; border:none" id="chkt">Checkout</button>
+              </form>
+              
+            <form method="POST" action="{{url('cart/clear')}}">
+               <input type="hidden" name="_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-flat btn edit" style="float:left; margin-top: 2px; border:none" id="chkt">Clear Cart
+              </button>
+              </form>
+              
+
+            @else
+             <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+          <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif', cursive;" id="tots">
+          <b>Delivery Fee:</b>&nbsp;Php
+          <label style="color:black">0.00</label>
+          <br>
         </div>
-         <button type="button" class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:left; margin-top: 2px; border:none" id="chkt">Checkout</button>
+              <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+          <p style="float:right; margin-right:2px; font-size: 17px; color:black;font-family: 'Lato', sans-serif" id="tots">
+          <b>Total:</b>&nbsp;Php
+          <label style="color:black" id="alltotal">{{sprintf("%.2f", Cart::subtotal())}}</label>
+          </p>
+        </div>
+              <a href="{{url('cart/checkout')}}">
+            <button type="submit" class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:right; margin-top: 2px; border:none" id="chkt" disabled>Checkout</button></a>
+
+              <form method="POST" action="{{url('cart/clear')}}">
+               <input type="hidden" name="_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-flat btn edit" style="float:left; margin-top: 2px; border:none" id="chkt" disabled>Clear Cart
+              </button>
+              </form>
+
+   @endif
+            
+       
+       
         
 
  </div>
@@ -265,99 +335,23 @@ display: inline-block;
 
   <!-- Control Center for Material Kit: activating the ripples, parallax effects, scripts from the example pages etc -->
   <script src="{{asset('customer/assets/js/material-kit.js')}}" type="text/javascript"></script>
-<script>
-// function incrementValue(){
-  
-
-//     //display modal form for task editing
-//     $('#plus').click(function(){
-//         var dish_id = $(this).val();
-//           var url = "addToCart/";
-
-//         $.get(url + '/' + dish_id, function (data) {
-//             //success data
-//             console.log(data);
-//             // $('#task_id').val(data.id);
-//             // $('#task').val(data.task);
-//             // $('#description').val(data.description);
-//             // $('#btn-save').val("update");
-
-//             // $('#myModal').modal('show');
-//         });
-
-// }
-
-// $(function() {
-//   var amount = parseInt($("#bprice").text(), 10);
-//   var qty = parseInt($("#number").val(), 10);
-    
-// $("#tAmount").text(amount * qty);
-//      document.getElementById('tAmount').text(amount*qty);
-    
-// });
-// $('#inc').on('click', function(){
-   
-// });
-
-// function incrementValue()
-// {
-//     var value = parseInt(document.getElementById('number').value, 10);
-//     value = isNaN(value) ? 0 : value;
-//     value++;
-
-
-//     document.getElementById('number').value = value;
-
-//     var id =document.getElementById('inc').value;
-// $.ajax({
-//             url: 'addToCart/{id}'+id,
-//             method: 'get',
-//             success: function () {
-//                 console.log("done");
-//                 //do something
-//             },error: function(xhr, ajaxOptions, thrownError){
-//                     console.log(xhr.status+" ,"+" "+ajaxOptions+", "+thrownError);
-//                 }
-//             }
-//         }); 
-
-// }
-
-function decrementValue()
-{
-    var value = parseInt(document.getElementById('number').value, 10);
-    value = isNaN(value) ? 0 : value;
-    value--;
-    if(value==0){
-
-    }
-    var id=$(this).attr("#data-id");
-    document.getElementById('number').value = value;
-    
-}
-
-
-
-
-     function myFunction(name, price){
-        // alert("ALERT NA PLEASE");
-
-        var div = document.getElementById("cartdiv");
-      
-       
-        div.innerHTML+='<button type="button" class="close" data-dismiss="alert" aria-hidden="true" style="color:black; font-size:20px">&times;</button><dt style="margin-left:-120px"><input type="number" min="1" placeholder="1" style="width: 45px; height:20px"></dt><dd style="margin-left: 2px"><label style="float: left; margin-left:0px; margin-right: 0px; font-size: 15px; color:black"><b>&nbsp;&nbsp;'+name+'</b></label> '+
-           ' <label style="font-size: 15px; color: black; float:right"><b>'+price+'</b></label></dd>';
-     
-
-           }
-
-       
-</script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 
 
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
+// $(document).ready(function(){
+// $('#addcart').on('click', function(){
+// // document.getElementById('amounts').textContent={{sprintf("%.2f", Cart::subtotal()+40)}};
+// });
+// });
+
+
+
+
+
+
 $(document).ready(function(){
     $('#quantity').on('keyup change', function() {
 

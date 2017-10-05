@@ -20,8 +20,13 @@ Auth::routes();
 Route::get('/home', 'HomeController@index');
 Route::post('/home', 'HomeController@index')->name('user.index');
 Route::get('/home/dish/details/{id}', 'HomeController@showDetails')->name('home.details');
-Route::get('addToCart/{id}', 'HomeController@addToCart')->name('dish.addtocart');
+// Route::get('addToCart/{id}', 'HomeController@addToCart')->name('dish.addtocart');
 
+Route::post('/cart', 'CartController@cart');
+Route::get('/cart/update', 'CartController@updateCart');
+Route::post('/cart/clear', 'CartController@destroyCart');
+Route::get('/cart/dish/remove', 'CartController@removeDish');
+Route::post('/cart/checkout', 'CartController@checkout');
 
 Route::get('/home', 'HomeController@index');
 Route::post('/home/express', 'HomeController@express');

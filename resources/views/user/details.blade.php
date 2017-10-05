@@ -163,58 +163,98 @@ display: inline-block;
 
 
 
+<div class="main main-raised"  style="width: 25%; float: right;">
+    <div class="section" style="padding-bottom: 2px">
+        <div class="container" style="width: 100%">
+                <p style="color: black; float:left; margin-top: -60px;font-size: 21px; font-family: 'Lobster', cursive;">
+                <i class="material-icons" style="font-size:21px">shopping_cart</i> &nbsp;Your Cart &nbsp; 
+                <span class="badge" style="font-family: verdana; background-color:#30BB6D" id="totalqty">
+              {{Cart::count()}}
+                </span>
+                </p>
 
+                <!-- <span id="current">hello</span><br>
+                   <input type="number" min="1" value="1" style="width: 45px; height:20px;" id="qs"> -->
 
+  <div class="row" style="padding-right:8px; padding-left: 8px">
+  @if(count(Cart::content()))
+@foreach(Cart::content() as $item)
+        
+        <dl class="dl-horizontal">
+            <div id="cartdiv" style="padding-left: 5px">  
+              <dt style="margin-left:-55px">
+             
+         <!--       <input type="hidden" name="_token" value="{{ csrf_token() }}"> -->
 
- <div class="main main-raised"  style="width: 25%; float: right;">
-        <div class="section" style="padding-bottom: 2px">
-            <div class="container" style="width: 100%">
-
-            <p style="color: black; float:left; margin-top: -60px;font-size: 20px; font-family: 'Lobster', cursive;">
-            <i class="material-icons" style="font-size:20px">shopping_cart</i> &nbsp;Your Cart &nbsp; <span class="badge">{{Session::has('cart') ? Session::get('cart')->totalQty : '0' }}</span></p>
-          
-
-                <div class="row" style="padding-right:8px; padding-left: 8px">
-
-@if(isset(Session::get('cart')->items))
-@foreach(Session::get('cart')->items as $crt)
-@foreach($crt['item'] as $di)
-    <dl class="dl-horizontal">
-       <div id="cartdiv">  
-          <dt style="margin-left:-120px">
-                    <input type="number" min="1" value="{{$crt['qty']}}" style="width: 45px; height:20px">
-           </dt>
-           <dd style="margin-left: 2px">
-               <label style="float: left; margin-left:0px; margin-right: 0px; font-size: 15px; color:black">
-                <b>&nbsp;&nbsp;{{$di['dish_name']}}</b>
+                 <input type="text" min="1"  style="width: 40px; height:25px;"  name="quantity" value="{{$item->qty}}" autocomplete="off"/>
+                  
+                   <a class="cart_quantity_up" href='{{url("cart/update?dish_id=$item->id&increment=1")}}'><i class="material-icons"  style="color:#30BB6D">add_circle</i></a>
+                   
+                  <a class="cart_quantity_down" href='{{url("cart/update?dish_id=$item->id&decrease=1")}}'><i class="material-icons"  style="color:#30BB6D" id="dec">remove_circle</i></a>
+                 
+               </dt>
+           
+              <dd style="margin-left: 2px">
+                <label style="float: left; margin-left:0px; margin-right: 0px; font-size: 15px; color:black">
+                <b>&nbsp;&nbsp;{{$item->name}}</b>
                 </label>
-                <label style="font-size: 15px; color: black; float:right"><b>{{$di['dish_price']}}</b></label>
-           </dd>
-       
+               </dd>
+
+                <dt style="margin-left:-2px">
+                <label style="font-size: 12px; color: gray; float:left"> Price: <b id="price">{{$item->price}}</b></label>
+                </dt>
+
+                 <dd style="margin-right: 2px">
+                <label style="font-size: 12px; color: gray; float:right">Total Amount:<b id="itemamount">{{sprintf("%.2f",$item->subtotal)}}</b></label>
+                </dd>
+
+               
           </div>
       </dl>
-@endforeach
-@endforeach
- @endif
-               
 
+          @endforeach
+          
 
-
-        <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-         <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lobster', cursive;" id="tots"><b>Subtotal:</b> Php 56.00</p><br>
-         </div>
-          <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-         <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lobster', cursive;" id="tots"><b>Delivery Fee:</b> Php 40 .00</p><br></div>
-          <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-       <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lobster', cursive;" id="tots"><b>Total:</b> Php 150.00</p>
-     
-          <button type="button" class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:left; margin-top: 2px; border:none" id="chkt">Checkout</button>
+          @else
+<center><label style="font-size: 30px">No dish added</label>
+       
+          @endif
+        
+    <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+           <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots">
+           <b>Subtotal:</b>&nbsp;Php
+           <label style="color:black" id="subtotal">{{Cart::subtotal()}}</label>
+           </p>
+           <br>
         </div>
+        <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+          <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif', cursive;" id="tots">
+          <b>Delivery Fee:</b>&nbsp;Php
+          <label style="color:black">40.00</label>
+          <br>
+        </div>
+        <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+          <p style="float:right; margin-right:2px; font-size: 17px; color:black;font-family: 'Lato', sans-serif" id="tots">
+          <b>Total:</b>&nbsp;Php
+          <label style="color:black" id="alltotal">{{sprintf("%.2f", Cart::subtotal()+40)}}</label>
+          </p>
+        </div>
+         <button type="button" class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:right; margin-top: 2px; border:none" id="chkt">Checkout</button>
+              <form method="POST" action="{{url('cart/clear')}}">
+               <input type="hidden" name="_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-flat btn edit" style="float:left; margin-top: 2px; border:none" id="chkt">Clear Cart
+              </button>
+              </form>
 
-                </div>
-                </div>
-                </div>
-                </div>
+
+        
+
+ </div>
+   </div>
+      </div>
+         </div>
+
+
                   
 
 
