@@ -182,22 +182,10 @@ class HomeController extends Controller
         return view('user.details', compact('dishes'));
     }
 
-// public function addToCart(Request $request, $id){
- 
-//     $dish=Dish::where('did', $id)->get();
-//     foreach($dish as $d){
-//      $price = $d->sellingPrice;
-//     }
+public function orderHistory(){
 
-//     $oldCart=Session::has('cart') ? Session::get('cart') : null;
-//     $cart= new Cart($oldCart);  
-//     $cart->addCart($dish, $id, $price);
-//     $request->session()->put('cart', $cart);
-
-//     return redirect()->route('user.index');
-
-
-// }
+    return view('user.orderhistory');
+}
 
 
 

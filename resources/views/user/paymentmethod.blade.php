@@ -174,26 +174,11 @@ display: inline-block;
         
         <dl class="dl-horizontal">
             <div id="cartdiv" style="padding-left: 5px">  
-              <dt style="margin-left:-65px">
-             
-         <!--       <input type="hidden" name="_token" value="{{ csrf_token() }}"> -->
-
-                 <input type="text" min="1"  style="width: 40px; height:25px;"  name="quantity" value="{{$item->qty}}" autocomplete="off"/>
-                  
-                   <a class="cart_quantity_up" href='{{url("cart/update?dish_id=$item->id&increment=1")}}'><i class="material-icons"  style="color:#30BB6D">add_circle</i></a>
-                   
-                  <a class="cart_quantity_down" href='{{url("cart/update?dish_id=$item->id&decrease=1")}}'><i class="material-icons"  style="color:#30BB6D" id="dec">remove_circle</i></a>
-                 
-               </dt>
-           
-              <dd style="margin-left: 2px">
+              <dd style="margin-left:-5px">
                 <label style="float: left; margin-left:0px; margin-right: 0px; font-size: 15px; color:black">
-                <b>&nbsp;&nbsp;{{$item->name}}</b>
+                <b>&nbsp;{{$item->qty}} x {{$item->name}}</b>
                 </label>
-                
-              
-              <a href='{{url("/cart/dish/remove?dish_id=$item->id&remove=true")}}' style="float:right"><i class="fa fa-times" style="color:red"></i></a>
-                 
+                   
                </dd>
 
                 <dt style="margin-left:-2px">
@@ -201,7 +186,7 @@ display: inline-block;
                 </dt>
 
                  <dd style="margin-right: 2px">
-                <label style="font-size: 12px; color: gray; float:right">Total Amount:<b id="itemamount">{{sprintf("%.2f",$item->subtotal)}}</b></label>
+                <label style="font-size: 12px; color: gray; float:right">Total Amount:<b id="itemamount">{{$item->subtotal}}</b></label>
                 </dd>
 
                
@@ -224,18 +209,6 @@ display: inline-block;
            <br>
         </div>
          @if(count(Cart::content()))
-        <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-          <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif', cursive;" id="tots">
-          <b>Delivery Fee:</b>&nbsp;Php
-          <label style="color:black">40.00</label>
-          <br>
-        </div>
-        <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-          <p style="float:right; margin-right:2px; font-size: 17px; color:black;font-family: 'Lato', sans-serif" id="tots">
-          <b>Total:</b>&nbsp;Php
-          <label style="color:black" id="alltotal">{{sprintf("%.2f", Cart::subtotal()+40)}}</label>
-          </p>
-        </div>
         <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
             <form method="POST" action="{{url('home')}}">
                <input type="hidden" name="_token" value="{{ csrf_token() }}">

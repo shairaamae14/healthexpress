@@ -33,7 +33,7 @@ Route::post('/home/express', 'HomeController@express');
 Route::get('/home/express', 'HomeController@express');
 Route::get('/displayDishes', 'HomeController@searchDishes')->name('search.dish');
 
-
+Route::get('/user/orderhistory', 'HomeController@orderHistory')->name('user.orderhistory');
 Route::get('/user/{id}', 'UserProfController@show')->name('user.profile');
 Route::post('user/{id}', 'UserProfController@update')->name('user.profile.update');
 Route::get('/user/logout', 'Auth\LoginController@userLogout')->name('user.logout');

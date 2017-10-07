@@ -62,7 +62,7 @@ h2{
                     </span>
                     <input type="text" name="email" value="{{ old('email') }}" class="form-control" placeholder="Email...">
                        @if ($errors->has('email'))
-                                    <span class="help-block" style="background-color: #30bb6d; color:white; font-size:12px">
+                                    <span class="help-block" style="color:red; font-size:12px">
                                         <strong>{{ $errors->first('email') }}</strong> 
                                     </span>
                                 @endif
@@ -77,7 +77,7 @@ h2{
                     </span>
                     <input type="password" name="password" placeholder="Password..." class="form-control" />
                       @if ($errors->has('password'))
-                                     <span class="help-block" style="background-color: red; font-size:15px">
+                                     <span class="help-block" style="color:red; font-size:15px">
                                         <strong>{{ $errors->first('password') }}</strong>
                                     </span>
                                 @endif
