@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Dish;
-use App\Cook;
 use App\Orders;
-use App\OrderDetails;
+use App\UserOrder;
 use Illuminate\Http\Request;
 use Auth;
+use App\OrderMode;
+use App\PaymentMethod;
+use Cart;
 class OrdersController extends Controller
 {
     /**
@@ -15,35 +16,30 @@ class OrdersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function checkout(Request $request){
+        $option = $request->option;
+        if($option == 'Delivery') {
+            $service = $option;
+        }
+        else {
+            $service = $option;
+        }
+        return view('user.paymentmethod', compact('option'));
+    }   
+    
     public function index()
     {
-        if(Auth::guard('web')->check())
-        {
-            //if user ang ga log in
-        $userLoc = Auth::user()->location;
-        $cooks = Cook::where('location', $userLoc)->get();
-         return view('user.menu', compact('cooks'));
-        //dd($cooks);
-        }
-        else 
-        {
-            // if cook
-        return view('cook.eorders');    
-        }
+        return view('user.paymentmethod');
         
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function showCookDishes($id)
-    {
-        $cook = Cook::find($id);
-        $dishes = Dish::where('cook_id', $id)->get();
-        //dd($dishes);
-        return view('user.dishes-cook', compact('dishes', 'cook'));
+    
+    public function order(Request $request) {
+        $order = new Order();
+        $order->m_id = $request['mode_id'];
+        $order->save();
+        
+        return $order;
     }
 
     /**
@@ -55,12 +51,26 @@ class OrdersController extends Controller
     public function store(Request $request)
     {
         $user = Auth::id();
-        $date = Carbon\Carbon::now();
-        // $orders = Orders::create(['user_id' => $user
-        //             'order_date' => $date,
-        //             'amount'=> ,
-        //             'order_mode' => ,
-        //             'status' => 'Pending']);
+//        dd($request);
+//        $mode = OrderMode::create(['om_name' => 'Express Meal']);
+        $order= Orders::create(['om_id' => 1]);
+        $status = 'Pending';
+        if($request['payment_mode'] == 'COD') {
+            for ($index = 0; $index < count($request->dish); $index++) {
+                $details = UserOrder::create(['user_id' => $user,
+                'order_id' => $order->id,
+                'dish_id' => $request['dish'][$index],
+                'payment_id' => 1,
+                'order_date' => $request['order_date'],
+                'totalQty' => $request['qty'][$index],
+                'totalAmount' => $request['total'][$index],
+                'order_status' => $status
+                
+            ]); 
+            }
+        }
+        Cart::destroy();
+        return redirect()->route('user.home');
     }
 
     /**
