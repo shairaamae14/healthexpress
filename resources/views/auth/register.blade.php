@@ -159,6 +159,7 @@
 		                                        <div class="form-group has-success">
 		                                            <label class="control-label">Gender</label>
                                                             <select name="gender" class="form-control">
+                                                                <option selected disabled hidden>Select an option</option>
                                                                 <option value="Male">Male</option>
                                                                 <option value="Female">Female</option>
                                                             </select>
@@ -168,8 +169,9 @@
                                                 <div class="row">
                                                     <div class="col-sm-5 col-sm-offset-1">
 		                                        <div class="form-group has-success">
-		                                            <label class="control-label">Health Goal<a data-toggle="tooltip" data-placement="right" title="What is your aim with your body"><i class="material-icons md-dark md-18 help">help</i></i></a> </label>
+		                                            <label class="control-label">Health Goal<a data-toggle="wizard-radio" rel="tooltip"  title="What is your aim with your body"><i class="material-icons md-dark md-18 help">help</i></i></a> </label>
                                                             <select class="col-md-4 form-control" name="goal" style="color:black">
+                                                                <option selected disabled hidden>Select an option</option>
                                                                 @foreach($goals as $goal)
                                                                 <option value="{{$goal->hg_id}}">{{$goal->hgoal_name}}</option>
                                                                 @endforeach
@@ -180,9 +182,9 @@
                                                     </div>
                                                     <div class="col-sm-5">
                                                         <div class="form-group has-success">
-		                                            <label class="control-label">Lifestyle/Activeness<a data-toggle="tooltip" data-placement="right" title="Sedentary:gets little to no exercise;Lightly Active:daily exercise for 30 mins;
-                                                            Active:daily exercise for 1hr and 45mins;Extremly Active:daily exercise for 4 hrs and 15mins"><i class="material-icons md-dark md-18 help">help</i></a></label>
+		                                            <label class="control-label">Lifestyle/Activeness<a data-toggle="wizard-radio" rel="tooltip" title="The level of how active you are in life"><i class="material-icons md-dark md-18 help">help</i></a></label>
                                                             <select class="col-md-4 form-control" name="lifestyle" style="color:black">
+                                                                <option selected disabled hidden>Select an option</option>
                                                                 @foreach($lifestyles as $lstyles)
                                                                 <option value="{{$lstyles->lifestyle_id}}">{{$lstyles->lifestyle_name}}</option>
                                                                @endforeach
@@ -196,20 +198,27 @@
                                                     <div class="row">
                                                     <div class="col-sm-4 col-sm-offset-1">
                                                         <div class="form-group has-success">
-		                                            <label class="control-label">Allergens</label>
-                                                           
-                                                                @foreach($allergens as $allgen)
-                                                                <input type="checkbox" value="{{$allgen->allergen_id}}" name="allergen[]" >{{$allgen->allergen_name}}
-                                                                @endforeach  
+		                                            <label class="control-label">Allergens<p class="text-muted">If none, just leave blank</p></label>
+                                                            
+                                                            <div id="allergens">
+                                                            @foreach($allergens as $allgen)
+                                                            <div class="checkbox">
+                                                                    <label>
+                                                                            <input type="checkbox" value="{{$allgen->allergen_id}}" name="allergen[]">{{$allgen->allergen_name}}
+                                                                    </label>
+                                                            </div>
+                                                            @endforeach
+                                                            </div>  
                                                             
 		                                        </div>
                                                     </div>
                                                     
-                                                    <div class="col-sm-4 col-sm-offset-1">
+                                                    <div class="col-sm-5 col-sm-offset-1">
                                                         
-                                                        <div class="form-group has-success">
+                                                        <div class="form-group has-success" style="display:none;" id="tolerance">
 		                                            <label class="control-label">Tolerance Level (Allergens)</label>
                                                             <select name="tolerance" class="form-control">
+                                                                <option selected disabled hidden>Select an option</option>
                                                                 <option value="Low">Low</option>
                                                                 <option value="Medium">Medium</option>
                                                                 <option value="High">High</option>
@@ -218,13 +227,18 @@
 		                                        </div>
                                                     </div>
                                                     
-                                                    <div class="col-sm-4">
+                                                    <div class="col-sm-5 col-sm-offset-1">
                                                         
                                                         <div class="form-group has-success">
-		                                            <label class="control-label">Medical Conditions</label>
+		                                            <label class="control-label">Medical Conditions<p class="text-muted">If none, just leave blank</p></label>
                                                             
                                                                 @foreach($mconditions as $conditions)
-                                                                <input type="checkbox" value="{{$conditions->medcon_id}}" name="med_condition[]">{{$conditions->medcon_name}}
+                                                                
+                                                                <div class="checkbox">
+                                                                    <label>
+                                                                            <input type="checkbox" value="{{$conditions->medcon_id}}" name="med_condition[]">{{$conditions->medcon_name}}
+                                                                    </label>
+                                                                </div>
                                                                 @endforeach
                                                             
 		                                        </div>
@@ -252,7 +266,7 @@
 
 	    <div class="footer">
 	        <div class="container text-center">
-	             Made with <i class="fa fa-heart heart"></i> by <a href="http://www.creative-tim.com">Creative Tim</a>.
+<!--	             Made with <i class="fa fa-heart heart"></i> by <a href="http://www.creative-tim.com">Creative Tim</a>.-->
 	        </div>
 	    </div>
 	</div>
@@ -356,6 +370,19 @@
         $(document).ready(function() {
             $('.datepicker').datepicker({
                 weekStart:1
+            });
+            
+            $('#allergens').on('click',':checkbox', function() {
+                $(this).each(function() {
+                    if($("input:checked").length > 0) {
+                        $('#tolerance').show();
+                    }
+                    else if($(this).prop("checked") == false) {
+                        $('#tolerance').hide();
+                    } 
+                });
+                    
+
             });
         });
     </script>
