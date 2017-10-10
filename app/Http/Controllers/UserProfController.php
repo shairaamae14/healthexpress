@@ -28,13 +28,13 @@ class UserProfController extends Controller
  public function show($id){
   
        $userid= Auth::id();
-       $users=User::where('id', $userid)->get(); 
-        foreach($users as $user) {
+       $user=User::find($userid); 
+     
             $userhealthgoals = UserHGoals::join('health_goals' , 'health_goals.hg_id', '=' , 'user_healthgoals.hg_id')->where('user_id', $user->id)->get();
             $userlifestyle = UserLifestyle::join('lifestyles', 'lifestyles.lifestyle_id', '=', 'user_lifestyle.lifestyle_id')->where('user_id', $user->id)->get();
             $userallergens = UserAllergen::join('allergens', 'allergens.allergen_id', '=', 'user_allergens.allergen_id')->where('user_id', $user->id)->get();
             $usermedcons = UserMCondition::join('medical_conditions', 'medical_conditions.medcon_id', '=', 'user_medcondition.medcon_id')->where('user_id', $user->id)->get();
-  }
+  
   
   $healthgoals = HealthGoals::all();
   $selectedGoal = UserHGoals::first()->hg_id;
@@ -57,7 +57,7 @@ class UserProfController extends Controller
 
 
 
-   return view('user.userprof', compact('users', 'userhealthgoals', 'userlifestyle', 'userallergens', 'usermedcons', 'healthgoals', 'selectedGoal', 'lifestyles', 'selectedLifestyle', 'allergies', 'selectedAllergens', 'medcons', 'selectedMedCons', 'tolerance', 'selectedTolerance', 'selectedGender'));
+   return view('user.userprof', compact('user', 'userhealthgoals', 'userlifestyle', 'userallergens', 'usermedcons', 'healthgoals', 'selectedGoal', 'lifestyles', 'selectedLifestyle', 'allergies', 'selectedAllergens', 'medcons', 'selectedMedCons', 'tolerance', 'selectedTolerance', 'selectedGender'));
     }
 
 
@@ -107,23 +107,32 @@ class UserProfController extends Controller
     }
      
 
-// public function store(array $data){
-//  for($i =0; $i < count($data['allergen']); $i++) {
-//             $allergen = UserAllergen::create(['user_id' => $user->id,
-//                                            'allergen_id' => $data['allergen'][$i],
-//                                            'tolerance_level' => $data['tolerance'],
-//                                             'status' => 1]);
-//         }
-//         for($j = 0; $j < count($data['med_condition']); $j++) {
-//             $condition = UserMCondition::create(['user_id' => $user->id,
-//                                              'medcon_id' => $data['med_condition'][$j],
-//                                              'status' => 1]);
-//         }
-//         return redirect()->route('user.profile', compact('id', 'allergen', 'condition'));
+public function store(Request $request, $id){
+
+  $id=User::find($id);
+  $tolerance="Low";
+
+ for($i =0; $i < count($request['allergen']); $i++) {
+            $allergen = UserAllergen::join('allergens' , 'allergens.allergen_id', '=' , 'user_allergens.allergen_id')
+                                    ->where('user_id', $id)
+                                    ->create(['allergen_id' => $request['allergen'][$i],
+                                           'tolerance_level' =>$tolerance,
+                                            'status' => 1]);
+        }
+
+
+
+
+        for($j = 0; $j < count($data['med_condition']); $j++) {
+            $condition = UserMCondition::create(['user_id' => $id,
+                                             'medcon_id' => $data['med_condition'][$j],
+                                             'status' => 1]);
+        }
+        return redirect()->route('user.profile');
 
      
-//       }
-// }
+      }
+
 
 
 }

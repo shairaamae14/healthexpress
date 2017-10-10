@@ -78,12 +78,10 @@ display: inline-block;
                   <div class="row"> 
                       <div class="profile" >
                           <div class="avatar">
-                              <center>
-                              <div style="width:200px; height:200px; margin-top: -100px; background-color:#30BB6D; border-radius: 100px; border:2px white solid; " >
-                              <label style="font-size: 150px; color:white; float:center"> {{Auth::user()->fname[0]}}
-                            </label>
+                             <center>
+                             <div style="width:200px; height:200px; margin-top: -100px; background-color:#30BB6D; border-radius: 100px; border:2px white solid;">
+                              <label style="font-size: 150px; color:white; float:center"> {{Auth::user()->fname[0]}}</label>
                             </div>
-                           <!--    <img src="{{asset('img/user.png')}}" alt="Circle Image" style="width:200px; height:200px; margin-top: -100px; " class="img-circle img-responsive img-raised"> -->
                           </div>
                            <div class="name">
                               <center><h3 class="title" style="color:#30BB6D">{{Auth::user()->fname." ".Auth::user()->lname}}</h3>
@@ -122,7 +120,7 @@ display: inline-block;
               <div class="content">
                 <div class="tab-content text-center">
                   <div class="tab-pane active" id="profile">
-                  @foreach($users as $user)
+                  
                       <button type="button" class="btn btn-flat btn-primary edit" style="background-color:#30BB6D; border:none; margin-top: 1px; float:right" data-toggle="modal" data-target="#myModal{{$user->id}}">
               <i class="fa fa-edit"></i>
               </button><br><br>
@@ -251,7 +249,7 @@ display: inline-block;
                         </div>
                       
 
- @endforeach
+
                   </div>
 
                 </div>
@@ -268,7 +266,7 @@ display: inline-block;
 
 
 <!-- Modal Core -->
- @foreach($users as $user)
+ 
 
 <div class="modal fade" id="myModal{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -424,7 +422,7 @@ display: inline-block;
     </div>
   </div>
 </div>
-@endforeach
+
 
 
 <!--END!-->
@@ -432,7 +430,7 @@ display: inline-block;
 
 <!--START!-->
 
- @foreach($users as $user)
+ 
 <div class="modal fade" id="myModal2{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -457,14 +455,14 @@ display: inline-block;
     </div>
   </div>
 </div>
-@endforeach
+
 
 <!--END!-->
 
 
 
 <!--start!-->
- @foreach($users as $user)
+ 
 <div class="modal fade" id="myModal3{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -634,7 +632,7 @@ display: inline-block;
   </div>
 </div>
 </div>
-@endforeach
+
 
  <!--end!-->
 
@@ -642,7 +640,7 @@ display: inline-block;
 
 
 
- @foreach($users as $user)
+ 
 <div class="modal fade" id="myModal4{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -651,24 +649,22 @@ display: inline-block;
        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-edit"></i><b>&nbsp;&nbsp;Add</b></h4>
       </div>
       <div class="modal-body">   
-  
-
+              <form method="post" action="{{route('user.profile.add', ['id'=>$user->id])}}">
+                <input type="hidden" name="_token" value="{{ csrf_token() }}">
       <h4 class="modal-title" id="myModalLabel">&nbsp;&nbsp;<b>Add Allergens</b></h4>
-                       
-
-
                      <div class="col-sm-12">
                       <div class="form-group label-floating has-success">
                           <label class="control-label">Allergens</label>
                          
-                                @if ($allergies->count())
+                                @if ($allergies)
 
                                 @foreach($allergies as $aller)
-                                <input type="checkbox" name="allergen" value="{{ $aller->allergen_id }}" {{ $selectedAllergens == $aller->allergen_id ? 'disabled="disabled"' : '' }}>{{ $aller->allergen_name}}</option><br> 
-                             @endforeach
-                                  @endif
+
+                                <input type="checkbox" name="allergen[]" value="{{$aller->allergen_id}}">{{ $aller->allergen_name}}<br> 
+                                @endforeach
+                                @endif
                                      
-                                    </select>     
+                                         
                              
                       </div>
                     </div>
@@ -679,7 +675,6 @@ display: inline-block;
 
  <!--end!-->
 
-     
 
       <div class="modal-footer">
         <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Cancel</button>
@@ -691,13 +686,13 @@ display: inline-block;
   </div>
 </div>
 </div>
-@endforeach
 
 
 
 
 
- @foreach($users as $user)
+
+ 
 <div class="modal fade" id="myModal5{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -746,7 +741,6 @@ display: inline-block;
   </div>
 </div>
 </div>
-@endforeach
 
 
 

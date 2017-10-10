@@ -28,7 +28,7 @@
                                 <ul class="dropdown-menu" role="menu">
 
                                  <li><a href="{{route('user.profile', ['id'=> Auth::id()])}}">Profile</a></li>
-                                 <li><a href="{{route('user.orderhistory')}}">Order History</a></li>
+                                 <li><a href="{{route('order.orderhistory')}}">Orders</a></li>
 
 
                                     <li>
