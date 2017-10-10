@@ -26,6 +26,10 @@ Route::post('/cart', 'CartController@cart');
 Route::get('/cart/update', 'CartController@updateCart');
 Route::post('/cart/clear', 'CartController@destroyCart');
 Route::get('/cart/dish/remove', 'CartController@removeDish');
+<<<<<<< HEAD
+Route::post('/cart/checkout', 'CartController@checkout');
+Route::post('/cart/order', 'OrdersController@store')->name('order.place');
+=======
 Route::post('/cart/checkout', 'OrdersController@checkout')->name('checkout');
 Route::post('/cart/order', 'OrdersController@store')->name('order.place');
 Route::get('/cart/orderhistory', 'OrdersController@show')->name('order.orderhistory');
@@ -34,6 +38,7 @@ Route::post('/cart/order/updatetodone/{id}', 'OrdersController@changeToDone')->n
 Route::get('/cart/pastorders', 'OrdersController@pastOrders')->name('order.pastorders');
 // Route::get('cart/order/status', 'OrdersController@show')->name('order.history');
 
+>>>>>>> 2646ad20dfde083a10a0fdda50c5327568fb2e6c
 
 Route::get('/home', 'HomeController@index');
 Route::post('/home/express', 'HomeController@express');
@@ -90,6 +95,8 @@ Route::prefix('cook')->group(function() {
         Route::get('/displayDishes', 'DishController@searchDishes')->name('display');
         Route::get('/previewDishes/{id}', 'DishController@previewDish')->name('preview');
         Route::get('/searchIngredients', 'DishController@searchIngredient')->name('search.ingredient');
+        Route::post('/status', 'CookController@changeAvailabilityStat')->name('status.change');
+        Route::post('/orderstat', 'CookController@changeOrderStats')->name('orderstat.change');
 	// Route::get('dishes/addingredients', 'DishController@adding')->name('cook.addingredients');
         
 });

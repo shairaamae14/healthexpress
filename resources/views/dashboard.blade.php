@@ -1,7 +1,7 @@
 @extends('cook-layouts.cook-master')
 <style>
  .D:hover{
-  background-color: #31A0DC !important;
+  background-color: #6E9BF0 !important;
   color:white !important;
   border:white !important;
 }
@@ -13,7 +13,7 @@
 }
 
 .R:hover{
-  background-color: #30BB6D !important;
+  background-color: #FFA233 !important;
   color:white !important;
   border:white !important;
   
@@ -43,36 +43,199 @@
 
             </div>
             
-            <div class="row">
-                <div class="col-md-3">
-                    <div class="box box-success box-solid orderCard">
-                        <div class="box-header with-border" id="header">
-                            <h3 class="box-title" style="color:white;"><i class="fa fa-user"></i> 
-                            Shayne Dingle</h3>
-                            <label id="stats" style="float:right; color:white">Pending</label>
+
+
+
+            <div class="body">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs tab-nav-right" role="tablist">
+                                <li role="presentation" class="active"><a href="#all" data-toggle="tab">ALL</a></li>
+                                <li role="presentation"><a href="#pending" data-toggle="tab">PENDING</a></li>
+                                <li role="presentation"><a href="#cooking" data-toggle="tab">COOKING</a></li>
+                                <li role="presentation"><a href="#done" data-toggle="tab">DONE</a></li>
+                            </ul>
+
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div role="tabpanel" class="tab-pane fade in active" id="all">
+                                    <b>All Orders</b>
+                                    <p>
+
+                                        <div class="body">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th>Order(s)</th>
+                                                            <th>Order Mode</th>
+                                                            <th>Date & Time Ordered</th>
+                                                            <th>Allergies</th>
+                                                            <th>Side Note(s)</th>
+                                                            <th>Action</th>
+                                                            
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($dishes as $orders)
+                                                        <tr>
+
+                                                            <td>{{$orders->fname}} {{$orders->lname}}</td>
+                                                            <td>{{$orders->dish_name}}</td>
+                                                            <td>{{$orders->om_name}}</td>
+                                                            <td>{{$orders->order_date}}</td>
+                                                            <td>{{$orders->allergen_name}}</td>
+                                                            <td>Don't put too much carrots. Please add more sauce</td>
+
+                                                            @if($orders->order_status == 'Pending')
+                                                            <td><a href="javascript:void(0);" onclick="cooking({{$orders->uo_id}})" id="Cooking" value="Cooking"><i class="material-icons" data-toggle="tooltip" data-placement="top" style="color:#DC3131" title="cooking">restaurant_menu</i></a></td>
+                                                            @elseif($orders->order_status == 'Cooking')
+                                                            <td><a href="javascript:void(0);" onclick="done({{$orders->uo_id}})" id="Done" value="Done"><i class="material-icons" data-toggle="tooltip" data-placement="top" title="done" style="color:#FFA233">local_mall</i></a></td>
+                                                            @elseif($orders->order_status == 'Done')
+                                                            <td><a href="javascript:void(0);" onclick="deliver({{$orders->uo_id}})" id="Deliver" value="Deliver"><i class="material-icons" data-toggle="tooltip" data-placement="top" title="deliver" style="color:#6E9BF0">local_shipping</i></a></td>
+                                                            @else
+                                                            <td><a href="javascript:void(0);" id="Delivered" value="Delivered"><i class="material-icons" data-toggle="tooltip" data-placement="top" title="delivered">check_circle</i></a></td>
+                                                            @endif
+                                                        </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </p>
+                                </div>
+                                <div role="tabpanel" class="tab-pane fade" id="pending">
+                                    <b>Pending</b>
+                                    <p>
+                                        <div class="body">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th>Order(s)</th>
+                                                            <th>Order Mode</th>
+                                                            <th>Date & Time Ordered</th>
+                                                            <th>Allergies</th>
+                                                            <th>Side Note(s)</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                        @foreach($dishes as $orders)
+                                                            @if($orders->order_status == 'Pending')
+                                                        <tr>
+                                                            <input type="hidden" id="id" value="{{$orders->uo_id}}">
+                                                            <td>{{$orders->fname}} {{$orders->lname}}</td>
+                                                            <td>{{$orders->dish_name}}</td>
+                                                            <td>{{$orders->om_name}}</td>
+                                                            <td>{{$orders->order_date}}</td>
+                                                            <td>{{$orders->allergen_name}}</td>
+                                                            <td>Please add more sauce</td>
+                                                            <td><a href="javascript:void(0);" onclick="cooking({{$orders->uo_id}})" id="Cooking"  value="Cooking"><i class="material-icons" data-toggle="tooltip" data-placement="top" style="color:#DC3131" title="cooking">restaurant_menu</i></a></td>
+                                                        </tr>
+                                                            @endif
+                                                        @endforeach
+                                                        
+                                                        
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </p>
+                                </div>
+                                <div role="tabpanel" class="tab-pane fade" id="cooking">
+                                    <b>Cooking</b>
+                                    <p>
+                                        <div class="body">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th>Order(s)</th>
+                                                            <th>Order Mode</th>
+                                                            <th>Date & Time Ordered</th>
+                                                            <th>Allergies</th>
+                                                            <th>Side Note(s)</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach($dishes as $cook)
+                                                            @if($cook->order_status == 'Cooking')
+                                                        <tr>
+                                                            <input type="hidden" id="id" value="{{$cook->uo_id}}">
+                                                            
+                                                            <td>{{$cook->fname}} {{$cook->lname}}<label id="id"></label></td>
+                                                            <td>{{$cook->dish_name}}</td>
+                                                            <td>{{$cook->om_name}}</td>
+                                                            <td>{{$cook->order_date}}</td>
+                                                            <td>{{$cook->allergen_name}}</td>
+                                                            <td>Please add more sauce</td>
+                                                            <td><a href="#" onclick="done({{$cook->uo_id}})" id="Done" value="Done"><i class="material-icons" data-toggle="tooltip" data-placement="top" title="done" style="color:#FFA233">local_mall</i></a></td>
+                                                        </tr>
+                                                            @endif
+                                                        @endforeach
+                                                        
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </p>
+                                </div>
+                                <div role="tabpanel" class="tab-pane fade" id="done">
+                                    <b>Done</b>
+                                    <p>
+                                        <div class="body">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th>Order(s)</th>
+                                                            <th>Order Mode</th>
+                                                            <th>Date & Time Ordered</th>
+                                                            <th>Allergies</th>
+                                                            <th>Side Note(s)</th>
+                                                            <th>Action</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                       @foreach($dishes as $done)
+                                                            @if($done->order_status == 'Done')
+                                                        <tr>
+                                                            <input type="hidden" id="id" value="{{$done->uo_id}}">
+                                                            
+                                                            <td>{{$done->fname}} {{$done->lname}}<label id="id"></label></td>
+                                                            <td>{{$done->dish_name}}</td>
+                                                            <td>{{$done->om_name}}</td>
+                                                            <td>{{$done->order_date}}</td>
+                                                            <td>{{$done->allergen_name}}</td>
+                                                            <td>Please add more sauce</td>
+                                                            <td><a href="javascript:void(0);" onclick="deliver({{$done->uo_id}})" id="Deliver" value="Deliver"><i class="material-icons" data-toggle="tooltip" data-placement="top" title="deliver" style="color:#6E9BF0">local_shipping</i></a></td>
+                                                        </tr>
+                                                            @endif
+                                                        @endforeach
+                                                        
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </p>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="box-body">
-                            <dl class="dl-horizontal">
-                                <dt><i class="fa fa-spoon"></i> Order(s):</dt>
-                                <dd class="dd_order"> <strong>Italian Quinoa Salad </strong>(2)</dd>
-                                <dt><i class="fa fa-check"></i> Order mode:</dt>
-                                <dd>Express Meal</dd>
-                                <dt><i class="fa fa-calendar"></i>  Date & Time Ordered:</dt>
-                                <dd>July 28, 8:42 AM</dd>
-                                <dt><i class="fa fa-times"></i> Allergies:</dt>
-                                <dd>Shrimp, Nuts, Milk</dd>
-                                <dt><i class="fa fa-sticky-note"></i>  Side note(s):</dt>
-                                <dd>Don't put too much carrots. Please add more sauce </dd>
-                            </dl>
-                            <a href="#"><button type="button" class="btn btn-flat btn-success btn-sm">Order details</button></a>
-                            <a href="#"><button type="button"  class="C btn btn-flat btn-success btn-sm" id="cooking" onclick="btnCook()" style="float:right; color:#DC3131; border:2px solid  #DC3131; background-color: white;">Cooking</button></a>
-                        <!--<a href="#"><button type="button"  class="D btn btn-flat btn-success btn-sm" id="deliver" onclick="btnDel()"  style="float:right; color:#31A0DC; border:2px solid #31A0DC;  background-color: white; margin-right:5px">Ready</button></a>
-                            <a href="#"><button type="button"  class="R btn btn-flat btn-success btn-sm" id="done" onclick="btnDone()"  style="float:right; color:#30BB6D; border:2px solid #30BB6D;  background-color: white; margin-right:5px">Received</button></a>-->
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+
+
+
+
+
+            
+
         </section>
 
     </div>
@@ -112,4 +275,107 @@
 <!-- AdminLTE App -->
 <script src="{{asset('adminlte/dist/js/adminlte.min.js')}}"></script>
 <script src="{{asset('adminlte/dist/js/app.js')}}"></script>
+
+
+
+
+<script src="{{asset('js/pages/ui/tooltips-popovers.js')}}"></script>
+
+
+    <!-- Bootstrap Core Js -->
+    <script src="{{asset('plugins/bootstrap/js/bootstrap.js')}}"></script>
+
+    <!-- Select Plugin Js -->
+    <script src="{{asset('plugins/bootstrap-select/js/bootstrap-select.js')}}"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="{{asset('plugins/jquery-slimscroll/jquery.slimscroll.js')}}"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="{{asset('plugins/node-waves/waves.js')}}"></script>
+
+    <!-- Jquery DataTable Plugin Js -->
+    <script src="{{asset('plugins/jquery-datatable/jquery.dataTables.js')}}"></script>
+    <script src="{{asset('plugins/jquery-datatable/skin/bootstrap/js/dataTables.bootstrap.js')}}"></script>
+    <script src="{{asset('plugins/jquery-datatable/extensions/export/dataTables.buttons.min.js')}}"></script>
+    <script src="{{asset('plugins/jquery-datatable/extensions/export/buttons.flash.min.js')}}"></script>
+    <script src="{{asset('plugins/jquery-datatable/extensions/export/jszip.min.js')}}"></script>
+    <script src="{{asset('plugins/jquery-datatable/extensions/export/pdfmake.min.js')}}"></script>
+    <script src="{{asset('plugins/jquery-datatable/extensions/export/vfs_fonts.js')}}"></script>
+    <script src="{{asset('plugins/jquery-datatable/extensions/export/buttons.html5.min.js')}}"></script>
+    <script src="{{asset('plugins/jquery-datatable/extensions/export/buttons.print.min.js')}}"></script>
+
+    <!-- Custom Js -->
+    <script src="{{asset('js/admin.js')}}"></script>
+    <script src="{{asset('js/pages/tables/jquery-datatable.js')}}"></script>
+
+    <!-- Demo Js -->
+    <script src="{{asset('js/demo.js')}}"></script>
+
+
+
+
+
+
+
+
+
+
+ <script type="text/javascript">
+        function cooking(id){
+                var status= "Cooking";
+                alert(status);
+                var data 
+                $.ajax({
+                    method: 'POST',
+                    url: "{{ url('/cook/orderstat') }}" ,
+                    dataType: 'json',
+                    headers: {'X_CSRF_TOKEN': '{{csrf_token()}}'},
+                    data: {'status':status,'id':id},
+                    success: function(json) {
+                        location.reload();
+                    },
+                    error: function(xhr,error){
+                        console.log(xhr);
+                    }
+                });
+        }
+
+         function done(id){
+            var status="Done";
+            alert(status);
+            $.ajax({
+                    method: 'POST',
+                    url: "{{ url('/cook/orderstat') }}" ,
+                    dataType: 'json',
+                    headers: {'X_CSRF_TOKEN': '{{csrf_token()}}'},
+                    data: {'status':status,'id':id},
+                    success: function(json) {
+                        location.reload();
+                    },
+                    error: function(xhr,error){
+                        console.log(xhr);
+                    }
+                });
+         }
+
+        function deliver(id){
+            var status="Deliver";
+            alert(status);
+            $.ajax({
+                    method: 'POST',
+                    url: "{{ url('/cook/orderstat') }}" ,
+                    dataType: 'json',
+                    headers: {'X_CSRF_TOKEN': '{{csrf_token()}}'},
+                    data: {'status':status, 'id':id},
+                    success: function(json) {
+                        location.reload();
+                    },
+                    error: function(xhr,error){
+                        console.log(xhr);
+                    }
+                });
+        }
+
+    </script>
 @endsection
