@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
+use App\Dish;
 use App\Orders;
 use App\UserOrder;
 use Illuminate\Http\Request;
@@ -16,10 +18,14 @@ class OrdersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+     
     public function checkout(Request $request){
         $option = $request->option;
         if($option == 'Delivery') {
             $service = $option;
+       
+
         }
         else {
             $service = $option;
@@ -70,7 +76,7 @@ class OrdersController extends Controller
             }
         }
         Cart::destroy();
-        return redirect()->route('user.home');
+        return redirect()->route('order.orderhistory');
     }
 
     /**
@@ -89,11 +95,44 @@ class OrdersController extends Controller
             $order = OrderDetails::where('dish_id', $dish->id)->get();
             return view('cook.eorders', compact($order));
         }
+
         else {
-            // return view sa user nga makakita siya sa iyang orders
-            return view('dashboard'); //*new
+                $pending= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
+                ->join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
+                ->where('user_id', $id)
+                ->groupBy('dish_id')
+                ->orderBy('order_date', 'desc')
+                 ->where('order_status', '=', 'Pending')
+                ->get();
+
+                $cooking= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
+                ->join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
+                ->where('user_id', $id)
+                ->groupBy('dish_id')
+                ->orderBy('order_date', 'desc')
+                ->where('order_status', '=', 'Cooking')
+                ->get();
+
+                $delivering= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
+                ->where('user_id', $id)
+                 ->groupBy('dish_id')
+                 ->orderBy('order_date', 'desc')
+                 ->where('order_status', '=', 'Delivering')
+                ->get();
+
+                $datetoday=Carbon::now('Asia/Manila')->format('Y-m-d');
+                $completed= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
+                ->where('user_id', $id)
+                ->groupBy('dish_id')
+                ->orderBy('order_date', 'desc')
+                ->where('order_status', '=', 'Completed')
+                 ->where('order_date', '=', $datetoday)
+                ->get();
+               
+               return view('user.orderhistory', compact('pending', 'cooking', 'delivering', 'completed', 'done'));
 
         }
+         
     }
 
     /**
@@ -104,11 +143,15 @@ class OrdersController extends Controller
      */
     public function edit(Orders $orders)
     {
+         $id = Auth::id();
         if(Auth::guard('cook')->check())
         {
             // mailisan niya ang status 
             // return view katong pwede sha maka ilis status
             return view('cook.eorderstatus'); //*new
+        }
+        else{
+
         }
     }
 
@@ -119,8 +162,9 @@ class OrdersController extends Controller
      * @param  \App\Orders  $orders
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
+
          if(Auth::guard('cook')->check())
         {
             
@@ -128,7 +172,51 @@ class OrdersController extends Controller
                             ->where('user_id', $request->uid)
                             ->update(['status' => $request->status]);
         }
+
+        
+}
+
+    public function changeToReceived($id){
+          $status='Completed';      
+             $completed= UserOrder::find($id)
+                ->update(['order_status'=>$status]);
+
+
+                        
+          return redirect()->route('order.orderhistory');
     }
+
+    public function changeToDone($id){
+        $datetoday=Carbon::now('Asia/Manila')->format('Y-m-d');
+          $status=''; 
+          // $finddate=UserOrder::find($id);
+         
+        
+        
+             return redirect()->route('order.pastorders');
+
+      
+    
+    }
+
+
+
+    public function pastOrders(){
+            $uid = Auth::id();
+           $done= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
+                ->where('user_id', $uid)
+                ->groupBy('dish_id', 'order_id')
+                ->orderBy('order_date', 'desc')
+                ->where('order_status', '=', 'Completed')
+                ->get();
+                 return view('user.pastorders', compact('done'));
+               
+    }
+
+
+
+
+
 
     /**
      * Remove the specified resource from storage.
@@ -140,4 +228,6 @@ class OrdersController extends Controller
     {
         // if ma cancel ang order pwede ra sguro diri
     }
+
+
 }

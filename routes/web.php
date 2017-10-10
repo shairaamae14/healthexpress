@@ -26,16 +26,24 @@ Route::post('/cart', 'CartController@cart');
 Route::get('/cart/update', 'CartController@updateCart');
 Route::post('/cart/clear', 'CartController@destroyCart');
 Route::get('/cart/dish/remove', 'CartController@removeDish');
-Route::post('/cart/checkout', 'CartController@checkout');
+Route::post('/cart/checkout', 'OrdersController@checkout')->name('checkout');
+Route::post('/cart/order', 'OrdersController@store')->name('order.place');
+Route::get('/cart/orderhistory', 'OrdersController@show')->name('order.orderhistory');
+Route::post('/cart/order/updatestatus/{id}', 'OrdersController@changeToReceived')->name('order.statuschange');
+Route::post('/cart/order/updatetodone/{id}', 'OrdersController@changeToDone')->name('order.donestatus');
+Route::get('/cart/pastorders', 'OrdersController@pastOrders')->name('order.pastorders');
+// Route::get('cart/order/status', 'OrdersController@show')->name('order.history');
+
 
 Route::get('/home', 'HomeController@index');
 Route::post('/home/express', 'HomeController@express');
 Route::get('/home/express', 'HomeController@express');
 Route::get('/displayDishes', 'HomeController@searchDishes')->name('search.dish');
 
-Route::get('/user/orderhistory', 'HomeController@orderHistory')->name('user.orderhistory');
+
 Route::get('/user/{id}', 'UserProfController@show')->name('user.profile');
 Route::post('user/{id}', 'UserProfController@update')->name('user.profile.update');
+Route::post('user/AddAller/{id}', 'UserProfController@store')->name('user.profile.add');
 Route::get('/user/logout', 'Auth\LoginController@userLogout')->name('user.logout');
 
 

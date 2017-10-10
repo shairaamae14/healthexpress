@@ -53,10 +53,14 @@ display: inline-block;
   color:black !important;
 }
 
+#load{
+  
+}
 
 /*Resize the wrap to see the search bar change!*/
 
 }
+
 
 </style>
 @section('content')
@@ -67,12 +71,10 @@ display: inline-block;
           <center>
        <div class="col-md-6">
            <br>
-            <h1 class="title text-center" style="font-family: 'Lobster', cursive; font-size: 30px;">Choose your order mode:</h1>
-
-            <a href="{{url('/home/express')}}" class=" btn btn-danger btn-raised btn-lg" style="background-color:transparent;border:2px solid white; font-family: 'Anton', sans-serif; font-size: 20px " id="ordermode"> <center> Express Meal</center>
-            </a>
-                <a href="{{url('/home/planned')}}" class=" btn btn-danger btn-raised btn-lg" id="ordermode" style="background-color:transparent;  border:2px solid white; font-family: 'Anton', sans-serif; font-size: 20px "><center>Planned Meal</center>
-            </a>
+            <h1 class="title text-left" style="font-size: 80px; font-family: 'Lobster', cursive;">Express Order</h1>
+             
+             <button id="ordermode" style="background-color:transparent;  border:2px solid white; font-size: 40px; margin-top:-120px; margin-left:900px; font-family: 'Lobster', cursive; color:white; width: 300px">Planned Meal
+            
 
         </div>
 
@@ -99,20 +101,6 @@ display: inline-block;
                 </form>
                 </div> -->
 
-                  <div class="search" style="float:right">
-                  <form method="POST" action="{{route('user.index')}}">
-                        {{csrf_field()}}
-                  <input type="text" id="input" class="searchTerm search-query mac-style" placeholder="Search"  name="search" value="" style="height:40px" autofocus >
-                   <input type="hidden" id="dish_id" name="id" value="">
-                    <button type="submit" class="btn btn-success btnSearch" id="btnSearch"><i class="material-icons">search</i></button>
-                </div>
-                              <ul id="dishNames" style="display:none">
-                           @foreach($dishes as $dish)
-                           <li><a href="#"></a>{{$dish->dish_name}}</li>
-                           @endforeach
-                       </ul>
-                        </form>
-                       </div>
                            
 
                 
@@ -130,6 +118,25 @@ display: inline-block;
                       <li><a href="#home" data-toggle="tab">Breakfast</a></li>
                       <li><a href="#updates" data-toggle="tab">Lunch</a></li>
                       <li><a href="#history" data-toggle="tab">Dinner</a></li>
+                      <li style="float:right; margin-left:250px">
+                     <div class="search">
+                         <form method="POST" action="{{route('user.index')}}">
+                          {{csrf_field()}}
+                          <input type="text" id="input" class="searchTerm search-query mac-style" placeholder="Search"  name="search" value="" style="color:black" autofocus>
+                         <input type="hidden" id="dish_id" name="id" value="">
+                          <button type="submit" class="btnSearch" id="btnSearch" style="background-color: transparent; border:none">
+                          <i class="material-icons">search</i></button>
+                    </div>
+                          <ul id="dishNames" style="display:none">
+                             @foreach($dishes as $dish)
+                             <li><a href="#"></a>{{$dish->dish_name}}</li>
+                             @endforeach
+                          </ul>
+                          </form>
+                         </div>
+
+
+                      </li>
                     </ul>
                   </div>
                 </div>
@@ -143,7 +150,7 @@ display: inline-block;
                         <div class="col-sm-3">
                          <div class="box box-solid" style="border-radius:5px; box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.3);">
                               <div class="box-header with-border">  
-                                <center><img src="{{asset('dish_imgs/'.$dish->dish_img)}}" style="width:150px; height:150px; border-radius:10px; border:1px solid #F0F0F0; margin-top: 10px;"></center>
+                                <center><img src="{{asset('dish_imgs/'.$dish->dish_img)}}" style="width:100%; height:150px; border-radius:10px; border:1px solid #F0F0F0; margin-top: 10px;"></center>
                               </div>
                               <center><h4 class="openModal box-title" style="margin-top: 5px; font-size: 12px;"><a href="" style="border-top: 1px solid #30BB6D; border-bottom: 1px solid #30BB6D; color:#30BB6D; " data-toggle="modal" data-target="#modal-default{{$dish->did}}"><b>{{$dish->dish_name}}</b></a><br>
                                 <br>
@@ -269,7 +276,7 @@ display: inline-block;
                                             <button type="submit" style="width:10px; background-color:transparent; border:transparent; margin-right: 30px">
                                                <i class="material-icons"  style="color:#30BB6D; font-size:40px">add_circle</i>
                                             </button>
-                            </form>
+                                        </form>
                               </br>
                           </div>
                         </div>
@@ -314,112 +321,101 @@ display: inline-block;
                 </span>
                 </p>
 
-                <!-- <span id="current">hello</span><br>
-                   <input type="number" min="1" value="1" style="width: 45px; height:20px;" id="qs"> -->
-
-  <div class="row" style="padding-right:8px; padding-left: 8px">
-  @if(count(Cart::content()))
-@foreach(Cart::content() as $item)
-        
+ <div class="row" style="padding-right:8px; padding-left: 8px">
+      @if(count(Cart::content()))
+      @foreach(Cart::content() as $item) 
         <dl class="dl-horizontal">
             <div id="cartdiv" style="padding-left: 5px">  
               <dt style="margin-left:-65px">
-             
-         <!--       <input type="hidden" name="_token" value="{{ csrf_token() }}"> -->
-
-                 <input type="text" min="1"  style="width: 40px; height:25px;"  name="quantity" value="{{$item->qty}}" autocomplete="off"/>
-                  
-                   <a class="cart_quantity_up" href='{{url("cart/update?dish_id=$item->id&increment=1")}}'><i class="material-icons"  style="color:#30BB6D">add_circle</i></a>
-                   
-                  <a class="cart_quantity_down" href='{{url("cart/update?dish_id=$item->id&decrease=1")}}'><i class="material-icons"  style="color:#30BB6D" id="dec">remove_circle</i></a>
-                 
+                 <label  name="quantity" style="color:black; margin-right:20px"> {{$item->qty}} x</label>
+                    <a class="cart_quantity_up" href='{{url("cart/update?dish_id=$item->id&increment=1")}}'>
+                    <i class="material-icons"  style="color:#30BB6D">add_circle</i></a>
+                    <a class="cart_quantity_down" href='{{url("cart/update?dish_id=$item->id&decrease=1")}}'>
+                    <i class="material-icons"  style="color:#30BB6D" id="dec">remove_circle</i></a>
                </dt>
-           
+
               <dd style="margin-left: 2px">
                 <label style="float: left; margin-left:0px; margin-right: 0px; font-size: 15px; color:black">
                 <b>&nbsp;&nbsp;{{$item->name}}</b>
                 </label>
-                
+                <a href='{{url("/cart/dish/remove?dish_id=$item->id&remove=true")}}' style="float:right">
+                  <i class="fa fa-trash-o" aria-hidden="true" style="color:black"></i>
+                </a>
               
-              <a href='{{url("/cart/dish/remove?dish_id=$item->id&remove=true")}}' style="float:right"><i class="fa fa-times" style="color:red"></i></a>
-                 
-               </dd>
-
-                <dt style="margin-left:-2px">
-                <label style="font-size: 12px; color: gray; float:left"> Price: <b id="price">{{$item->price}}</b></label>
-                </dt>
-
-                 <dd style="margin-right: 2px">
-                <label style="font-size: 12px; color: gray; float:right">Total Amount:<b id="itemamount">{{sprintf("%.2f",$item->subtotal)}}</b></label>
-                </dd>
-
                
+              </dd>
+
+              <dt style="margin-left:-2px">
+                <label style="font-size: 12px; color: gray; float:left"> Price: <b id="price">{{$item->price}}</b></label>
+              </dt>
+
+              <dd style="margin-right: 2px">
+                <label style="font-size: 12px; color: gray; float:right">Total Amount:<b id="itemamount">{{$item->subtotal}}</b></label>
+              </dd>
+
           </div>
       </dl>   
 
-          @endforeach
-          
+      @endforeach
+      @else
+            <center>
+            <label style="font-size: 30px">Your cart is empty</label>
+            </center>
+      @endif
+      
+          <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+                 <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots">
+                 <b>Subtotal:</b>&nbsp;Php
+                 <label style="color:black" id="subtotal">{{Cart::subtotal()}}</label>
+                 </p>
+                 <br>
+          </div>
+        
+      @if(count(Cart::content()))
+        
+        <!--   <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+              <p style="float:right; margin-right:2px; font-size: 17px; color:black;font-family: 'Lato', sans-serif" id="tots">
+              <b>Total:</b>&nbsp;Php
+              <label style="color:black" id="alltotal">{{Cart::subtotal()}}</label>
+              </p>
+          </div> -->
 
-          @else
-<center><label style="font-size: 30px">Your cart is empty</label>
-       
-          @endif
-      <div id="amounts">
-    <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-           <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots">
-           <b>Subtotal:</b>&nbsp;Php
-           <label style="color:black" id="subtotal">{{Cart::subtotal()}}</label>
-           </p>
-           <br>
-        </div>
-         @if(count(Cart::content()))
-        <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-          <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif', cursive;" id="tots">
-          <b>Delivery Fee:</b>&nbsp;Php
-          <label style="color:black">40.00</label>
-          <br>
-        </div>
         
         <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-          <p style="float:right; margin-right:2px; font-size: 17px; color:black;font-family: 'Lato', sans-serif" id="tots">
-          <b>Total:</b>&nbsp;Php
-          <label style="color:black" id="alltotal">{{sprintf("%.2f", Cart::subtotal()+40)}}</label>
-          </p>
-        </div>
-        
-            <form method="POST" action="{{url('cart/checkout')}}">
-               <input type="hidden" name="_token" value="{{ csrf_token() }}">
+          <!--  <form method="POST" action="{{url('cart/checkout')}}">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
             <button type="submit" class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:right; margin-top: 2px; border:none" id="chkt">Checkout</button>
-              </form>
-              
-            <form method="POST" action="{{url('cart/clear')}}">
+              </form> -->
+
+               <button class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:right; margin-top: 2px; border:none" id="chkt"data-toggle="modal" data-target="#myModal">
+                        Proceed
+                      </button>
+
+          <form method="POST" action="{{url('cart/clear')}}">
                <input type="hidden" name="_token" value="{{ csrf_token() }}">
               <button type="submit" class="btn btn-flat btn edit" style="float:left; margin-top: 2px; border:none" id="chkt">Clear Cart
               </button>
               </form>
-              
+        </div>
+       
 
-            @else
-             <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-          <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif', cursive;" id="tots">
-          <b>Delivery Fee:</b>&nbsp;Php
-          <label style="color:black">0.00</label>
-          <br>
-        </div>
-              <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-          <p style="float:right; margin-right:2px; font-size: 17px; color:black;font-family: 'Lato', sans-serif" id="tots">
-          <b>Total:</b>&nbsp;Php
-          <label style="color:black" id="alltotal">{{sprintf("%.2f", Cart::subtotal())}}</label>
-          </p>
-        </div>
-              <a href="{{url('cart/checkout')}}">
-            <button type="submit" class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:right; margin-top: 2px; border:none" id="chkt" disabled>Checkout</button></a>
+      @else
+
+         <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+           <!--  <a href="{{url('cart/checkout')}}">
+            <button type="submit" class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:right; margin-top: 2px; border:none" id="chkt" disabled>Checkout</button>
+            </a> -->
+
+             <button  class="btn btn-flat btn-success btn edit" style="float:right; margin-top: 2px; border:none" id="chkt" data-toggle="modal" data-target="#myModal" disabled>
+                        Proceed
+                      </button>
 
               <form method="POST" action="{{url('cart/clear')}}">
                <input type="hidden" name="_token" value="{{ csrf_token() }}">
               <button type="submit" class="btn btn-flat btn edit" style="float:left; margin-top: 2px; border:none" id="chkt" disabled>Clear Cart
               </button>
               </form>
+         </div>
 
    @endif
             
@@ -434,6 +430,62 @@ display: inline-block;
 
 
 
+
+<!-- Sart Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Mood of delivery</h4>
+      </div>
+      <div class="modal-body">
+      <center>
+        <form method="POST" action="{{url('cart/checkout')}}" style="float:right">
+             <input type="radio" class="radio-btn" name="option" id="a-opt" />
+               Delivery
+            <input type="radio" name="option"/>Pick Up
+            
+
+      <div class="modal-footer">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-success btn-simple" style="float:right" id="chkt">Checkout</button>
+        <a href="#"><button type="button" class="btn btn-simple" style="float:right">Continue shopping</button></a>
+      </div>
+      </form>
+    </div>
+    </div>
+  </div>
+</div>
+<!--  End Modal -->
+
+<!-- Sart Modal -->
+<div class="modal fade" id="myModal1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Mood of delivery</h4>
+      </div>
+      <div class="modal-body">
+      <center>
+             <input type="radio"/>
+            <button class="btn btn-success btn-flat" style="float:right" id="chkt">Delivery</button>
+
+              
+            <input type="radio"/>Pick Up
+            </div>
+
+
+      <div class="modal-footer">
+          <form method="POST" action="{{url('cart/checkout')}}" style="float:right">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-success btn-simple" style="float:right" id="chkt">Checkout</button>
+              </form>
+        <a href="#"><button type="button" class="btn btn-simple" style="float:right">Continue shopping</button></a>
+      </div>
+    </div>
+  </div>
+</div>
+<!--  End Modal -->
 
 
 
@@ -459,11 +511,7 @@ display: inline-block;
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
-// $(document).ready(function(){
-// $('#addcart').on('click', function(){
-// // document.getElementById('amounts').textContent={{sprintf("%.2f", Cart::subtotal()+40)}};
-// });
-// });
+
 
 
 
