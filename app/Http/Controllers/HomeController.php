@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Auth;   
 use App\UserAllergen;
 use App\Allergen;
+use App\UserMCondition;
+use App\MedicalConditions;
 use App\Http\Requests;
 use Session;
 use Illuminate\Session\Store;
@@ -41,31 +43,48 @@ class HomeController extends Controller
         $id = Auth::id();
         $user = User::where('id', $id)->first();
         $allergens = json_decode($user->allergens);
-        
-        $dishes = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
-                            ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
-                            ->get();
-
-          $breakfast = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+        $dishes = $this->filter();
+   
+        if(!$request->sortOption) {
+            $dishes = Dish::join('dish_besteaten','dish_besteaten.dish_id', '=', 'dishes.did')
+                            ->join('besteaten_at', 'besteaten_at.be_id' , '=', 'dish_besteaten.be_id')
+                            ->paginate(12);
+            $title = 'All';
+        }
+        else {
+            if($request->sortOption == 'Breakfast') {
+                $dishes = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
                             ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
                             ->where('dish_besteaten.be_id', 1)
-                            ->get();
-            // }
-        // else if($request->sortOption == 'Lunch') {
-            $lunch = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+                            ->paginate(12);
+                $title = 'Breakfast';
+            }
+            
+            else if($request->sortOption == 'Lunch') {
+                $dishes = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
                             ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
                             ->where('dish_besteaten.be_id', 2)
-                            ->get();
-            
-        // }
-        // else if($request->sortOption == 'Dinner'){
-            $dinner = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+                            ->paginate(12);
+                $title = 'Lunch';
+            }
+            else if($request->sortOption == 'Dinner') {
+                $dishes = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
                             ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
                             ->where('dish_besteaten.be_id', 3)
-                            ->get();
+                            ->paginate(12);
+                $title = 'Dinner';
+            }
+            else if($request->sortOption == 'All') {
+                $dishes = Dish::join('dish_besteaten','dish_besteaten.dish_id', '=', 'dishes.did')
+                            ->join('besteaten_at', 'besteaten_at.be_id' , '=', 'dish_besteaten.be_id')
+                            ->paginate(12);
+                $title = 'All';
+            }
+        }
 
 
-         return view('user.home', compact('user', 'dishes', 'sortDishes', 'breakfast', 'lunch', 'dinner'));
+      
+         return view('user.home', compact('user', 'dishes', 'title'));
     }
     
     public function express(Request $request) {
@@ -141,36 +160,142 @@ class HomeController extends Controller
         return $search;
         
     }
-    public function allergyFilter() {
+    
+    public function showDish(Request $request) {
+        $dish_id = $request->id;
+        $dishes = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+                    ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
+                    ->where('dishes.did', $dish_id)->paginate(5);
+        
+         $breakfast = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+                            ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
+                            ->where('dish_besteaten.be_id', 1)
+                            ->paginate(5);
+        $lunch = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+                            ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
+                            ->where('dish_besteaten.be_id', 2)
+                            ->get();
+          $dinner = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+                            ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
+                            ->where('dish_besteaten.be_id', 3)
+                            ->get();
+        
+        return view('user.home', compact('dishes', 'breakfast', 'lunch', 'dinner'));
+    }
+    public function filter() {
         $uid = Auth::id();
         $allergies = UserAllergen::join('allergens', 'allergens.allergen_id', '=', 'user_allergens.allergen_id')
                                 ->where('user_id', $uid)->get();
-        if($allergies) 
+        $medcon = UserMCondition::join('medical_conditions', 'medical_conditions.medcon_id', '=', 'user_medcondition.medcon_id')
+                                ->where('user_id', $uid)->get();
+//        $dish = Dish::all();
+//        $dish = Dish::with(['dish_besteaten', 'dish_ingredients' => function (HasMany $builder) {
+//            $builder->getQuery()->has('besteaten');
+//        }])->get();
+//        dd($dish);
+        
+        if($allergies || $medcon) 
         {
             foreach($allergies as $allergy)
             {
-                if($allergy->allergen_name == 'None') {
-                  $dishes = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
-                    ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
-                    ->get();   
-                }
-                else {
-                  $dishes = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+                foreach($medcon as $mc) {
+                        if($mc->medcon_name == 'Asthma') {
+                            if($allergy->allergen_name == 'Peanut' || $allergy->allergen_name == 'Eggs' || $allergy->allergen_name == 'Wheat') {
+                                $dishes = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+                                            ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
+                                            ->join('dish_ingredients', 'dishes.did', '=', 'dish_ingredients.dish_id')
+                                            ->join('ingredient_list', 'dish_ingredients.ing_id', '=', 'ingredient_list.id')
+                                            ->where('ingredient_list.Shrt_Desc', 'NOT LIKE', "%".$allergy->allergen_name."%")
+                                            ->paginate(12);
+                            }
+                            else {
+                                $dishes = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+                                            ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
+                                            ->join('dish_ingredients', 'dishes.did', '=', 'dish_ingredients.dish_id')
+                                            ->join('ingredient_list', 'dish_ingredients.ing_id', '=', 'ingredient_list.id')
+                                            ->where('ingredient_list.Shrt_Desc', 'NOT LIKE', "%Peanut%")
+                                            ->where('ingredient_list.Shrt_Desc', 'NOT LIKE', "%Eggs%")
+                                            ->where('ingredient_list.Shrt_Desc', 'NOT LIKE', "%Wheat%")
+                                            ->paginate(12);
+                            }
+                            
+                        }
+                        else if($mc->medcon_name == 'High Cholesterol') {
+                            if($allergy->allergen_name == 'Shellfish' || $allergy->allergen_name == 'Eggs' || $allergy->allergen_name == 'Milk') {
+                                $dishes = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+                                            ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
+                                            ->join('dish_ingredients', 'dishes.did', '=', 'dish_ingredients.dish_id')
+                                            ->join('ingredient_list', 'dish_ingredients.ing_id', '=', 'ingredient_list.id')
+                                            ->where('ingredient_list.Shrt_Desc', 'NOT LIKE', "%".$allergy->allergen_name."%")
+                                            ->paginate(12);
+                            }
+                            else {
+                                $dishes = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+                                            ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
+                                            ->join('dish_ingredients', 'dishes.did', '=', 'dish_ingredients.dish_id')
+                                            ->join('ingredient_list', 'dish_ingredients.ing_id', '=', 'ingredient_list.id')
+                                            ->where('ingredient_list.Shrt_Desc', 'NOT LIKE', "%Shellfish%")
+                                            ->where('ingredient_list.Shrt_Desc', 'NOT LIKE', "%Eggs%")
+                                            ->where('ingredient_list.Shrt_Desc', 'NOT LIKE', "%Milk%")
+                                            ->where('ingredient_list.Shrt_Desc', 'NOT LIKE', "%Beef%")
+                                            ->paginate(12);
+                            }
+                        }
+                        else if($mc->medcon_name == 'High Blood Pressure') {
+                            if($allergy->allergen_name == 'Shellfish'   ) {
+                                $dishes = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+                                            ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
+                                            ->join('dish_ingredients', 'dishes.did', '=', 'dish_ingredients.dish_id')
+                                            ->join('ingredient_list', 'dish_ingredients.ing_id', '=', 'ingredient_list.id')
+                                            ->where('ingredient_list.Shrt_Desc', 'NOT LIKE', "%".$allergy->allergen_name."%")
+                                            ->paginate(12);
+                            }
+                            else {
+                                
+                            }
+                        }
+                        else if($mc->medcon_name == 'Arthritis') {
+                            if($allergy->allergen_name == 'Shellfish' || $allergy->allergen_name == 'Eggs' || $allergy->allergen_name == 'Milk'
+                                        || $allergy->allergen_name == 'Wheat') {
+                                $dishes = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+                                            ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
+                                            ->join('dish_ingredients', 'dishes.did', '=', 'dish_ingredients.dish_id')
+                                            ->join('ingredient_list', 'dish_ingredients.ing_id', '=', 'ingredient_list.id')
+                                            ->where('ingredient_list.Shrt_Desc', 'NOT LIKE', "%".$allergy->allergen_name."%")
+                                            ->paginate(12);
+                            }
+                            else {
+                                $dishes = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+                                            ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
+                                            ->join('dish_ingredients', 'dishes.did', '=', 'dish_ingredients.dish_id')
+                                            ->join('ingredient_list', 'dish_ingredients.ing_id', '=', 'ingredient_list.id')
+                                            ->where('ingredient_list.Shrt_Desc', 'NOT LIKE', "%Shellfish%")
+                                            ->where('ingredient_list.Shrt_Desc', 'NOT LIKE', "%Eggs%")
+                                            ->where('ingredient_list.Shrt_Desc', 'NOT LIKE', "%Milk%")
+                                            ->where('ingredient_list.Shrt_Desc', 'NOT LIKE', "%Beef%")
+                                            ->paginate(12);
+                            }
+                        }
+
+ 
+                }  
+            }
+//                $dishes = $dish->transform(function($dish) {
+//                    $pm = $dish->dish_besteaten();
+//                    return $pm;
+//                });
+                    $dishes = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
                     ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
                     ->join('dish_ingredients', 'dishes.did', '=', 'dish_ingredients.dish_id')
                     ->join('ingredient_list', 'dish_ingredients.ing_id', '=', 'ingredient_list.id')
-                    ->whereNotIn('ingredient_list.Shrt_Desc', 'LIKE', "%".$allergy->allergen_name."%")
-                    ->get();   
-                }
-                
-               
-            }
+                    ->where('ingredient_list.Shrt_Desc', 'NOT LIKE', "%".$allergy->allergen_name."%")
+                    ->paginate(12); 
         }
-        else {
-            $dishes = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
-                    ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
-                    ->get(); 
-        }
+//        else {
+//            $dishes = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+//                    ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
+//                    ->get(); 
+//        }
         
         return $dishes;
         
