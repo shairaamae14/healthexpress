@@ -27,6 +27,7 @@ Route::get('/cart/update', 'CartController@updateCart');
 Route::post('/cart/clear', 'CartController@destroyCart');
 Route::get('/cart/dish/remove', 'CartController@removeDish');
 Route::post('/cart/checkout', 'CartController@checkout');
+Route::post('/cart/order', 'OrdersController@store')->name('order.place');
 
 Route::get('/home', 'HomeController@index');
 Route::post('/home/express', 'HomeController@express');
@@ -79,6 +80,8 @@ Route::prefix('cook')->group(function() {
         Route::get('/displayDishes', 'DishController@searchDishes')->name('display');
         Route::get('/previewDishes/{id}', 'DishController@previewDish')->name('preview');
         Route::get('/searchIngredients', 'DishController@searchIngredient')->name('search.ingredient');
+        Route::post('/status', 'CookController@changeAvailabilityStat')->name('status.change');
+        Route::post('/orderstat', 'CookController@changeOrderStats')->name('orderstat.change');
 	// Route::get('dishes/addingredients', 'DishController@adding')->name('cook.addingredients');
         
 });
