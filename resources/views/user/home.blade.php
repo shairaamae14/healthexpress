@@ -59,6 +59,23 @@ display: inline-block;
 
 /*Resize the wrap to see the search bar change!*/
 
+.ui-helper-hidden-accessible {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+.ui-autocomplete {
+    position: absolute;
+    z-index: 100;
+
+}
+.ui-autocomplete ul, li {
+    display:list-item;
 }
 
 
@@ -79,8 +96,6 @@ display: inline-block;
             
 
         </div>
-
-      
       </div>
     </div>
   </div>
@@ -89,22 +104,32 @@ display: inline-block;
         <div class="section">
             <div class="container" style="width: 90%;">
                 <div class="row">
-
-            <!--       <div id="bestEaten" style="float:left">
-                  <span class="label label-default" style="float:left; margin-bottom: 2px">Sort by</span>
-                <form id="sortBy" action ="{{url('/home') }}" method="POST">
+                    
+                   <div id="bestEaten" style="float:left">
+                        <span class="label label-default" style="float:left; margin-bottom: 2px">Sort by</span>
+                    <form id="sortBy" action ="{{url('/home') }}" method="POST">
                       {{csrf_field()}}
-                    <select id="category" name='category' class='form-control' style="width:200px; height:40px">
-                        <option disabled selected value> -- select an option -- </option>
-                        <option value='Breakfast'>Breakfast</option>
-                        <option value='Lunch'>Lunch</option>
-                        <option value='Dinner'>Dinner</option>
-                    </select>
-                </form>
-                </div> -->
+                        <select id="category" name='sortOption' class='form-control' style="width:200px; height:40px">
+                            <option disabled selected hidden>All</option>
+                            <option value='All'>All</option>
+                            <option value='Breakfast'>Breakfast</option>
+                            <option value='Lunch'>Lunch</option>
+                            <option value='Dinner'>Dinner</option>
+                        </select>
+                    </form>
+                  
+                    </div> 
 
-                           
-
+                     <div class="search col-md-6" style="float:right">
+                         <form method="POST" action="{{route('show.dish')}}">
+                          {{csrf_field()}}
+                          <input type="text" id="input"  class="form-control" placeholder="Search"  name="search" value="" style="color:black;">
+                          <input type="hidden" id="dish_id" name="id" value="">
+                         <button type="submit" class="btnSearch pull-right" id="btnSearch" style="background-color: transparent; border:none">
+                          <i class="material-icons">search</i></button>
+                          </form>
+                    </div>     
+                    
                 
 
   <br>
@@ -116,26 +141,10 @@ display: inline-block;
                 <div class="nav-tabs-navigation">
                   <div class="nav-tabs-wrapper">
                     <ul class="nav nav-tabs" data-tabs="tabs">
-                      <li class="active"><a href="#all" data-toggle="tab">All</a></li>
-                      <li><a href="#home" data-toggle="tab">Breakfast</a></li>
-                      <li><a href="#updates" data-toggle="tab">Lunch</a></li>
-                      <li><a href="#history" data-toggle="tab">Dinner</a></li>
+                      <li class="active"><a href="#all" data-toggle="tab">{{$title}} Dishes</a></li>
                       <li style="float:right; margin-left:250px">
-                     <div class="search">
-                         <form method="POST" action="{{route('user.index')}}">
-                          {{csrf_field()}}
-                          <input type="text" id="input" class="searchTerm search-query mac-style" placeholder="Search"  name="search" value="" style="color:black" autofocus>
-                         <input type="hidden" id="dish_id" name="id" value="">
-                          <button type="submit" class="btnSearch" id="btnSearch" style="background-color: transparent; border:none">
-                          <i class="material-icons">search</i></button>
-                    </div>
-                          <ul id="dishNames" style="display:none">
-                             @foreach($dishes as $dish)
-                             <li><a href="#"></a>{{$dish->dish_name}}</li>
-                             @endforeach
-                          </ul>
-                          </form>
-                         </div>
+                        
+                          
 
 
                       </li>
@@ -179,111 +188,6 @@ display: inline-block;
                     @endforeach
                 @endif
                   </div> 
-
-                  <div class="tab-pane active" id="home">
-                 @if($breakfast)
-                      @foreach($breakfast as $dish)
-                        <div class="col-sm-3">
-                         <div class="box box-solid" style="border-radius:5px; box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.3);">
-                              <div class="box-header with-border">  
-                                <center><img src="{{asset('dish_imgs/'.$dish->dish_img)}}" style="width:150px; height:150px; border-radius:10px; border:1px solid #F0F0F0; margin-top: 10px;"></center>
-                              </div>
-                              <center><h4 class="openModal box-title" style="margin-top: 5px; font-size: 12px;"><a href="" style="border-top: 1px solid #30BB6D; border-bottom: 1px solid #30BB6D; color:#30BB6D; " data-toggle="modal" data-target="#modal-default{{$dish->did}}"><b>{{$dish->dish_name}}</b></a><br>
-                                <br>
-                              <center><small>
-                              <i class="fa fa-star" id="rate"></i>
-                              <i class="fa fa-star" id="rate"></i>
-                              <i class="fa fa-star" id="rate"></i>
-                              <i class="fa fa-star-o" id="rate"></i>
-                              <i class="fa fa-star-o" id="rate"></i>
-                              </small><br>
-                              <a href="{{route('cook.rating')}}"><p style="font-size: 12px; color:#30BB6D; background-color:#E3E3E3">See Reviews</p></a>
-                              </center>
-                              <p style="float:left; margin-left:5px; margin-top: 12px; font-size: 20px; font-family: 'Lobster', cursive; color:black;" id="tots">Php {{$dish->sellingPrice}}</p>
-                       
-                                          <form method="POST" action="{{url('cart')}}">
-                                          <input type="hidden" name="dish_id" value="{{$dish->did}}">
-                                          <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                            <button type="submit" style="width:10px; background-color:transparent; border:transparent; margin-right: 30px">
-                                               <i class="material-icons"  style="color:#30BB6D; font-size:40px">add_circle</i>
-                                            </button>
-                            </form>
-                              </br>
-                          </div>
-                        </div>
-                    @endforeach
-                @endif
-                  </div>
-
-                  <div class="tab-pane" id="updates">
-                   @if($lunch)
-                      @foreach($lunch as $dish)
-                        <div class="col-sm-3">
-                         <div class="box box-solid" style="border-radius:5px; box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.3);">
-                              <div class="box-header with-border">  
-                                <center><img src="{{asset('dish_imgs/'.$dish->dish_img)}}" style="width:150px; height:150px; border-radius:10px; border:1px solid #F0F0F0; margin-top: 10px;"></center>
-                              </div>
-                              <center><h4 class="openModal box-title" style="margin-top: 5px; font-size: 12px;"><a href="" style="border-top: 1px solid #30BB6D; border-bottom: 1px solid #30BB6D; color:#30BB6D; " data-toggle="modal" data-target="#modal-default{{$dish->did}}"><b>{{$dish->dish_name}}</b></a><br>
-                                <br>
-                              <center><small>
-                              <i class="fa fa-star" id="rate"></i>
-                              <i class="fa fa-star" id="rate"></i>
-                              <i class="fa fa-star" id="rate"></i>
-                              <i class="fa fa-star-o" id="rate"></i>
-                              <i class="fa fa-star-o" id="rate"></i>
-                              </small><br>
-                              <a href="{{route('cook.rating')}}"><p style="font-size: 12px; color:#30BB6D; background-color:#E3E3E3">See Reviews</p></a>
-                              </center>
-                              <p style="float:left; margin-left:5px; margin-top: 12px; font-size: 20px; font-family: 'Lobster', cursive; color:black;" id="tots">Php {{$dish->sellingPrice}}</p>
-                       
-                                          <form method="POST" action="{{url('cart')}}">
-                                          <input type="hidden" name="dish_id" value="{{$dish->did}}">
-                                          <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                            <button type="submit" style="width:10px; background-color:transparent; border:transparent; margin-right: 30px">
-                                               <i class="material-icons"  style="color:#30BB6D; font-size:40px">add_circle</i>
-                                            </button>
-                            </form>
-                              </br>
-                          </div>
-                        </div>
-                      @endforeach
-                     @endif
-                  </div>
-
-                  <div class="tab-pane" id="history">
-                             @if($dinner)
-                      @foreach($dinner as $dish)
-                        <div class="col-sm-3">
-                         <div class="box box-solid" style="border-radius:5px; box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.3);">
-                              <div class="box-header with-border">  
-                                <center><img src="{{asset('dish_imgs/'.$dish->dish_img)}}" style="width:150px; height:150px; border-radius:10px; border:1px solid #F0F0F0; margin-top: 10px;"></center>
-                              </div>
-                              <center><h4 class="openModal box-title" style="margin-top: 5px; font-size: 12px;"><a href="" style="border-top: 1px solid #30BB6D; border-bottom: 1px solid #30BB6D; color:#30BB6D; " data-toggle="modal" data-target="#modal-default{{$dish->did}}"><b>{{$dish->dish_name}}</b></a><br>
-                                <br>
-                              <center><small>
-                              <i class="fa fa-star" id="rate"></i>
-                              <i class="fa fa-star" id="rate"></i>
-                              <i class="fa fa-star" id="rate"></i>
-                              <i class="fa fa-star-o" id="rate"></i>
-                              <i class="fa fa-star-o" id="rate"></i>
-                              </small><br>
-                              <a href="{{route('cook.rating')}}"><p style="font-size: 12px; color:#30BB6D; background-color:#E3E3E3">See Reviews</p></a>
-                              </center>
-                              <p style="float:left; margin-left:5px; margin-top: 12px; font-size: 20px; font-family: 'Lobster', cursive; color:black;" id="tots">Php {{$dish->sellingPrice}}</p>
-                       
-                                          <form method="POST" action="{{url('cart')}}">
-                                          <input type="hidden" name="dish_id" value="{{$dish->did}}">
-                                          <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                            <button type="submit" style="width:10px; background-color:transparent; border:transparent; margin-right: 30px">
-                                               <i class="material-icons"  style="color:#30BB6D; font-size:40px">add_circle</i>
-                                            </button>
-                                        </form>
-                              </br>
-                          </div>
-                        </div>
-                      @endforeach
-                     @endif
-                  </div>
                 </div>
               </div>
             </div>
@@ -294,17 +198,9 @@ display: inline-block;
         </div><!--row!-->
        </div><!--container!-->
 
-<center>
- <ul class="pagination pagination-success" style="float:right">
-        <li><a href="javascript:void(0);">< prev</a></li>
-        <li class="active"><a href="javascript:void(0);">1</a></li>
-        <li><a href="javascript:void(0);">2</a></li>
-        <li><a href="javascript:void(0);">3</a></li>
-        <li><a href="javascript:void(0);">4</a></li>
-        <li><a href="javascript:void(0);">5</a></li>
-        <li><a href="javascript:void(0);">next ></a></li>
-    </ul>
-</center>
+<div class="text-center">
+{{$dishes->links('vendor.pagination.custom')}}
+</div>
 
     </div><!--section!-->
 </div><!--main raised!-->
@@ -420,10 +316,7 @@ display: inline-block;
          </div>
 
    @endif
-            
-       
-       
-        
+
 
  </div>
    </div>
@@ -516,23 +409,16 @@ display: inline-block;
 
   <!-- Control Center for Material Kit: activating the ripples, parallax effects, scripts from the example pages etc -->
   <script src="{{asset('customer/assets/js/material-kit.js')}}" type="text/javascript"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 
 
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.js"></script>
 <script>
 
-
-
-
-
-
-
 $(document).ready(function(){
-    $('#quantity').on('keyup change', function() {
-
-        alert('yey');   
+    $('#category').on('change', function() {
+        $('#sortBy').submit();
     });
     $( "#input" ).autocomplete({
         source: function( request, response ) {
