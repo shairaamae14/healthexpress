@@ -120,12 +120,12 @@ display: inline-block;
                   
                     </div> 
 
-                     <div class="search col-md-6" style="float:right">
+                     <div class="search col-md-4">
                          <form method="POST" action="{{route('show.dish')}}">
                           {{csrf_field()}}
-                          <input type="text" id="input"  class="form-control" placeholder="Search"  name="search" value="" style="color:black;">
+                          <input type="text" id="input"  class="form-control" placeholder="Search"  name="search" value="" style="color:black; float:right; margin-right:-300px">
                           <input type="hidden" id="dish_id" name="id" value="">
-                         <button type="submit" class="btnSearch pull-right" id="btnSearch" style="background-color: transparent; border:none">
+                         <button type="submit" class="btnSearch pull-right" id="btnSearch" style="background-color: transparent; border:none; float:right; margin-right:-350px; margin-top: 8px">
                           <i class="material-icons">search</i></button>
                           </form>
                     </div>     
@@ -141,7 +141,7 @@ display: inline-block;
                 <div class="nav-tabs-navigation">
                   <div class="nav-tabs-wrapper">
                     <ul class="nav nav-tabs" data-tabs="tabs">
-                      <li class="active"><a href="#all" data-toggle="tab">{{$title}} Dishes</a></li>
+                      <li class="active"><a href="#all" data-toggle="tab" style="color:#30BB6D">{{$title}} Dishes</a></li>
                       <li style="float:right; margin-left:250px">
                         
                           
@@ -161,7 +161,7 @@ display: inline-block;
                         <div class="col-sm-3">
                          <div class="box box-solid" style="border-radius:5px; box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.3);">
                               <div class="box-header with-border">  
-                                <center><img src="{{asset('dish_imgs/'.$dish->dish_img)}}" style="width:100%; height:150px; border-radius:10px; border:1px solid #F0F0F0; margin-top: 10px;"></center>
+                                <center><img src="{{asset('dish_imgs/'.$dish->dish_img)}}" style="width:100%; height:150px; border:1px solid #F0F0F0;"></center>
                               </div>
                               <center><h4 class="openModal box-title" style="margin-top: 5px; font-size: 12px;"><a href="{{route('home.details', ['id' => $dish->did])}}" style="border-top: 1px solid #30BB6D; border-bottom: 1px solid #30BB6D; color:#30BB6D;" value="{{$dish->dish_name}}" id="dish_name"><b>{{$dish->dish_name}}</b></a><br>
                                 <br>
@@ -176,8 +176,8 @@ display: inline-block;
                               </center>
                                 <p style="float:left; margin-left:5px; margin-top: 12px; font-size: 20px; font-family: 'Lobster', cursive; color:black;" id="tots">Php {{$dish->sellingPrice}}</p>
 
-                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#modal-default{{$dish->did}}" style="width:10px; background-color:transparent; border:transparent; margin-right: 30px">
-                                   <i class="material-icons"  style="color:#30BB6D; font-size:40px">add_circle</i>
+                                <button type="button" class="btn btn-simple" data-toggle="modal" data-target="#modal-default{{$dish->did}}" style="width:0px; background-color:transparent; border:transparent; margin-top:-15px; margin-right:10px">
+                                   <i class="material-icons" style="color:#30BB6D; font-size:40px">add_circle</i>
                                    </button>
 
                        
@@ -285,7 +285,7 @@ display: inline-block;
         
         <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
       
-               <button class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:right; margin-top: 2px; border:none" id="chkt"data-toggle="modal" data-target="#myModal">
+               <button class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:right; margin-top: 2px; border:none" id="chkt" data-toggle="modal" data-target="#modal-default1">
                         Proceed
                       </button>
 
@@ -300,9 +300,7 @@ display: inline-block;
       @else
 
          <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-           <!--  <a href="{{url('cart/checkout')}}">
-            <button type="submit" class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:right; margin-top: 2px; border:none" id="chkt" disabled>Checkout</button>
-            </a> -->
+         
 
              <button  class="btn btn-flat btn-success btn edit" style="float:right; margin-top: 2px; border:none" id="chkt" data-toggle="modal" data-target="#myModal" disabled>
                         Proceed
@@ -326,32 +324,57 @@ display: inline-block;
 
 
 
-<!-- Sart Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h4 class="modal-title">Mood of Delivery</h4>
-      </div>
-      <div class="modal-body">
-      <center>
-        <form method="POST" action="{{url('cart/checkout')}}" style="float:right">
-             <input type="radio" class="radio-btn" name="option" id="a-opt" />
-               Delivery
-            <input type="radio" name="option"/>Pick Up
-            
 
-      <div class="modal-footer">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-            <button type="submit" class="btn btn-success btn-simple" style="float:right" id="chkt">Checkout</button>
-        <a href="#"><button type="button" class="btn btn-simple" style="float:right">Continue shopping</button></a>
-      </div>
-      </form>
-    </div>
-    </div>
-  </div>
-</div>
+
+
+
+
+<!-- Sart Modal -->
+
+<div class="modal fade" id="modal-default1">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">MODE OF DELIVERY</h4>
+              </div>
+          
+              <div class="modal-body"  style="padding-bottom: 0px">
+                    <center><form method="POST" action="{{url('cart/checkout')}}">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                         <input type="radio" name="option" id="a-opt" />Delivery
+                        <input type="radio" name="option"/>Pick Up
+                          <br>
+                   <div class="modal-footer">
+                        <a href="#"><button type="button" class="btn btn-simple">&nbsp;Continue shopping</button></a>
+                        <button type="submit" class="btn btn-simple btn-success" style="width:10px; background-color:transparent; border:transparent; margin-right: 30px">
+                             Checkout&nbsp;
+                        </button>    
+                        
+                  </div>
+
+               </form>
+
+              </div>
+              <!--modalbody!-->
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
 <!--  End Modal -->
+
+
+
+
+
+
+
+
+
+
 
 <!-- Sart Modal -->
 @foreach($dishes as $dish)
@@ -361,27 +384,27 @@ display: inline-block;
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Add side note</h4>
+                <h4 class="modal-title" style="color:#30BB6D"><i class="fa fa-sticky-note-o" aria-hidden="true"></i> <b>ADD SIDE NOTE</h4>
               </div>
           
               <div class="modal-body">
-                     <form method="POST" action="{{url('cart')}}">
+                     <center><form method="POST" action="{{url('cart')}}">
                   <input type="hidden" name="dish_id" value="{{$dish->did}}">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
-               <textarea rows="4" cols="50" name="sidenote">None
+               <textarea rows="5" cols="60" name="sidenote" style="border: 2px solid #30BB6D; color:#30BB6D">None
                </textarea>
 
                    <div class="modal-footer">
-                        <button type="submit" style="width:10px; background-color:transparent; border:transparent; margin-right: 30px">
-                             <i class="material-icons"  style="color:#30BB6D; font-size:40px">add_circle</i>
+                   <br>
+                        <button type="submit" class="btn btn-success" style="border:transparent">
+                            <b> Add to cart</b><i class="material-icons" style="color:white; font-size:40px">add_circle</i>&nbsp; 
                         </button>    
                   </div>
 
                </form>
 
               </div>
-              
-     
+              <!--modalbody!-->
             </div>
             <!-- /.modal-content -->
           </div>
