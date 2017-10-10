@@ -47,6 +47,9 @@ Route::post('user/AddAller/{id}', 'UserProfController@store')->name('user.profil
 Route::get('/user/logout', 'Auth\LoginController@userLogout')->name('user.logout');
 
 
+//Planned Meals
+Route::get('/plannedmeals', 'HomeController@plannedindex');
+
 Route::prefix('cook')->group(function() {
 	Route::get('/login', 'Auth\CookLoginController@show')->name('cook.login');
 	Route::post('/login', 'Auth\CookLoginController@login')->name('cook.login.submit');

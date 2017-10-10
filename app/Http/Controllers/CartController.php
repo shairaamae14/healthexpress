@@ -14,12 +14,18 @@ public function cart() {
         $dishes = Dish::where('did', $dish_id)->get();
         $delfee=40;
         $subtotal=Cart::subtotal();
-        
-       
+      
+        $note=Request::get('sidenote');
+     
+    
         foreach($dishes as $d){
-        Cart::add(array('id' => $d->did, 'name' => $d->dish_name, 'qty' => 1, 'price' => $d->sellingPrice));
-
+   
+        Cart::add(array('id' => $d->did, 'name' => $d->dish_name, 'qty' => 1, 'price' => $d->sellingPrice, 'sidenote' =>$note));
+  
 			}
+    
+        
+
 
        // dd($alltotal);
     }
@@ -62,9 +68,6 @@ $item = Cart::search(function($key, $value){
 return redirect()->route('user.index'); 
 }
 
-public function checkout(){
-    return view('user.paymentmethod');
-}
 
 
 }

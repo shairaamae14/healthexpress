@@ -182,9 +182,9 @@ class HomeController extends Controller
         return view('user.details', compact('dishes'));
     }
 
-public function orderHistory(){
 
-    return view('user.orderhistory');
+public function plannedindex(){
+    return view('user.plannedmeals');
 }
 
 
