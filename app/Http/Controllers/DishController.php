@@ -146,7 +146,12 @@ class DishController extends Controller
     public function show($id)
     {
         $dishes = Dish::where('did', $id)->get();
-        return view('cook.viewdet', compact('dishes'));
+        $dish_ingredients = DishIngredient::where('did', $id)->join('dishes', 'dishes.did', '=', 'dish_ingredients.dish_id')
+                    ->join('ingredient_list', 'ingredient_list.id', '=', 'dish_ingredients.ing_id')
+                    ->join('unit_measurements', 'unit_measurements.um_id', '=', 'dish_ingredients.um_id')
+                    ->join('preparations', 'preparations.p_id', '=', 'dish_ingredients.preparation')
+                    ->get();
+        return view('cook.viewdet', compact('dishes', 'dish_ingredients'));
     }
 
     /**
@@ -162,7 +167,12 @@ class DishController extends Controller
         $list = IngredientList::all();
         $units = UnitMeasurement::all();
         $preps = Preparation::all();
-        return view('cook.editdish',compact('dishes', 'list', 'units', 'preps', 'beaten'));
+        $dish_ingredients = DishIngredient::where('did', $id)->join('dishes', 'dishes.did', '=', 'dish_ingredients.dish_id')
+                    ->join('ingredient_list', 'ingredient_list.id', '=', 'dish_ingredients.ing_id')
+                    ->join('unit_measurements', 'unit_measurements.um_id', '=', 'dish_ingredients.um_id')
+                    ->join('preparations', 'preparations.p_id', '=', 'dish_ingredients.preparation')
+                    ->get();
+        return view('cook.editdish',compact('dishes', 'list', 'units', 'preps', 'beaten', 'dish_ingredients'));
     }
 
     /**
@@ -209,6 +219,43 @@ class DishController extends Controller
         $dishes = DishBestEaten::where('dish_id', $dishes)
             ->update(['be_id' => $request['best'][$i]]);
         }
+
+
+        $ingred = Input::get('ingid');
+        $quan = Input::get('qtyy');
+        $prep = Input::get('prepp');
+        $um = Input::get('umm');
+
+        $quann = Input::get('qtyys');
+        $prepp = Input::get('prepps');
+        $umm = Input::get('umms');
+
+        $dingid = Input::get('ding_id');
+
+
+                if($dingid){
+                    for($i=0; $i<count($dingid); $i++){
+                        $ings = DishIngredient::where('ding_id', $dingid[$i])
+                                            ->update(['quantity'=>$quann[$i],
+                                                      'preparation'=>$prepp[$i],
+                                                      'um_id'=>$umm[$i]]);
+                    }
+                }
+                
+                else{
+                    for($i=0; $i<count($ingred);$i++)
+                    {
+                        $ingredients = DishIngredient::create([
+                            'um_id' => $um[$i],
+                            'dish_id' => $id,
+                            'ing_id' => $ingred[$i],
+                            'quantity' => $quan[$i],
+                            'preparation' => $prep[$i],
+                            'status' => 1
+
+                            ]);
+                }
+            }
       
         return redirect()->route('cook.dishes');
     }
@@ -293,7 +340,7 @@ class DishController extends Controller
         $term = $request->term;
         $lists = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
                     ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
-                    ->where('dishes.dish_name', 'LIKE', '%'.$term.'%')
+                    ->where('dishes.dish_name', 'LIKE', $term.'%')
                     ->get();    
         
         if(count($lists) == 0) {

@@ -73,11 +73,11 @@ fieldset{
                     </div>
                     <div class="stepwizard-step">
                         <a href="#step-3" class="btn-default" style="background-color: #30BB6D; color:white; border-radius:150px" disabled="disabled"><center><img src="{{asset('img/plus.svg')}}" style="width:55px; height:45px"/></center></a>
-                    <p>Save Dish</p>
+                        <p>Save Dish</p>
                     </div>
                 </div>
             </div>
- 
+        @foreach($dishes as $dish)
         <form role="form"  method="post" action="{{route('cook.dishes.update', ['id' => $dish->did])}}" enctype="multipart/form-data">
          {{csrf_field()}}
             <div class="row setup-content" id="step-1">
@@ -86,15 +86,16 @@ fieldset{
                         <h3>Dish Details</h3>
 
                             <div class="form-group col-md-5">
-                                <img src="{{asset('img/choose.png')}}" class="img-circle" id="img-tag" width="200px" />
+                                <img src="{{asset('dish_imgs/'.$dish->dish_img)}}" class="img-circle" id="img-tag" width="200px" />
                                 <br>
                                 <label for="exampleInputFile">Dish Image</label>
+                                <input type="hidden" name="img" value="{{$dish->dish_img}}">
                                 <input type="file" id="img" name="img">
                                   <p class="help-block">jpg., jpeg., png. extension only</p>
                             </div>
                             <div class="form-group col-md-4">
                                 <label>Name:</label>
-                                <input type="text" class="form-control" id="dish_name" name="dish_name" placeholder="Name" value="{{$dish->dish_name}} required autofocus>
+                                <input type="text" class="form-control" id="dish_name" name="dish_name" placeholder="Name" value="{{$dish->dish_name}}" required autofocus>
                             </div>
                             <div class="form-group col-md-4">
                                 <label>No. of Serving:</label>
@@ -102,7 +103,7 @@ fieldset{
                             </div>
                             <div class="form-group col-md-4">
                                 <label>Preparation Time:</label> 
-                                <input type="text" id="duration" name="duration" value="{{$dish->preparation_time}}" required>
+                                <input type="text" id="duration" name="duration"  required>
                             </div>
 
                             <div class="form-group col-md-4">
@@ -110,15 +111,15 @@ fieldset{
                                 <input type="text" class="form-control" id="price" name="price" placeholder="Price" value="{{$dish->basePrice}}" required>
                             </div>
                             <div class="form-group col-md-8">
-                                <label>Best Eaten during: {{$be->name}}</label><br>
+                                <label>Best Eaten during: {{$dish->name}}</label><br>
                                 @foreach($beaten as $be)
-                                <input type="checkbox" class="flat-red" value="{{$be->be_id}}" name="best[]">{{$be->name}}</option>
+                                <input type="checkbox" class="flat-red" value="{{$be->be_id}}" id="best" name="best[]"><label>{{$be->name}}</label>
                                 @endforeach
                             </div> 
                             <div class="form-group col-md-8">
                                 <label>Signature Dish:</label><br>
-                                <input type="checkbox" id="signDish" name="signDish" value="1"> Yes
-                                <input type="checkbox" id="signDish" name="signDish" value="0"> No
+                                <input type="checkbox" id="signDish" name="signDish" value="1"><label>Yes</label>
+                                <input type="checkbox" id="signDish" name="signDish" value="0"><label>No</label>
                             </div> 
                             <div class="form-group col-md-9">
                                 <label>Description:</label>
@@ -127,7 +128,7 @@ fieldset{
 
                             <div class="col-md-10">
                                 <button type="button" class="btn btn-primary nextBtn btn-lg" id="cancel">Cancel</button>
-                                <button class="btn btn-success nextBtn btn-lg pull-right" type="button">Next</button>
+                                <button class="btn btn-success nextBtn btn-lg pull-right" onclick="summary()" type="button">Next</button>
                             </div>
 
                     </div>
@@ -139,13 +140,14 @@ fieldset{
                     <div class="col-md-12">
                         <h3>Ingredient Details</h3>
                             <div class="form-group ui-widget">
-                              <input type="text" class="form-control" name="ingredients" id="ingredients" placeholder="Search" required autofocus>
+                              <input type="text" class="form-control" name="ingredients" id="ingredients" placeholder="Search" autofocus>
+                              <input type="hidden" id="ing_id" multiple name="ing_id[]" value=""/>
                             </div>
                             <div class="form-group col-md-4">
-                                <input type="number" class="form-control" id="quantity" name="quantity[]" placeholder="Quantity" ng-model="choice.name" min="0" autofocus required>
+                                <input type="number" class="form-control" id="quantity" name="quantity[]" placeholder="Quantity" ng-model="choice.name" min="0" autofocus>
                             </div>
                             <div class="form-group col-md-3">
-                                <select class="form-control" id="preparation" name="preparation[]" id="preparation" name="preparation" style="width:100px;" required autofocus>
+                                <select class="form-control" id="preparation" name="preparation[]" id="preparation" name="preparation" style="width:100px;" autofocus>
                                     @foreach($preps as $prep)
                                         <option value="{{ $prep->p_id }}">{{$prep->p_name}}</option> 
                                     @endforeach
@@ -168,13 +170,32 @@ fieldset{
                                   <th style="width:150px">Quantity</th>
                                   <th style="width:150px">Preparation</th>
                                   <th style="width:150px">Unit of Measure</th>
+                                  <th style="width:150px">Option</th>
                                 </tr>
+                                @foreach($dish_ingredients as $di)
+                                <tr class="iRow" id="iRow">
+                                    <input type="hidden" name="ding_id[]" value="{{$di->ding_id}}">
+                                    <td>{{$di->Shrt_Desc}}</td>
+                                    <input type="hidden" id="ingid" name="ingids[]" value="{{$di->ding_id}}">
+                                    <td id="quanN">{{$di->quantity}}</td>
+                                    <input type="hidden" id="qtyy" name="qtyys[]" value="{{$di->quantity}}">
+                                    <td id="prepN">{{$di->p_name}}</td>
+                                    <input type="hidden" id="prepp" name="prepps[]" value="{{$di->preparation}}">
+                                    <td id="unitN">{{$di->um_name}}</td>
+                                    <input type="hidden" id="umm" name="umms[]" value="{{$di->um_id}}">
+                                    <td><button type="button" id="remove" class="remove"><i class="fa fa-times"></i></button><button type="button" class="btn btn-flat fa fa-edit" style="background-color:#30BB6D; color:white; border:none; margin-top: 1px; line-height: 100%; float:right" data-toggle="modal" data-target="#myModal{{$di->id}}"></button></td>
+                                </tr>
+                                @endforeach
                             </table>
                             </div>
                             <div>    
                                 <button class="btn btn-primary btn-lg pull-left" type="button" href="step-1">Previous</button>    
                                 <button class="btn btn-success nextBtn btn-lg pull-right" type="button" >Next</button>
                             </div>
+
+
+
+                            
                     </div>
                 </div>
             </div>
@@ -184,22 +205,79 @@ fieldset{
                 <div class="col-xs-6 col-md-offset-3">
                     <div class="col-md-12">
                         <h3> Step 3</h3>
-                    <div>
-                    <p>Dish Details</p>
-                    <div id="summary"></div>
-                    <p>Ingredient Details</p>
-
-                    
-                    </div>
-                        
-                    <button type="submit" class="btn btn-block btn-success pull-right" href="{{route('cook.dishes.create')}}"><i class="fa fa-plus"></i>Add Dish</button> 
+                        <div>
+                            <p>Dish Details</p>
+                            <div id="summary"></div>                   
+                        </div>
+                        <button type="submit" class="btn btn-block btn-success pull-right" href="{{route('cook.dishes.update', ['id' => $dish->did])}}"><i class="fa fa-plus"></i>Update Dish</button> 
                     </div>
                 </div>
-         
             </div>
-            </form>
-
+        </form>
+        @endforeach
         </div>
+
+
+        <!-- modal -->
+                            @foreach($dish_ingredients as $di)
+                                <div class="modal fade" id="myModal{{$di->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                <h4 class="modal-title" id="myModalLabel"><i class="fa fa-edit"></i><b>&nbsp;&nbsp;Change</b></h4>
+                                            </div>&nbsp;&nbsp;
+                                            <div class="modal-body">
+                                                <form method="post" action="#" enctype="multipart/form-data">
+                                                {{csrf_field()}} 
+                                                    <h4 class="modal-title" id="myModalLabel">&nbsp;&nbsp;<b>Ingredient Details</b></h4>
+                                                <div class="col-sm-12">
+                                                    <div class="form-group label-floating has-success">
+                                                        <label class="control-label">Quantity</label>
+                                                        <input type="text" class="form-control" id="quantityN" name="quantityN" value="{{$di->quantity}}" />
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group label-floating has-success">
+                                                        <label class="control-label">Preparation</label>
+                                                        <select class="form-control" id="preparationN" name="preparationN[]" id="preparation" name="preparation" style="width:100px;" autofocus>
+                                                            @foreach($preps as $prep)
+                                                                @if($di->preparation == $prep->p_id)
+                                                                <option selected value="{{ $prep->p_id }}">{{$prep->p_name}}</option>
+                                                                @else
+                                                                <option value="{{ $prep->p_id }}">{{$prep->p_name}}</option> 
+                                                                @endif
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm-6">
+                                                    <div class="form-group label-floating has-success">
+                                                        <label class="control-label">Unit of Measure</label>
+                                                        <select class="form-control" id="umN" name="umN[]" style="width:150px;">
+                                                            @foreach($units as $um)
+                                                                @if($di->um_id == $um->um_id)
+                                                                <option selected value="{{ $um->um_id }}">{{$um->um_name}}</option>
+                                                                @else
+                                                                <option value="{{ $um->um_id }}">{{$um->um_name}}</option>
+                                                                @endif
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-info btn-simple" onclick="changes(); return false;" style="color:#30BB6D">Change</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                                <!-- end of modal -->
+
+
 
     </section>
     <!-- /.content -->
@@ -237,7 +315,7 @@ fieldset{
 <script src="{{asset('adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}"></script>
 <!-- Slimscroll -->
 <script src="{{asset('adminlte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
-<!-- FastClick -->
+    <!-- FastClick -->
 <script src="{{asset('adminlte/bower_components/fastclick/lib/fastclick.js')}}"></script>
 <!-- AdminLTE App -->
 <script src="{{asset('adminlte/dist/js/adminlte.min.js')}}"></script>
@@ -270,7 +348,9 @@ fieldset{
     });
 
 $(document).ready(function () {
-  
+    $('#part').on('click','.remove', function() {
+          $(this).closest(".iRow").remove();
+      });
     $('#cancel').on('click', function() {
       window.location = '{{url("/cook/dishes")}}';
     });
@@ -329,26 +409,62 @@ allWells.hide();
          }
     });
 
+
+    function changes(){
+
+        var quan = document.getElementById('quantityN').value;
+        var prep = $("#preparationN option:selected").map(function() {
+            return $(this).text();
+          }).get();
+        var prepp = $('#preparationN').val();
+        var um = $("#umN option:selected").map(function() {
+            return $(this).text();
+          }).get();
+        var umm = $('#umN').val();
+
+        document.getElementById("quanN").innerHTML = quan;
+        document.getElementById("prepN").innerHTML = prep;
+        document.getElementById("unitN").innerHTML = um;
+
+        document.getElementById("qtyy").value = quan;
+        document.getElementById("prepp").value = prepp;
+        document.getElementById("umm").value = umm;
+
+
+
+        return false;
+
+
+    }
+
     function addChoice()
     {
+        
+        var div = document.getElementById("part");
+
         var ingred = document.getElementById('ingredients').value;
         var quan = document.getElementById('quantity').value;
-
+        var ingid = document.getElementById('ing_id').value;
         var prep = $("#preparation option:selected").map(function() {
             return $(this).text();
           }).get();
-        var um = $("#unit option:selected").map(function() {
+        var prepp = $('#preparation').val();
+        var um = $("#um option:selected").map(function() {
             return $(this).text();
           }).get();
+        var umm = $('#um').val();
 
-        var div = document.getElementById("part");
-
-        div.innerHTML += 
+                div.innerHTML += 
                         '<tr style="text-align:center">'+
-                        '<td>'+ingred+'</td>'+
-                        '<td>'+quan+'</td>'+
-                        '<td>'+prep+'</td>'+
-                        '<td>'+um+'</td>'+
+                        '<td >'+ingred+'</td>'+
+                        '<input type="hidden" id="ingid" name="ingid[]" value="'+ingid+'">'+
+                        '<td multiple name="qty[]">'+quan+'</td>'+
+                        '<input type="hidden" id="qtyy" name="qtyy[]" value="'+quan+'">'+
+                        '<td multiple name="prep[]">'+prep+'</td>'+
+                        '<input type="hidden" id="prepp" name="prepp[]" value="'+prepp+'">'+
+                        '<td multiple name="unit[]">'+um+'</td>'+
+                        '<input type="hidden" id="umm" name="umm[]" value="'+umm+'">'+
+                        '<td><button type="button" id="remove" class="remove"><i class="fa fa-times"></i></button></td>'+
                         '</tr>';
 
                         return false;
@@ -356,24 +472,63 @@ allWells.hide();
 
     function summary(){
 
+          // var name = document.getElementById("dish_name").value;
+          // var serving = document.getElementById("serving").value;
+          // var ptime = document.getElementById("duration").value;
+          // var pend = document.getElementById("pend").value;
+          // var price = document.getElementById("price").value;
+          // var desc = document.getElementById("dish_desc").value;
+          // var best = $("#best option:selected").map(function() {
+          //   return $(this).text();
+          // }).get();
+          // var serveSize = document.getElementById("serveSize").value;
+          // // var ingred = $('ingredients').val();
+          // var ingred=[];
+          // var ingred = $("#ingredients option:selected").map(function() {
+          //   return $(this).text();
+          // }).get();
+          // var quan = $('quantity').val();
+          // var prep = $('preparation').val();
+          // var um = $('um').val();
+
+
+          // var div = document.getElementById('summary');
+          // var div2 = document.getElementById('ingred-part');
+          // // var i;
+          //   div.innerHTML +=  'Name: '+name+'<br>'+
+          //                     'Serving: '+serving+'<br>'+
+          //                     'Preparation Time: '+ptime+'<br>'+
+          //                     'Preparation End: '+pend+'<br>'+
+          //                     'Price: '+price+'<br>'+
+          //                     'Description: '+desc+'<br>'+
+          //                     'Best Eaten: '+best+'<br>'+
+          //                     'Serving Size: '+serveSize+'<br>';
+
+
+
+
+
+
           var name = document.getElementById("dish_name").value;
           var serving = document.getElementById("serving").value;
           var ptime = document.getElementById("duration").value;
-          var pend = document.getElementById("pend").value;
           var price = document.getElementById("price").value;
           var desc = document.getElementById("dish_desc").value;
-          var best = $("#best option:selected").map(function() {
-            return $(this).text();
+          // var best = $("#best:checked").map(function() {
+          //   return $(this).innerHTML;
+          // }).get();
+          var best = $('#best:checked').map(function() {
+            return $(this).next('label').text();
           }).get();
-          var serveSize = document.getElementById("serveSize").value;
-          // var ingred = $('ingredients').val();
-          var ingred=[];
-          var ingred = $("#ingredients option:selected").map(function() {
-            return $(this).text();
+          // var signDish = $("#signDish:checked").map(function(){
+          //   return $(this).text();
+          // });
+          var signDish = $('#signDish:checked').map(function() {
+            return $(this).next('label').text();
           }).get();
-          var quan = $('quantity').val();
-          var prep = $('preparation').val();
-          var um = $('um').value;
+          // var best = $('#best:checked').innerHTML;
+          // var signDish = document.getElementById("signDish").value;
+          // var or_this = $('#best').next('label').text();
 
           var div = document.getElementById('summary');
           var div2 = document.getElementById('ingred-part');
@@ -381,11 +536,10 @@ allWells.hide();
             div.innerHTML += 'Name: '+name+'<br>'+
                               'Serving: '+serving+'<br>'+
                               'Preparation Time: '+ptime+'<br>'+
-                              'Preparation End: '+pend+'<br>'+
                               'Price: '+price+'<br>'+
                               'Description: '+desc+'<br>'+
                               'Best Eaten: '+best+'<br>'+
-                              'Serving Size: '+serveSize+'<br>';
+                              'Sign Dish: '+signDish+'<br>';
 
     }
 </script>
@@ -396,11 +550,67 @@ allWells.hide();
 $(document).ready(function(){
 
     $( "#ingredients" ).autocomplete({
-        source: "{{ url('/cook/searchIngredients') }}"
-    });
+        source: function( request, response ) {
+            $.ajax( {
+              url: "{{ url('/cook/searchIngredients') }}",
+              dataType: "json",
+              data: {
+                term: request.term
+              },
+              success: function( data ) {
 
+                response($.map(data,function(d) {
+                    if(d == 'No dishes found')
+                    {
+                        return { 
+                            label: 'No dishes found.'
+                        };
+                    }
+                    else {
+                        return {
+                            id: d.id,
+                            value: d.Shrt_Desc,
+                        };    
+                    }
+                }));
+              }
+            } );
+        },
 
+        select: function( event, ui) {
 
+            this.value = ui.item.value;
+            $(this).next("input").val(ui.item.value);
+            event.preventDefault();  
+
+            $('#ing_id').val(ui.item.id);
+
+            displayPreviewDish(ui.item.id);
+            console.log( "Selected: " + ui.item.value + " id " + ui.item.id );
+        }
+        }).data("ui-autocomplete")._renderItem = function (ul, item) {
+
+            if(item.value == 'No dishes found.'){
+                return $('<li class="ui-state-disabled">'+item.label+'</li>').appendTo(ul);
+            }else{
+                return $("<li>")
+                .append("<a>" + item.label + "</a>")
+                .appendTo(ul);
+            }
+        };
+
+//When unchecking the checkbox
+$("#check-all").on('ifUnchecked', function (event) {
+  //Uncheck all checkboxes
+  $("input[type='checkbox']", ".user_permissions_table").iCheck("uncheck");
+});
+//When checking the checkbox
+$("#check-all").on('ifChecked', function (event) {
+  //Check all checkboxes
+  $("input[type='checkbox']", ".user_permissions_table").iCheck("check");
+});
+    
+   
 });
   
 </script>

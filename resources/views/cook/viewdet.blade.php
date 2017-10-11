@@ -32,6 +32,7 @@ a:hover{
         <div class="col-xs-6 col-md-offset-3">
           <!-- Custom Tabs -->
           @foreach($dishes as $dish)
+          
           <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
               <li class="active"><a href="#tab_1" data-toggle="tab">Dish Details</a></li>
@@ -64,7 +65,26 @@ a:hover{
               </div>
               <!-- /.tab-pane -->
               <div class="tab-pane" id="tab_2">
-                
+                <table id="example1" class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                  <th>Ingredient Name</th>
+                  <th>Quantity</th>
+                  <th>Preparation</th>
+                  <th>Unit of Measurement</th>
+                </tr>
+                </thead>
+                <tbody>
+                    @foreach($dish_ingredients as $di)
+                        <tr>
+                          <td>{{$di->Shrt_Desc}}</td>
+                          <td>{{$di->quantity}}</td>
+                          <td>{{$di->p_name}}</td>
+                          <td> {{$di->um_name}}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+              </table>
               </div>
               <!-- /.tab-pane -->
               <div class="tab-pane" id="tab_3">
@@ -128,6 +148,9 @@ a:hover{
        /.row -->
    
 
+
+
+  
 
     
       </section>
