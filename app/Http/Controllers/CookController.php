@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\UserOrder;
-
 
 class CookController extends Controller
 {
@@ -32,7 +30,6 @@ class CookController extends Controller
         //                     ->join('order_mode', 'user_orders.order_id' , '=', 'order_mode.id')
         //                     ->get();
 
-        $cid  = Auth::id();
 
         $dishes=UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
                 ->join('orders', 'orders.id', '=', 'user_orders.order_id')
@@ -40,8 +37,6 @@ class CookController extends Controller
                 ->join('users', 'users.id', '=', 'user_orders.user_id')
                 ->join('user_allergens', 'user_allergens.user_id', '=', 'users.id')
                 ->join('allergens', 'allergens.allergen_id', '=', 'user_allergens.allergen_id')
-                ->join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
-                ->where('cooks.id', $cid)
                 ->get();
 
         // $details = $details->merge($dishes)->merge($orders)->merge($oid);
