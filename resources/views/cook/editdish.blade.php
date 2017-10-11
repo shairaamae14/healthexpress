@@ -113,22 +113,13 @@ fieldset{
                             <div class="form-group col-md-8">
                                 <label>Best Eaten during: {{$dish->name}}</label><br>
                                 @foreach($beaten as $be)
-                                    @if($dish->be_id == $be->be_id)
-                                    <input type="checkbox" class="flat-red" value="{{$be->be_id}}" id="best" name="best[]" checked><label>{{$be->name}}</label>
-                                    @else
-                                    <input type="checkbox" class="flat-red" value="{{$be->be_id}}" id="best" name="best[]"><label>{{$be->name}}</label>
-                                    @endif
+                                <input type="checkbox" class="flat-red" value="{{$be->be_id}}" id="best" name="best[]"><label>{{$be->name}}</label>
                                 @endforeach
                             </div> 
                             <div class="form-group col-md-8">
                                 <label>Signature Dish:</label><br>
-                                @if($dish->isSignatureDish == '1')
-                                <input type="checkbox" id="signDish" name="signDish" value="1" checked><label>Yes</label>
+                                <input type="checkbox" id="signDish" name="signDish" value="1"><label>Yes</label>
                                 <input type="checkbox" id="signDish" name="signDish" value="0"><label>No</label>
-                                @else
-                                <input type="checkbox" id="signDish" name="signDish" value="1" ><label>Yes</label>
-                                <input type="checkbox" id="signDish" name="signDish" value="0" checked><label>No</label>
-                                @endif
                             </div> 
                             <div class="form-group col-md-9">
                                 <label>Description:</label>
@@ -192,7 +183,7 @@ fieldset{
                                     <input type="hidden" id="prepp" name="prepps[]" value="{{$di->preparation}}">
                                     <td id="unitN">{{$di->um_name}}</td>
                                     <input type="hidden" id="umm" name="umms[]" value="{{$di->um_id}}">
-                                    <td><button type="button" id="remove" onclick="remove({{$di->ding_id}})" class="remove"><i class="fa fa-times"></i></button><button type="button" class="btn btn-flat fa fa-edit" style="background-color:#30BB6D; color:white; border:none; margin-top: 0px; line-height: 100%; float:right" data-toggle="modal" data-target="#myModal{{$di->id}}"></button></td>
+                                    <td><button type="button" id="remove" class="remove"><i class="fa fa-times"></i></button><button type="button" class="btn btn-flat fa fa-edit" style="background-color:#30BB6D; color:white; border:none; margin-top: 1px; line-height: 100%; float:right" data-toggle="modal" data-target="#myModal{{$di->id}}"></button></td>
                                 </tr>
                                 @endforeach
                             </table>
@@ -419,12 +410,6 @@ allWells.hide();
     });
 
 
-    function remove(id){
-        $.get( "{{ url('/cook/remove?id=') }}"+id);
-    }
-
-
-
     function changes(){
 
         var quan = document.getElementById('quantityN').value;
@@ -487,18 +472,63 @@ allWells.hide();
 
     function summary(){
 
+          // var name = document.getElementById("dish_name").value;
+          // var serving = document.getElementById("serving").value;
+          // var ptime = document.getElementById("duration").value;
+          // var pend = document.getElementById("pend").value;
+          // var price = document.getElementById("price").value;
+          // var desc = document.getElementById("dish_desc").value;
+          // var best = $("#best option:selected").map(function() {
+          //   return $(this).text();
+          // }).get();
+          // var serveSize = document.getElementById("serveSize").value;
+          // // var ingred = $('ingredients').val();
+          // var ingred=[];
+          // var ingred = $("#ingredients option:selected").map(function() {
+          //   return $(this).text();
+          // }).get();
+          // var quan = $('quantity').val();
+          // var prep = $('preparation').val();
+          // var um = $('um').val();
+
+
+          // var div = document.getElementById('summary');
+          // var div2 = document.getElementById('ingred-part');
+          // // var i;
+          //   div.innerHTML +=  'Name: '+name+'<br>'+
+          //                     'Serving: '+serving+'<br>'+
+          //                     'Preparation Time: '+ptime+'<br>'+
+          //                     'Preparation End: '+pend+'<br>'+
+          //                     'Price: '+price+'<br>'+
+          //                     'Description: '+desc+'<br>'+
+          //                     'Best Eaten: '+best+'<br>'+
+          //                     'Serving Size: '+serveSize+'<br>';
+
+
+
+
+
+
           var name = document.getElementById("dish_name").value;
           var serving = document.getElementById("serving").value;
           var ptime = document.getElementById("duration").value;
           var price = document.getElementById("price").value;
           var desc = document.getElementById("dish_desc").value;
-     
+          // var best = $("#best:checked").map(function() {
+          //   return $(this).innerHTML;
+          // }).get();
           var best = $('#best:checked').map(function() {
             return $(this).next('label').text();
           }).get();
+          // var signDish = $("#signDish:checked").map(function(){
+          //   return $(this).text();
+          // });
           var signDish = $('#signDish:checked').map(function() {
             return $(this).next('label').text();
           }).get();
+          // var best = $('#best:checked').innerHTML;
+          // var signDish = document.getElementById("signDish").value;
+          // var or_this = $('#best').next('label').text();
 
           var div = document.getElementById('summary');
           var div2 = document.getElementById('ingred-part');
@@ -580,7 +610,6 @@ $("#check-all").on('ifChecked', function (event) {
   $("input[type='checkbox']", ".user_permissions_table").iCheck("check");
 });
     
-
    
 });
   
