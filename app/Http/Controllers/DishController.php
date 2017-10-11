@@ -163,7 +163,11 @@ class DishController extends Controller
     public function edit($id)
     {
         $beaten = BestEaten::all();
-        $dishes = Dish::where('did',$id)->get();
+        $dishes = Dish::where('did',$id)
+                ->join('dish_besteaten', 'dish_besteaten.dish_id','=','dishes.did')
+                ->join('besteaten_at', 'besteaten_at.be_id','=','dish_besteaten.be_id')
+                ->join('cook_dishcatalog', 'cook_dishcatalog.dish_id', '=','dishes.did')
+                ->get();
         $list = IngredientList::all();
         $units = UnitMeasurement::all();
         $preps = Preparation::all();
@@ -266,6 +270,16 @@ class DishController extends Controller
      * @param  \App\Dish  $dish
      * @return \Illuminate\Http\Response
      */
+    public function removeIng(Request $request){
+        
+        $id = $request->id;
+        $ingred = DishIngredient::where('ding_id', $id)->delete();
+        // $ingred->delete();
+
+        return redirect()->route('cook.dishes.edit');
+        // return Redirect::back();
+    }
+
     public function destroy($id)
     {
 //        $dish = Dish::where('did', $id)->get();
