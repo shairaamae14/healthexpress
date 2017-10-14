@@ -34,7 +34,7 @@ display: inline-block;
 }
 
 .box-solid:hover{
- box-shadow: 0 16px 24px 2px rgba(0,0,0,0.14), 0 6px 30px 5px rgba(0,0,0,0.12), 0 8px 10px -5px rgba(0,0,0,0.3) !important;
+ box-shadow: 0 16px 24px 2px rgba(0,0,0,0.14), 0 6px 20px 5px rgba(0,0,0,0.12), 0 8px 10px -5px rgba(0,0,0,0.3) !important;
 
 }
 
@@ -84,15 +84,14 @@ display: inline-block;
     </div>
   </div>
 
-    <div class="main main-raised"  style="width: 65%; float: left">
+    <div class="main main-raised">
         <div class="section">
-            <div class="container" style="width: 90%;">
+            <div class="container">
                 <div class="row">
 
                 <div class="card card-signup">
-              <form class="form" method="" action="">
                 <div class="header header-success text-center">
-                  <h1 style="font-family: Lato">What is your plan range?</h1>
+                  <h1 style="font-family: Lato">CHOOSE YOUR PLAN</h1>
                   <!-- <div class="social-line">
                     <a href="#pablo" class="btn btn-simple btn-just-icon">
                       <i class="fa fa-facebook-square"></i>
@@ -104,37 +103,173 @@ display: inline-block;
                       <i class="fa fa-google-plus"></i>
                     </a>
                   </div> -->
-                </div>
+                </div> 
                 <div class="content">
-                     <div class="col-sm-6">
-                     <div class="form-group label-floating has-success">
-                          <label class="control-label">(example: 3 days, 1 week, 1 month)</label>
-                          <input type="text" class="form-control" name="lname"  />
+                <div id="content">
+                   @foreach($plans as $plan)
+                <div class="col-sm-4">
+                    <div class="box box-solid" style="box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.3);">
+                         <div class="box-header with-border">  
+
+                          <h3 class="text-center">{{$plan->name}}</h3>
+                          <select class="form-control">
+                               <option>1 Person</option>
+                                 <option>2 Person/s</option>
+                                   <option>3 Person/s</option>
+                                     <option>4 Person/s</option>
+                          </select>
+                          <h2 class="text-center"> {{ number_format($plan->cost, 2) }}</h2>
+                                    @if ($plan->description)
+                                                  <p>{{ $plan->description }}</p>
+                                      @endif
+                          <center><button type="button" class="btn btn-success" id="btnplan">CHOOSE PLAN</button>
+                         <br>
+                       </div>
+                       <br>
+                   </div>
+                </div>
+                   @endforeach
+                        
+
+<!--                         <div class="col-sm-4">
+                         <div class="box box-solid" style="box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.3);">
+                              <div class="box-header with-border">  
+                               
+                               <h3 class="text-center"> Meal Plan 1</h3>
+                                 <select class="form-control">
+                                    <option>1 Person</option>
+                                      <option>2 Person/s</option>
+                                        <option>3 Person/s</option>
+                                          <option>4 Person/s</option>
+                               </select>
+                               <h2 class="text-center"> Php 450.00</h2>
+                                  <center> <button type="button" class="btn btn-success">CHOOSE PLAN</button>
+                              <br>
+                            </div>
+                            <br>
+                        </div>
+                        </div>
+                       
+
+                         <div class="col-sm-4">
+                         <div class="box box-solid" style="box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.3);">
+                              <div class="box-header with-border">  
+                               
+                               <h3 class="text-center"> Meal Plan 1</h3>
+                                 <select class="form-control">
+                                    <option>1 Person</option>
+                                      <option>2 Person/s</option>
+                                        <option>3 Person/s</option>
+                                          <option>4 Person/s</option>
+                               </select>
+                               <h2 class="text-center"> Php 450.00</h2>
+                                  <center> <button type="button" class="btn btn-success">CHOOSE PLAN</button>
+                              <br>
+                            </div>
+                            <br>
+                        </div>
+                        </div>-->
+                        <br>
+
+                  </div>
+
                       </div>
+                  
+
+
+                   <div id="content2" style="display:none">
+                          <div class="col-sm-3">
+                     <div class="form-group label-floating has-success">
+                          <label class="control-label">Number of days:</label>
+                          <input type="number" name="numberof" id="umberof" class="form-control" min="1" max="6" required autofocus/>
+                      </div>
+
                     </div>
+
+                    <div class="footer text-center">
+                    <button type="button" class="btn btn-success" id="next">Next</button>
+                     <center> <button type="button" class="btn btn-success" id="back">Back</button>
+                    </div>
+                
+                      
+
+                  </div>
+
+
+
+                  <div id="content3" style="display:none">
+                       <div class="col-sm-8">
+                         <div class="box box-solid" style="box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.3);">
+                              <div class="box-header with-border">  
+                               
+                               <h3 class="text-center">Dish</h3>
+                               <center><button type="button" class="btn btn-success" id="btnplan">+</button>
+                              <br>
+                            </div>
+                            <br>
+                        </div>
+                      </div>
+
+                      <div class="col-sm-4">
+                         <div class="box box-solid" style="box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.3);">
+                              <div class="box-header with-border">  
+                               
+                               <h3 class="text-center">Your Meals</h3>
+                               <select class="form-control">
+                                    <option>1 Person</option>
+                                      <option>2 Person/s</option>
+                                        <option>3 Person/s</option>
+                                          <option>4 Person/s</option>
+                               </select>
+                               <h2 class="text-center"> Php 450.00</h2>
+                               <center><button type="button" class="btn btn-success" id="btnplan">+</button>
+                              <br>
+                            </div>
+                            <br>
+                        </div>
+                      </div>
+                      <div class="row">
+                      <div class="col-sm-8" style="margin-top:0;">
+                      <div class="box box-solid" style="box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 5px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.3);">
+                              <div class="box-header with-border">  
+                               
+                               <h3 class="text-center">Dish</h3>
+                               <center><button type="button" class="btn btn-success" id="btnplan">+</button>
+                              <br>
+                            </div>
+                            <br>
+                        </div>
+                      </div>
+                      </div>
+
+                      <div class="footer text-center">
+                      
+                       <center> <button type="button" class="btn btn-success" id="back">Back</button>
+                      </div>
+                  </div>
+                 
+
+
+                        </div><!--content!-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    </div><!--cardsignup!-->
 
                 
-              
-
-                      </div>
-                    </div>
-
-                  <!-- If you want to add a checkbox to this form, uncomment this code
-
-                  <div class="checkbox">
-                    <label>
-                      <input type="checkbox" name="optionsCheckboxes" checked>
-                      Subscribe to newsletter
-                    </label>
-                  </div> -->
-                  <br>
-                  <br>
+                <br><br>
                 </div>
-                <div class="footer text-center">
-                  <a href="#pablo" class="btn btn-flat btn-success btn-lg">Get Started</a>
-                </div>
-              </form>
-            </div>
+             
 
 
                            
@@ -146,128 +281,13 @@ display: inline-block;
 
 
     </div><!--section!-->
+
 </div><!--main raised!-->
+</div><!--wrapper!-->
 
 
 
 
- <div class="main main-raised"  style="width: 25%; float: right;">
-    <div class="section" style="padding-bottom: 2px">
-        <div class="container" style="width: 100%">
-                <p style="color: black; float:left; margin-top: -60px;font-size: 21px; font-family: 'Lobster', cursive;">
-                <i class="material-icons" style="font-size:21px">shopping_cart</i> &nbsp;Your Cart &nbsp; 
-                <span class="badge" style="font-family: verdana; background-color:#30BB6D" id="totalqty">
-              {{Cart::count()}}
-                </span>
-                </p>
-
- <div class="row" style="padding-right:8px; padding-left: 8px">
-      @if(count(Cart::content()))
-      @foreach(Cart::content() as $item) 
-        <dl class="dl-horizontal">
-            <div id="cartdiv" style="padding-left: 5px">  
-              <dt style="margin-left:-65px">
-                 <label  name="quantity" style="color:black; margin-right:20px"><b> {{$item->qty}} x</b></label>
-                    <a class="cart_quantity_up" href='{{url("cart/update?dish_id=$item->id&increment=1")}}'>
-                    <i class="material-icons"  style="color:#30BB6D">add_circle</i></a>
-                    <a class="cart_quantity_down" href='{{url("cart/update?dish_id=$item->id&decrease=1")}}'>
-                    <i class="material-icons"  style="color:#30BB6D" id="dec">remove_circle</i></a>
-               </dt>
-
-              <dd style="margin-left: 2px">
-                <label style="float: left; margin-left:0px; margin-right: 0px; font-size: 15px; color:black">
-                <b>&nbsp;&nbsp;{{$item->name}}</b>
-               <br>{{$item->sidenote}}
-                </label>
-                <a href='{{url("/cart/dish/remove?dish_id=$item->id&remove=true")}}' style="float:right">
-                  <i class="fa fa-trash-o" aria-hidden="true" style="color:black; font-size: 20px"></i>
-                </a>
-              <!--   <a href="#" data-toggle="modal" data-target="#myModal1" style="float:right">
-                    <i class="material-icons" style="color:black;">note_add</i>
-                </a> -->
-              
-               
-              </dd>
-
-
-              <dt style="margin-left:-2px">
-                <label style="font-size: 12px; color: gray; float:left"> Price: <b id="price">{{$item->price}} </b></label>
-              </dt>
-
-              <dd style="margin-right: 2px">
-                <label style="font-size: 12px; color: gray; float:right">Total Amount:<b id="itemamount">{{$item->subtotal}}</b></label>
-              </dd>
-
-          </div>
-      </dl>   
-
-      @endforeach
-      @else
-            <center>
-            <label style="font-size: 30px">Your cart is empty</label>
-            </center>
-      @endif
-      
-          <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-                 <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots">
-                 <b>Subtotal:</b>&nbsp;Php
-                 <label style="color:black" id="subtotal">{{Cart::subtotal()}}</label>
-                 </p>
-                 <br>
-          </div>
-        
-      @if(count(Cart::content()))
-        
-        <!--   <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-              <p style="float:right; margin-right:2px; font-size: 17px; color:black;font-family: 'Lato', sans-serif" id="tots">
-              <b>Total:</b>&nbsp;Php
-              <label style="color:black" id="alltotal">{{Cart::subtotal()}}</label>
-              </p>
-          </div> -->
-
-        
-        <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-      
-               <button class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:right; margin-top: 2px; border:none" id="chkt"data-toggle="modal" data-target="#myModal">
-                        Proceed
-                      </button>
-
-          <form method="POST" action="{{url('cart/clear')}}">
-               <input type="hidden" name="_token" value="{{ csrf_token() }}">
-              <button type="submit" class="btn btn-flat btn edit" style="float:left; margin-top: 2px; border:none" id="chkt">Clear Cart
-              </button>
-              </form>
-        </div>
-       
-
-      @else
-
-         <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-           <!--  <a href="{{url('cart/checkout')}}">
-            <button type="submit" class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:right; margin-top: 2px; border:none" id="chkt" disabled>Checkout</button>
-            </a> -->
-
-             <button  class="btn btn-flat btn-success btn edit" style="float:right; margin-top: 2px; border:none" id="chkt" data-toggle="modal" data-target="#myModal" disabled>
-                        Proceed
-                      </button>
-
-              <form method="POST" action="{{url('cart/clear')}}">
-               <input type="hidden" name="_token" value="{{ csrf_token() }}">
-              <button type="submit" class="btn btn-flat btn edit" style="float:left; margin-top: 2px; border:none" id="chkt" disabled>Clear Cart
-              </button>
-              </form>
-         </div>
-
-   @endif
-            
-       
-       
-        
-
- </div>
-   </div>
-      </div>
-         </div>
 
 
 
@@ -295,6 +315,23 @@ display: inline-block;
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
 
+$(document).ready(function (){
+$('#btnplan').on('click', function(){
+$('#content').hide();
+$('#content2').show();
+});
+
+$('#back').on('click', function() {
+  $('#content2').hide();
+  $('#content').show();x
+});
+$('#next').on('click', function() {
+  $('#content2').hide();
+  $('#content3').show();
+});
+
+
+});
 
 
 

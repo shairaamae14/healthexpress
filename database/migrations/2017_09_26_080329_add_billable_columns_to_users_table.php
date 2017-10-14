@@ -14,10 +14,6 @@ class AddBillableColumnsToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('braintree_id');
-            $table->dropColumn('paypal_email');
-            $table->dropColumn('card_brand');
-            $table->dropColumn('card_last_four');
             $table->string('braintree_id')->nullable();
             $table->string('paypal_email')->nullable();
             $table->string('card_brand')->nullable();

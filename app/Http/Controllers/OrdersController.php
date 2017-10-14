@@ -8,8 +8,13 @@ use App\Orders;
 use App\UserOrder;
 use Illuminate\Http\Request;
 use Auth;
+use App\User;
 use App\OrderMode;
 use App\PaymentMethod;
+use Braintree_ClientToken;
+use Braintree_Transaction;
+use Braintree_CreditCard;
+use Braintree_Customer;
 use Cart;
 class OrdersController extends Controller
 {
@@ -22,6 +27,16 @@ class OrdersController extends Controller
      
     public function checkout(Request $request){
         $option = $request->option;
+        $user = Auth::user();
+        if(!$user->braintree_id) {
+           $clientToken = Braintree_ClientToken::generate(); 
+        }
+        else {
+            $clientToken = Braintree_ClientToken::generate([
+                'customerId' => $user->braintree_id
+            ]); 
+        }
+        
         if($option == 'Delivery') {
             $service = $option;
        
@@ -30,7 +45,7 @@ class OrdersController extends Controller
         else {
             $service = $option;
         }
-        return view('user.paymentmethod', compact('option'));
+        return view('user.paymentmethod', compact('option', 'clientToken'));
     }   
     
     public function index()
@@ -47,7 +62,88 @@ class OrdersController extends Controller
         
         return $order;
     }
+    
+    
+    public function payment(Request $request) {
+        $customer = Auth::user();
+        $user = User::find($customer->id);
+        $total_amount = $request['amount'];
+        $nonce = $request['payment_method_nonce'];
+        
+        if(!$customer->braintree_id) {
+            $cust = Braintree_Customer::create([
+                    'paymentMethodNonce' => $nonce,
+                    'creditCard' => [
+                        'billingAddress' => [
+                          'firstName' => $customer->fname,
+                          'lastName' => $customer->lname,
+                          'streetAddress' => $customer->location
 
+                        ],
+                        'options' => [
+                            'verifyCard' => true
+                        ]
+                    ]
+            ]);
+           
+            $user->braintree_id = $cust->customer->id;
+            $user->card_brand = $cust->customer->creditCards[0]->cardType;
+            $user->card_last_four = $cust->customer->creditCards[0]->last4;
+            $user->save();
+            
+            $result = Braintree_Transaction::sale([
+                'amount' => $total_amount,
+                'customerId' => $user->braintree_id,
+                'options' => [
+                    'submitForSettlement' => true
+                ]
+            ]);
+            
+            $this->orderStatus($result->transaction->id);
+        }
+        else {
+            $result = Braintree_Transaction::sale([
+                'amount' => $request->amount,
+                'customerId' => $customer->braintree_id,
+                'options' => [
+                    'submitForSettlement' => true
+                ]
+            ]);
+        }
+        
+    }
+    
+    public function orderStatus($id) {
+        $transaction = Braintree_Transaction::find($id);
+        
+        $transactionStatuses = [
+            Braintree_Transaction::AUTHORIZED,
+            Braintree_Transaction::AUTHORIZING,
+            Braintree_Transaction::SETTLED,
+            Braintree_Transaction::SETTLING,
+            Braintree_Transaction::SETTLEMENT_CONFIRMED,
+            Braintree_Transaction::SETTLEMENT_PENDING,
+            Braintree_Transaction::SUBMITTED_FOR_SETTLEMENT,
+        ];
+        
+        if(in_array($transaction->status, $transactionStatuses)) {
+           
+        }
+    }
+    
+    public function initCustomer(Request $request) {
+        $customer = Auth::user();
+        if(!$customer->braintree_id) {
+            $result = Braintree_Customer::create([
+                        'firstName' => $customer->fname,
+                        'lastName' => $customer->lname
+                
+            ]);
+            
+        }
+        
+        return $result;
+    }
     /**
      * Store a newly created resource in storage.
      *
@@ -59,6 +155,29 @@ class OrdersController extends Controller
         $user = Auth::id();
 //        dd($request);
 //        $mode = OrderMode::create(['om_name' => 'Express Meal']);
+        
+        
+         $nonce = $request['payment_method_nonce'];
+         $transact = Braintree_Transaction::sale([
+                    'amount' => $request['total'],
+                    'paymentMethodNonce' => $nonceFromTheClient,
+                    'options' => [
+                      'submitForSettlement' => True
+                    ]
+          ]);
+         
+         
+        $transact = Braintree_Transaction::submitForSettlement('the_transaction_id');
+        if ($transact->success) {
+            $settledTransaction = $transact->transaction;
+        } else {
+            $errors = $transact->errors;
+        }
+        
+        
+        
+        
+        
         $order= Orders::create(['om_id' => 1]);
         $status = 'Pending';
         if($request['payment_mode'] == 'COD') {

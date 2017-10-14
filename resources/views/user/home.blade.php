@@ -284,11 +284,12 @@ display: inline-block;
 
         
         <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-      
+        <form method="POST" action="{{url('cart/checkout')}}">
+           <input type="hidden" name="_token" value="{{ csrf_token() }}">
                <button class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:right; margin-top: 2px; border:none" id="chkt" data-toggle="modal" data-target="#modal-default1">
                         Proceed
                       </button>
-
+          </form>
           <form method="POST" action="{{url('cart/clear')}}">
                <input type="hidden" name="_token" value="{{ csrf_token() }}">
               <button type="submit" class="btn btn-flat btn edit" style="float:left; margin-top: 2px; border:none" id="chkt">Clear Cart
@@ -301,10 +302,12 @@ display: inline-block;
 
          <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
          
-
-             <button  class="btn btn-flat btn-success btn edit" style="float:right; margin-top: 2px; border:none" id="chkt" data-toggle="modal" data-target="#myModal" disabled>
-                        Proceed
+             <form method="POST" action="{{url('cart/checkout')}}">
+                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
+             <button type="submit" class="btn btn-flat btn-success btn edit" style="float:right; margin-top: 2px; border:none" id="chkt" disabled>
+                        Checkout
                       </button>
+             </form>
 
               <form method="POST" action="{{url('cart/clear')}}">
                <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -331,7 +334,7 @@ display: inline-block;
 
 <!-- Sart Modal -->
 
-<div class="modal fade" id="modal-default1">
+<!--<div class="modal fade" id="modal-default1">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
@@ -347,7 +350,7 @@ display: inline-block;
                         <input type="radio" name="option"/>Pick Up
                           <br>
                    <div class="modal-footer">
-                        <a href="#"><button type="button" class="btn btn-simple">&nbsp;Continue shopping</button></a>
+                        <a href="#"><button type="button" class="btn btn-simple" data-dismiss="modal">&nbsp;Continue shopping</button></a>
                         <button type="submit" class="btn btn-simple btn-success" style="width:10px; background-color:transparent; border:transparent; margin-right: 30px">
                              Checkout&nbsp;
                         </button>    
@@ -357,14 +360,14 @@ display: inline-block;
                </form>
 
               </div>
-              <!--modalbody!-->
+              modalbody!
             </div>
-            <!-- /.modal-content -->
+             /.modal-content 
           </div>
-          <!-- /.modal-dialog -->
+           /.modal-dialog 
         </div>
-        <!-- /.modal -->
-<!--  End Modal -->
+         /.modal 
+  End Modal -->
 
 
 

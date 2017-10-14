@@ -20,25 +20,30 @@ Auth::routes();
 Route::get('/home', 'HomeController@index');
 Route::post('/home', 'HomeController@index')->name('user.index');
 Route::get('/home/dish/details/{id}', 'HomeController@showDetails')->name('home.details');
+Route::post('/home/dish', 'HomeController@showDish')->name('show.dish');
+Route::get('/displayDishes', 'HomeController@searchDishes')->name('search.dish');
 // Route::get('addToCart/{id}', 'HomeController@addToCart')->name('dish.addtocart');
 
 Route::post('/cart', 'CartController@cart');
 Route::get('/cart/update', 'CartController@updateCart');
 Route::post('/cart/clear', 'CartController@destroyCart');
 Route::get('/cart/dish/remove', 'CartController@removeDish');
-<<<<<<< HEAD
+
 Route::post('/cart/checkout', 'CartController@checkout');
 Route::post('/cart/order', 'OrdersController@store')->name('order.place');
-=======
+Route::post('/cart/pay', 'OrdersController@payment')->name('order.payment');
+Route::post('/initCustomer', 'OrdersController@initCustomer');
+
+
 Route::post('/cart/checkout', 'OrdersController@checkout')->name('checkout');
 Route::post('/cart/order', 'OrdersController@store')->name('order.place');
-Route::get('/cart/orderhistory', 'OrdersController@show')->name('order.orderhistory');
-Route::post('/cart/order/updatestatus/{id}', 'OrdersController@changeToReceived')->name('order.statuschange');
-Route::post('/cart/order/updatetodone/{id}', 'OrdersController@changeToDone')->name('order.donestatus');
-Route::get('/cart/pastorders', 'OrdersController@pastOrders')->name('order.pastorders');
+Route::get('/orderhistory', 'OrdersController@show')->name('order.orderhistory');
+Route::post('/order/updatestatus/{id}', 'OrdersController@changeToReceived')->name('order.statuschange');
+Route::post('/order/updatetodone/{id}', 'OrdersController@changeToDone')->name('order.donestatus');
+Route::get('/pastorders', 'OrdersController@pastOrders')->name('order.pastorders');
 // Route::get('cart/order/status', 'OrdersController@show')->name('order.history');
 
->>>>>>> 2646ad20dfde083a10a0fdda50c5327568fb2e6c
+
 
 Route::get('/home', 'HomeController@index');
 Route::post('/home/express', 'HomeController@express');
@@ -53,7 +58,9 @@ Route::get('/user/logout', 'Auth\LoginController@userLogout')->name('user.logout
 
 
 //Planned Meals
-Route::get('/plannedmeals', 'HomeController@plannedindex');
+Route::get('/plannedmeals', 'PlannedMController@index')->name('user.plan.index');
+Route::post('/plan/create', 'PlannedMController@store')->name('user.plan.store');
+Route::get('/plannedmeal/schedule', 'PlannedMController@show')->name('user.plan.show');
 
 Route::prefix('cook')->group(function() {
 	Route::get('/login', 'Auth\CookLoginController@show')->name('cook.login');
