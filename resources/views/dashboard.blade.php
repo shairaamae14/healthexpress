@@ -88,13 +88,13 @@
                                                             <td>Don't put too much carrots. Please add more sauce</td>
 
                                                             @if($orders->order_status == 'Pending')
-                                                            <td><a href="javascript:void(0);" onclick="cooking({{$orders->uo_id}})" id="Cooking" value="Cooking"><i class="material-icons" data-toggle="tooltip" data-placement="top" style="color:#DC3131" title="cooking">restaurant_menu</i></a></td>
+                                                            <td><a href="javascript:void(0);" onclick="cooking({{$orders->uo_id}})" id="Cooking" value="Cooking"><i class="fa fa-cutlery" data-toggle="tooltip" data-placement="top" style="color:#DC3131" title="cooking"></i></a></td>
                                                             @elseif($orders->order_status == 'Cooking')
-                                                            <td><a href="javascript:void(0);" onclick="done({{$orders->uo_id}})" id="Done" value="Done"><i class="material-icons" data-toggle="tooltip" data-placement="top" title="done" style="color:#FFA233">local_mall</i></a></td>
+                                                            <td><a href="javascript:void(0);" onclick="done({{$orders->uo_id}})" id="Done" value="Done"><i class="fa fa-suitcase" data-toggle="tooltip" data-placement="top" title="done" style="color:#FFA233"></i></a></td>
                                                             @elseif($orders->order_status == 'Done')
-                                                            <td><a href="javascript:void(0);" onclick="deliver({{$orders->uo_id}})" id="Deliver" value="Deliver"><i class="material-icons" data-toggle="tooltip" data-placement="top" title="deliver" style="color:#6E9BF0">local_shipping</i></a></td>
+                                                            <td><a href="javascript:void(0);" onclick="deliver({{$orders->uo_id}})" id="Deliver" value="Deliver"><i class="fa fa-truck" data-toggle="tooltip" data-placement="top" title="deliver" style="color:#6E9BF0"></i></a></td>
                                                             @else
-                                                            <td><a href="javascript:void(0);" id="Delivered" value="Delivered"><i class="material-icons" data-toggle="tooltip" data-placement="top" title="delivered">check_circle</i></a></td>
+                                                            <td><a href="javascript:void(0);" id="Delivered" value="Delivered"><i class="fa fa-check-circle" style="color:green" data-toggle="tooltip" data-placement="top" title="delivered"></i></a></td>
                                                             @endif
                                                         </tr>
                                                         @endforeach
@@ -133,7 +133,7 @@
                                                             <td>{{$orders->order_date}}</td>
                                                             <td>{{$orders->allergen_name}}</td>
                                                             <td>Please add more sauce</td>
-                                                            <td><a href="javascript:void(0);" onclick="cooking({{$orders->uo_id}})" id="Cooking"  value="Cooking"><i class="material-icons" data-toggle="tooltip" data-placement="top" style="color:#DC3131" title="cooking">restaurant_menu</i></a></td>
+                                                            <td><a href="javascript:void(0);" onclick="cooking({{$orders->uo_id}})" id="Cooking"  value="Cooking"><i class="fa fa-cutlery" data-toggle="tooltip" data-placement="top" style="color:#DC3131" title="cooking"></i></a></td>
                                                         </tr>
                                                             @endif
                                                         @endforeach
@@ -174,7 +174,7 @@
                                                             <td>{{$cook->order_date}}</td>
                                                             <td>{{$cook->allergen_name}}</td>
                                                             <td>Please add more sauce</td>
-                                                            <td><a href="#" onclick="done({{$cook->uo_id}})" id="Done" value="Done"><i class="material-icons" data-toggle="tooltip" data-placement="top" title="done" style="color:#FFA233">local_mall</i></a></td>
+                                                            <td><a href="#" onclick="done({{$cook->uo_id}})" id="Done" value="Done"><i class="fa fa-suitcase" data-toggle="tooltip" data-placement="top" title="done" style="color:#FFA233"></i></a></td>
                                                         </tr>
                                                             @endif
                                                         @endforeach
@@ -214,7 +214,7 @@
                                                             <td>{{$done->order_date}}</td>
                                                             <td>{{$done->allergen_name}}</td>
                                                             <td>Please add more sauce</td>
-                                                            <td><a href="javascript:void(0);" onclick="deliver({{$done->uo_id}})" id="Deliver" value="Deliver"><i class="material-icons" data-toggle="tooltip" data-placement="top" title="deliver" style="color:#6E9BF0">local_shipping</i></a></td>
+                                                            <td><a href="javascript:void(0);" onclick="deliver({{$done->uo_id}})" id="Deliver" value="Deliver"><i class="fa fa-truck" data-toggle="tooltip" data-placement="top" title="deliver" style="color:#6E9BF0"></i></a></td>
                                                         </tr>
                                                             @endif
                                                         @endforeach
@@ -324,7 +324,7 @@
  <script type="text/javascript">
         function cooking(id){
                 var status= "Cooking";
-                alert(status);
+                // alert(status);
                 var data 
                 $.ajax({
                     method: 'POST',
@@ -343,7 +343,7 @@
 
          function done(id){
             var status="Done";
-            alert(status);
+            // alert(status);
             $.ajax({
                     method: 'POST',
                     url: "{{ url('/cook/orderstat') }}" ,
