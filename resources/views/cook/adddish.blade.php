@@ -42,6 +42,56 @@ fieldset{
 .durationpicker-label {
     display: inline-block;
 }
+
+
+
+.stepwizard-step p {
+    margin-top: 10px;
+}
+.stepwizard-row {
+    display: table-row;
+}
+.stepwizard {
+    display: table;
+    width: 50%;
+    position: relative;
+}
+.stepwizard-step button[disabled] {
+    opacity: 1 !important;
+    filter: alpha(opacity=100) !important;
+}
+.stepwizard-row:before {
+    top: 14px;
+    bottom: 0;
+    position: absolute;
+    content: " ";
+    width: 100%;
+    height: 1px;
+    background-color: #ccc;
+    z-order: 0;
+}
+.stepwizard-step {
+    display: table-cell;
+    text-align: center;
+    position: relative;
+}
+.btn-circle {
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 12px;
+    line-height: 1.428571429;
+    border-radius: 15px;
+}
+.btn-primary{
+    background-color: blue;
+}
+.btn-success{
+    background-color: blue;
+}
+
+
 </style>
 
 
@@ -59,8 +109,8 @@ fieldset{
     </section>
 
     <!-- Main content -->
-    <section class="content">
-        <div class="container">
+    <!-- <section class="content"> -->
+        <!-- <div class="container">
             <div class="stepwizard col-md-offset-3">
                 <div class="stepwizard-row setup-panel">
                     <div class="stepwizard-step">
@@ -76,36 +126,53 @@ fieldset{
                     <p>Save Dish</p>
                     </div>
                 </div>
-            </div>
+            </div> -->
  
-        <form role="form"  method="post" action="{{route('cook.dishes.create')}}" enctype="multipart/form-data">
-         {{csrf_field()}}
-            <div class="row setup-content" id="step-1">
-                <div class="col-xs-9 col-md-offset-3 ">
-                    <div class="col-md-12">
-                        <h3>Dish Details</h3>
-
-                            <div class="form-group col-md-5">
+        <div class="container">
+            <div class="stepwizard col-md-offset-3">
+                <div class="stepwizard-row setup-panel">
+                  <div class="stepwizard-step">
+                    <a href="#step-1" type="button" class="btn btn-primary btn-circle">1</a>
+                    <p>Dish Details</p>
+                  </div>
+                  <div class="stepwizard-step">
+                    <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled">2</a>
+                    <p>Ingredient Details</p>
+                  </div>
+                  <div class="stepwizard-step">
+                    <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled">3</a>
+                    <p>Dish Summary</p>
+                  </div>
+                </div>
+              </div>
+  
+  <form role="form"  method="post" action="{{route('cook.dishes.create')}}" enctype="multipart/form-data">
+    {{csrf_field()}}
+    <div class="row setup-content" id="step-1">
+      <div class="col-xs-6 col-md-offset-3">
+        <div class="col-md-12">
+          <h3>Dish Details</h3>
+              <div class="form-group col-md-6">
                                 <img src="{{asset('img/choose.png')}}" class="img-circle" id="img-tag" width="200px" />
                                 <br>
                                 <label for="exampleInputFile">Dish Image</label>
                                 <input type="file" id="img" name="img">
                                   <p class="help-block">jpg., jpeg., png. extension only</p>
                             </div>
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-6">
                                 <label>Name:</label>
                                 <input type="text" class="form-control" id="dish_name" name="dish_name" placeholder="Name" required autofocus>
                             </div>
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-6">
                                 <label>No. of Serving:</label>
                                 <input type="number" class="form-control" id="serving" name="serving" placeholder="No. of serving(s)" min="1" required autofocus>
                             </div>
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-6">
                                 <label>Preparation Time:</label> 
                                 <input type="text" id="duration" name="duration" required>
                             </div>
 
-                            <div class="form-group col-md-4">
+                            <div class="form-group col-md-6">
                                 <label>Price:</label>
                                 <input type="text" class="form-control" id="price" name="price" placeholder="Price" required>
                             </div>
@@ -125,36 +192,31 @@ fieldset{
                                 <textarea class="form-control" rows="3" id="dish_desc" name="dish_desc" placeholder="Description" required autofocus></textarea>                
                            </div>
 
-                            <div class="col-md-10">
-                                <button type="button" class="btn btn-primary nextBtn btn-lg" id="cancel">Cancel</button>
-                                <button class="btn btn-success nextBtn btn-lg pull-right" onclick="summary()" type="button">Next</button>
-                            </div>
-
-                    </div>
-                </div>
-            </div>
-
-            <div class="row setup-content" id="step-2">
-                <div class="col-xs-6 col-md-offset-3">
-                    <div class="col-md-12">
-                        <h3>Ingredient Details</h3>
-                        
-                            <div class="form-group ui-widget">
-                              <input type="text" class="form-control" multiple name="ingredients[]" id="ingredients" placeholder="Search" required autofocus>
+              <button class="btn btn-primary nextBtn btn-lg pull-right" type="button" onclick="summary()" >Next</button>
+        </div>
+      </div>
+    </div>
+    <div class="row setup-content" id="step-2">
+      <div class="col-xs-6 col-md-offset-3">
+        <div class="col-md-12">
+          <h3>Ingredient Details</h3>
+              
+                 <div class="form-group ui-widget">
+                              <input type="text" class="form-control" name="ingredients" id="ingredients" placeholder="Search" autofocus>
                               <input type="hidden" id="ing_id" multiple name="ing_id[]" value=""/>
                             </div>
                             <div class="form-group col-md-4">
-                                <input type="number" class="form-control" id="quantity" multiple name="quantity[]" placeholder="Quantity" ng-model="choice.name" min="0" autofocus required>
+                                <input type="number" class="form-control" id="quantity" name="quantity" placeholder="Quantity" ng-model="choice.name" min="0" autofocus >
                             </div>
                             <div class="form-group col-md-3">
-                                <select class="form-control" id="preparation" multiple name="preparation[]" id="preparation" name="preparation" style="width:100px;" required autofocus>
+                                <select class="form-control" id="preparation" name="preparation" id="preparation" name="preparation" style="width:100px;" autofocus>
                                     @foreach($preps as $prep)
                                         <option value="{{ $prep->p_id }}">{{$prep->p_name}}</option> 
                                     @endforeach
                                 </select>
                             </div>
                             <div class="form-group col-md-4">
-                                <select class="form-control" id="um" multiple name="um[]" style="width:150px;">
+                                <select class="form-control" id="um" name="um" style="width:150px;">
                                   @foreach($units as $um)
                                     <option value="{{ $um->um_id }}">{{$um->um_name}}</option> 
                                   @endforeach
@@ -174,38 +236,39 @@ fieldset{
                             </table>
                             </div>
                             <div>    
-                                <button class="btn btn-primary btn-lg pull-left" type="button" href="step-1">Previous</button>    
-                                <button class="btn btn-success nextBtn btn-lg pull-right" type="button" >Next</button>
-                            </div>
-                    </div>
-                </div>
-            </div>
+              <button class="btn btn-primary nextBtn btn-lg pull-right" type="button" >Next</button>
+        </div>
+      </div>
+    </div>
+</div>
+    <div class="row setup-content" id="step-3">
+      <div class="col-xs-6 col-md-offset-3">
+        <div class="col-md-12">
+          <h3>Dish Summary</h3>
 
-
-            <div class="row setup-content" id="step-3">
-                <div class="col-xs-6 col-md-offset-3">
-                    <div class="col-md-12">
-                        <h3> Step 3</h3>
-                    <div>
                     <p>Dish Details</p>
                     <div id="summary"></div>
                     <p>Ingredient Details</p>
 
-                    
-                    </div>
-                        
-                    <button type="submit" class="btn btn-block btn-success pull-right" href="{{route('cook.dishes.create')}}"><i class="fa fa-plus"></i>Add Dish</button> 
-                    </div>
-                </div>
-         
-            </div>
-            </form>
-
+             <button type="submit" class="btn btn-block btn-success pull-right" href="{{route('cook.dishes.create')}}"><i class="fa fa-plus"></i>Add Dish</button> 
         </div>
+      </div>
+    </div>
+  </form>
+        </div>
+    <!-- </section> -->
 
-    </section>
-    <!-- /.content -->
+
+
+
+   <!-- </div> -->
 </div>
+
+        <!-- </div> -->
+
+    <!-- </section> -->
+    <!-- /.content -->
+<!-- </div> -->
 <!-- /.content-wrapper -->
 
     <footer class="main-footer">
@@ -276,60 +339,51 @@ $(document).ready(function () {
     $('#cancel').on('click', function() {
       window.location = '{{url("/cook/dishes")}}';
     });
-// Wizard Step
-var navListItems = $('div.setup-panel div a'),
-        allWells = $('.setup-content'),
-        allNextBtn = $('.nextBtn');
 
-allWells.hide();
+    var navListItems = $('div.setup-panel div a'),
+              allWells = $('.setup-content'),
+              allNextBtn = $('.nextBtn');
 
-    navListItems.click(function (e) {
-        e.preventDefault();
-        var $target = $($(this).attr('href')),
-                $item = $(this);
+      allWells.hide();
 
-        if (!$item.hasClass('disabled')) {
-            navListItems.removeClass('btn-success').addClass('btn-success');
-            $item.addClass('btn-success');
-            allWells.hide();
-            $target.show();
-            $target.find('input:eq(0)').focus();
-        }
+      navListItems.click(function (e) {
+          e.preventDefault();
+          var $target = $($(this).attr('href')),
+                  $item = $(this);
+
+          if (!$item.hasClass('disabled')) {
+              navListItems.removeClass('btn-primary').addClass('btn-default');
+              $item.addClass('btn-primary');
+              allWells.hide();
+              $target.show();
+              $target.find('input:eq(0)').focus();
+          }
+      });
+
+      allNextBtn.click(function(){
+          var curStep = $(this).closest(".setup-content"),
+              curStepBtn = curStep.attr("id"),
+              nextStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().next().children("a"),
+              curInputs = curStep.find("input[type='text'],input[type='url']"),
+              isValid = true;
+
+          $(".form-group").removeClass("has-error");
+          for(var i=0; i<curInputs.length; i++){
+              if (!curInputs[i].validity.valid){
+                  isValid = false;
+                  $(curInputs[i]).closest(".form-group").addClass("has-error");
+              }
+          }
+
+          if (isValid)
+              nextStepWizard.removeAttr('disabled').trigger('click');
+      });
+
+      $('div.setup-panel div a.btn-primary').trigger('click');
+
     });
 
-    allNextBtn.click(function(){
-        var curStep = $(this).closest(".setup-content"),
-            curStepBtn = curStep.attr("id"),
-            nextStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().next().children("a"),
-            curInputs = curStep.find("input[type='text'],input[type='url']"),
-            isValid = true;
 
-        $(".form-group").removeClass("has-error");
-        for(var i=0; i<curInputs.length; i++){
-            if (!curInputs[i].validity.valid){
-                isValid = false;
-                $(curInputs[i]).closest(".form-group").addClass("has-error");
-            }
-        }
-
-        if (isValid)
-            nextStepWizard.removeAttr('disabled').trigger('click');
-    });
-
-    $('div.setup-panel div a.btn-success').trigger('click');
-    });
-
-
-    $("#search").keyup(function(){
-         var str=  $("#search").val();
-         if(str == "") {
-                 $( "#txtHint" ).html("<b>Ingredient name will be listed here...</b>"); 
-         }else {
-                 $.get( "{{ url('cook/adddish?id=') }}"+str, function( data ) {
-                     $( "#txtHint" ).html( data );  
-              });
-         }
-    });
 
     function addChoice()
     {
@@ -359,35 +413,39 @@ allWells.hide();
                         '<input type="hidden" id="umm" name="umm[]" value="'+umm+'">'+
                         '</tr>';
 
+
+                        document.getElementById('ingredients').value='';
+        document.getElementById('quantity').value='';
+        $('#preparation option').prop('selected', function() {
+            return this.defaultSelected;
+        });
+        $('#um option').prop('selected', function() {
+            return this.defaultSelected;
+        });
+
                         return false;
+
+
+
     }
 
     function summary(){
-        // alert('hello');
           var name = document.getElementById("dish_name").value;
           var serving = document.getElementById("serving").value;
           var ptime = document.getElementById("duration").value;
           var price = document.getElementById("price").value;
           var desc = document.getElementById("dish_desc").value;
-          // var best = $("#best:checked").map(function() {
-          //   return $(this).innerHTML;
-          // }).get();
+          
           var best = $('#best:checked').map(function() {
             return $(this).next('label').text();
           }).get();
-          // var signDish = $("#signDish:checked").map(function(){
-          //   return $(this).text();
-          // });
           var signDish = $('#signDish:checked').map(function() {
             return $(this).next('label').text();
           }).get();
-          // var best = $('#best:checked').innerHTML;
-          // var signDish = document.getElementById("signDish").value;
-          // var or_this = $('#best').next('label').text();
 
           var div = document.getElementById('summary');
           var div2 = document.getElementById('ingred-part');
-          // var i;
+          
             div.innerHTML += 'Name: '+name+'<br>'+
                               'Serving: '+serving+'<br>'+
                               'Preparation Time: '+ptime+'<br>'+
@@ -405,60 +463,7 @@ allWells.hide();
 $(document).ready(function(){
 
     $( "#ingredients" ).autocomplete({
-        // source: "{{ url('/cook/searchIngredients') }}"
-    // });
-    // source: function(request,response){
-    //       $.ajax({
-    //         url: "{{ url('cook/searchIngredients') }}",
-    //         datatType: "json",
-    //         data:  {
-    //           term: request.term
-    //         },
-    //         success: function(data){
-    //           response($.map(data,function(d){
-    //             if(d == 'Not found')
-    //             {
-    //               return{
-    //                 label: 'Not found'
-    //               };
-    //             }
-    //             else
-    //             {
-    //               return{
-    //                 id: d.id,
-    //                 value: d.Shrt_Desc
-    //               };
-    //             }
-    //           }));
-    //           $(data).each(function(index,Shrt_Desc){
-    //             return{
-    //               value: data.Shrt_Desc
-    //             }
-    //           })
-
-    //         },
-    //         select: function(event, ui){
-    //           this.value=ui.item.value;
-    //           $(this).next("input").val(ui.item.value);
-    //           event.preventDefault();
-
-    //           var id=$(#dish_id).val(ui.item.id);
-    //           console.log(id);
-    //           displayPreviewDish(id);
-    //           console.log("Selected: "+ui.item.value+" id "+ui.item.id);
-    //         }
-
-    //       }).data("ui-autocomplete")._renderItem = function(ul,item){
-    //         if(item.value == 'No Dishes Found'){
-    //           return $('<li>'+item.label+'</li>').appendTo(ul);
-    //         }
-    //         else{
-    //           return $("<li>").append("<a>"+item.label+"</a>").appendTo(ul);
-    //         }
-    //       }
-    //     }
-    //     });
-    // $( "#input" ).autocomplete({
+        
         source: function( request, response ) {
             $.ajax( {
               url: "{{ url('/cook/searchIngredients') }}",
