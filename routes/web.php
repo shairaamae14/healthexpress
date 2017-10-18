@@ -29,7 +29,9 @@ Route::get('/cart/update', 'CartController@updateCart');
 Route::post('/cart/clear', 'CartController@destroyCart');
 Route::get('/cart/dish/remove', 'CartController@removeDish');
 
-Route::post('/cart/checkout', 'CartController@checkout');
+Route::post('/pcart', 'PcartController@cart');
+
+Route::post('/cart/checkout', 'OrdersController@checkout');
 Route::post('/cart/order', 'OrdersController@store')->name('order.place');
 Route::post('/cart/pay', 'OrdersController@payment')->name('order.payment');
 Route::post('/initCustomer', 'OrdersController@initCustomer');
@@ -37,7 +39,7 @@ Route::post('/initCustomer', 'OrdersController@initCustomer');
 
 Route::post('/cart/checkout', 'OrdersController@checkout')->name('checkout');
 Route::post('/cart/order', 'OrdersController@store')->name('order.place');
-Route::get('/orderhistory', 'OrdersController@show')->name('order.orderhistory');
+Route::get('/orderstatus', 'OrdersController@show')->name('order.orderhistory');
 Route::post('/order/updatestatus/{id}', 'OrdersController@changeToReceived')->name('order.statuschange');
 Route::post('/order/updatetodone/{id}', 'OrdersController@changeToDone')->name('order.donestatus');
 Route::get('/pastorders', 'OrdersController@pastOrders')->name('order.pastorders');
@@ -58,9 +60,24 @@ Route::get('/user/logout', 'Auth\LoginController@userLogout')->name('user.logout
 
 
 //Planned Meals
+Route::get('/plan/{plan}', 'PlannedMController@show');
+Route::get('/braintree/token', 'PlannedMController@token');
+Route::post('/subscribe', 'PlannedMController@subscribe');
 Route::get('/plannedmeals', 'PlannedMController@index')->name('user.plan.index');
 Route::post('/plan/create', 'PlannedMController@store')->name('user.plan.store');
 Route::get('/plannedmeal/schedule', 'PlannedMController@show')->name('user.plan.show');
+
+
+Route::group(['middleware' => 'subscribed'], function () {
+    //Subscriptions
+    Route::get('/subscription', 'SubscriptionsController@index')->name('subscriptions');
+    Route::post('/subscription/resume', 'SubscriptionsController@resume');
+    Route::post('/subscription/cancel', 'SubscriptionsController@cancel');
+    Route::get('/meals/{plan}', 'PlannedMController@chooseMeal')->name('choose.meal');
+});
+
+
+Route::post('braintree/webhooks','\Laravel\Cashier\Http\Controllers\WebhookController@handleWebhook');
 
 Route::prefix('cook')->group(function() {
 	Route::get('/login', 'Auth\CookLoginController@show')->name('cook.login');
@@ -96,7 +113,7 @@ Route::prefix('cook')->group(function() {
 	Route::get('dishes/{id}', 'DishController@show')->name('cook.dishes.show');
         Route::post('dishes/{id}', 'DishController@update')->name('cook.dishes.update');
         Route::post('dishes/delete/{id}', 'DishController@destroy')->name('cook.dishes.delete');
-	Route::get('dishes/edit/{id}', 'DishController@edit')->name('cook.dishes.edit');
+	Route::get('dishes/update/{id}', 'DishController@update')->name('cook.dishes.update');
 	Route::get('dishes/reviews', 'DishController@viewrating')->name('cook.rating');
         
         Route::get('/displayDishes', 'DishController@searchDishes')->name('display');
@@ -120,3 +137,26 @@ Route::prefix('user')->group(function() {
 // Route::get('/', 'SearchController@index');
 Route::get('cook/adddish','SearchController@liveSearch'); 
 Route::post('search', 'SearchController@search');
+
+
+//Admin
+Route::prefix('admin')->group(function() {
+	Route::get('/', 'AdminController@index');
+	Route::post('/addAllergen', 'AdminController@storeAllergens')->name('add.allergen');
+	Route::post('/addMedcon', 'AdminController@storeMedCon')->name('add.medcon');
+	Route::post('/addPreparation', 'AdminController@storePreparation')->name('add.prep');
+	Route::post('/addMeasurement', 'AdminController@storeMeasurement')->name('add.measure');
+	Route::post('/addBestEaten', 'AdminController@storeBestEaten')->name('add.best');
+
+	Route::post('/updateAllergen/{id}', 'AdminController@updateAllergens')->name('update.allergen');
+	Route::post('/updateMedCon/{id}', 'AdminController@updateMedCon')->name('update.medcon');
+	Route::post('/updatePreparation/{id}', 'AdminController@updatePreparation')->name('update.prep');
+	Route::post('/updateMeasurement/{id}', 'AdminController@updateMeasurement')->name('update.measure');
+	Route::post('/updateBestEaten/{id}', 'AdminController@updateBestEaten')->name('update.best');
+	
+	Route::post('/deleteAllergen' , 'CoachingFormController@deleteAllergen');
+	Route::post('/deleteMedCon' , 'CoachingFormController@deleteMedCon');
+	Route::post('/deletePreparation' , 'CoachingFormController@deletePreparation');
+	Route::post('/deleteMeasurement' , 'CoachingFormController@deleteMeasurement');
+	Route::post('/deleteBestEaten' , 'CoachingFormController@deleteBestEaten');
+});
