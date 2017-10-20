@@ -3,12 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Auth;
 use App\Allergens;
 use App\MedicalConditions;
 use App\Preparation;
 use App\UnitMeasurement;
 use App\BestEaten;
-
+use App\User;
+use App\Dish;
+use App\DishIngredient;
+use App\IngredientList;
 class AdminController extends Controller
 {
     
@@ -20,9 +24,144 @@ class AdminController extends Controller
         $measurements = UnitMeasurement::all();
         $besteaten = BestEaten::all();
 
+
         return view('admin.dashboard', compact('allergens', 'medcons', 'preparation', 'measurements','besteaten'));
     }
 
+    public function matrix()
+    {
+        $user = Auth::user();
+        $allergies = $user->allergies;
+        $medcondition = $user->conditions;
+  
+        $dishes = Dish::all();
+        $recommendation = array();
+        $compare_first = array();
+        
+        $count = 0;
+
+        if(!$allergies || !$medcondition) {
+          for ($i=0; $i < count($dishes); $i++) {
+            $nfacts = $dishes[$i]->nfacts;
+                for ($k=0; $k < count($nfacts); $k++) { 
+                    if($nfacts[$k]['calories'] <= $user['dcr']) {
+                        $recommendation[$count] = $dishes[$i];
+                        $count++;
+                    }
+                }
+            }  
+        }
+        else {
+            for ($j=0; $j < count($dishes); $j++) { 
+                $ingredients = $dishes[$j]->ingredients;
+                   
+                    for ($h=0; $h < count($ingredients); $h++) { 
+                    
+                        $restrictions = collect([$medcondition[$j]->restrictions]);
+
+                        $filter = $restrictions->filter(function ($value, $key) {
+                            dd($value['id']);
+                            
+                        });
+                        
+                        dd($filter->all());
+                // dd($ingredients[3]['Protein_g']);
+                        // if( $ingredients[0]->Protein_g <= $restrictions['Protein_g']) {
+                        //     $recommendation[$count] = $dishes[$j];
+
+                        //     $count++;
+                        // }
+                        // else {
+                        //    $count = 1 ;
+                        // }
+                        // dd($restrictions);
+                        // $this->restrict($restrictions, $ingredients);
+                        // dd($restrictions);
+
+                    }
+                 
+            }
+        }
+
+        dd($ingredients);
+        dd($count);
+
+
+        dd($recommendation);
+        //    if($calories <= $dcr) {
+            
+        
+        // }
+        // else{
+        //     dd('wtf');
+        // }
+    
+        
+        
+         // for ($i=0; $i < count($dishes); $i++) { 
+         //        $facts = $list[18]->nfacts;
+         //         dd($facts);
+         //            for ($k=0; $k < count($ingredients) ; $k++) { 
+         //               if($facts[$k]['Water_g'] <= 16) {
+         //                    $recommendation[$i] = $dishes[$i];
+         //                    $count++;
+         //                }
+         //            }
+                
+            
+         // }
+      
+       // $sample = User::findOrFail(1);
+       // $data = $sample->lifestyle;
+       // dd($data);
+  
+            // dd($recommendation[3]['dish_name']);
+        // dd(count($recommendation));
+         
+        // dd($another);
+     
+        // dd($dishes->besteaten);
+       
+        return view('admin.matrix', compact('user', 'recommendation', 'allergies', 'medcondition'));
+    }
+
+    public function restrict($restrictions, $ingredients) {
+       
+        $count = 0;
+        $res = collect([$restrictions]);
+        $ing = collect([$ingredients]);
+        // $res = $res->each(function($item, $key) {
+        //     $res->intersect
+        // });
+        // $intersect = $ing->intersectKey($res);
+        // $res = $res->every(function($value, $key) {
+        //     $data = $res->diffAssoc([$ing]);
+        // });
+       
+        // $keyed = $res->mapWithKeys(function($item) {
+
+        //     dd($item);
+        // });
+        // dd($count);
+        // dd(count($restrictions));
+
+
+        // $res = json_decode(json_encode($restrictions),true);
+        
+        // for ($i=0; $i < count($restrictions); $i++) { 
+        //     dd($restrictions['id']);
+        // }
+        
+        // dd($c);
+        // foreach ($variable as $key) {
+        //     dd($key)
+        // }
+        // for ($i=0; $i < count($restrictions); $i++) { 
+        //     isset()
+        // }
+
+        
+    }
 
     public function createAllergens()
     {
@@ -144,5 +283,9 @@ class AdminController extends Controller
         $medcon = BestEaten::where('be_id', $id)->delete();
 
         return redirect()->back();
+    }
+
+    public function recommendation() {
+
     }
 }

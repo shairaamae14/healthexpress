@@ -179,7 +179,7 @@
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Cancel">
                   <span aria-hidden="true">&times;</span></button>
                 <h4 class="modal-title">Add Allergen</h4>
               </div>
@@ -190,7 +190,7 @@
                 <input type="text" class="form-control" name="aname" required autofocus>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-primary">Add</button>
               </div>
           	</form>
@@ -219,7 +219,7 @@
                 <input type="text" class="form-control" name="mname" required autofocus>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-primary">Add</button>
               </div>
           	</form>
@@ -248,7 +248,7 @@
                 <input type="text" class="form-control" name="pname" required autofocus>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-primary">Add</button>
               </div>
           	</form>
@@ -277,7 +277,7 @@
                 <input type="text" class="form-control" name="umname" required autofocus>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-primary">Add</button>
               </div>
           	</form>
@@ -310,7 +310,7 @@
                 <input type="time" class="form-control timepicker" name="end">
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-primary">Add</button>
               </div>
               </form>
@@ -340,7 +340,7 @@
                 <input type="text" class="form-control" name="aname" value="{{$allergen->allergen_name}}" required autofocus>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-primary">Update</button>
               </div>
           	</form>
@@ -370,7 +370,7 @@
                 <input type="text" class="form-control" name="mname" value="{{$mc->medcon_name}}" required autofocus>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-primary">Update</button>
               </div>
           	</form>
@@ -400,7 +400,7 @@
                 <input type="text" class="form-control" name="pname" value="{{$prep->p_name}}" required autofocus>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-primary">Update</button>
               </div>
           	</form>
@@ -430,7 +430,7 @@
                 <input type="text" class="form-control" name="umname" value="{{$measure->um_name}}" required autofocus>
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-primary">Update</button>
               </div>
           	</form>
@@ -465,7 +465,7 @@
                 <input type="time" class="form-control timepicker" value="{{$be->end_time}}" name="end">
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
                 <button type="submit" class="btn btn-primary">Update</button>
               </div>
               </form>

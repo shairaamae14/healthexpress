@@ -10,4 +10,6 @@ class DishIngredient extends Model
     protected $primaryKey = 'ding_id';
     protected $guarded = [];
     protected $dates = ['deleted_at'];
+    
+    
 }

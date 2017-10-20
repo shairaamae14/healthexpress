@@ -34,4 +34,16 @@ class User extends Authenticatable
      public function orders() {
         return $this->hasMany('App/Orders');
     }
+
+    public function allergies() {
+        return $this->belongsToMany('App\Allergens', 'user_allergens', 'user_id', 'allergen_id');
+    }
+
+    public function conditions() {
+        return $this->belongsToMany('App\MedicalConditions', 'user_medcondition', 'user_id', 'medcon_id');
+    }
+
+    public function lifestyle() {
+        return $this->belongsToMany('App\Lifestyles', 'user_lifestyle', 'user_id', 'lifestyle_id');
+    }
 }

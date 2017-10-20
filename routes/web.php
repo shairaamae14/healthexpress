@@ -142,6 +142,7 @@ Route::post('search', 'SearchController@search');
 //Admin
 Route::prefix('admin')->group(function() {
 	Route::get('/', 'AdminController@index');
+	Route::get('/matrix', 'AdminController@matrix')->name('matrix');
 	Route::post('/addAllergen', 'AdminController@storeAllergens')->name('add.allergen');
 	Route::post('/addMedcon', 'AdminController@storeMedCon')->name('add.medcon');
 	Route::post('/addPreparation', 'AdminController@storePreparation')->name('add.prep');
@@ -153,7 +154,7 @@ Route::prefix('admin')->group(function() {
 	Route::post('/updatePreparation/{id}', 'AdminController@updatePreparation')->name('update.prep');
 	Route::post('/updateMeasurement/{id}', 'AdminController@updateMeasurement')->name('update.measure');
 	Route::post('/updateBestEaten/{id}', 'AdminController@updateBestEaten')->name('update.best');
-	
+
 	Route::post('/deleteAllergen' , 'CoachingFormController@deleteAllergen');
 	Route::post('/deleteMedCon' , 'CoachingFormController@deleteMedCon');
 	Route::post('/deletePreparation' , 'CoachingFormController@deletePreparation');
