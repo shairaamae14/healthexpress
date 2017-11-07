@@ -275,12 +275,22 @@ class HomeController extends Controller
                 }  
             }
 
+                if(!$allergies->isEmpty()){
+
                     $dishes = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
                     ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
                     ->join('dish_ingredients', 'dishes.did', '=', 'dish_ingredients.dish_id')
                     ->join('ingredient_list', 'dish_ingredients.ing_id', '=', 'ingredient_list.id')
                     ->where('ingredient_list.Shrt_Desc', 'NOT LIKE', "%".$allergy->allergen_name."%")
                     ->paginate(3); 
+                }
+                else{
+                    $dishes = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+                    ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
+                    ->join('dish_ingredients', 'dishes.did', '=', 'dish_ingredients.dish_id')
+                    ->join('ingredient_list', 'dish_ingredients.ing_id', '=', 'ingredient_list.id')
+                    ->paginate(3); 
+                }
         }
         
         //        $dish = Dish::all();
