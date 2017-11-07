@@ -9,6 +9,7 @@ use App\BestEaten;
 use App\DishBestEaten;
 use Illuminate\Http\Request;
 use App\Cook;
+use App\NutritionFacts;
 use Validator;
 use App\IngredientList;
 use App\UnitMeasurement;
@@ -128,10 +129,59 @@ class DishController extends Controller
                 'quantity' => $quan[$i],
                 'preparation' => $prep[$i],
                 'status' => 1
-
                 ]);
         }   
         
+
+        $dish_ing = DishIngredient::join('unit_measurements', 'unit_measurements.um_id','=','dish_ingredients.um_id')
+                            ->join('ingredient_list','ingredient_list.id','=','dish_ingredients.ing_id')
+                            ->where('dish_ingredients.dish_id', $dish->id)
+                            ->get();
+
+        // dd($dish_ing->ding_id);
+        $energy = 0;
+        $protein = 0;
+        $total_fat=0;
+        $carbs=0;
+        $fibre=0;
+        $sodium=0;
+        $sat_fat=0;
+        $cholesterol=0;
+
+        foreach ($dish_ing as $dishi) {
+            $energy+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->Energ_Kcal))/100;
+            $protein+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->Protein_g))/100;
+            $total_fat+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->Lipid_Tot_g))/100;
+            $carbs+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->Carbohydrt_g))/100;
+            $fibre+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->Fiber_TD_g))/100;
+            $sodium+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->Sodium_mg))/100;
+            $sat_fat+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->FA_Sat_g))/100;
+            $cholesterol+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->Cholestrl_mg))/100;
+        }
+        $energy/=$request['serving'];
+        $protein/=$request['serving'];
+        $total_fat/=$request['serving'];
+        $carbs/=$request['serving'];
+        $fibre/=$request['serving'];
+        $sodium/=$request['serving'];
+        $sat_fat/=$request['serving'];
+        $cholesterol/=$request['serving'];
+
+            $nutrifacts = NutritionFacts::create([
+                            'dish_id' => $dish->id,
+                            'gram_weight' => '123',
+                            'calories' => $energy,
+                            'protein' => $protein,
+                            'total_fat' => $total_fat,
+                            'carbohydrate' => $carbs,
+                            'fibre' => $fibre,
+                            'sodium' => $sodium,
+                            'sat_fat' => $sat_fat,
+                            'cholesterol' => $cholesterol  
+
+            ]);
+
+
         return redirect()->route('cook.dishes');
         // dd($cook);
     }
@@ -151,7 +201,9 @@ class DishController extends Controller
                     ->join('unit_measurements', 'unit_measurements.um_id', '=', 'dish_ingredients.um_id')
                     ->join('preparations', 'preparations.p_id', '=', 'dish_ingredients.preparation')
                     ->get();
-        return view('cook.viewdet', compact('dishes', 'dish_ingredients'));
+
+        $nutritional = NutritionFacts::where('dish_id', $id)->get();
+        return view('cook.viewdet', compact('dishes', 'dish_ingredients','nutritional'));
     }
 
     /**
@@ -176,6 +228,7 @@ class DishController extends Controller
                     ->join('unit_measurements', 'unit_measurements.um_id', '=', 'dish_ingredients.um_id')
                     ->join('preparations', 'preparations.p_id', '=', 'dish_ingredients.preparation')
                     ->get();
+        
         return view('cook.editdish',compact('dishes', 'list', 'units', 'preps', 'beaten', 'dish_ingredients'));
     }
 
@@ -238,18 +291,16 @@ class DishController extends Controller
 
 
                 if($dingid){
-                    for($i=0; $i<count($dingid); $i++){
-                        $ings = DishIngredient::where('ding_id', $dingid[$i])
+                  for($i=0; $i<count($dingid); $i++){
+                    $ings = DishIngredient::where('ding_id', $dingid[$i])
                                             ->update(['quantity'=>$quann[$i],
                                                       'preparation'=>$prepp[$i],
                                                       'um_id'=>$umm[$i]]);
-                    }
+                  }
                 }
-                
                 else{
-                    for($i=0; $i<count($ingred);$i++)
-                    {
-                        $ingredients = DishIngredient::create([
+                  for($i=0; $i<count($ingred);$i++){
+                    $ingredients = DishIngredient::create([
                             'um_id' => $um[$i],
                             'dish_id' => $id,
                             'ing_id' => $ingred[$i],
@@ -257,9 +308,70 @@ class DishController extends Controller
                             'preparation' => $prep[$i],
                             'status' => 1
 
-                            ]);
+                    ]);
+                  }
                 }
-            }
+
+
+
+
+                $dish_ing = DishIngredient::join('unit_measurements', 'unit_measurements.um_id','=','dish_ingredients.um_id')
+                            ->join('ingredient_list','ingredient_list.id','=','dish_ingredients.ing_id')
+                            ->where('dish_ingredients.dish_id', $id)
+                            ->get();
+
+        // dd($dish_ing->ding_id);
+        $energy = 0;
+        $protein = 0;
+        $total_fat=0;
+        $carbs=0;
+        $fibre=0;
+        $sodium=0;
+        $sat_fat=0;
+        $cholesterol=0;
+
+        foreach ($dish_ing as $dishi) {
+            $energy+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->Energ_Kcal))/100;
+            $protein+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->Protein_g))/100;
+            $total_fat+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->Lipid_Tot_g))/100;
+            $carbs+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->Carbohydrt_g))/100;
+            $fibre+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->Fiber_TD_g))/100;
+            $sodium+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->Sodium_mg))/100;
+            $sat_fat+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->FA_Sat_g))/100;
+            $cholesterol+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->Cholestrl_mg))/100;
+        }
+
+        // foreach($dish_ing as $disho){
+            // var_dump($dishi->ding_id);
+
+        $energy/=$request->serving;
+        $protein/=$request->serving;
+        $total_fat/=$request->serving;
+        $carbs/=$request->serving;
+        $fibre/=$request->serving;
+        $sodium/=$request->serving;
+        $sat_fat/=$request->serving;
+        $cholesterol/=$request->serving;
+
+
+            $nutrifacts = NutritionFacts::where('dish_id', $id)
+                            ->update([
+                            'dish_id' => $id,
+                            'gram_weight' => '123',
+                            'calories' => $energy,
+                            'protein' => $protein,
+                            'total_fat' => $total_fat,
+                            'carbohydrate' => $carbs,
+                            'fibre' => $fibre,
+                            'sodium' => $sodium,
+                            'sat_fat' => $sat_fat,
+                            'cholesterol' => $cholesterol  
+
+            ]);
+
+
+
+
       
         return redirect()->route('cook.dishes');
     }

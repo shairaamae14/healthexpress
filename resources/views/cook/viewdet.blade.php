@@ -6,6 +6,7 @@ a:hover{
 }
 
 
+
 #rate{
   color:orange;
 }
@@ -88,7 +89,41 @@ a:hover{
               </div>
               <!-- /.tab-pane -->
               <div class="tab-pane" id="tab_3">
-                Nutritional Facts goes here
+                <!-- Nutritional Facts goes here -->
+                <center>
+                <h4><b>Nutritional Facts</b></h4>
+                <b>Amount Per Serving</b>
+                <table>
+                @foreach($nutritional as $nutrition)
+                
+                <tr style="border-bottom:2px solid black">
+                  <td><b style="margin-right: 50px">Calories</b></td>
+                  <td>{{ $nutrition->calories }}g</td>
+                </tr>
+                <tr>
+                  <td><b style="margin-right: 50px">Total Fat</b></td>
+                  <td>{{ $nutrition->total_fat }}g</td>
+                </tr>
+                <tr>
+                  <td><b style="margin-right: 50px">Cholesterol</b></td>
+                  <td>{{ $nutrition->cholesterol }}g</td>
+                </tr>
+                <tr>
+                  <td><b style="margin-right: 50px">Sodium</b></td>
+                  <td>{{ $nutrition->sodium }}g</td>
+                </tr>
+                <tr style="border-bottom:2px solid black">
+                  <td><b style="margin-right: 50px">Total Carbohydrate</b></td>
+                  <td>{{ $nutrition->carbohydrate }}g</td>
+                </tr>
+                <tr>
+                  <td><b style="margin-right: 50px">Protein</b></td>
+                  <td>{{ $nutrition->protein }}g</td>
+                </tr>
+                
+                @endforeach
+              </table>
+
               </div>
               <!-- /.tab-pane -->
             </div>
