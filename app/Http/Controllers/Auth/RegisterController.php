@@ -15,6 +15,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Input;
+
 class RegisterController extends Controller
 {
     /*
@@ -98,17 +100,39 @@ class RegisterController extends Controller
         $lifestyle= UserLifestyle::create(['user_id' => $user->id,
                                             'lifestyle_id' =>$data['lifestyle'],
                                             'status' => 1 ]);
-        for($i =0; $i < count($data['allergen']); $i++) {
-            $allergen = UserAllergen::create(['user_id' => $user->id,
-                                           'allergen_id' => $data['allergen'][$i],
-                                           'tolerance_level' => $data['tolerance'],
-                                            'status' => 1]);
+
+        $allergen = Input::get('allergen');
+
+        if($allergen!=null){
+            for($i =0; $i < count($data['allergen']); $i++) {
+                $allergen = UserAllergen::create(['user_id' => $user->id,
+                                               'allergen_id' => $data['allergen'][$i],
+                                               'tolerance_level' => $data['tolerance'],
+                                                'status' => 1]);
+            }
         }
-        for($j = 0; $j < count($data['med_condition']); $j++) {
-            $condition = UserMCondition::create(['user_id' => $user->id,
-                                             'medcon_id' => $data['med_condition'][$j],
-                                             'status' => 1]);
+        // else{
+        //     $allergen = UserAllergen::create(['user_id' => $user->id,
+        //                                        'allergen_id' => null,
+        //                                        'tolerance_level' => null,
+        //                                         'status' => 1]);
+            
+        // }
+
+        $med = Input::get('med_condition');
+        if($med!=null){
+            for($j = 0; $j < count($data['med_condition']); $j++) {
+                $condition = UserMCondition::create(['user_id' => $user->id,
+                                                 'medcon_id' => $data['med_condition'][$j],
+                                                 'status' => 1]);
+            }
         }
+        // else{
+        //     $condition = UserMCondition::create(['user_id' => $user->id,
+        //                                          'medcon_id' => null,
+        //                                          'status' => 1]);
+            
+        // }
        
 
         return $user;
