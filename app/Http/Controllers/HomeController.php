@@ -13,6 +13,8 @@ use App\UserMCondition;
 use App\MedicalConditions;
 use App\Http\Requests;
 use App\DishBestEaten;
+use App\NutritionFacts;
+use App\DishIngredient;
 use Session;
 use Illuminate\Session\Store;
 
@@ -318,10 +320,18 @@ class HomeController extends Controller
         
     }
     
+    
   public function showDetails($id){
-        $dishes = Dish::where('did', $id)->get();
+        $dishes = Dish::join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
+                         ->where('did', $id)->get();
+        $dish_ingredients = DishIngredient::where('did', $id)->join('dishes', 'dishes.did', '=', 'dish_ingredients.dish_id')
+                    ->join('ingredient_list', 'ingredient_list.id', '=', 'dish_ingredients.ing_id')
+                    ->join('unit_measurements', 'unit_measurements.um_id', '=', 'dish_ingredients.um_id')
+                    ->join('preparations', 'preparations.p_id', '=', 'dish_ingredients.preparation')
+                    ->get();
 
-        return view('user.details', compact('dishes'));
+             $nutritional = NutritionFacts::where('dish_id', $id)->get();
+        return view('user.details', compact('dishes', 'nutritional', 'dish_ingredients'));
     }
 
 public function orderHistory(){

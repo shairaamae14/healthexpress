@@ -12,6 +12,7 @@ use App\ UserMCondition;
 use App\Lifestyles;
 use App\MedicalConditions;
 use App\Allergens;
+use Validator;
 use Carbon\Carbon;  
 use Illuminate\Support\Facades\Input;
 
@@ -79,8 +80,44 @@ public function getAgeAttribute(){
 }
 
 
+public function storeUserImg(Request $request){
+  $id=Auth::user()->id;
+  $user=User::find($id);
+    $file = $request->file('img');
+        $file2 = $request->input('img');
+        // dd($request);
+        if($file != null)
+        {
+         
+            $img = $this->uploadImage($file);
 
+        }
+        else 
+        {
 
+            $img = $file2;
+        }
+        $image = User::where('id', $id)
+                       ->update(['profpic' =>  $img]);
+     return redirect()->route('user.profile', compact('id', 'user'));
+}
+ public function uploadImage($file)
+    {
+
+       if($file != null)
+        {  
+            $destination_path =  base_path().'/public/user_imgs';
+            // $destination_path = public_path(). '/user_imgs';
+            $filename = $file->getClientOriginalName();
+            $file->move($destination_path, $filename);
+                
+            $img = $filename;
+        }
+            
+   
+
+        return $img;
+    }
 
 public function storeAllergen(Request $request){
   // $tolerance="Low";
@@ -173,30 +210,28 @@ public function destroyM(Request $request){
 }
 
 public function update2(Request $request, $id){
-  $user = Auth::id();
-  $uid = Input::get('ua_id');
-  $tol = Input::get('tolerance');
-  $aller = Input::get('allergen');
+    $user = Auth::id();
+     
+     $uid = Input::get('ua_id');
+     $tol = Input::get('tolerance');
+     $aller = Input::get('allergen');
 
-  for($i=0; $i<count($tol);$i++)
-  {
-    $datas = UserAllergen::where([
+     // dd($tol);
+     // dd($uid);
+
+      for($i=0; $i<count($tol);$i++)
+      {
+
+        $datas = UserAllergen::where([
             ['user_id', '=', $user], 
             ['ua_id', '=', $uid[$i]]
-          ])
-          ->update([
-            'tolerance_level'=> $tol[$i]
-          ]);
-  }
-  return redirect()->route('user.profile', compact('id', 'user'));
-}
+         ])
+            ->update([
+                'tolerance_level'=> $tol[$i]
+              ]);
+      }
 
-public function updateData($ua_id, $user, $tolerance_level)
-{
-    UserAllergen::updateOrCreate(
-        ['ua_id' => $ua_id, 'user_id' => $user],
-        ['tolerance_level'=> $tolerance_level]
-    );
+     return redirect()->route('user.profile', compact('id', 'user'));
 }
 
 public function destroyA(Request $request){
@@ -212,49 +247,5 @@ public function destroyA(Request $request){
 
  return redirect()->route('user.profile', compact('user', 'id'));
 }
-
-
-
-public function changePass(Request $request){
-        $password = $request['newpass'];
-        $user = Auth::user();
-        $id = Auth::user()->id;
-        $prof = User::find(Auth::user()->id);
-
-        // $newpass = User::where('id', $id)->update(['password'=>bcrypt($password)]);
-
-
-        if(Hash::check(Input::get('oldpass'),$prof['password'])){
-        //     $newpass = User::where('id', $id)
-        //                         ->update(['password'=>$password]);
-
-            $prof->password = bcrypt(Input::get('newpass'));
-            $prof->save();
-            return redirect()->route('user.profile', compact('id', 'user'));
-        }
-        // else{
-        //     return redirect()->route('user.profile', compact('id', 'user'));
-        // }
-
-
-
-        // $user = User::update(['password'=>$password])
-        //             ->where('id', $id);
-    }
-
-
-
-
-// public function changePass(Request $request){
-//   $pass = $request['pass'];
-//   $user = Auth::user();
-
-//   if(Hash::check($pass, $user->password)){
-//     return \Redirect::route('user.changepass');
-//   }
-//   else{
-//     return response()->json(['error' => 'Error msg'], 404);
-//   }
-// }
 
 }

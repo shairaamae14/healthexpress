@@ -70,13 +70,13 @@ display: inline-block;
             <div class="profile" >
                 <div class="avatar">
                      <center>
-                   <div style="width:200px; height:200px; margin-top: -100px; background-color:#30BB6D; border-radius: 100px; border:2px white solid;">
-                     <label style="font-size: 150px; color:white; float:center">{{$user->fname[0]}}</label>
+                 <div style="width:200px; height:200px; margin-top: -100px; background-color:#30BB6D; border-radius: 100px; border:2px white solid;">
+                   <img src="{{url('./user_imgs/'.$user->profpic)}}" class="img-circle" id="img-tag" width="200px" />
+            <!--          <label style="font-size: 150px; color:white; float:center">{{$user->fname[0]}}</label> -->
                    </div>
                 </div>
-                <br>
-                <center> <input type="file" id="img" class="btn btn-flat btn-success" name="img">
-                                
+                    <br>
+                   <center><button class="btn btn-success" data-toggle="modal" data-target="#myModal9{{$user->id}}">Upload image</button>
                 <div class="name">
                      <center><h3 class="title" style="color:#30BB6D">{{Auth::user()->fname." ".Auth::user()->lname}}</h3>
                 </div>
@@ -886,7 +886,7 @@ display: inline-block;
         <h4 class="modal-title" id="myModalLabel">Change Password</h4>
       </div>
       <div class="modal-body">
-        <form method="post" action="{{ route('user.changepass') }}" enctype="multipart/form-data">
+        <form method="post" action="{{url('/change/password')}}" enctype="multipart/form-data">
         {{csrf_field()}} 
           <div class="col-sm-12">
             <div class="form-group label-floating has-success">
@@ -1130,6 +1130,38 @@ display: inline-block;
   </div>
 </div>
 <!--end!-->
+
+
+
+<div class="modal fade" id="myModal9{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><b>Upload Image</b></h4>
+      </div>
+          <form method="post" action="{{route('user.img', ['id'=>Auth::user()->id])}}" enctype="multipart/form-data">    
+             {{csrf_field()}}
+          <div class="modal-body">  
+          <center>
+             <img src="{{asset('img/chooseimg.jpg')}}" class="img-circle" id="img-tag" width="200px" />
+             <br>
+             <label for="exampleInputFile"><b>Your chosen image</b></label>
+             <input type="file" id="img" name="img" class="btn btn-flat btn-success">
+ 
+          </div> <!--MODAL BODY!-->
+          <div class="modal-footer">
+              <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-info btn-simple" style="color:#30BB6D">Save</button>
+         </div>
+         </form>
+    </div>   
+  </div>
+</div>
+<!--end!-->
+
+
+
 
 
 

@@ -90,7 +90,7 @@ display: inline-block;
            <br>
             <h1 class="title text-left" style="font-size: 80px; font-family: 'Lobster', cursive;">Express Order</h1>
              
-             <a href="./plannedmeals"><button id="ordermode" style="background-color:transparent;  border:2px solid white; font-size: 40px; margin-top:-20px; margin-left:10px; font-family: 'Lobster', cursive; color:white; width: 300px">Planned Meal
+             <a href="./plannedm"><button id="ordermode" style="background-color:transparent;  border:2px solid white; font-size: 40px; margin-top:-20px; margin-left:10px; font-family: 'Lobster', cursive; color:white; width: 300px">Planned Meal
              </button>
              </a>
             
@@ -234,7 +234,9 @@ display: inline-block;
               <dd style="margin-left: 2px">
                 <label style="float: left; margin-left:0px; margin-right: 0px; font-size: 15px; color:black">
                 <b>&nbsp;&nbsp;{{$item->name}}</b>
-               <br>{{$item->sidenote}}
+                <br>
+                <label style="font-size: 12px"><b>Side note:{{$item->sidenote}}</label>
+               <br>
                 </label>
                 <a href='{{url("/cart/dish/remove?dish_id=$item->id&remove=true")}}' style="float:right">
                   <i class="fa fa-trash-o" aria-hidden="true" style="color:black; font-size: 20px"></i>
@@ -249,6 +251,7 @@ display: inline-block;
 
               <dt style="margin-left:-2px">
                 <label style="font-size: 12px; color: gray; float:left"> Price: <b id="price">{{$item->price}} </b></label>
+                <h1>{{($item->options->has('note') ? $item->options->note : '') }}</h1>
               </dt>
 
               <dd style="margin-right: 2px">
@@ -286,7 +289,7 @@ display: inline-block;
         <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
         <form method="POST" action="{{url('cart/checkout')}}">
            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-               <button class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:right; margin-top: 2px; border:none" id="chkt" data-toggle="modal" data-target="#modal-default1">
+               <button class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:right; margin-top: 2px; border:none" id="chkt">
                         Proceed
                       </button>
           </form>
@@ -311,7 +314,7 @@ display: inline-block;
 
               <form method="POST" action="{{url('cart/clear')}}">
                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-              <button type="submit" class="btn btn-flat btn edit" style="float:left; margin-top: 2px; border:none" id="chkt" disabled>Clear Cart
+              <button type="submit" class="btn btn-danger btn-simple" style="float:left; margin-top: -10px; border:none; font-size:15px"  disabled>Clear Cart
               </button>
               </form>
          </div>
@@ -387,25 +390,28 @@ display: inline-block;
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                   <span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" style="color:#30BB6D"><i class="fa fa-sticky-note-o" aria-hidden="true"></i> <b>ADD SIDE NOTE</h4>
+                <h4 class="modal-title" style="color:#30BB6D"><i class="fa fa-sticky-note-o" aria-hidden="true"></i><b>&nbsp;ADD SIDE NOTE</b></h4>
               </div>
           
               <div class="modal-body">
-                     <center><form method="POST" action="{{url('cart')}}">
-                  <input type="hidden" name="dish_id" value="{{$dish->did}}">
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-               <textarea rows="5" cols="60" name="sidenote" style="border: 2px solid #30BB6D; color:#30BB6D">None
-               </textarea>
+              <form method="POST" action="{{url('cart')}}">
+              {{csrf_field()}}
+              <input type="hidden" name="dish_id" value="{{$dish->did}}">
+
+
+                     <label>If you have any request or specifications regarding your meal. Please indicate below:</label>
+                     <input type="text" name="sidenote" style="width:100%;" value="None">
+            
 
                    <div class="modal-footer">
                    <br>
-                        <button type="submit" class="btn btn-success" style="border:transparent">
-                            <b> Add to cart</b><i class="material-icons" style="color:white; font-size:40px">add_circle</i>&nbsp; 
+                        <button type="button" class="btn btn btn-danger btn-simple" data-dismiss="modal" aria-label="Close">Cancel</button>
+                        <button type="submit" class="btn btn-success addCart" id="{{$dish->did}}"  style="border:transparent">
+                            <b> Add to cart</b>
                         </button>    
                   </div>
 
-               </form>
-
+                </form>
               </div>
               <!--modalbody!-->
             </div>
@@ -440,6 +446,43 @@ display: inline-block;
 
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.js"></script>
+<!-- <script>
+$(document).ready(function(e){
+  $('.addCart').click(function(e){
+    alert('HELLOOO');
+    e.preventDefault();
+     var dish_id=$(this).attr("id");
+     // var be_id=$('#be_id').val();
+     console.log(dish_id);
+     $.ajax({
+      type:"GET",
+      url:"/cart/"+dish_id+",
+        success:function(data){
+         $("#modal.close").click();
+         console.log(data);
+       // alert(data);
+         // $(".cntnt").append(data);
+
+                                  
+        },
+        error:function(data)
+        {
+          alert("Error");
+        }
+    });
+  });
+
+
+
+});
+</script>
+ -->
+
+
+
+
+
+
 <script>
 
 $(document).ready(function(){

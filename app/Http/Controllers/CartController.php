@@ -22,7 +22,7 @@ public function cart() {
    
         Cart::add(array('id' => $d->did, 'name' => $d->dish_name, 'qty' => 1, 'price' => $d->sellingPrice, 'sidenote' =>$note));
   
-			}
+            }
     
         
 
