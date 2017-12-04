@@ -4,10 +4,12 @@
 @section('heading')
  <!-- Calendar -->
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.7/fullcalendar.min.js"></script>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.7/fullcalendar.min.js"></script> -->
     <!-- <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.7/fullcalendar.min.css"/>
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.7/fullcalendar.min.css"/> -->
+    <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.6/fullcalendar.min.css'>
+<link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css'>
 @endsection
 <style>
 @import url('http://fonts.googleapis.com/css?family=Lobster');
@@ -84,6 +86,8 @@ hr{
 }
 
 
+
+
 </style>
 
 @section('content')
@@ -111,7 +115,7 @@ hr{
   
   <!-- <h5>{{$cal}}</h5> -->
  
-            <div class="card" style="width:30rem; margin-left: 5px; padding:10px">
+            <div class="card" style="width:30rem; margin-left:-50px; padding:10px">
               <!--   <img class="card-img-top" src="..." alt="Card image cap"> -->
               <div class="card-block">
                 <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
@@ -124,56 +128,66 @@ hr{
               {{csrf_field()}}
               <input type="hidden" name="type" value="{{$type}}">
               <!--BFAST-->
-              <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
-              <label class="card-title text-center" style="color:#4caf50;">Breakfast</label>
-              <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
-              <div class="card" style="margin-bottom: 10px">
-                <div class="card-block">
+              
+                <!-- <div class="card-block">
                   <input type="checkbox" style="float:left; margin-top:15px; margin-right: 8px; margin-left: 8px">
                   <img src="{{asset('img/tunapatties.jpg')}}" style="width:50px; height:50px; float:left; margin: 5px"/>
                   <label style="color:black" name="dish_id" value="1">Tuna patties</label><br>
                   <label class="control-label">SMALL DESCRIPTION</label>
-                </div><!--cardblock!-->
-                <div class="form-group">
-                 <!--STARTDATETIME!-->
-                  <div class="input-group date form_datetime col-md-5" data-date="2017-09-16T05:25:07Z" data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
-                    <input class="form-control" size="16" type="text" value="" placeholder="start date" style="width:150px; font-size:10px" name="start" readonly>
-                    <span class="input-group-addon"><span class="fa fa-times" aria-hidden="true"></span></span>
-                    <span class="input-group-addon"><span class="fa fa-calendar" aria-hidden="true"></span></span>
-                  </div>
-                  <input type="hidden" id="dtp_input1" value="" /><br/>
-                 <!--ENDDATETIME!-->
-                  <div class="input-group date form_datetime col-md-5" data-date="2017-09-16T05:25:07Z" data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
-                    <input class="form-control" size="16" type="text" value="" placeholder="end date" style="width:150px; font-size:10px" name="end" readonly>
-                    <span class="input-group-addon"><span class="fa fa-times" aria-hidden="true"></span></span>
-                    <span class="input-group-addon"><span class="fa fa-calendar" aria-hidden="true"></span></span>
-                  </div>
-                  <input type="hidden" id="dtp_input1" value="" /><br/>
-                </div><!--datetime!-->
-              </div><!--CARD!-->
-              <!--endofbfast!-->
-              <!--LUNCH-->
-              <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
-              <label class="card-title text-center" style="color:#4caf50;">Lunch</label>
-              <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
-              <div class="card" style="margin-bottom: 10px">
-                <div class="card-block">
-                  <input type="checkbox" style="float:left; margin-top:15px; margin-right: 5px; margin-left: 5px">
-                  <img src="{{asset('img/tunapatties.jpg')}}" style="width:50px; height:50px; float:left; margin: 5px"/>
-                  <label style="color:black">Teriyaki Chicken Casserole</label><br>
-                </div><!--cardblock!-->
-                <div class="form-group">
+                </div> --><!--cardblock!-->
+                <div id='wrap'>
+
+        <div id='external-events'>
+          <div id='external-events-listing'>
+            <!-- <h4>Draggable Events</h4> -->
+            <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
+            <label class="card-title text-center" style="color:#4caf50;">Breakfast</label>
+            <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
+            <div class="card" style="margin-bottom: 10px">
+              <div class='fc-event'>Mixed Bowl Salad</div>
+            </div>
+            <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
+            <label class="card-title text-center" style="color:#4caf50;">Lunch</label>
+            <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
+            <div class="card" style="margin-bottom: 10px">
+              <div class='fc-event'>Tuna Patties</div>
+            </div>
+            <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
+            <label class="card-title text-center" style="color:#4caf50;">Dinner</label>
+            <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
+            <div class="card" style="margin-bottom: 10px">
+              <div class='fc-event'>Braised Beef</div>
+            </div>
+          </div>
+          <!-- <p>
+            <input type='checkbox' id='drop-remove' unchecked />
+            <label for='drop-remove'>remove after drop</label>
+          </p> -->
+        </div>
+
+        
+
+        <div style='clear:both'></div>
+
+    </div>
+
+
+
+                
+
+                <!-- <div class="form-group">
                   <div class="input-group date form_datetime col-md-5" data-date="2017-09-16T05:25:07Z" data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
                     <input class="form-control" size="16" type="text" value="" placeholder="choose schedule" style="width:180px; font-size:12px" readonly>
                     <span class="input-group-addon"><span class="fa fa-times" aria-hidden="true"></span></span>
                     <span class="input-group-addon"><span class="fa fa-calendar" aria-hidden="true"></span></span>
                   </div>
                   <input type="hidden" id="dtp_input1" value="" /><br/>
-                </div><!--CALENDAR!-->
-              </div><!--CARD!-->
+                </div> -->
+                <!--CALENDAR!-->
+              <!-- </div> --><!--CARD!-->
               <!--endoflunch!-->
               <!--DINNER-->
-             
+              
               <!--ENDOF!-->
               <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
               <div class="card-block">
@@ -183,71 +197,100 @@ hr{
               </div>
 
          
-          <div class="card" style="width:80rem; float:right; margin-left: 5px; padding:10px">
-            @if($type == 'daily')
-              <div id="daily">
-                {!! $calendar->calendar() !!}
-              </div>
-              <script>
-                $(document).ready(function(){
-                  $('#daily').fullCalendar({
-                                    "defaultView":"agendaDay",
-                                    "header":{"left":"prev,next today",
-                                                    "center":"title",
-                                                    "right":"agendaDay"
-                                    },
-                                    "editable":true,
-                                    "droppable":true,
-                                    "eventLimit":true,
-                                    "events":[{"id":null,"title":"Hello","allDay":false,"start":"2017-11-11T08:00:00+00:00","end":"2017-11-11T09:00:00+00:00"},{"id":null,"title":"Another","allDay":false,"start":"2017-11-09T12:00:00+00:00","end":"2017-11-09T13:00:00+00:00"}]
-                  });
-                });
-              </script>
-            @elseif($type == 'weekly')
-              <div id="weekly">
-                {!! $calendar->calendar() !!}
-              </div>
-              <script>
-                $(document).ready(function(){
-                  $('#weekly').fullCalendar({
-                                      "defaultView":"agendaWeek",
-                                      "header":{"left":"prev,next today",
-                                                        "center":"title",
-                                                        "right":"agendaWeek"
-                                      },
-                                      "editable":true,
-                                      "droppable":true,
-                                      "eventLimit":true,
-                                      "events":[{"id":null,"title":"Hello","allDay":false,"start":"2017-11-11T08:00:00+00:00","end":"2017-11-11T09:00:00+00:00"},{"id":null,"title":"Another","allDay":false,"start":"2017-11-09T12:00:00+00:00","end":"2017-11-09T13:00:00+00:00"}]
-                  });
-                });
-              </script>
-            @else
-              <div id="monthly">
-                {!! $calendar->calendar() !!}
-              </div>
-              <script>
-                $(document).ready(function(){
-                  $('#monthly').fullCalendar({
-                                      "defaultView":"month",
-                                      "header":{"left":"prev,next today",
-                                                      "center":"title",
-                                                      "right":"month"
-                                      },
-                                      "editable":true,
-                                      "droppable":true,
-                                      "eventLimit":true,
-                                      "events":[{"id":null,"title":"Hello","allDay":false,"start":"2017-11-11T08:00:00+00:00","end":"2017-11-11T09:00:00+00:00"},{"id":null,"title":"Another","allDay":false,"start":"2017-11-09T12:00:00+00:00","end":"2017-11-09T13:00:00+00:00"}]
-                  });
-                });
-              </script>
-            @endif
+          <div class="card" style="width:92rem; float:right; margin-right:-10px; margin-left:10px; padding:10px">
+            <div id='calendar'></div>
           </div>
         </div><br><br><!--content!-->
       </div><!--row!-->
     </div><!--section!-->
   </div><!--main raised!-->
 </div><!--wrapper!-->
+<script src='https://code.jquery.com/jquery-1.11.2.min.js'></script>
+<script src='https://code.jquery.com/ui/1.11.2/jquery-ui.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js'></script>
+<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.6/fullcalendar.min.js'></script>
+
+
+<script>
+    $(document).ready(function() {
+
+
+        /* initialize the external events
+        -----------------------------------------------------------------*/
+
+        $('#external-events .fc-event').each(function() {
+
+            // store data so the calendar knows to render an event upon drop
+            $(this).data('event', {
+                title: $.trim($(this).text()), // use the element's text as the event title
+                stick: true // maintain when user navigates (see docs on the renderEvent method)
+            });
+
+            // make the event draggable using jQuery UI
+            $(this).draggable({
+                zIndex: 999,
+                revert: true,      // will cause the event to go back to its
+                revertDuration: 0  //  original position after the drag
+            });
+
+        });
+
+
+        /* initialize the calendar
+        -----------------------------------------------------------------*/
+
+        $('#calendar').fullCalendar({
+            header: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'month,agendaWeek,agendaDay'
+            },
+            editable: true,
+            droppable: true, // this allows things to be dropped onto the calendar
+            dragRevertDuration: 0,
+            drop: function() {
+                // is the "remove after drop" checkbox checked?
+                if ($('#drop-remove').is(':checked')) {
+                    // if so, remove the element from the "Draggable Events" list
+                    $(this).remove();
+                }
+            },
+            eventDragStop: function( event, jsEvent, ui, view ) {
+                
+                if(isEventOverDiv(jsEvent.clientX, jsEvent.clientY)) {
+                    $('#calendar').fullCalendar('removeEvents', event._id);
+                    var el = $( "<div class='fc-event'>" ).appendTo( '#external-events-listing' ).text( event.title );
+                    el.draggable({
+                      zIndex: 999,
+                      revert: true, 
+                      revertDuration: 0 
+                    });
+                    el.data('event', { title: event.title, id :event.id, stick: true });
+                }
+            }
+        });
+
+
+        var isEventOverDiv = function(x, y) {
+
+            var external_events = $( '#external-events' );
+            var offset = external_events.offset();
+            offset.right = external_events.width() + offset.left;
+            offset.bottom = external_events.height() + offset.top;
+
+            // Compare
+            if (x >= offset.left
+                && y >= offset.top
+                && x <= offset.right
+                && y <= offset .bottom) { return true; }
+            return false;
+
+        }
+
+
+    });
+</script>
 @endsection
 
 @section('addtl_scripts')
@@ -313,45 +356,7 @@ hr{
     });
   </script>
 
-<!-- <script>
 
-
-$(document).ready(function(){
-    $(".form-addcart").submit(function(e)
-    {
-
-      // alert('hello');
-     e.preventDefault();
-      var that= $(this),
-         url=that.attr('action'),
-         type=that.attr('method'),
-         data={};
-    
-    $(this).find('[name]').each(function(index, value){
-      var that=$(this),
-          name=that.attr('name'),
-          value=that.val();
-
-          data[name]=value;
-    });
-
-    console.log(data);
-  
-
-
-$.ajax({
-        url:url,
-        type:type,
-        data:data,
-        sucess:function(response){
-           console.log(data);
-        }
-    });
-    return false;
-  });
-  });
-
-</script> -->
 <script>
   $(document).ready(function (){
     $('#btnplan').on('click', function(){
@@ -383,8 +388,16 @@ $.ajax({
           alert('Finish Called');
           window.location.href= './plannedmeal/calendar';
 
-        }     
+        }
+
+          
   });
+
+
+$(".form_datetime").datetimepicker({
+        format: "dd MM yyyy - hh:ii"
+    }); 
+  
 </script>
 
 
