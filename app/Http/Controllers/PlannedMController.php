@@ -7,7 +7,7 @@ use App\Plan;
 use App\UserPlan;
 use App\Dish;
 use App\BestEaten;
-use App\Event;
+use App\PlannedMeals;
 use Calendar;
 
 use Illuminate\Support\Facades\Auth;
@@ -34,16 +34,16 @@ class PlannedMController extends Controller
 //       return view('user.plannedmeals', compact('plans'));
 
         $events = [];
-        $data = Event::all();
+        $data = PlannedMeals::all();
         if($data->count()){
           foreach ($data as $key => $value) {
             $events[] = Calendar::event(
                 $value->title,
                 false,
                 // new \DateTime($value->start_date),
-                $value->start_date,
+                $value->start_time,
                 // new \DateTime($value->end_date.' +1 day')
-                $value->end_date
+                $value->end_time
             );
           }
        }
@@ -92,14 +92,54 @@ class PlannedMController extends Controller
 
     }
 
-    public function storeEvent(Request $request){
-          $id = Auth::id();
-         $events = Event::create(['user_id' => $id,
-                               'dish_id' => $request['dish_id'],
-                              'name'=> $request['dish_name'],
-                              'type' => $request['type'],
-                              'start_date' => $request['start'],
-                              'end_date' => $request['end_date']
-                         ]);
+    public function storePlans(Request $request){
+        $id = Auth::id();
+        $events = PlannedMeals::create(['user_id' => $id,
+                                'title' => $request['title'],
+                                'om_id' => $request['om_id'],
+                                'dish_id' => $request['dish_id'],
+                                'be_id'=> $request['be_id'],
+                                'plan_id' => $request['plan_id'],
+                                'start_time' => $request['start'],
+                                'end_time' => $request['end']
+        ]);
     }
+
+    public function resetDate(Request $request){
+      $title = $request['title'];
+      $startdate = $request['start'];
+      $enddate = $request['end'];
+      $eventid = $request['eventid'];
+
+      $update = PlannedMeals::where('id',$eventid)
+                      ->update(['title'=>$title, 
+                                'start_time'=>$startdate,
+                                'end_time'=>$enddate
+                      ]);
+      if($update)
+        return response()->json(['status'=>'success']);
+      else
+        return response()->json(['status'=>'failed']);
+    }
+
+    public function fetchPlans(Request $request){
+        $events = [];
+        $query = PlannedMeals::all();
+        foreach($query as $key=>$value){
+            $e[]=Calendar::event(
+                $value->id,
+                $value->title,
+                false,
+                $value->start_time,
+                $value->end_time
+            );
+            array_push($events,$e);
+          }
+          return response()->json($events);
+    }
+
+
+
+
+
 }

@@ -139,19 +139,21 @@ hr{
 
         <div id='external-events'>
           <div id='external-events-listing'>
-            <!-- <h4>Draggable Events</h4> -->
+            <!-- Breakfast -->
             <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
             <label class="card-title text-center" style="color:#4caf50;">Breakfast</label>
             <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
             <div class="card" style="margin-bottom: 10px">
               <div class='fc-event'>Mixed Bowl Salad</div>
             </div>
+            <!-- Lunch -->
             <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
             <label class="card-title text-center" style="color:#4caf50;">Lunch</label>
             <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
             <div class="card" style="margin-bottom: 10px">
               <div class='fc-event'>Tuna Patties</div>
             </div>
+            <!-- Dinner -->
             <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
             <label class="card-title text-center" style="color:#4caf50;">Dinner</label>
             <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
@@ -159,10 +161,6 @@ hr{
               <div class='fc-event'>Braised Beef</div>
             </div>
           </div>
-          <!-- <p>
-            <input type='checkbox' id='drop-remove' unchecked />
-            <label for='drop-remove'>remove after drop</label>
-          </p> -->
         </div>
 
         
@@ -171,24 +169,6 @@ hr{
 
     </div>
 
-
-
-                
-
-                <!-- <div class="form-group">
-                  <div class="input-group date form_datetime col-md-5" data-date="2017-09-16T05:25:07Z" data-date-format="dd MM yyyy - HH:ii p" data-link-field="dtp_input1">
-                    <input class="form-control" size="16" type="text" value="" placeholder="choose schedule" style="width:180px; font-size:12px" readonly>
-                    <span class="input-group-addon"><span class="fa fa-times" aria-hidden="true"></span></span>
-                    <span class="input-group-addon"><span class="fa fa-calendar" aria-hidden="true"></span></span>
-                  </div>
-                  <input type="hidden" id="dtp_input1" value="" /><br/>
-                </div> -->
-                <!--CALENDAR!-->
-              <!-- </div> --><!--CARD!-->
-              <!--endoflunch!-->
-              <!--DINNER-->
-              
-              <!--ENDOF!-->
               <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
               <div class="card-block">
                 <button type="submit" class="btn btn-success btn-flat">Save Schedule</button>
@@ -214,7 +194,24 @@ hr{
 
 <script>
     $(document).ready(function() {
-
+        var  json_events;
+        // $.ajax({
+        //     url: '{{ url("calendar") }}',
+        //     type: 'get', // Send post data
+        //     data: {'type':'fetch'},
+        //     async: false,
+        //     success: function(s){
+        //         json_events = s;
+        //     }
+        // });
+        var currentMousePos = {
+            x: -1,
+            y: -1
+        };
+            jQuery(document).on("mousemove", function (event) {
+            currentMousePos.x = event.pageX;
+            currentMousePos.y = event.pageY;
+        });
 
         /* initialize the external events
         -----------------------------------------------------------------*/
@@ -235,17 +232,19 @@ hr{
             });
 
         });
-
-
         /* initialize the calendar
         -----------------------------------------------------------------*/
-
+        var zone= "05:30";
         $('#calendar').fullCalendar({
+            events: json_events,
+            // events: [{"id":"14","title":"New Event","start":"2017-12-24T16:00:00+04:00","allDay":false}],
+            utc: true,
             header: {
                 left: 'prev,next today',
                 center: 'title',
                 right: 'month,agendaWeek,agendaDay'
-            },
+            }, 
+            
             editable: true,
             droppable: true, // this allows things to be dropped onto the calendar
             dragRevertDuration: 0,
@@ -268,10 +267,85 @@ hr{
                     });
                     el.data('event', { title: event.title, id :event.id, stick: true });
                 }
-            }
+            },
+            eventReceive: function(event){
+                var om_id = 2;
+                var dish_id = 122;
+                var be_id = 2;
+                var plan_id = 2;
+                var title = event.title;
+                var start = event.start.format("YYYY-MM-DD[T]HH:MM:SS");
+                var end = (event.end == null) ? start : event.end.format();
+                $.ajax({
+                  url: "{{ route('user.storeplans') }}",
+                  // data: 'type=new&title='+title+'&startdate='+start+'&zone='+zone,
+                  data: {'type':'new','om_id':om_id,'title':title,'dish_id':dish_id,'be_id':be_id,'plan_id':plan_id,'start':start,'end':end},
+                  method: "GET",
+                  dataType: 'json',
+                  success: function(){
+                    // event.id = response.eventid;
+                    alert('success');
+                    // $('#calendar').fullCalendar('updateEvent',event);
+                  },
+                  error: function(e){
+                    console.log('error');
+                  }
+               });
+                $('#calendar').fullCalendar('updateEvent',event);
+            },
+            eventDrop: function(event, delta, revertFunc) {
+                var id = 1;
+                var title = event.title;
+                var start = event.start.format("YYYY-MM-DD[T]HH:MM:SS");
+                var end = (event.end == null) ? start : event.end.format();
+                $.ajax({
+                    url: "{{ route('user.resetdate') }}",
+                    data: {'type':'resetdate','title':title,'start':start,'end':end,'eventid':id},
+                    method: "GET",
+                    dataType: 'json',
+                    success: function(response){
+                        if(response.status != 'success')                            
+                        revertFunc();
+                    },
+                    error: function(e){                     
+                        revertFunc();
+                        alert('Error processing your request: '+e.responseText);
+                    }
+                });
+            },
+            eventResize: function(event, delta, revertFunc) {
+                console.log(event);
+                var title = event.title;
+                var end = event.end.format();
+                var start = event.start.format();
+                $.ajax({
+                    url: "{{url('user.resetdate')}}",
+                    data: {'type':'resetdate','title':title,'start':start,'end':end,'eventid':event.id},
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function(response){
+                        if(response.status != 'success')                            
+                        revertFunc();
+                    },
+                    error: function(e){                     
+                        revertFunc();
+                        alert('Error processing your request: '+e.responseText);
+                    }
+                });
+            },
         });
-
-
+        function getFreshEvents(){
+            $.ajax({
+                url: "{{route('user.fetch')}}",
+                type: 'POST', // Send post data
+                data: 'type=fetch',
+                async: false,
+                success: function(s){
+                    freshevents = s;
+                }
+            });
+            $('#calendar').fullCalendar('addEventSource', JSON.parse(freshevents));
+        }
         var isEventOverDiv = function(x, y) {
 
             var external_events = $( '#external-events' );
@@ -287,8 +361,6 @@ hr{
             return false;
 
         }
-
-
     });
 </script>
 @endsection
