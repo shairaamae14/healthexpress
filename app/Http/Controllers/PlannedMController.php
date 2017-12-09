@@ -9,12 +9,13 @@ use App\Dish;
 use App\BestEaten;
 use App\PlannedMeals;
 use Calendar;
+use mysql_fetch_array;
 
 use Illuminate\Support\Facades\Auth;
 
 class PlannedMController extends Controller
 {
-	 /**
+   /**
      * Create a new controller instance.
      *
      * @return void
@@ -33,40 +34,45 @@ class PlannedMController extends Controller
 //       $plans = Plans::all();
 //       return view('user.plannedmeals', compact('plans'));
 
-        $events = [];
-        $data = PlannedMeals::all();
-        if($data->count()){
-          foreach ($data as $key => $value) {
-            $events[] = Calendar::event(
-                $value->title,
-                false,
-                // new \DateTime($value->start_date),
-                $value->start_time,
-                // new \DateTime($value->end_date.' +1 day')
-                $value->end_time
-            );
-          }
-       }
-        $calendar = Calendar::addEvents($events);
+        // $events = [];
+        // $data = PlannedMeals::all();
+        // if($data->count()){
+          // foreach ($data as $key => $value) {
+          //   $events[] = Calendar::event(
+          //       $value->title,
+          //       false,
+          //       // new \DateTime($value->start_date),
+          //       $value->start_time,
+          //       // new \DateTime($value->end_date.' +1 day')
+          //       $value->end_time
+          //   );
+          // }
+       // }
         $breakfast = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
                             ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
-                            ->where('dish_besteaten.be_id', 1)
+                            ->where('dish_besteaten.be_id', 1)->take(3)
                             ->get();
          $lunch = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
                             ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
-                            ->where('dish_besteaten.be_id', 2)
+                            ->where('dish_besteaten.be_id', 2)->take(3)
                             ->get();
          $dinner = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
                             ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
-                            ->where('dish_besteaten.be_id', 3)
+                            ->where('dish_besteaten.be_id', 3)->take(3)
                             ->get();
        $besteaten= BestEaten::all();
-
-        $type = $request['type'];
+       $type = $request['type'];
+       if($type == 'daily')
+        $typeno = 1;
+       else if($type == 'weekly')
+        $typeno = 2;
+       else
+        $typeno = 3;
+        
         // $cal=json_encode($dinner);
 
         // dd($cal);
-        return view('user.pmeals', compact('breakfast', 'lunch', 'dinner', 'besteaten', 'type', 'calendar'))->with(['plans' => Plan::get(), 'cal'=> response()->json($dinner)]);
+        return view('user.pmeals', compact('breakfast', 'lunch', 'dinner', 'besteaten', 'typeno', 'calendar'))->with(['plans' => Plan::get(), 'cal'=> response()->json($dinner)]);
     }
 
     public function index1(){
@@ -74,17 +80,17 @@ class PlannedMController extends Controller
     }
 
     public function store(Request $request){
-//    	  $id = Auth::id();
+//        $id = Auth::id();
 //
-//    	  $userplan=UserPlan::create(['numberof' => $request['numberof'],
-//						            'user_id' => $id,
-//						            'plan_id' => $request['plan'],
-//						            'date_started' =>\Carbon\Carbon::now('Asia/Manila')
+//        $userplan=UserPlan::create(['numberof' => $request['numberof'],
+//                        'user_id' => $id,
+//                        'plan_id' => $request['plan'],
+//                        'date_started' =>\Carbon\Carbon::now('Asia/Manila')
 //            ]);
 
-    	 
+       
 
-    	return redirect()->route('user.plan.show');
+      return redirect()->route('user.plan.show');
     }
 
     public function showCalendar(){
@@ -94,15 +100,19 @@ class PlannedMController extends Controller
 
     public function storePlans(Request $request){
         $id = Auth::id();
-        $events = PlannedMeals::create(['user_id' => $id,
-                                'title' => $request['title'],
-                                'om_id' => $request['om_id'],
-                                'dish_id' => $request['dish_id'],
-                                'be_id'=> $request['be_id'],
-                                'plan_id' => $request['plan_id'],
-                                'start_time' => $request['start'],
-                                'end_time' => $request['end']
+        $events = PlannedMeals::create(['title' => $request['title'],
+                                        'user_id' => $id,
+                                        'om_id' => $request['om_id'],
+                                        'dish_id' => $request['dish_id'],
+                                        'be_id'=> $request['be_id'],
+                                        'plan_id' => $request['plan_id'],
+                                        'start' => $request['start'],
+                                        'end' => $request['end'],
+                                        'allDay' => false
         ]);
+        return response()->json(['data'=>$events]);
+        
+
     }
 
     public function resetDate(Request $request){
@@ -110,11 +120,12 @@ class PlannedMController extends Controller
       $startdate = $request['start'];
       $enddate = $request['end'];
       $eventid = $request['eventid'];
+      // dd($title);
 
       $update = PlannedMeals::where('id',$eventid)
                       ->update(['title'=>$title, 
-                                'start_time'=>$startdate,
-                                'end_time'=>$enddate
+                                'start'=>$startdate,
+                                'end'=>$enddate
                       ]);
       if($update)
         return response()->json(['status'=>'success']);
@@ -123,19 +134,28 @@ class PlannedMController extends Controller
     }
 
     public function fetchPlans(Request $request){
-        $events = [];
-        $query = PlannedMeals::all();
-        foreach($query as $key=>$value){
-            $e[]=Calendar::event(
-                $value->id,
-                $value->title,
-                false,
-                $value->start_time,
-                $value->end_time
-            );
-            array_push($events,$e);
-          }
-          return response()->json($events);
+
+        $events = array();
+        $query = PlannedMeals::select('id', 'title', 'start', 'end', 'allDay')->get();
+
+        
+        // while($fetch = mysqli_fetch_array($query,MYSQLI_ASSOC))
+        // {
+        //  $e = array();
+        //     $e['id'] = $fetch['id'];
+        //     $e['title'] = $fetch['title'];
+        //     $e['start'] = $fetch['start_time'];
+        //     $e['end'] = $fetch['end_time'];
+
+        //     $allday = ($fetch['allDay'] == "true") ? true : false;
+        //     $e['allDay'] = $allday;
+
+        //     array_push($events, $e);
+        // }
+        // echo json_encode($events);
+        // echo reponse()->json($query);
+        return $query->toJson();
+        // return response()->json($query);
     }
 
 

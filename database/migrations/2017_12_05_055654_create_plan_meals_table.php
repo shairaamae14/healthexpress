@@ -21,8 +21,9 @@ class CreatePlanMealsTable extends Migration
             $table->integer('dish_id')->unsigned();
             $table->integer('be_id')->unsigned();
             $table->integer('plan_id')->unsigned();
-            $table->string('start_time');
-            $table->string('end_time');
+            $table->string('start');
+            $table->string('end');
+            $table->string('allDay');
             $table->timestamps();
         });
         Schema::table('planned_meals', function (Blueprint $table) {
