@@ -53,11 +53,41 @@ Route::get('/home/express', 'HomeController@express');
 Route::get('/displayDishes', 'HomeController@searchDishes')->name('search.dish');
 
 
-Route::get('/user/{id}', 'UserProfController@show')->name('user.profile');
-Route::post('user/{id}', 'UserProfController@update')->name('user.profile.update');
-Route::post('user/AddAller/{id}', 'UserProfController@store')->name('user.profile.add');
+Route::get('/user/profile/{id}', 'UserProfController@show')->name('user.profile');
+Route::post('/user/{id}', 'UserProfController@update')->name('profile.update');
+Route::post('/user/allergen/{id}', 'UserProfController@update2')->name('allergies.update');
+Route::post('/user/AddAller/{id}', 'UserProfController@storeAllergen')->name('allergen.add');
+Route::post('/user/Allergen/delete', 'UserProfController@destroyA')->name('aller.destroy');
+Route::post('/user/MedCon/delete', 'UserProfController@destroyM')->name('aller.destroyM');
+Route::post('user/AddMed/{id}', 'UserProfController@storeMedcon')->name('medcon.add');
 Route::get('/user/logout', 'Auth\LoginController@userLogout')->name('user.logout');
+Route::post('user/Adduserimg/{id}', 'UserProfController@storeUserImg')->name('user.img');
+Route::get('/user/changepass', function() {
+	return view('auth.changepass');
+})->name('user.changepass');
 
+Route::post('/change/password', function() {
+	$user = Auth::user()->id;
+	if(Hash::check(Input::get('passwordold'), $user['password']) &&
+	 Input::get('passwordnew') == Input::get('password_confirmation'))
+	{
+		$user->password = bcrypt(Input::get('passwordnew'));
+		$user->save();
+
+		return redirect()->route('user.profile', compact('id', 'user'))->with('success', 'Password Changed!');
+	}
+	else
+	{
+		if(!Hash::check(Input::get('passwordold'), $user['password']))
+		{
+			return back()->with('error', 'Old password is incorrect.');
+		}
+		else
+		{
+			return back()->with('error', 'Password does not match!');
+		}
+	}
+});
 
 //Planned Meals
 Route::get('/plan/{plan}', 'PlannedMController@show');
@@ -105,22 +135,23 @@ Route::prefix('cook')->group(function() {
 
 	
 	//Dishes
-        Route::get('/dishes/addCatalog', 'DishController@addCatalog')->name('dish.catalog');
-        Route::post('/dishes/createCatalog', 'DishController@createCatalog')->name('dish.catalog.create');
-        Route::get('dishes', 'DishController@index')->name('cook.dishes');
+	Route::get('/dishes/addCatalog', 'DishController@addCatalog')->name('dish.catalog');
+	Route::post('/dishes/createCatalog', 'DishController@createCatalog')->name('dish.catalog.create');
+	Route::get('dishes', 'DishController@index')->name('cook.dishes');
 	Route::get('dishes/add', 'DishController@create')->name('cook.dishes.add');
 	Route::post('dishes/create', 'DishController@store')->name('cook.dishes.create');
 	Route::get('dishes/{id}', 'DishController@show')->name('cook.dishes.show');
-        Route::post('dishes/{id}', 'DishController@update')->name('cook.dishes.update');
-        Route::post('dishes/delete/{id}', 'DishController@destroy')->name('cook.dishes.delete');
-	Route::get('dishes/update/{id}', 'DishController@update')->name('cook.dishes.update');
+	Route::post('dishes/{id}', 'DishController@update')->name('cook.dishes.update');
+	Route::post('dishes/delete/{id}', 'DishController@destroy')->name('cook.dishes.delete');
+	Route::post('dishes/update/{id}', 'DishController@update')->name('cook.dishes.update');
+	Route::get('dishes/edit/{id}', 'DishController@edit')->name('cook.dishes.edit');
 	Route::get('dishes/reviews', 'DishController@viewrating')->name('cook.rating');
         
-        Route::get('/displayDishes', 'DishController@searchDishes')->name('display');
-        Route::get('/previewDishes/{id}', 'DishController@previewDish')->name('preview');
-        Route::get('/searchIngredients', 'DishController@searchIngredient')->name('search.ingredient');
-        Route::post('/status', 'CookController@changeAvailabilityStat')->name('status.change');
-        Route::post('/orderstat', 'CookController@changeOrderStats')->name('orderstat.change');
+	Route::get('/displayDishes', 'DishController@searchDishes')->name('display');
+	Route::get('/previewDishes/{id}', 'DishController@previewDish')->name('preview');
+	Route::get('/searchIngredients', 'DishController@searchIngredient')->name('search.ingredient');
+	Route::post('/status', 'CookController@changeAvailabilityStat')->name('status.change');
+	Route::post('/orderstat', 'CookController@changeOrderStats')->name('orderstat.change');
 	// Route::get('dishes/addingredients', 'DishController@adding')->name('cook.addingredients');
         
 });
@@ -131,6 +162,10 @@ Route::prefix('user')->group(function() {
 });
 
 
+//Calendar Routes
+Route::get('user/calendar', 'PlannedMController@storePlans')->name('user.storeplans');
+Route::get('user/calendar/fetch', 'PlannedMController@fetchPlans')->name('user.fetch');
+Route::get('user/calendar/update', 'PlannedMController@resetDate')->name('user.resetdate');
 
 
 
@@ -138,16 +173,19 @@ Route::prefix('user')->group(function() {
 Route::get('cook/adddish','SearchController@liveSearch'); 
 Route::post('search', 'SearchController@search');
 
-
+Route::get('/matrix', 'AdminController@matrix')->name('matrix');
+	Route::get('/unitTest' , 'AdminController@unitTest');
 //Admin
 Route::prefix('admin')->group(function() {
 	Route::get('/', 'AdminController@index');
-	Route::get('/matrix', 'AdminController@matrix')->name('matrix');
+	
+	
 	Route::post('/addAllergen', 'AdminController@storeAllergens')->name('add.allergen');
 	Route::post('/addMedcon', 'AdminController@storeMedCon')->name('add.medcon');
 	Route::post('/addPreparation', 'AdminController@storePreparation')->name('add.prep');
 	Route::post('/addMeasurement', 'AdminController@storeMeasurement')->name('add.measure');
 	Route::post('/addBestEaten', 'AdminController@storeBestEaten')->name('add.best');
+	Route::post('/addTolerance', 'AdminController@storeTolerance')->name('add.tolerance');
 
 	Route::post('/updateAllergen/{id}', 'AdminController@updateAllergens')->name('update.allergen');
 	Route::post('/updateMedCon/{id}', 'AdminController@updateMedCon')->name('update.medcon');
@@ -160,4 +198,5 @@ Route::prefix('admin')->group(function() {
 	Route::post('/deletePreparation' , 'CoachingFormController@deletePreparation');
 	Route::post('/deleteMeasurement' , 'CoachingFormController@deleteMeasurement');
 	Route::post('/deleteBestEaten' , 'CoachingFormController@deleteBestEaten');
+
 });
