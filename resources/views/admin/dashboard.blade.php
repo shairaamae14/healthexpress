@@ -17,6 +17,7 @@
 		<button type="button" class="btn btn-flat btn-success add-dish" data-toggle="modal" data-target="#modal-measurement" style="margin-bottom:20px"><i class="fa fa-plus"></i> Add Unit Measurements</button>
 		<button type="button" class="btn btn-flat btn-success add-dish" data-toggle="modal" data-target="#modal-preparation"  style="margin-bottom:20px"><i class="fa fa-plus"></i> Add Preparations</button>	
 		<button type="button" class="btn btn-flat btn-success add-dish" data-toggle="modal" data-target="#modal-best"  style="margin-bottom:20px"><i class="fa fa-plus"></i> Add Best Eaten</button>
+    <button type="button" class="btn btn-flat btn-success add-dish" data-toggle="modal" data-target="#modal-tolerance"  style="margin-bottom:20px"><i class="fa fa-plus"></i> Add Tolerance Level Value</button>
 
 		<div class="row">
 			<div class="col-md-6">
@@ -322,6 +323,51 @@
         </div>
         <!-- /.modal -->
 <!-- End Best Modal -->
+
+<!-- Tolerance Modal -->
+ <div class="modal fade" id="modal-tolerance">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Add Tolerance Value</h4>
+              </div>
+              <form method="POST" action="{{route('add.tolerance')}}">
+                {{csrf_field()}}
+              <div class="modal-body">
+                <label>Allergen</label>
+                <select class="form-control" name="allergen">
+                  @foreach($allergens as $allergen)
+                  <option value="{{$allergen->allergen_id}}">{{$allergen->allergen_name}}</option>
+                  @endforeach
+                </select>
+                <label>Level</label>
+                <select class="form-control" name="level">
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                </select>
+                <label>Threshold Value</label>
+                <input type="text" class="form-control" name="value">
+                <label>Minimum</label>
+                <input type="text" class="form-control" name="min">
+                <label>Maximum</label>
+                <input type="text" class="form-control" name="max">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Cancel</button>
+                <button type="submit" class="btn btn-primary">Add</button>
+              </div>
+              </form>
+            </div>
+
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+<!-- End Tolerance Modal -->
 
 <!-- update Allergens Modal -->
 @foreach($allergens as $allergen)
