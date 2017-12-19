@@ -146,13 +146,13 @@
 		                                    <div class="col-sm-3">
 		                                        <div class="form-group has-success">
 		                                            <label class="control-label">Weight (kg)</label>
-		                                            <input id="weight" type="number" class="form-control" name="weight" min="1" required>
+		                                            <input id="weight" type="text" class="form-control" name="weight" min="1" required>
 		                                        </div>
 		                                    </div>
 		                                    <div class="col-sm-3">
 		                                        <div class="form-group  has-success">
 		                                            <label class="control-label">Height (cm)</label>
-                                                            <input id="height" type="number" class="form-control" name="height" min="1" required>
+                                                            <input id="height" type="text" class="form-control" name="height" min="1" required>
 		                                        </div>
 		                                    </div>
                                                     <div class="col-sm-3">
@@ -200,7 +200,7 @@
                                                         <div class="form-group has-success">
 		                                            <label class="control-label">Allergens<p class="text-muted">If none, just leave blank</p></label>
                                                             
-                                                            <div id="allergens">
+                                                            <div id="allergens" class="allergens">
                                                             @foreach($allergens as $allgen)
                                                             <div class="checkbox">
                                                                     <label>
@@ -215,7 +215,7 @@
                                                     
                                                     <div class="col-sm-5 col-sm-offset-1">
                                                         
-                                                        <div class="form-group has-success" style="display:none;" id="tolerance">
+                                                        <div class="form-group has-success tolerance" style="display:none;" id="tolerance">
 		                                            <label class="control-label">Tolerance Level (Allergens)</label>
                                                             <select name="tolerance" class="form-control">
                                                                 <option selected disabled hidden>Select an option</option>
@@ -223,7 +223,7 @@
                                                                 <option value="Medium">Medium</option>
                                                                 <option value="High">High</option>
                                                             </select>
-                                                            
+                                                           
 		                                        </div>
                                                     </div>
                                                     
@@ -231,7 +231,7 @@
                                                         
                                                         <div class="form-group has-success">
 		                                            <label class="control-label">Medical Conditions<p class="text-muted">If none, just leave blank</p></label>
-                                                            
+                                                                <div id="medcon" class="medcon">
                                                                 @foreach($mconditions as $conditions)
                                                                 
                                                                 <div class="checkbox">
@@ -240,7 +240,8 @@
                                                                     </label>
                                                                 </div>
                                                                 @endforeach
-                                                            
+                                                                </div>
+                                                          
 		                                        </div>
                                                     </div>
                                                     </div>
@@ -289,10 +290,12 @@
       // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
 
       function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: 10.3157007, lng: 123.88544300000001},
-          zoom: 13
-        });
+        var latLng = new google.maps.LatLng(10.3157007,123.88544300000001 );
+        var mapOptions = {
+            zoom:13,
+            center: latLng
+        }
+        var map = new google.maps.Map(document.getElementById('map'), mapOptions);
         var card = document.getElementById('pac-card');
         var input = document.getElementById('location');
         var options = {
@@ -315,9 +318,34 @@
         infowindow.setContent(infowindowContent);
         var marker = new google.maps.Marker({
           map: map,
+          draggable: true,
+          animation: google.maps.Animation.DROP,
+          position: latLng,
           anchorPoint: new google.maps.Point(0, -29)
         });
-
+       
+         geocoder = new google.maps.Geocoder();
+         
+         google.maps.event.addListener(marker, 'dragend', function() {
+              geocoder.geocode({latLng: marker.getPosition()}, function(responses) {
+            if (responses && responses.length > 0) {
+                infowindow.setContent(
+                "<div class='place'>" + responses[0].formatted_address 
+                + "<br /> <small>" 
+                + "Latitude: " + marker.getPosition().lat() + "<br>" 
+                + "Longitude: " + marker.getPosition().lng() + "</small></div>"
+                );
+                infowindow.open(map, marker);
+            } else {
+                alert('Error: Google Maps could not determine the address of this location.');
+            }
+            });
+                map.panTo(marker.getPosition());
+          });
+          google.maps.event.addListener(marker, 'dragstart', function() {
+            infowindow.close(map, marker);
+        });
+          
         autocomplete.addListener('place_changed', function() {
           infowindow.close();
           marker.setVisible(false);
@@ -350,6 +378,8 @@
               (place.address_components[2] && place.address_components[2].short_name || '')
             ].join(' ');
           }
+          
+         
 
           infowindowContent.children['place-icon'].src = place.icon;
           infowindowContent.children['place-name'].textContent = place.name;
@@ -372,7 +402,7 @@
                 weekStart:1
             });
             
-            $('#allergens').on('click',':checkbox', function() {
+            $('.allergens').on('click',':checkbox', function() {
                 $(this).each(function() {
                     if($("input:checked").length > 0) {
                         $('#tolerance').show();
@@ -380,11 +410,27 @@
                     else if($(this).prop("checked") == false) {
                         $('#tolerance').hide();
                     } 
-                });
-                    
 
+                });
             });
-        });
+//            $('#medcon').on('click',':checkbox', function() {
+//                $(this).each(function() {
+//                    if($("input:checked").length <= 0) {
+//                        var empty ="<input type='hidden' value='' name='med_condition'>";
+//                        $('.medcon').append(empty);
+//                    }
+//                    else if($(this).prop("checked") == false) {
+//                        var empty ="<input type='hidden' value='' name='med_condition'>";
+//                        $('.medcon').append(empty);
+//                    } 
+//                  
+//                });    
+//                
+//                    
+//
+//            });
+           
+    });
     </script>
 
 @endsection
