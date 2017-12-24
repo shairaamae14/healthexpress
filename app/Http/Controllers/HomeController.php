@@ -46,20 +46,88 @@ class HomeController extends Controller
         $id = Auth::id();
         $user = User::where('id', $id)->first();
         $allergens = json_decode($user->allergens);
-        $dishes = $this->filter();
+        $dishes = collect();
+        $user = Auth::user()->load('conditions.restrictions','allergies.tol_values');
+        $comparisons = ['calories', 'protein', 'total_fat', 'carbohydrate', 'fibre', 'sodium','sat_fat', 'cholesterol'];
+        // $dishes = $this->filter();
         
-        $dishes = Dish::with('dish_besteaten.besteaten')->get();
+        // $dishes = Dish::with('dish_besteaten.besteaten')->get();
    
         if(!$request->sortOption) {
 //            $dishes = Dish::join('dish_besteaten','dish_besteaten.dish_id', '=', 'dishes.did')
 //                            ->join('besteaten_at', 'besteaten_at.be_id' , '=', 'dish_besteaten.be_id')
 //                            ->paginate(12);
 //            $dishes = Dish::paginate(3);
-            $dishes = Dish::paginate(3);
-            foreach($dishes as $d) {
-                $best_eaten = DishBestEaten::join('besteaten_at' , 'besteaten_at.be_id', '=' , 'dish_besteaten.be_id')
-                                        ->where('dish_id', $d->did)->get();
+           foreach ($user->allergies as $allergy) {
+                $list = \App\Dish::whereHas('ingredients', function($query) use($allergy){
+                     $protein = $allergy->tol_values->threshold_value /100;
+                    switch ($allergy->tol_values->level) {
+                        case 'High':
+                            break;
+                        case 'Medium':
+                            $proteinMin = $allergy->min / 100;
+                            $proteinMax = $allergy->max / 100;
+                            $query->where('Shrt_Desc', 'LIKE', '%'.$allergy->allergen_name.'%')
+                            ->where('Protein_g', '<', $proteinMin)->orWhere('Protein_g', '<=', $proteinMax);
+                            break;
+                        case 'Low':
+                           $query->where('Shrt_Desc', 'LIKE', '%'.$allergy->allergen_name.'%')->where('Protein_g', '<', $protein);
+                            break;
+                        default:
+                            break;
+                        }
+
+               })->get();
+                $list2 = \App\Dish::whereDoesntHave('ingredients', function($query) use($allergy){
+                    $query->where('Shrt_Desc', 'LIKE', '%'.$allergy->allergen_name.'%');
+               })->get();
             }
+
+            if(count($list) !=0 && count($list2) !=0) {
+                $first = $list->load('nfacts');
+                $second = $list2->load('nfacts');
+                for ($i=0; $i < count($first); $i++) { 
+                   for ($x=0; $x < count($second); $x++) { 
+                        foreach ($user->conditions as $condition) { 
+                            foreach ($comparisons as $comparison) {
+                                if ($condition->restrictions[0][$comparison] < $first[$i]->nfacts[$comparison] && $condition->restrictions[0][$comparison] < $second[$x]->nfacts[$comparison]) {
+                            
+                                    $dishes[$i] = $first[$i];
+                                    $dishes[$x] = $second[$x];
+                                }
+                            }
+                        }
+                   }
+               }
+
+
+            }
+            else if(count($list) !=0 && count($list2) == 0) {
+                $first = $list->load('nfacts');
+                  for ($i=0; $i < count($first); $i++) {  
+                        foreach ($user->conditions as $condition) { 
+                            foreach ($comparisons as $comparison) {
+                                if ($condition->restrictions[0][$comparison] < $first[$i]->nfacts[$comparison]) {
+                            
+                                    $dishes[$i] = $first[$i];
+                                }
+                            }
+                        }
+               }
+            }
+            else if(count($list2) !=0 && count($list) == 0) {
+                $second = $list2->load('nfacts');
+                   for ($x=0; $x < count($second); $x++) { 
+                        foreach ($user->conditions as $condition) { 
+                            foreach ($comparisons as $comparison) {
+                                if ( $condition->restrictions[0][$comparison] < $second[$x]->nfacts[$comparison]) {
+                                    $dishes[$x] = $second[$x];
+                                }
+                            }
+                        }
+                   }     
+            }
+            
             
            
             $title = 'All';
@@ -95,8 +163,7 @@ class HomeController extends Controller
             }
         }
 
-
-      
+        // dd($dishes);
          return view('user.home', compact('user', 'dishes', 'title'));
     }
     

@@ -42,6 +42,7 @@ class CookController extends Controller
                 ->join('allergens', 'allergens.allergen_id', '=', 'user_allergens.allergen_id')
                 ->join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
                 ->where('cooks.id', $cid)
+                ->orderBy('user_orders.order_date', 'desc')
                 ->get();
 
         // $details = $details->merge($dishes)->merge($orders)->merge($oid);

@@ -15,4 +15,8 @@ class Allergens extends Model
     public function user() {
     	return $this->belongsToMany('App\User', 'user_allergens', 'allergen_id', 'user_id');
     }
+
+    public function tol_values() {
+    	return $this->hasOne('App\ToleranceValues', 'aid', 'allergen_id');
+    }
 }

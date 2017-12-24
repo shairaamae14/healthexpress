@@ -85,14 +85,14 @@
                                                             <td>{{$orders->om_name}}</td>
                                                             <td>{{$orders->order_date}}</td>
                                                             <td>{{$orders->allergen_name}}</td>
-                                                            <td>Don't put too much carrots. Please add more sauce</td>
+                                                            <td>None</td>
 
                                                             @if($orders->order_status == 'Pending')
                                                             <td><a href="javascript:void(0);" onclick="cooking({{$orders->uo_id}})" id="Cooking" value="Cooking"><i class="fa fa-cutlery" data-toggle="tooltip" data-placement="top" style="color:#DC3131" title="cooking"></i></a></td>
                                                             @elseif($orders->order_status == 'Cooking')
                                                             <td><a href="javascript:void(0);" onclick="done({{$orders->uo_id}})" id="Done" value="Done"><i class="fa fa-suitcase" data-toggle="tooltip" data-placement="top" title="done" style="color:#FFA233"></i></a></td>
                                                             @elseif($orders->order_status == 'Done')
-                                                            <td><a href="javascript:void(0);" onclick="deliver({{$orders->uo_id}})" id="Deliver" value="Deliver"><i class="fa fa-truck" data-toggle="tooltip" data-placement="top" title="deliver" style="color:#6E9BF0"></i></a></td>
+                                                            <td><a href="javascript:void(0);" onclick="deliver({{$orders->uo_id}})" id="Delivering" value="Delivering"><i class="fa fa-truck" data-toggle="tooltip" data-placement="top" title="deliver" style="color:#6E9BF0"></i></a></td>
                                                             @else
                                                             <td><a href="javascript:void(0);" id="Delivered" value="Delivered"><i class="fa fa-check-circle" style="color:green" data-toggle="tooltip" data-placement="top" title="delivered"></i></a></td>
                                                             @endif
@@ -214,7 +214,7 @@
                                                             <td>{{$done->order_date}}</td>
                                                             <td>{{$done->allergen_name}}</td>
                                                             <td>Please add more sauce</td>
-                                                            <td><a href="javascript:void(0);" onclick="deliver({{$done->uo_id}})" id="Deliver" value="Deliver"><i class="fa fa-truck" data-toggle="tooltip" data-placement="top" title="deliver" style="color:#6E9BF0"></i></a></td>
+                                                            <td><a href="javascript:void(0);" onclick="deliver({{$done->uo_id}})" id="Delivering" value="Delivering"><i class="fa fa-truck" data-toggle="tooltip" data-placement="top" title="deliver" style="color:#6E9BF0"></i></a></td>
                                                         </tr>
                                                             @endif
                                                         @endforeach
@@ -360,7 +360,7 @@
          }
 
         function deliver(id){
-            var status="Deliver";
+            var status="Delivering";
             alert(status);
             $.ajax({
                     method: 'POST',

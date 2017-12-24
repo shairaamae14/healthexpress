@@ -130,7 +130,7 @@ div.tab button.active {
       <div class="container">
         <div class="row">
         
-           <a href="{{url('/cart/pastorders')}}">
+           <a href="{{url('/pastorders')}}">
              <button type="submit" class="btn btn-success btn-simple btn-md" style="margin-top: -10px">
                   <span class="badge" style="background-color:#66bb6a; color:white; font-size: 13px; float:right; ">View Order history</span>
                         </button>
@@ -264,7 +264,7 @@ div.tab button.active {
                             <td>{{$del->order_date}}</td>
                             <td class="text-right"><span class="badge" style="color:white; background-color:#66bb6a; float:right">{{$del->order_status}}</span></td>
                             <td class="td-actions text-right">
-                            <form method="post" action="{{route('order.statuschange', ['id'=>$del->id])}}">
+                            <form method="post" action="{{route('order.statuschange', ['id'=>$del->uo_id])}}">
                                  <input type="hidden" name="_token" value="{{ csrf_token() }}">
                              <button type="submit" rel="tooltip" title="Did you receive your order?" class="btn btn-success btn-simple btn-md" style="margin-top: -10px">
                               Order Received
@@ -320,7 +320,7 @@ div.tab button.active {
                       </table>
                       @else
                       <center>
-                       <label style="font-size: 35px; margin-top: 20px">No order has been placed</label>
+                       <label style="font-size: 35px; margin-top: 20px">No order has been completed</label>
                      </center>
                      @endif   
                    </div>        

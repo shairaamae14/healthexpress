@@ -40,15 +40,15 @@
              <td>{{$user->dcr}}
               </td>
               @if($allergies)
-              @foreach($allergies as $allergy)
-             <td>{{$allergy->allergen_name}}</td>
-             <td>{{$allergy->tolerance_level}}</td>
-             @endforeach
+             
+             <td>{{$allergies->allergen_name}}</td>
+             <td>{{$allergies->tolerance_level}}</td>
+             
              @else
              <td>None</td>
              <td>None</td>
              @endif
-             @if($medcondition)
+             @if(count($medcondition) != 0)
              <td>
              @foreach($medcondition as $cond)
              {{$cond->medcon_name}} 

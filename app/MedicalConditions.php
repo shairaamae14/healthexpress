@@ -17,6 +17,6 @@ class MedicalConditions extends Model
     }
 
     public function restrictions() {
-    	return $this->hasOne('App\MedicalRestrictions', 'mcon_id', 'medcon_id');
+    	return $this->hasMany('App\MedicalRestrictions', 'mcon_id', 'medcon_id');
     }
 }

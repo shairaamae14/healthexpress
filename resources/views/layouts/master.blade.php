@@ -38,5 +38,6 @@ font-size: 30px !important;
 </footer>      
 
 </body>
+  @yield('scripts')
   @include('layouts.footer')
 </html>

@@ -123,3 +123,22 @@
     </div>
 
     @endsection
+
+    @section('scripts')
+    <!--   Core JS Files   -->
+      <script src="{{asset('customer/assets/js/jquery.min.js')}}" type="text/javascript"></script>
+      <!-- <script src="{{asset('customer/assets/js/bootstrap.min.js')}}" type="text/javascript"></script> -->
+      <script src="{{asset('customer/assets/js/material.min.js')}}"></script>
+
+      <!-- Control Center for Material Kit: activating the ripples, parallax effects, scripts from the example pages etc -->
+      <script src="{{asset('customer/assets/js/material-kit.js')}}" type="text/javascript"></script>
+       <script type="text/javascript">
+        window_width = $(window).width();
+
+        if (window_width >= 992){
+            big_image = $('.wrapper > .header');
+
+            $(window).on('scroll', materialKitDemo.checkScrollForParallax);
+        }
+    </script>
+    @endsection

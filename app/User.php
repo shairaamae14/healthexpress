@@ -18,7 +18,7 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'fname','lname', 'email', 'password', 'contact_no', 'weight', 'height', 'birthday','gender', 'health_goal',
-        'allergens', 'medical_condition', 'lifestyle', 'location', 'longitude', 'latitude', 'status' 
+        'allergens', 'medical_condition', 'lifestyle', 'location', 'longitude', 'latitude', 'status', 'age','bmr', 'dcr'
     ];
 
     /**
@@ -37,6 +37,10 @@ class User extends Authenticatable
 
     public function allergies() {
         return $this->belongsToMany('App\Allergens', 'user_allergens', 'user_id', 'allergen_id');
+    }
+
+    public function userallergy() {
+        return $this->hasMany('App\UserAllergen', 'user_id', 'id');
     }
 
     public function conditions() {
