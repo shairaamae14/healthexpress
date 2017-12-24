@@ -1,7 +1,7 @@
 @extends('user-layouts.master')
 <link href="{{asset('datetimepicker/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" media="screen">
 <link href="{{asset('datetimepicker/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet" media="screen">
-<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.6/fullcalendar.min.css'>
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.0/fullcalendar.min.css'>
 <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css'>
 @section('heading')
  <!-- Calendar -->
@@ -84,7 +84,7 @@ hr{
 
 /*Resize the wrap to see the search bar change!*/
 
-}
+
 
 
 
@@ -96,8 +96,8 @@ hr{
   <div class="header header-filter" style="background-image: url('{{asset('img/bgindex.jpg')}}')">
     <div class="container">
       <div class="row">
-          <center>
-       <div class="col-md-6">
+        <center>
+        <div class="col-md-6">
            <br>
             <h1 class="title text-left" style="font-size: 80px; font-family: 'Lobster', cursive;">Planned Meals</h1>
               <a href="./home">
@@ -111,13 +111,8 @@ hr{
     <div class="section">
       <div class="container">
         <div class="row">
-          <div class="content">
-            <!--start card!-->
-  
-  <!-- <h5>{{$cal}}</h5> -->
- 
+          <div class="content"> 
             <div class="card" style="width:30rem; margin-left:-50px; padding:10px">
-              <!--   <img class="card-img-top" src="..." alt="Card image cap"> -->
               <div class="card-block">
                 <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
                 <h4 class="card-title text-center" style="color:#4caf50;">Suggested Dishes</h4>
@@ -127,416 +122,271 @@ hr{
               <center>
               <form method="post" action="#">
               {{csrf_field()}}
-              <!--BFAST-->
-              
-                <!-- <div class="card-block">
-                  <input type="checkbox" style="float:left; margin-top:15px; margin-right: 8px; margin-left: 8px">
-                  <img src="{{asset('img/tunapatties.jpg')}}" style="width:50px; height:50px; float:left; margin: 5px"/>
-                  <label style="color:black" name="dish_id" value="1">Tuna patties</label><br>
-                  <label class="control-label">SMALL DESCRIPTION</label>
-                </div> --><!--cardblock!-->
                 <div id='wrap'>
-
-        <div id='external-events'>
-          <div id='external-events-listing'>
-            <!-- Breakfast -->
-            <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
-            <label class="card-title text-center" style="color:#4caf50;">Breakfast</label>
-            <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
-            <div class="card" style="margin-bottom: 10px">
-              @foreach($breakfast as $bfast)
-                <div class='fc-event'>{{$bfast->dish_name}}
-                <input type="hidden" class="dish_id" id="dish_id" value="{{$bfast->did}}"/>
-                <input type="hidden" id="be_id" name="be_id" value="{{$bfast->be_id}}"/>
+                  <div id='external-events'>
+                      <!-- Breakfast -->
+                      <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
+                      <label class="card-title text-center" style="color:#4caf50;">Breakfast</label>
+                      <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
+                      <div class="card" style="margin-bottom: 10px">
+                        @foreach($breakfast as $bfast)
+                          <div class='fc-event' data-event='{"did": {{$bfast->did}}, "title": "{{$bfast->dish_name}}", "be":{{$bfast->be_id}} }'>{{$bfast->dish_name}}</div>
+                        @endforeach
+                      </div>
+                      <!-- Lunch -->
+                      <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
+                      <label class="card-title text-center" style="color:#4caf50;">Lunch</label>
+                      <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
+                      <div class="card" style="margin-bottom: 10px">
+                        @foreach($lunch as $lnch)
+                          <div class='fc-event' data-event='{"did": {{$lnch->did}}, "title": "{{$lnch->dish_name}}", "be":{{$lnch->be_id}} }'>{{$lnch->dish_name}}</div>
+                        @endforeach
+                      </div>
+                      <!-- Dinner -->
+                      <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
+                      <label class="card-title text-center" style="color:#4caf50;">Dinner</label>
+                      <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
+                      <div class="card" style="margin-bottom: 10px">
+                        @foreach($dinner as $dnr)
+                          <div class='fc-event' data-event='{"did": {{$dnr->did}}, "be":{{$dnr->be_id}}, "title": "{{$dnr->dish_name}}" }'>{{$dnr->dish_name}}</div>
+                        @endforeach
+                      </div>
+                      <i class="fa fa-trash-o fa-2x" aria-hidden="true" id="trash"></i>
+                  </div>
+                  <div style='clear:both'></div>
+                  {{-- <xspan class="tt">x</xspan> --}}
                 </div>
-              @endforeach
-            </div>
-            <!-- Lunch -->
-            <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
-            <label class="card-title text-center" style="color:#4caf50;">Lunch</label>
-            <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
-            <div class="card" style="margin-bottom: 10px">
-              @foreach($lunch as $lnch)
-                <div class='fc-event'>{{$lnch->dish_name}}</div>
-                <input type="hidden" class="dish_id" id="{{$lnch->did}}" value="{{$lnch->did}}"/>
-                <input type="hidden" id="be_id" name="be_id" value="{{$lnch->be_id}}"/>
-              @endforeach
-            </div>
-            <!-- Dinner -->
-            <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
-            <label class="card-title text-center" style="color:#4caf50;">Dinner</label>
-            <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
-            <div class="card" style="margin-bottom: 10px">
-              @foreach($dinner as $dnr)
-                <div class='fc-event'>{{$dnr->dish_name}}</div>
-                <input type="hidden" class="dish_id" id="{{$dnr->did}}" value="{{$dnr->did}}"/>
-                <input type="hidden" id="be_id" name="be_id" value="{{$dnr->be_id}}"/>
-              @endforeach
-            </div>
-          </div>
-        </div>
-
-        
-
-        <div style='clear:both'></div>
-
-    </div>
-
-              <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
-              <div class="card-block">
-                <button type="submit" class="btn btn-success btn-flat">Save Schedule</button>
-              </div>
+                <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
+                <div class="card-block">
+                  <button type="submit" class="btn btn-success btn-flat">Save Schedule</button>
+                </div>
               </form>
-              </div>
-
-         
-          <div class="card" style="width:92rem; float:right; margin-right:-10px; margin-left:10px; padding:10px">
-            <div id='calendar'></div>
-          </div>
-        </div><br><br><!--content!-->
-      </div><!--row!-->
-    </div><!--section!-->
-  </div><!--main raised!-->
-</div><!--wrapper!-->
+            </div>
+            <div class="card" style="width:92rem; float:right; margin-right:-10px; margin-left:10px; padding:10px">
+              <div id='calendar'></div>
+            </div>
+          </div><br><br><!--content!-->
+        </div><!--row!-->
+      </div><!--section!-->
+    </div><!--main raised!-->
+  </div><!--wrapper!-->
+</div>
 <script src='https://code.jquery.com/jquery-1.11.2.min.js'></script>
 <script src='https://code.jquery.com/ui/1.11.2/jquery-ui.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js'></script>
 <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.6/fullcalendar.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.0/fullcalendar.min.js'></script>
 
 
 <script>
-    $(document).ready(function() {
-        var  json_events;
-        
-        $.ajax({
-            url: '{{ route("user.fetch") }}',
-            method: 'get', // Send post data
-            data: {'type':'fetch'},
-            // async: false,
-            success: function(s){
-                json_events = s;
-                // console.log(s);
-                // $.each(s,function(index,value)
-                // {
-                //   // console.log(index);
-                // });
+$(document).ready(function() {
+    $('#external-events .fc-event').each(function() {
+      // make the event draggable using jQuery UI
+      $(this).draggable({
+        zIndex: 999,
+        revert: true, // will cause the event to go back to its
+        revertDuration: 0 //  original position after the drag
+      });
 
+    });
+    /* initialize the calendar
+    -----------------------------------------------------------------*/
 
+    // $('#calendar').fullCalendar({
+    //   header: {
+    //     left: 'prev,next today',
+    //     center: 'title',
+    //     right: 'month,agendaWeek,agendaDay'
+    //   },
+    //   editable: true,
+    //   droppable: true, // this allows things to be dropped onto the calendar
+    //   drop: function() {
+    //     $(this).remove();
+    //   },
+      
 
-
-
-
-
-                $('#calendar').fullCalendar({
-            // events: JSON.parse(json_events),
-            // events: {
-            //   url: "{{route('user.fetch')}}"
-            // }
-
+  // var  json_events;
+    $.ajax({
+      url: '{{ route("user.fetch") }}',
+      method: 'get', // Send post data
+      data: {'type':'fetch'},
+      // async: false,
+      success: function(s){
+             // $(document).click(function(event) {
+             //  // console.log(JSON.stringify(event));
+             //  console.log(event);
+             // var text = $(event.target);
+             // var id = text[0]['childNodes'][1]['value'];
+             // // alert(id);
+             //  });
+        json_events = s;
+        $('#calendar').fullCalendar({
             events: JSON.parse(s),
-            // events: [{"id":1,"title":"dedewd","start":"2017-12-08T00:12:00","end":"2017-12-08T00:12:00","allDay":"false"},{"id":68,"title":"awq","start":"2017-12-06T00:12:00","end":"2017-12-06T00:12:00","allDay":"false"},{"id":69,"title":"dedewd","start":"2017-12-07T00:12:00","end":"2017-12-07T00:12:00","allDay":"false"},{"id":70,"title":"uybwd","start":"2017-12-07T00:12:00","end":"2017-12-07T00:12:00","allDay":"false"},{"id":71,"title":"awq","start":"2017-12-06T00:12:00","end":"2017-12-06T00:12:00","allDay":"false"}],
-
-
-
-
-            // events: [{"id":"14","title":"New Event","start":"2017-12-24T16:00:00+04:00","allDay":false}],
-            utc: true,
-            header: {
-                left: 'prev,next today',
-                center: 'title',
-                right: 'month,agendaWeek,agendaDay'
-            }, 
-            
-            editable: true,
-            droppable: true, // this allows things to be dropped onto the calendar
-            dragRevertDuration: 0,
-            drop: function() {
-                // is the "remove after drop" checkbox checked?
-                if ($('#drop-remove').is(':checked')) {
-                    // if so, remove the element from the "Draggable Events" list
-                    $(this).remove();
-                }
-            },
-            eventDragStop: function( event, jsEvent, ui, view ) {
-                
-                if(isEventOverDiv(jsEvent.clientX, jsEvent.clientY)) {
-                    $('#calendar').fullCalendar('removeEvents', event._id);
-                    var el = $( "<div class='fc-event'>" ).appendTo( '#external-events-listing' ).text( event.title );
-                    el.draggable({
-                      zIndex: 999,
-                      revert: true, 
-                      revertDuration: 0 
-                    });
-                    el.data('event', { title: event.title, id :event.id, stick: true });
-                }
-            },
-            eventReceive: function(event){
-                var title = event.title;
-                var dish = $('.dish_id').val();
-                var be = document.getElementById('be_id').value;
-                var om = 2;
-                var start = event.start.format("YYYY-MM-DD[T]HH:MM:SS");
-                var end = (event.end == null) ? start : event.end.format();
-                $.ajax({
-                  url: "{{ route('user.storeplans') }}",
-                  // data: 'type=new&title='+title+'&startdate='+start+'&zone='+zone,
-                  data: {'type':'new','title':title,'start':start,'end':end,'dish_id':dish,'be_id':be,'plan_id':'2','om_id':om},
-                  method: "GET",
-                  dataType: 'json',
-                  success: function(){
-                    // event.id = response.eventid;
-                    // console.log(title);
-                    alert('success');
-                    // $('#calendar').fullCalendar('updateEvent',event);
-                  },
-                  error: function(e){
-                    console.log('error');
-                  }
-               });
-                $('#calendar').fullCalendar('updateEvent',event);
-            },
-            eventDrop: function(event, delta, revertFunc) {
-                var id = event.id;
-                var title = event.title;
-                var start = event.start.format("YYYY-MM-DD[T]HH:MM:SS");
-                var end = (event.end == null) ? start : event.end.format();
-                $.ajax({
-                    url: "{{ route('user.resetdate') }}",
-                    data: {'type':'resetdate','title':title,'start':start,'end':end,'eventid':id},
-                    method: "GET",
-                    dataType: 'json',
-                    success: function(response){
-                        if(response.status != 'success')                            
-                        revertFunc();
-                    },
-                    error: function(e){                     
-                        revertFunc();
-                        alert('Error processing your request: '+e.responseText);
-                    }
-                });
-            },
-            eventResize: function(event, delta, revertFunc) {
-                console.log(event);
-                var id = 1;
-                var title = event.title;
-                var end = event.end.format();
-                var start = event.start.format();
-                $.ajax({
-                    url: "{{url('user.resetdate')}}",
-                    data: {'type':'resetdate','title':title,'start':start,'end':end,'eventid':id},
-                    type: 'POST',
-                    dataType: 'json',
-                    success: function(response){
-                        if(response.status != 'success')                            
-                        revertFunc();
-                    },
-                    error: function(e){                     
-                        revertFunc();
-                        alert('Error processing your request: '+e.responseText);
-                    }
-                });
-            },
-        });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+          utc: true,
+          header: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'month,agendaWeek,agendaDay'
+          },  
+          editable: true,
+          droppable: true, // this allows things to be dropped onto the calendar
+          dragRevertDuration: 0,
+          drop: function() {
+            // is the "remove after drop" checkbox checked?
+            if ($('#drop-remove').is(':checked')) {
+              // if so, remove the element from the "Draggable Events" list
+              $(this).remove();
             }
+          },
+          eventDragStop: function (event, jsEvent, ui, view) {
+            if (isElemOverDiv()) {
+              var con = confirm('Are you sure to delete this permanently?');
+              if(con == true) {
+              var id = event.id;
+              $.ajax({
+                  url: '{{ route("user.delete") }}',
+                  data: {'id':id},
+                  method: 'GET',
+                  dataType: 'json',
+                  success: function(response){
+                    console.log(response);
+                    if(response.status == 'success'){
+                      $('#calendar').fullCalendar('removeEvents');
+                          getFreshEvents();
+                        }
+                  },
+                  error: function(e){ 
+                    alert('Error processing your request: '+e.responseText);
+                  }
+                });
+              }   
+            }
+          },
+          eventReceive: function(event){
+            var title = event.title;
+            console.log(event);
+            var dish = event.did;
+            var be = event.be;
+            var om = 2;
+            var start = event.start.format("YYYY-MM-DD[T]HH:MM:SS");
+            var end = (event.end == null) ? start : event.end.format();
+            $.ajax({
+              url: "{{ route('user.storeplans') }}",
+              // data: 'type=new&title='+title+'&startdate='+start+'&zone='+zone,
+              data: {'title':title,'start':start,'end':end,'dish_id':dish,'be_id':be,'plan_id':'2','om_id':om},
+              method: "GET",
+              dataType: 'json',
+              success: function(){
+                // event.id = response.eventid;
+                // console.log(title);
+                // alert('success');
+                $('#calendar').fullCalendar('updateEvent',event);
+              },
+              error: function(e){
+                console.log('error');
+              }
+            });
+            $('#calendar').fullCalendar('updateEvent',event);
+          },
+          eventDrop: function(event, delta, revertFunc) {
+            var id = event.id;
+            var title = event.title;
+            var start = event.start.format("YYYY-MM-DD[T]HH:MM:SS");
+            var end = (event.end == null) ? start : event.end.format();
+            $.ajax({
+              url: "{{ route('user.resetdate') }}",
+              data: {'title':title,'start':start,'end':end,'id':id},
+              method: "GET",
+              dataType: 'json',
+              success: function(response){
+                if(response.status != 'success')                            
+                  revertFunc();
+              },
+              error: function(e){                     
+                revertFunc();
+                alert('Error processing your request: '+e.responseText);
+              }
+            });
+          },
+          eventResize: function(event, delta, revertFunc) {
+            // console.log(event);
+            var id = event.id;
+            // console.log(event.id);
+            var title = event.title;
+            var end = event.end.format();
+            var start = event.start.format();
+            $.ajax({
+              url: "{{ route('user.resetdate') }}",
+              data: {'title':title,'start':start,'end':end,'id':id},
+              method: 'GET',
+              dataType: 'json',
+              success: function(response){
+                if(response.status != 'success')                            
+                  revertFunc();
+              },
+              error: function(e){                     
+                revertFunc();
+                  alert('error');
+              }
+            });
+          },
         });
-        var currentMousePos = {
-            x: -1,
-            y: -1
-        };
-            jQuery(document).on("mousemove", function (event) {
-            currentMousePos.x = event.pageX;
-            currentMousePos.y = event.pageY;
-        });
+      }
+    });
+    var currentMousePos = {
+      x: -1,
+      y: -1
+    };
+    jQuery(document).on("mousemove", function (event) {
+    currentMousePos.x = event.pageX;
+    currentMousePos.y = event.pageY;
+  });
 
         /* initialize the external events
         -----------------------------------------------------------------*/
-
-        $('#external-events .fc-event').each(function() {
-
-            // store data so the calendar knows to render an event upon drop
-            $(this).data('event', {
-                title: $.trim($(this).text()), // use the element's text as the event title
-                stick: true // maintain when user navigates (see docs on the renderEvent method)
-            });
-
-            // make the event draggable using jQuery UI
-            $(this).draggable({
-                zIndex: 999,
-                revert: true,      // will cause the event to go back to its
-                revertDuration: 0  //  original position after the drag
-            });
-
-        });
-        /* initialize the calendar
-        -----------------------------------------------------------------*/
-        // var zone= "05:30";
-        // console.log(json_events);
-        // $('#calendar').fullCalendar({
-        //     // events: JSON.parse(json_events),
-        //     // events: {
-        //     //   url: "{{route('user.fetch')}}"
-        //     // }
-
-        //     // events: json_events,
-        //     // events: [{"id":1,"title":"dedewd","start":"2017-12-08T00:12:00","end":"2017-12-08T00:12:00","allDay":"false"},{"id":68,"title":"awq","start":"2017-12-06T00:12:00","end":"2017-12-06T00:12:00","allDay":"false"},{"id":69,"title":"dedewd","start":"2017-12-07T00:12:00","end":"2017-12-07T00:12:00","allDay":"false"},{"id":70,"title":"uybwd","start":"2017-12-07T00:12:00","end":"2017-12-07T00:12:00","allDay":"false"},{"id":71,"title":"awq","start":"2017-12-06T00:12:00","end":"2017-12-06T00:12:00","allDay":"false"}],
-
-
-
-
-        //     // events: [{"id":"14","title":"New Event","start":"2017-12-24T16:00:00+04:00","allDay":false}],
-        //     utc: true,
-        //     header: {
-        //         left: 'prev,next today',
-        //         center: 'title',
-        //         right: 'month,agendaWeek,agendaDay'
-        //     }, 
-            
-        //     editable: true,
-        //     droppable: true, // this allows things to be dropped onto the calendar
-        //     dragRevertDuration: 0,
-        //     drop: function() {
-        //         // is the "remove after drop" checkbox checked?
-        //         if ($('#drop-remove').is(':checked')) {
-        //             // if so, remove the element from the "Draggable Events" list
-        //             $(this).remove();
-        //         }
-        //     },
-        //     eventDragStop: function( event, jsEvent, ui, view ) {
-                
-        //         if(isEventOverDiv(jsEvent.clientX, jsEvent.clientY)) {
-        //             $('#calendar').fullCalendar('removeEvents', event._id);
-        //             var el = $( "<div class='fc-event'>" ).appendTo( '#external-events-listing' ).text( event.title );
-        //             el.draggable({
-        //               zIndex: 999,
-        //               revert: true, 
-        //               revertDuration: 0 
-        //             });
-        //             el.data('event', { title: event.title, id :event.id, stick: true });
-        //         }
-        //     },
-        //     eventReceive: function(event){
-        //         var title = event.title;
-        //         var dish = document.getElementById('dish_id').value;
-        //         var be = document.getElementById('be_id').value;
-        //         var om = 2;
-        //         var start = event.start.format("YYYY-MM-DD[T]HH:MM:SS");
-        //         var end = (event.end == null) ? start : event.end.format();
-        //         $.ajax({
-        //           url: "{{ route('user.storeplans') }}",
-        //           // data: 'type=new&title='+title+'&startdate='+start+'&zone='+zone,
-        //           data: {'type':'new','title':title,'start':start,'end':end,'dish_id':dish,'be_id':be,'plan_id':'2','om_id':om},
-        //           method: "GET",
-        //           dataType: 'json',
-        //           success: function(){
-        //             // event.id = response.eventid;
-        //             // console.log(title);
-        //             alert('success');
-        //             // $('#calendar').fullCalendar('updateEvent',event);
-        //           },
-        //           error: function(e){
-        //             console.log('error');
-        //           }
-        //        });
-        //         $('#calendar').fullCalendar('updateEvent',event);
-        //     },
-        //     eventDrop: function(event, delta, revertFunc) {
-        //         var id = 1;
-        //         var title = event.title;
-        //         var start = event.start.format("YYYY-MM-DD[T]HH:MM:SS");
-        //         var end = (event.end == null) ? start : event.end.format();
-        //         $.ajax({
-        //             url: "{{ route('user.resetdate') }}",
-        //             data: {'type':'resetdate','title':title,'start':start,'end':end,'eventid':id},
-        //             method: "GET",
-        //             dataType: 'json',
-        //             success: function(response){
-        //                 if(response.status != 'success')                            
-        //                 revertFunc();
-        //             },
-        //             error: function(e){                     
-        //                 revertFunc();
-        //                 alert('Error processing your request: '+e.responseText);
-        //             }
-        //         });
-        //     },
-        //     eventResize: function(event, delta, revertFunc) {
-        //         console.log(event);
-        //         var id = 1;
-        //         var title = event.title;
-        //         var end = event.end.format();
-        //         var start = event.start.format();
-        //         $.ajax({
-        //             url: "{{url('user.resetdate')}}",
-        //             data: {'type':'resetdate','title':title,'start':start,'end':end,'eventid':id},
-        //             type: 'POST',
-        //             dataType: 'json',
-        //             success: function(response){
-        //                 if(response.status != 'success')                            
-        //                 revertFunc();
-        //             },
-        //             error: function(e){                     
-        //                 revertFunc();
-        //                 alert('Error processing your request: '+e.responseText);
-        //             }
-        //         });
-        //     },
-        // });
-        function getFreshEvents(){
-            $.ajax({
-                url: "{{route('user.fetch')}}",
-                type: 'POST', // Send post data
-                data: 'type=fetch',
-                async: false,
-                success: function(s){
-                    freshevents = s;
-                }
-            });
-            $('#calendar').fullCalendar('addEventSource', JSON.parse(freshevents));
-        }
-        var isEventOverDiv = function(x, y) {
-
-            var external_events = $( '#external-events' );
-            var offset = external_events.offset();
-            offset.right = external_events.width() + offset.left;
-            offset.bottom = external_events.height() + offset.top;
-
-            // Compare
-            if (x >= offset.left
-                && y >= offset.top
-                && x <= offset.right
-                && y <= offset .bottom) { return true; }
-            return false;
-
-        }
+  // $('#external-events .fc-event').each(function() {
+  //   // store data so the calendar knows to render an event upon drop
+  //   $(this).data('event', {
+  //     title: $.trim($(this).text()), // use the element's text as the event title
+  //     stick: true // maintain when user navigates (see docs on the renderEvent method)
+  //   });
+  //   // make the event draggable using jQuery UI
+  //   $(this).draggable({
+  //     zIndex: 999,
+  //     revert: true,      // will cause the event to go back to its
+  //     revertDuration: 0  //  original position after the drag
+  //   });
+  // });
+  function getFreshEvents(){
+    $.ajax({
+      url: "{{route('user.fetch')}}",
+      type: 'get', // Send post data
+      data: 'type=fetch',
+      async: false,
+      success: function(s){
+        freshevents = s;
+        // alert('hi');
+      }
     });
+    $('#calendar').fullCalendar('addEventSource', JSON.parse(freshevents));
+  }
+  function isElemOverDiv() {
+        var trashEl = jQuery('#trash');
+
+        var ofs = trashEl.offset();
+
+        var x1 = ofs.left;
+        var x2 = ofs.left + trashEl.outerWidth(true);
+        var y1 = ofs.top;
+        var y2 = ofs.top + trashEl.outerHeight(true);
+
+        if (currentMousePos.x >= x1 && currentMousePos.x <= x2 &&
+            currentMousePos.y >= y1 && currentMousePos.y <= y2) {
+            return true;
+        }
+        return false;
+  }
+});
 
 </script>
 @endsection
@@ -642,9 +492,7 @@ hr{
   });
 
 
-$(".form_datetime").datetimepicker({
-        format: "dd MM yyyy - hh:ii"
-    }); 
+
   
 </script>
 

@@ -54,7 +54,7 @@ class PlannedMController extends Controller
                             ->get();
          $lunch = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
                             ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
-                            ->where('dish_besteaten.be_id', 2)->take(3)
+                            ->where('dish_besteaten.be_id', 2)->take(4)
                             ->get();
          $dinner = Dish::join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
                             ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
@@ -100,7 +100,8 @@ class PlannedMController extends Controller
 
     public function storePlans(Request $request){
         $id = Auth::id();
-        $events = PlannedMeals::create(['title' => $request['title'],
+        $events = PlannedMeals::create([
+                                        'title' => $request['title'],
                                         'user_id' => $id,
                                         'om_id' => $request['om_id'],
                                         'dish_id' => $request['dish_id'],
@@ -119,14 +120,15 @@ class PlannedMController extends Controller
       $title = $request['title'];
       $startdate = $request['start'];
       $enddate = $request['end'];
-      $eventid = $request['eventid'];
-      // dd($title);
+      $eventid = $request['id'];
+      // dd($eventid);
 
       $update = PlannedMeals::where('id',$eventid)
                       ->update(['title'=>$title, 
                                 'start'=>$startdate,
                                 'end'=>$enddate
                       ]);
+                      // dd($update);
       if($update)
         return response()->json(['status'=>'success']);
       else
@@ -136,7 +138,7 @@ class PlannedMController extends Controller
     public function fetchPlans(Request $request){
 
         $events = array();
-        $query = PlannedMeals::select('id', 'title', 'start', 'end', 'allDay')->get();
+        $query = PlannedMeals::select('id', 'title', 'dish_id', 'start', 'end', 'allDay')->get();
 
         
         // while($fetch = mysqli_fetch_array($query,MYSQLI_ASSOC))
@@ -157,6 +159,19 @@ class PlannedMController extends Controller
         return $query->toJson();
         // return response()->json($query);
     }
+
+    public function deletePlan(Request $request){
+      $id = $request['id'];
+
+      $delete = PlannedMeals::where('id', $id)->delete();
+                             
+      if($delete)
+        return response()->json(['status'=>'success']);
+      else
+        return response()->json(['status'=>'failed']);
+    }
+
+    
 
 
 
