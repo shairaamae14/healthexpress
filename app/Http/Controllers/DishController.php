@@ -16,6 +16,10 @@ use App\UnitMeasurement;
 use App\DishIngredient;
 use App\Preparation;
 use App\CookCatalog;
+use App\Event;
+use App\CookPlan;
+use App\Pmealdishes;
+use Calendar;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Input;
@@ -46,6 +50,34 @@ class DishController extends Controller
         
         
       return view('cook.dishes', compact('dishes', 'dbestEaten'));
+    
+    }
+
+       public function pmindex()
+    {
+        $id = Auth::id();
+        
+        $pmdishes = PmealDishes::join('dishes', 'dishes.did','=', 'pm_dishes.dish_id')->where('cook_id', $id)
+                        ->get(); 
+          $pmdaily = PmealDishes::join('dishes', 'dishes.did','=', 'pm_dishes.dish_id')
+                                ->where('cook_id', $id)
+                                ->where('plan', 'Daily')
+                                ->get();
+         $pmweekly = PmealDishes::join('dishes', 'dishes.did','=', 'pm_dishes.dish_id')
+                                ->where('cook_id', $id)
+                                ->where('plan', 'Weekly')
+                                ->get();  
+          $pmmonthly = PmealDishes::join('dishes', 'dishes.did','=', 'pm_dishes.dish_id')
+                                ->where('cook_id', $id)
+                                ->where('plan', 'Monthly')
+                                ->get();    
+        foreach($pmdishes as $dish) {
+            $dbestEaten = DishBestEaten::join('besteaten_at' , 'besteaten_at.be_id', '=' , 'dish_besteaten.be_id')
+              ->where('dish_id', $dish->did)->get();
+        }               
+        
+        
+      return view('cook.pmdishes', compact('pmdishes', 'pmdaily', 'pmweekly', 'pmmonthly', 'dbestEaten'));
     
     }
 
@@ -104,13 +136,13 @@ class DishController extends Controller
             ]);
 
         for($i = 0 ; $i < count($request['best']); $i++) {
-            $bestEaten = DishBestEaten::create(['dish_id' => $dish->id,
+            $bestEaten = DishBestEaten::create(['dish_id' => $dish->did,
                                             'be_id' => $request['best'][$i],
                                             'status' => 1]);
         }
         
         $catalog = CookCatalog::create(['cook_id' => $dish->authorCook_id,
-                                        'dish_id' => $dish->id,
+                                        'dish_id' => $dish->did,
                                         'isSignatureDish' => $request->signDish,
                                         'status' => 1]);
         
@@ -124,7 +156,7 @@ class DishController extends Controller
             
             $ing = DishIngredient::create([
                 'um_id' => $um[$i],
-                'dish_id' => $dish->id,
+                'dish_id' => $dish->did,
                 'ing_id' => $ingred[$i],
                 'quantity' => $quan[$i],
                 'preparation' => $prep[$i],
@@ -135,7 +167,7 @@ class DishController extends Controller
 
         $dish_ing = DishIngredient::join('unit_measurements', 'unit_measurements.um_id','=','dish_ingredients.um_id')
                             ->join('ingredient_list','ingredient_list.id','=','dish_ingredients.ing_id')
-                            ->where('dish_ingredients.dish_id', $dish->id)
+                            ->where('dish_ingredients.dish_id', $dish->did)
                             ->get();
 
         // dd($dish_ing->ding_id);
@@ -168,7 +200,7 @@ class DishController extends Controller
         $cholesterol/=$request['serving'];
 
             $nutrifacts = NutritionFacts::create([
-                            'dish_id' => $dish->id,
+                            'dish_id' => $dish->did,
                             'gram_weight' => '123',
                             'calories' => $energy,
                             'protein' => $protein,
@@ -533,4 +565,29 @@ class DishController extends Controller
 
 
     }
+
+    public function viewPlan(){
+      $id=Auth::id();
+      $dishes=Dish::where('authorCook_id', $id)->get();
+      return view('cook.makeplan', compact('dishes'));
+    }
+    
+
+    public function storePlan(Request $request){
+       $id = Auth::id();
+      $dish_id= Input::get('dish_id');
+      $plans= Input::get('plan');
+      // dd($plan);
+      // dd($request['dish_id']);
+    
+    for($i=0; $i<count($dish_id);$i++){
+         $plan =Pmealdishes::create(['cook_id'=>$id,
+                                    'dish_id'=>$dish_id[$i],
+                                    'plan'=>$plans[$i]          
+                          ]);
+        }
+
+        return redirect()->route('cook.pmdishes');
+     }
+
 }
