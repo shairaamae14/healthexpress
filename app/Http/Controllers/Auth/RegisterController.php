@@ -138,7 +138,7 @@ class RegisterController extends Controller
         return $user;
     }
     
-    public function index() {
+    public function showRegistrationForm() {
         $goals = HealthGoals::all();
         $lifestyles = Lifestyles::all();
         $allergens = Allergens::all();
