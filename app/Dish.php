@@ -25,7 +25,7 @@ class Dish extends Model
     }
 
     public function nfacts() {
-        return $this->hasOne('App\NutritionalFacts', 'ding_id', 'did');
+        return $this->hasOne('App\NutritionFacts', 'ding_id', 'did');
     }
     
     public function planned_meals()
