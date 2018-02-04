@@ -106,7 +106,7 @@ Route::prefix('cook')->group(function() {
 	Route::get('/', 'CookController@index')->name('cook.dashboard');
 	Route::post('/', 'CookController@index')->name('cook.sort');
 	Route::get('/logout', 'Auth\CookLoginController@logout')->name('cook.logout');
-
+	
 	//Password reset routes
 	Route::post('/password/email', 'Auth\CookForgotPasswordController@sendResetLinkEmail')->name('cook.password.email');
 	Route::get('/password/reset', 'Auth\CookForgotPasswordController@showLinkRequestForm')->name('cook.password.request');
@@ -118,8 +118,9 @@ Route::prefix('cook')->group(function() {
 	Route::get('orders/eodetails', function(){
         return view('cook.vieweorder');
 	});
-	Route::get('orders', 'CookController@showExOrders')->name('cook.expressorders');
-	Route::get('orders', 'CookController@showOrders')->name('cook.orders');
+	Route::get('orders/express', 'CookController@showExOrders')->name('cook.expressorders');
+	Route::get('orders/planned', 'CookController@fetch')->name('cook.porders');
+	Route::get('orders/planned/{id}/{planid}', 'CookController@showPlanOrders')->name('cook.planorder');
 	
 	//Dishes
 	Route::get('/dishes/addCatalog', 'DishController@addCatalog')->name('dish.catalog');
