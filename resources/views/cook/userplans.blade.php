@@ -25,13 +25,15 @@
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
         <section class="content-header">
-             <h1>Express Orders</h1>
+             <h1>Planned Meals</h1>
             <ol class="breadcrumb">
                 <li class="active"><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
             </ol>
         </section>
+
        <br> 
         <section class="content">
+            <button type="button" class="btn btn-flat btn-success" onclick="window.location.href='{{route('cook.porders')}}'" style="margin-bottom:20px"><i class="fa fa-mail-reply"></i> Back</button>
         <div class="box">
             <div class="box-body">
                 <form id ="sortorder" action =" {{url('cook/')}}" method ='POST'>
@@ -53,38 +55,47 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Order(s)</th>
-                                <th>Order Mode</th>
                                 <th>Date & Time Ordered</th>
-                                <th>Status</th>
+                                <th>Meal For</th>
+                                <th>Side Note(s)</th>
                                 <th class="disabled-sorting text-right">Action</th>
                                 
                             </tr>
                         </thead>
                         <tbody>
-                            @if($orders)
-                            @foreach($orders as $order)
+                            @if($meals)
+                            @foreach($meals as $order)
                             <tr>
-                                <td>{{$order->user->fname}} {{$order->user->lname}}</td>
-                                <td>{{$order->dishes[0]['dish_name']}}</td>
-                                <td>{{$order->order->order_mode->om_name}}</td>
-                                {{-- <td>{{date_format($order->created_at,'F d Y h:i:s A')}}</td> --}}
-                                <td>January 02, 2018 12:30:00 PM</td>
-                                @if($order->order_status == 'Pending')
+                                <td>{{$order->fname}} {{$order->lname}}</td>
+                                {{-- <td>{{$order->dishes[0]['dish_name']}}</td> --}}
+                                <td>{{$order->dish_name}}</td>
+                                <td>February 02, 2018 12:30:00 PM</td>
+                                {{-- <td>{{date_format($order->start,'F d Y h:i:s A')}}</td> --}}
+                                <td>{{$order->name}}</td>
+                                @if($order->note != null)
+                                    <td>{{$order->note}}</td>
+                                @else
+                                  <td>None</td>
+                                @endif
+                                
+                                {{-- <td>January 02, 2018 12:30:00 PM</td> --}}
+                                {{-- <td><button class="btn btn-default btn-flat"><a href="{{route('cook.planorder',['id' => $order->user_id, 'planid'=>$order->plan_id])}}">View Details</a></button></td> --}}
+                                @if($order->p_status == 'Pending')
                                 <td><span class="label label-default">Pending</span></td>
                                 <td class="text-right">
-                                    <button class="btn btn-default btn-flat" data-toggle="modal" data-target="#view_details{{$order->user_id}}">View Details</button>
+                                    {{-- <button class="btn btn-default btn-flat" data-toggle="modal" data-target="#view_details{{$order->user_id}}">View Details</button> --}}
                                     <button class="btn btn-default btn-flat" data-toggle="tooltip" data-placement="top" title="Change to Cooking" onclick="cooking({{$order->uo_id}})" id="Cooking" value="Cooking">Cooking</button>
                                 </td>
-                                @elseif($order->order_status == 'Cooking')
+                                @elseif($order->p_status == 'Cooking')
                                 <td><span class="label label-warning">Cooking</span></td>
                                 <td class="text-right">
-                                    <button class="btn btn-default btn-flat" data-toggle="modal" data-target="#view_details{{$order->user_id}}">View Details</button>
+                                    {{-- <button class="btn btn-default btn-flat" data-toggle="modal" data-target="#view_details{{$order->user_id}}">View Details</button> --}}
                                     <button class="btn btn-default btn-flat" onclick="delivering({{$order->uo_id}})" id="Done" value="Done" data-toggle="tooltip" data-placement="top" title="Change to Delivering">Deliver</button></a>
                                 </td>
-                                @elseif($order->order_status == 'Delivering')
+                                @elseif($order->p_status == 'Delivering')
                                 <td><span class="label label-info">Delivering</span></td>
                                 <td class="text-right">
-                                    <button class="btn btn-default btn-flat" data-toggle="modal" data-target="#view_details{{$order->user_id}}">View Details</button>
+                                    {{-- <button class="btn btn-default btn-flat" data-toggle="modal" data-target="#view_details{{$order->user_id}}">View Details</button> --}}
                                     Waiting for customer response.
                                 </td>
                                 @else
@@ -110,7 +121,7 @@
       <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
       reserved.
     </footer>
-@foreach($orders as $order)
+{{-- @foreach($orders as $order)
 <div class="modal fade" id="view_details{{$order->user_id}}">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -161,7 +172,7 @@
   <!-- /.modal-dialog -->
 </div>
 <!-- /.modal -->
-@endforeach
+@endforeach --}}
 @endsection
 @section('addtl_scripts')
 <!-- jQuery 3 -->

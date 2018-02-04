@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\UserOrder;
+use App\PlannedMeals;
+
 
 
 class CookController extends Controller
@@ -95,7 +97,8 @@ class CookController extends Controller
 
     public function showExOrders()
     {
-        return view('cook.eorders');
+        $orders = UserOrder::all();
+        return view('cook.eorders', compact('orders'));
     }
 
 
@@ -113,5 +116,39 @@ class CookController extends Controller
         return response()->json(['data'=>$cook]);
     }
 
+    public function fetch(Request $request){
+        $fetch = PlannedMeals::join('dishes','planned_meals.dish_id', '=', 'dishes.did')
+                            ->join('cooks', 'dishes.authorCook_id' , '=', 'cooks.id')
+                            ->join('users', 'planned_meals.user_id', '=', 'users.id')
+                            ->join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+                            ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
+                            ->join('plans', 'planned_meals.plan_id', '=', 'plans.id')
+                            ->join('order_mode', 'planned_meals.om_id', '=', 'order_mode.id')
+                            ->where('order_status', 'ordered')
+                            ->distinct()
+                            ->get(['fname','plan_id','plan_name','lname','om_name','user_id','note']);
+                            // dd($fetch);
+
+
+        return view('cook.planned', compact('fetch'));
+    }
+
+    public function showPlanOrders($id, $planid){
+
+        $meals = PlannedMeals::join('dishes','planned_meals.dish_id', '=', 'dishes.did')
+                            ->join('cooks', 'dishes.authorCook_id' , '=', 'cooks.id')
+                            ->join('users', 'planned_meals.user_id', '=', 'users.id')
+                            ->join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
+                            ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
+                            ->join('plans', 'planned_meals.plan_id', '=', 'plans.id')
+                            ->join('order_mode', 'planned_meals.om_id', '=', 'order_mode.id')
+                            ->where('user_id', $id)
+                            ->where('plan_id', $planid)
+                            ->where('order_status', 'ordered')
+                            ->get();
+
+
+      return view('cook.userplans', compact('meals'));
+    }
 
 }

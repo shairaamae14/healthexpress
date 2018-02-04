@@ -46,8 +46,8 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="#"><i class="fa fa-circle-o"></i> Express Meals</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> Planned Meals</a></li>
+            <li><a href="{{route('cook.expressorders')}}"><i class="fa fa-circle-o"></i> Express Meals</a></li>
+            <li><a href="{{route('cook.porders')}}"><i class="fa fa-circle-o"></i> Planned Meals</a></li>
           </ul>
         </li>
         <li>
@@ -78,8 +78,8 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="#"><i class="fa fa-circle-o"></i> Express Meals</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> Planned Meals</a></li>
+            <li><a href="{{route('cook.expressorders')}}"><i class="fa fa-circle-o"></i> Express Meals</a></li>
+            <li><a href="{{route('cook.porders')}}"><i class="fa fa-circle-o"></i> Planned Meals</a></li>
           </ul>
         </li>
         <li>
@@ -110,8 +110,8 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="#"><i class="fa fa-circle-o"></i> Express Meals</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> Planned Meals</a></li>
+            <li><a href="{{route('cook.expressorders')}}"><i class="fa fa-circle-o"></i> Express Meals</a></li>
+            <li><a href="{{route('cook.porders')}}"><i class="fa fa-circle-o"></i> Planned Meals</a></li>
           </ul>
         </li>
         <li class="active">
@@ -141,14 +141,16 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href=""><i class="fa fa-circle-o"></i> Express Meals</a></li>
-            <li><a href="#"><i class="fa fa-circle-o"></i> Planned Meals</a></li>
+            <li><a href="{{route('cook.expressorders')}}"><i class="fa fa-circle-o"></i> Express Meals</a></li>
+            <li><a href="{{route('cook.porders')}}"><i class="fa fa-circle-o"></i> Planned Meals</a></li>
           </ul>
         </li>
+        <li>
         <a href="{{route('cook.pmdishes')}}">
             <i class="fa fa-calendar-check-o"></i>
             <span>Planned Meals</span>
           </a>
+        </li>
         @endif
       </ul>
     </section>
