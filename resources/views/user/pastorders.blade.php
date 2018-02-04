@@ -129,7 +129,8 @@ div.tab button.active {
     <div class="section">
       <div class="container">
         <div class="row">
-          <h1 class="text-center">Order History</h1>
+           <a href="{{route('order.orderhistory')}}" class="btn-simple btn btn-succes"><i class="material-icons">arrow_back</i>Go back to order status</a>
+            <h1 class="text-center" style="color:white; background-color: #4caf50"><b>Order History</b></h1>
               @if(count($done))
                     <table class="table">
                       <thead>
