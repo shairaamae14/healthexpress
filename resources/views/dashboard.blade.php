@@ -61,6 +61,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            @if($orders)
                             @foreach($orders as $order)
                             <tr>
                                 <td>{{$order->user->fname}} {{$order->user->lname}}</td>
@@ -91,6 +92,7 @@
                                 @endif
                             </tr>
                             @endforeach
+                            @endif
                         </tbody>
                     </table>
                 </div>              
