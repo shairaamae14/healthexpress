@@ -1,8 +1,8 @@
 @extends('cook-layouts.cook-master')
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js" ></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.js" ></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.js" ></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 
 <style>
 
@@ -111,364 +111,131 @@ fieldset{
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
             <li class="active">Dishes</li>
             </ol>
+            <div>
+                <button type="button" class="btn bg-olive btn-flat btn-lg" onclick="window.history.back();"><i class="fa fa-arrow-left"></i> Cancel</button>
+            </div>
     </section>
 
-    <!-- Main content -->
-    <!-- <section class="content"> -->
-        <!-- <div class="container">
-            <div class="stepwizard col-md-offset-3">
-                <div class="stepwizard-row setup-panel">
-                    <div class="stepwizard-step">
-                        <a href="#step-1"  class="btn-success" style="background-color: #30BB6D; color:white; border-radius:150px"><center><img src="{{asset('img/food.svg')}}" style="width:55px; height:45px"/></center></a>
-                        <p>Dish Details</p>
-                    </div>
-                    <div class="stepwizard-step">
-                        <a href="#step-2" class="btn-success" style="background-color: #30BB6D; color:white; border-radius:150px" disabled="disabled"><center><img src="{{asset('img/ingredients.svg')}}" style="width:75px; height:55px"/></center></a>
-                        <p>Ingredients</p>
-                    </div>
-                    <div class="stepwizard-step">
-                        <a href="#step-3" class="btn-success" style="background-color: #30BB6D; color:white; border-radius:150px" disabled="disabled"><center><img src="{{asset('img/plus.svg')}}" style="width:55px; height:45px"/></center></a>
-                    <p>Save Dish</p>
-                    </div>
-                </div>
-            </div> -->
+    <div class="container">
+       <form id="add_dish" method="post" action="{{route('cook.dishes.create')}}" enctype="multipart/form-data">
+        {{csrf_field()}}
+    <h3>Dish</h3>
+    <fieldset>
+        <legend>Dish Details</legend>
+            <div class="form-group col-md-4">
+           <!--  <img src="{{asset('img/choose.png')}}" class="img-circle" id="img-tag" width="200px" />
+            <br>
+            <label for="exampleInputFile">Dish Image</label>
+            <input type="file" id="img" name="img">
+              <p class="help-block">jpg., jpeg., png. extension only</p> -->
+              <input type="file" class="dropify" data-height="160" data-allowed-file-extensions="jpg jpeg png svg"/ name="img" id="img">
+        </div>
+
+        <div class="form-group col-md-3">
+            <!-- <label>Name:</label> -->
+            <input type="text" class="form-control" id="dish_name" name="dish_name" placeholder="Name" required autofocus>
+        </div>
+        <div class="form-group col-md-3">
+            <!-- <label>No.of Serving:</label> -->
+            <input type="number" class="form-control" id="serving" name="serving" placeholder="No. of serving(s)" min="1" required autofocus>
+        </div>
+        <div class="form-group col-md-3">
+            <!-- <label>Preparation Time:</label>  -->
+            <input type="text" id="duration" name="duration" required>
+        </div>
+
+        <div class="form-group col-md-3">
+            <!-- <label>Price:</label> -->
+            <div class="input-group">
+            <input type="text" class="form-control" id="price" name="price" placeholder="Price" required>
+            </div>
+        </div>
+        <div class="form-group col-md-3">
+            <label>Best Eaten during:</label><br>
+            @foreach($beaten as $be)
+            <input type="checkbox" class="flat-red" value="{{$be->be_id}}" id="best" name="best[]"><label>{{$be->name}}</label>
+            @endforeach
+        </div> 
+
+        <div class="form-group col-md-3 ">
+            <label>Signature Dish:</label><br>
+            <input type="checkbox" class="signDish" id="signDish" name="signDish" value="1"><label>Yes</label>
+            <input type="checkbox" class="signDish" id="signDish" name="signDish" value="0"><label>No</label>
+        </div>
+        <div class="form-group col-md-12">
+            <label>Description:</label>
+            <textarea class="form-control" rows="3" id="dish_desc" name="dish_desc" placeholder="Description" required autofocus></textarea>                
+        </div>
+    </fieldset>
  
-        <div class="container">
-            <div class="stepwizard col-md-offset-3">
-                <div class="stepwizard-row setup-panel">
-                  <div class="stepwizard-step">
-                    <a href="#step-1" type="button" class="btn btn-primary btn-circle">1</a>
-                    <p>Dish Details</p>
-                  </div>
-                  <div class="stepwizard-step">
-                    <a href="#step-2" type="button" class="btn btn-default btn-circle" disabled="disabled">2</a>
-                    <p>Ingredient Details</p>
-                  </div>
-                  <div class="stepwizard-step">
-                    <a href="#step-3" type="button" class="btn btn-default btn-circle" disabled="disabled">3</a>
-                    <p>Dish Summary</p>
-                  </div>
-                </div>
-              </div>
-  
-  <form role="form"  method="post" action="{{route('cook.dishes.create')}}" enctype="multipart/form-data">
-    {{csrf_field()}}
-    <div class="row setup-content" id="step-1">
-      <div class="col-xs-6 col-md-offset-3">
+    <h3>Ingredients</h3>
+    <fieldset>
+        <legend>Ingredient Details</legend>
         <div class="col-md-12">
-          <h3>Dish Details</h3>
-              <div class="form-group col-md-6">
-                                <img src="{{asset('img/choose.png')}}" class="img-circle" id="img-tag" width="200px" />
-                                <br>
-                                <label for="exampleInputFile">Dish Image</label>
-                                <input type="file" id="img" name="img">
-                                  <p class="help-block">jpg., jpeg., png. extension only</p>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label>Name:</label>
-                                <input type="text" class="form-control" id="dish_name" name="dish_name" placeholder="Name" required autofocus>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label>No. of Serving:</label>
-                                <input type="number" class="form-control" id="serving" name="serving" placeholder="No. of serving(s)" min="1" required autofocus>
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label>Preparation Time:</label> 
-                                <input type="text" id="duration" name="duration" required>
-                            </div>
-
-                            <div class="form-group col-md-6">
-                                <label>Price:</label>
-                                <input type="text" class="form-control" id="price" name="price" placeholder="Price" required>
-                            </div>
-                            <div class="form-group col-md-8">
-                                <label>Best Eaten during:</label><br>
-                                @foreach($beaten as $be)
-                                <input type="checkbox" class="flat-red" value="{{$be->be_id}}" id="best" name="best[]"><label>{{$be->name}}</label>
-                                @endforeach
-                            </div> 
-                            <div class="form-group col-md-8">
-                                <label>Signature Dish:</label><br>
-                                <input type="checkbox" id="signDish" name="signDish" value="1"><label>Yes</label>
-                                <input type="checkbox" id="signDish" name="signDish" value="0"><label>No</label>
-                            </div> 
-                            <div class="form-group col-md-9">
-                                <label>Description:</label>
-                                <textarea class="form-control" rows="3" id="dish_desc" name="dish_desc" placeholder="Description" required autofocus></textarea>                
-                           </div>
-
-              <button class="btn btn-primary nextBtn btn-lg pull-right" type="button" onclick="summary()" >Next</button>
+        <div class="form-group">
+          <select class="js-data-example-ajax form-control col-md-12" id="ingredients" name="ingredients" autofocus="">
+            @foreach($list as $ing)
+              <option value="{{$ing->id}}">{{$ing->Shrt_Desc}}</option>
+            @endforeach
+          </select>
+          <input type="hidden" id="ing_id" multiple name="ing_id[]" value=""/>
         </div>
-      </div>
-    </div>
-    <div class="row setup-content" id="step-2">
-      <div class="col-xs-6 col-md-offset-3">
-        <div class="col-md-12">
-          <h3>Ingredient Details</h3>
-              
-                 <div class="form-group ui-widget">
-                              {{-- <input type="text" class="form-control" name="ingredients" id="ingredients" placeholder="Search" autofocus> --}}
-
-
-
-                              <select class="js-data-example-ajax form-control"></select>
-
-
-
-                              <input type="hidden" id="ing_id" multiple name="ing_id[]" value=""/>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <input type="number" class="form-control" id="quantity" name="quantity" placeholder="Quantity" ng-model="choice.name" min="0" autofocus >
-                            </div>
-                            <div class="form-group col-md-3">
-                                <select class="form-control" id="preparation" name="preparation" id="preparation" name="preparation" style="width:100px;" autofocus>
-                                    @foreach($preps as $prep)
-                                        <option value="{{ $prep->p_id }}">{{$prep->p_name}}</option> 
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-group col-md-4">
-                                <select class="form-control" id="um" name="um" style="width:150px;">
-                                  @foreach($units as $um)
-                                    <option value="{{ $um->um_id }}">{{$um->um_name}}</option> 
-                                  @endforeach
-                                </select>
-                            </div>
-                            <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
-                            
-                            <button class="addfields remove" onclick="addChoice(); return false;" ng-click="addNewChoice()">+</button>  
-                            <div class="form-group">
-                                <div ng-app="angularjs-starter" ng-controller="MainCtrl">
-                            <table id="part">
-                                <tr>
-                                  <th style="width:150px">Ingredient Name</th>
-                                  <th style="width:150px">Quantity</th>
-                                  <th style="width:150px">Preparation</th>
-                                  <th style="width:150px">Unit of Measure</th>
-                                  <th style="width:150px">Action</th>
-                                </tr>
-
-                            </table>
-                        </div>
-                            </div>
-                            <div>    
-              <button class="btn btn-primary nextBtn btn-lg pull-right" type="button" >Next</button>
         </div>
-      </div>
-    </div>
-</div>
-    <div class="row setup-content" id="step-3">
-      <div class="col-xs-6 col-md-offset-3">
-        <div class="col-md-12">
-          <h3>Dish Summary</h3>
-
-                    <p>Dish Details</p>
-                    <div id="summary"></div>
-                    <p>Ingredient Details</p>
-
-             <button type="submit" class="btn btn-block btn-success pull-right" href="{{route('cook.dishes.create')}}"><i class="fa fa-plus"></i>Add Dish</button> 
+        <div class="form-group col-md-4">
+            <input type="number" class="form-control" id="quantity" name="quantity" placeholder="Quantity" ng-model="choice.name" min="0" autofocus >
         </div>
-      </div>
-    </div>
-  </form>
+        <div class="form-group col-md-3">
+            <select class="form-control" id="preparation" name="preparation" style="width:100px;" autofocus>
+                @foreach($preps as $prep)
+                    <option value="{{ $prep->p_id }}">{{$prep->p_name}}</option> 
+                @endforeach
+            </select>
         </div>
-    <!-- </section> -->
+        <div class="form-group col-md-4">
+            <select class="form-control" id="um" name="um" style="width:150px;">
+              @foreach($units as $um)
+                <option value="{{ $um->um_id }}">{{$um->um_name}}</option> 
+              @endforeach
+            </select>
+        </div>
+        <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
+        <button class="addfields remove" onclick="addChoice(); return false;" ng-click="addNewChoice()">+</button>
+        <div class="form-group">
+            <table id="part">
+                <tr>
+                  <th style="width:150px">Ingredient Name</th>
+                  <th style="width:150px">Quantity</th>
+                  <th style="width:150px">Preparation</th>
+                  <th style="width:150px">Unit of Measure</th>
+                </tr>
+            </table>
+        </div>
+    </fieldset>
+ 
+    <h3>Dish Summary</h3>
+    <fieldset>
+        <legend>Dish Summary</legend>
+ 
+        <p>Dish Details</p>
+        <div id="summary"></div>
+        <p>Ingredient Details</p>
+    </fieldset>
 
+    </form>
+    
 
-
-
-   <!-- </div> -->
 </div>
 
 
+<footer class="main-footer">
+    <div class="pull-right hidden-xs">
+      <b>Version</b> 2.4.0
+    </div>
+    <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
+    reserved.
+</footer>
 
-<script>
 
-$(".js-example-data-ajax").select2({
-  ajax: {
-    url: "https://api.github.com/search/repositories",
-    dataType: 'json',
-    delay: 250,
-    data: function (params) {
-      return {
-        q: params.term, // search term
-        page: params.page
-      };
-    },
-    processResults: function (data, params) {
-      // parse the results into the format expected by Select2
-      // since we are using custom formatting functions we do not need to
-      // alter the remote JSON data, except to indicate that infinite
-      // scrolling can be used
-      params.page = params.page || 1;
-
-      return {
-        results: data.items,
-        pagination: {
-          more: (params.page * 30) < data.total_count
-        }
-      };
-    },
-    cache: true
-  },
-  placeholder: 'Search for a repository',
-  escapeMarkup: function (markup) { return markup; }, // let our custom formatter work
-  minimumInputLength: 1,
-  templateResult: formatRepo,
-  templateSelection: formatRepoSelection
-});
-
-function formatRepo (repo) {
-  if (repo.loading) {
-    return repo.text;
-  }
-
-  var markup = "<div class='select2-result-repository clearfix'>" +
-    "<div class='select2-result-repository__avatar'><img src='" + repo.owner.avatar_url + "' /></div>" +
-    "<div class='select2-result-repository__meta'>" +
-      "<div class='select2-result-repository__title'>" + repo.full_name + "</div>";
-
-  if (repo.description) {
-    markup += "<div class='select2-result-repository__description'>" + repo.description + "</div>";
-  }
-
-  markup += "<div class='select2-result-repository__statistics'>" +
-    "<div class='select2-result-repository__forks'><i class='fa fa-flash'></i> " + repo.forks_count + " Forks</div>" +
-    "<div class='select2-result-repository__stargazers'><i class='fa fa-star'></i> " + repo.stargazers_count + " Stars</div>" +
-    "<div class='select2-result-repository__watchers'><i class='fa fa-eye'></i> " + repo.watchers_count + " Watchers</div>" +
-  "</div>" +
-  "</div></div>";
-
-  return markup;
-}
-
-function formatRepoSelection (repo) {
-  return repo.full_name || repo.text;
-}
-
-
-
-
-
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<script>
-$(document).ready(function(){
-
-    $('.js-data-example-ajax').select2({
-        
-        // source: function( request, response ) {
-            ajax: {
-              url: "{{ url('/cook/searchIngredients') }}",
-              dataType: "json",
-              data: {
-                term: request.term
-              },
-              success: function( data ) {
-
-                response($.map(data,function(d) {
-                    if(d == 'No dishes found')
-                    {
-                        return { 
-                            label: 'No dishes found.'
-                        };
-                    }
-                    else {
-                        return {
-                            id: d.id,
-                            value: d.Shrt_Desc,
-                        };    
-                    }
-                }));
-              }
-            } );
-        // },
-
-        // select: function( event, ui) {
-
-        //     this.value = ui.item.value;
-        //     $(this).next("input").val(ui.item.value);
-        //     event.preventDefault();  
-
-        //     $('#ing_id').val(ui.item.id);
-
-        //     displayPreviewDish(ui.item.id);
-        //     console.log( "Selected: " + ui.item.value + " id " + ui.item.id );
-        // }
-        });
-    // .data("ui-autocomplete")._renderItem = function (ul, item) {
-
-    //         if(item.value == 'No dishes found.'){
-    //             return $('<li class="ui-state-disabled">'+item.label+'</li>').appendTo(ul);
-    //         }else{
-    //             return $("<li>")
-    //             .append("<a>" + item.label + "</a>")
-    //             .appendTo(ul);
-    //         }
-    //     };
-
-});
-  
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <!-- </div> -->
-
-    <!-- </section> -->
-    <!-- /.content -->
-<!-- </div> -->
-<!-- /.content-wrapper -->
-
-    <footer class="main-footer">
-        <div class="pull-right hidden-xs">
-          <b>Version</b> 2.4.0
-        </div>
-        <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
-        reserved.
-    </footer>
 
 @endsection
 @section('addtl_scripts')
@@ -476,7 +243,93 @@ $(document).ready(function(){
 {{-- <script src="{{asset('adminlte/bower_components/jquery/dist/jquery.min.js')}}"></script> --}}
 <!-- jQuery UI 1.11.4 -->
 {{-- <script src="{{asset('adminlte/bower_components/jquery-ui/jquery-ui.min.js')}}"></script> --}}
+<script src="{{asset('js/jquery.steps.min.js')}}"></script>
+<script src="{{asset('js/jquery.validate.min.js')}}"></script>
+
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script type="text/javascript">
+
+    var form = $("#add_dish").show();
+ 
+form.steps({
+    headerTag: "h3",
+    bodyTag: "fieldset",
+    transitionEffect: "slideLeft",
+    onStepChanging: function (event, currentIndex, newIndex)
+    {
+        // Allways allow previous action even if the current form is not valid!
+        if (currentIndex > newIndex)
+        {
+            return true;
+        }
+        // Forbid next action on "Warning" step if the user is to young
+        if (newIndex === 3 && Number($("#age-2").val()) < 18)
+        {
+            return false;
+        }
+        // Needed in some cases if the user went back (clean up)
+        if (currentIndex < newIndex)
+        {
+            // To remove error styles
+            form.find(".body:eq(" + newIndex + ") label.error").remove();
+            form.find(".body:eq(" + newIndex + ") .error").removeClass("error");
+        }
+        form.validate().settings.ignore = ":disabled,:hidden";
+        return form.valid();
+    },
+    onStepChanged: function (event, currentIndex, priorIndex)
+    {
+        // Used to skip the "Warning" step if the user is old enough.
+        if (currentIndex === 2 && Number($("#age-2").val()) >= 18)
+        {
+            form.steps("next");
+        }
+        // Used to skip the "Warning" step if the user is old enough and wants to the previous step.
+        if (currentIndex === 2 && priorIndex === 3)
+        {
+            form.steps("previous");
+        }
+    },
+    onFinishing: function (event, currentIndex)
+    {
+        form.validate().settings.ignore = ":disabled";
+        return form.valid();
+    },
+    onFinished: function (event, currentIndex)
+    {
+        alert("Submitted!");
+    }
+}).validate({
+    errorPlacement: function errorPlacement(error, element) { element.before(error); },
+    rules: {
+        'img' : { required: true},
+        'dish_name' : {required: true},
+        'serving' : {required: true},  
+        'duration' : {required: true},
+        'price' : {required: true},
+        'signDish' : { checked: true },
+        'price' : {required: true}
+
+    }
+
+});
+
+    $.validator.addMethod("checked", function(value, elem, param) {
+    if($(".signDish:checkbox:checked").length > 0){
+       return true;
+    }else {
+       return false;
+    }
+
+
+    },"You must select at least one!");
+    $(document).ready(function(){
+      $('.js-data-example-ajax').select2({
+      });
+    });
+
+  </script>
+</script> 
 <script>
   $.widget.bridge('uibutton', $.ui.button);
 </script>
@@ -497,107 +350,62 @@ $(document).ready(function(){
 <script src="{{asset('adminlte/bower_components/fastclick/lib/fastclick.js')}}"></script>
 <!-- AdminLTE App -->
 <script src="{{asset('adminlte/dist/js/adminlte.min.js')}}"></script>
-
+<script src="{{asset('js/dropify.min.js')}}"></script>
+<!-- iCheck 1.0.1 -->
+<script src="{{asset('adminlte/plugins/iCheck/icheck.min.js')}}"></script>
 <script src="{{asset('js/durationpicker.js')}}"></script>
 
 
 <script type="text/javascript">
+
     // Duration
     $('#duration').durationPicker();
-    $('#button').on('click', function() {
-    var input= $('#duration').val();
-    alert(input);
-    });
-    
-    //Change image
-    function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-
-            reader.onload = function (e) {
-                $('#img-tag').attr('src', e.target.result);
-            }
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-    
-    $("#img").change(function(){
-        readURL(this);
-    });
 
 $(document).ready(function () {
+    var dropify = $('.dropify').dropify({
+        messages: {
+        'default': 'Drag and drop a file here or click',
+        'replace': 'Drag and drop or click to replace',
+        'remove':  'Remove',
+        'error':   'Ooops, something wrong happened.'
+    }
+       });
   
     $('#cancel').on('click', function() {
       window.location = '{{url("/cook/dishes")}}';
     });
-    $('#part').on('click','.remove', function() {
-          $(this).closest(".iRow").remove();
-    });
-
-    var navListItems = $('div.setup-panel div a'),
-              allWells = $('.setup-content'),
-              allNextBtn = $('.nextBtn');
-
-      allWells.hide();
-
-      navListItems.click(function (e) {
-          e.preventDefault();
-          var $target = $($(this).attr('href')),
-                  $item = $(this);
-
-          if (!$item.hasClass('disabled')) {
-              navListItems.removeClass('btn-primary').addClass('btn-default');
-              $item.addClass('btn-primary');
-              allWells.hide();
-              $target.show();
-              $target.find('input:eq(0)').focus();
-          }
-      });
-
-      allNextBtn.click(function(){
-          var curStep = $(this).closest(".setup-content"),
-              curStepBtn = curStep.attr("id"),
-              nextStepWizard = $('div.setup-panel div a[href="#' + curStepBtn + '"]').parent().next().children("a"),
-              curInputs = curStep.find("input[type='text'],input[type='url']"),
-              isValid = true;
-
-          $(".form-group").removeClass("has-error");
-          for(var i=0; i<curInputs.length; i++){
-              if (!curInputs[i].validity.valid){
-                  isValid = false;
-                  $(curInputs[i]).closest(".form-group").addClass("has-error");
-              }
-          }
-
-          if (isValid)
-              nextStepWizard.removeAttr('disabled').trigger('click');
-      });
-
-      $('div.setup-panel div a.btn-primary').trigger('click');
 
     });
 
-   
-
+function remove(id){
+        $('#remove'+id).remove();
+    }
 
     function addChoice()
     {
-        var ingred = document.getElementById('ingredients').value;
+        var ingid = document.getElementById('ingredients').value;
         var quan = document.getElementById('quantity').value;
-        var ingid = document.getElementById('ing_id').value;
+        // var ingid = document.getElementById('ing_id').value;
+        var prepp = $('#preparation').val();
+        var umm = $('#um').val();
+
+        var ingred = $("#ingredients option:selected").map(function() {
+            return $(this).text();
+          }).get();
+
         var prep = $("#preparation option:selected").map(function() {
             return $(this).text();
           }).get();
-        var prepp = $('#preparation').val();
+        
         var um = $("#um option:selected").map(function() {
             return $(this).text();
           }).get();
-        var umm = $('#um').val();
+        
 
         var div = document.getElementById("part");
 
         div.innerHTML += 
-                        '<tr style="text-align:center" class="iRow" id="iRow">'+
+                        '<tr style="text-align:center" id="remove'+ingid+'">'+
                         '<td multiple>'+ingred+'</td>'+
                         '<input type="hidden" id="ingid" name="ingid[]" value="'+ingid+'">'+
                         '<td multiple multiple name="qty[]">'+quan+'</td>'+
@@ -606,11 +414,13 @@ $(document).ready(function () {
                         '<input type="hidden" id="prepp" name="prepp[]" value="'+prepp+'">'+
                         '<td multiple name="unit[]">'+um+'</td>'+
                         '<input type="hidden" id="umm" name="umm[]" value="'+umm+'">'+
-                        '<td><button class="remove" ng-show="$last" ng-click="removeChoice()">-</button></td>'+
+                        '<td><button type="button" onclick="remove('+ingid+')" class="remove"><i class="fa fa-times"></i></button></td>'+
                         '</tr>';
 
 
-                        document.getElementById('ingredients').value='';
+       
+        $('select').select2().select2('val', $('#ingredients option:eq(0)').val());
+      
         document.getElementById('quantity').value='';
         $('#preparation option').prop('selected', function() {
             return this.defaultSelected;
@@ -652,66 +462,7 @@ $(document).ready(function () {
 
     }
 </script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.js"></script>
-<script>
 
-$(document).ready(function(){
-
-    $( "#ingredients" ).autocomplete({
-        
-        source: function( request, response ) {
-            $.ajax( {
-              url: "{{ url('/cook/searchIngredients') }}",
-              dataType: "json",
-              data: {
-                term: request.term
-              },
-              success: function( data ) {
-
-                response($.map(data,function(d) {
-                    if(d == 'No dishes found')
-                    {
-                        return { 
-                            label: 'No dishes found.'
-                        };
-                    }
-                    else {
-                        return {
-                            id: d.id,
-                            value: d.Shrt_Desc,
-                        };    
-                    }
-                }));
-              }
-            } );
-        },
-
-        select: function( event, ui) {
-
-            this.value = ui.item.value;
-            $(this).next("input").val(ui.item.value);
-            event.preventDefault();  
-
-            $('#ing_id').val(ui.item.id);
-
-            displayPreviewDish(ui.item.id);
-            console.log( "Selected: " + ui.item.value + " id " + ui.item.id );
-        }
-        }).data("ui-autocomplete")._renderItem = function (ul, item) {
-
-            if(item.value == 'No dishes found.'){
-                return $('<li class="ui-state-disabled">'+item.label+'</li>').appendTo(ul);
-            }else{
-                return $("<li>")
-                .append("<a>" + item.label + "</a>")
-                .appendTo(ul);
-            }
-        };
-
-});
-  
-</script>
 @endsection
 
 
