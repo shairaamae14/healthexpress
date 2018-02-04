@@ -200,7 +200,7 @@ class DishController extends Controller
         $cholesterol/=$request['serving'];
 
             $nutrifacts = NutritionFacts::create([
-                            'dish_id' => $dish->did,
+                            'ding_id' => $dish->did,
                             'gram_weight' => '123',
                             'calories' => $energy,
                             'protein' => $protein,

@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class NutritionFacts extends Model
 {
     protected $table = 'nutritional_facts';
-    protected $fillable = ['dish_id', 'gram_weight', 'calories', 'protein', 'total_fat',
+    protected $fillable = ['ding_id', 'gram_weight', 'calories', 'protein', 'total_fat',
 						'carbohydrate', 'fibre', 'sodium', 'sat_fat', 'cholesterol'];
 
 	public function dish() {

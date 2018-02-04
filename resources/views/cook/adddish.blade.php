@@ -297,7 +297,7 @@ form.steps({
     },
     onFinished: function (event, currentIndex)
     {
-        alert("Submitted!");
+        $('#add_dish').submit();
     }
 }).validate({
     errorPlacement: function errorPlacement(error, element) { element.before(error); },
