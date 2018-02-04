@@ -11,7 +11,7 @@
             <a href="./" id="brndhvr" style="font-size: 20px">
                 <div class="logo-container" style="color:white;">
                     <div class="logo">
-                        <img src="{{asset('img/healthlogo.png')}}" width="80" height="40" style="margin-right:2px; margin-top:5px"  alt="Creative Tim Logo" rel="tooltip" title="Health Express" data-placement="bottom" data-html="true">
+                        <img src="{{asset('img/healthlogo.png')}}" width="80" height="40" style="margin-right:2px; margin-top:5px"  alt="Health Express Logo" rel="tooltip" title="Health Express" data-placement="bottom" data-html="true">
                         <b style="color:white">HEALTH</b>EXPRESS
                     </div>
                     <!-- <div class="brand">

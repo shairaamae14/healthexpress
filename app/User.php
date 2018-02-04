@@ -50,4 +50,9 @@ class User extends Authenticatable
     public function lifestyle() {
         return $this->belongsToMany('App\Lifestyles', 'user_lifestyle', 'user_id', 'lifestyle_id');
     }
+
+    public function user_orders()
+    {
+        return $this->hasMany('App\UserOrder', 'user_id', 'id');
+    }
 }

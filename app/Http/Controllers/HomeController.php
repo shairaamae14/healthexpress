@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Dish;
 use App\User;
+use App\Cook;
 use Illuminate\Support\Facades\DB;
 use Auth;   
 use App\UserAllergen;
+use App\Ratings;
 use App\Allergen;
 use App\UserMCondition;
 use App\MedicalConditions;
@@ -15,8 +17,11 @@ use App\Http\Requests;
 use App\DishBestEaten;
 use App\NutritionFacts;
 use App\DishIngredient;
+use App\ToleranceValues;
 use Session;
+use App\CookRating;
 use Illuminate\Session\Store;
+
 
 // use Request;
 // use Illuminate\Routing\Redirector;
@@ -163,8 +168,35 @@ class HomeController extends Controller
             }
         }
 
+        $ratings = Ratings::where('dish_id', $id)->join('users' , 'users.id', '=' , 'dish_ratings.user_id')->get();
+
+            $rate=Ratings::where('dish_id', $id)->get();
+            $avg=0;
+            $average=0;
+            $tempwhole=0;
+            $r=count($rate);
+            for($i=0; $i<$r; $i++){
+              $avg+=$rate[$i]->rating/$r;
+            }
+
+               $average=round($avg, 1);
+               $tempavg=$average;
+               $tempwhole=floor($tempavg);
+               $tempdec=$tempavg-$tempwhole;
+               // dd($tempdec);
+                if($tempdec==0.0){
+                $average=$average;
+                // dd($average);
+               }
+               else if($tempdec<=0.5 || $tempdec>=0.5){
+                $tempdec=0.5;
+                $average=$tempwhole + $tempdec;
+                // dd($average, "hello");
+               }
+
+
         // dd($dishes);
-         return view('user.home', compact('user', 'dishes', 'title'));
+         return view('user.home', compact('user', 'dishes', 'title', 'average'));
     }
     
     public function express(Request $request) {
@@ -387,8 +419,8 @@ class HomeController extends Controller
         
     }
     
-    
-  public function showDetails($id){
+public function showDetails($id){
+    $userid=Auth::id();
         $dishes = Dish::join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
                          ->where('did', $id)->get();
         $dish_ingredients = DishIngredient::where('did', $id)->join('dishes', 'dishes.did', '=', 'dish_ingredients.dish_id')
@@ -397,15 +429,78 @@ class HomeController extends Controller
                     ->join('preparations', 'preparations.p_id', '=', 'dish_ingredients.preparation')
                     ->get();
 
-             $nutritional = NutritionFacts::where('dish_id', $id)->get();
-        return view('user.details', compact('dishes', 'nutritional', 'dish_ingredients'));
+             $nutritional = NutritionFacts::where('ding_id', $id)->get();
+             $ratings = Ratings::where('dish_id', $id)->join('users' , 'users.id', '=' , 'dish_ratings.user_id')->get();
+
+            $rate=Ratings::where('dish_id', $id)->get();
+            $avg=0;
+            $average=0;
+            $tempwhole=0;
+            $r=count($rate);
+            for($i=0; $i<$r; $i++){
+              $avg+=$rate[$i]->rating/$r;
+            }
+
+               $average=round($avg, 1);
+               $tempavg=$average;
+               $tempwhole=floor($tempavg);
+               $tempdec=$tempavg-$tempwhole;
+               // dd($tempdec);
+                if($tempdec==0.0){
+                $average=$average;
+                // dd($average);
+               }
+               else if($tempdec<=0.5 || $tempdec>=0.5){
+                $tempdec=0.5;
+                $average=$tempwhole + $tempdec;
+                // dd($average, "hello");
+               }
+         return view('user.details', compact('dishes', 'nutritional', 'dish_ingredients', 'ratings', 'average'));
     }
+
+    public function showCook($id){
+        $cook=Cook::where('id', $id)->get();
+        // dd($cook);
+            $dishes=Dish::where('authorCook_id', $id)->paginate(12);
+              // $dishes = Dish::paginate(12);
+
+              $ratings = CookRating::where('cook_id', $id)->join('users' , 'users.id', '=' , 'cook_ratings.user_id')->get();
+
+            $rate=CookRating::where('cook_id', $id)->get();
+            $avg=0;
+            $average=0;
+            $tempwhole=0;
+            $r=count($rate);
+            for($i=0; $i<$r; $i++){
+              $avg+=$rate[$i]->rating/$r;
+            }
+
+               $average=round($avg, 1);
+               $tempavg=$average;
+               $tempwhole=floor($tempavg);
+               $tempdec=$tempavg-$tempwhole;
+               // dd($tempdec);
+                if($tempdec==0.0){
+                $average=$average;
+                // dd($average);
+               }
+               else if($tempdec<=0.5 || $tempdec>=0.5){
+                $tempdec=0.5;
+                $average=$tempwhole + $tempdec;
+                // dd($average, "hello");
+               }
+
+           // dd($average);
+            // dd($cookid);
+
+        return view('user.showcook', compact('cook', 'dishes', 'average', 'ratings'));
+    }
+
 
 public function orderHistory(){
 
     return view('user.orderhistory');
 }
-
 
 
 }

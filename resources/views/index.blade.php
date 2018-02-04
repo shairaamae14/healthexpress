@@ -17,7 +17,7 @@
 
                     <br />
                     <a href="./login" class="btn btn-danger btn-raised btn-lg" style="background-color: #30bb6d">
-                        Get started
+                        Order Now
                     </a>
                 </div>
             </div>
@@ -29,20 +29,23 @@
             <div class="section text-center section-landing" id="works">
                 <div class="row">
                     <div class="col-md-8 col-md-offset-2">
-                        <h2 class="title" >4 Easy steps</h2>
-                        <!-- <h5 class="description">This is the paragraph where you can write more details about your product. Keep you user engaged by providing meaningful information. Remember that by this time, the user is curious, otherwise he wouldn't scroll to get here. Add a button if you want the user to see more.</h5> -->
+                        <h2 class="title" >About</h2>
+                        <h5 class="description">Health Express lets you choose your favorite meals may it be
+                        through Express or Planned. It also helps you decide in choosing healthier food choices
+                        to match your goals!</h5>
                     </div>
                 </div>
 
                 <div class="features">
                     <div class="row">
+                        <h2 class="title" >4 Easy steps</h2>
                         <div class="col-md-3">
                             <div class="info">
                                 <div class="icon icon-success">
                                     <i class="fa fa-4x fa-plus-square text-success sr-icons"></i>
                                 </div>
                                 <h4 class="info-title steps">Create Account</h4>
-                               <!--  <p>Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.</p> -->
+                                <p>Sign up to get a glimpse and try our application!</p>
                             </div>
                         </div>
                         <div class="col-md-3">
@@ -51,8 +54,9 @@
                                     <i class="fa fa-4x fa-mouse-pointer text-success sr-icons"></i>
                                 </div>
                                 <h4 class="info-title steps">Choose an option</h4>
-                                <!-- <p>Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.</p>
-                                -->                                </div>
+                                <p>We cater two options - Express Meals and Planned Meals. Express Meals are for
+                                one-time orders while on Planned Meals, you can plan out your meal for the how many days, week, or a month.</p>
+                                                               </div>
                         </div>
                         <div class="col-md-3">
                             <div class="info">
@@ -60,7 +64,7 @@
                                     <i class="fa fa-4x  fa-shopping-cart text-success sr-icons"></i>
                                 </div>
                                 <h4 class="info-title steps">Choose meal and pay</h4>
-                              <!--   <p>Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.</p> -->
+                                <p>Choose your desired meal then pay.</p>
                             </div>
                         </div>
 
@@ -70,7 +74,7 @@
                                     <i class="fa fa-4x fa-heart text-success sr-icons"></i>
                                 </div>
                                 <h4 class="info-title steps">Happy Eating</h4>
-                              <!--   <p>Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.</p> -->
+                                <p>Enjoy and savor your sumptuous meals!</p>
                             </div>
                         </div>
 
@@ -88,27 +92,27 @@
                         <form class="contact-form">
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class="form-group label-floating has-success">
+                                    <div class="form-group label-floating">
                                         <label class="control-label">Your Name</label>
                                         <input type="email" class="form-control">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="form-group label-floating has-success">
+                                    <div class="form-group label-floating">
                                         <label class="control-label">Your Email</label>
                                         <input type="email" class="form-control">
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="form-group label-floating has-success">
+                            <div class="form-group label-floating">
                                 <label class="control-label">Your Messge</label>
                                 <textarea class="form-control" rows="4"></textarea>
                             </div>
 
                             <div class="row">
                                 <div class="col-md-4 col-md-offset-4 text-center">
-                                    <button class="btn btn-success btn-raised">
+                                    <button class="btn btn-primary btn-raised">
                                         Send Message
                                     </button>
                                 </div>

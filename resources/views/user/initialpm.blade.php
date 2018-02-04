@@ -1,16 +1,16 @@
 @extends('user-layouts.master')
-  <script type="text/javascript" src="//cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>
-<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
-    <link href="http://netdna.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
-      <link rel="stylesheet" type="text/css" media="all" href="{{asset('datetimepicker/daterangepicker.css')}}"/>
 
+<script type="text/javascript" src="//cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap/3/css/bootstrap.css" />
+<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
+<link rel="stylesheet" type="text/css" href="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.css" />
   
 <!-- <link href="{{asset('datetimepicker/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" media="screen">
 <link href="{{asset('datetimepicker/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet" media="screen"> -->
 <style>
-@import url('http://fonts.googleapis.com/css?family=Lobster');
-@import url('http://fonts.googleapis.com/css?family=Anton');
+@import url('https://fonts.googleapis.com/css?family=Lobster');
+@import url('https://fonts.googleapis.com/css?family=Anton');
 @import url('https://fonts.googleapis.com/css?family=Ubuntu+Condensed');
 @import url('https://fonts.googleapis.com/css?family=Archivo+Black');
 @import url('https://fonts.googleapis.com/css?family=Lato');
@@ -106,16 +106,11 @@ hr{
           <div class="content">
             <center>
             <h1 style="color:white; background-color: #4caf50"><b>WHAT'S YOUR PLAN?</b></h1>
-            <div style="border:2px solid #4caf50; padding:30px;">
-              <form role="form" method="post" action="{{route('user.plan.index')}}">
+            <div>
+              <form role="form" method="get" action="{{route('user.plan.index')}}">
                 {{csrf_field()}}
-                <center><h3> Please select your type of plan </h3>
-                  <select class="form-control plan" id="type" name="type" style="width:250px; height:60px; border:2px solid #4caf50; font-size: 20px; ">
-                    <option></option>
-                    <option value="daily">Daily</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="monthly">Monthly</option>
-                  </select>
+                <center><h3> Please select date range for your plan: </h3>
+                    <div class='col-md-4 col-md-offset-2 demo'><h4>Your Date Range Picker</h4> <input type='text' name='daterange' id='config-demo' class='form-control'><i class='fa fa-calendar'></i></div><br>
                   <div class="ask" id="ask">
                     <!--numberofquestiongoeshere!-->
                   </div>
@@ -125,6 +120,40 @@ hr{
             </div>
           </div><br><br><!--content!-->
         </div><!--row!-->
+
+        <div class="section text-center" id="works">
+               <div class="features">
+            <div class="row">
+                        <div class="col-md-4">
+                <div class="info">
+                  <div class="icon icon-primary">
+                    <i class="material-icons">chat</i>
+                  </div>
+                  <h4 class="info-title">First Feature</h4>
+                  <p>Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.</p>
+                </div>
+                        </div>
+                        <div class="col-md-4">
+                <div class="info">
+                  <div class="icon icon-success">
+                    <i class="material-icons">verified_user</i>
+                  </div>
+                  <h4 class="info-title">Second Feature</h4>
+                  <p>Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.</p>
+                </div>
+                        </div>
+                        <div class="col-md-4">
+                <div class="info">
+                  <div class="icon icon-danger">
+                    <i class="material-icons">fingerprint</i>
+                  </div>
+                  <h4 class="info-title">Third Feature</h4>
+                  <p>Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.</p>
+                </div>
+                        </div>
+                    </div>
+          </div>
+            </div>
       </div><!--container!-->
     </div><!--section!-->
   </div><!--main-raised!-->
@@ -133,7 +162,7 @@ hr{
 
 @section('addtl_scripts')
 <!--   Core JS Files   -->
-  <script src="{{asset('customer/assets/js/jquery.min.js')}}" type="text/javascript"></script>
+  <!-- <script src="{{asset('customer/assets/js/jquery.min.js')}}" type="text/javascript"></script> -->
   <script src="{{asset('customer/assets/js/bootstrap.min.js')}}" type="text/javascript"></script>
   <script src="{{asset('customer/assets/js/material.min.js')}}"></script>
 
@@ -145,53 +174,24 @@ hr{
 
   <!-- Control Center for Material Kit: activating the ripples, parallax effects, scripts from the example pages etc -->
   <script src="{{asset('customer/assets/js/material-kit.js')}}" type="text/javascript"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-
-  <script type="text/javascript" src="{{asset('js/jquery-2.0.0.min.js')}}"></script>
-  <script type="text/javascript" src="{{asset('js/jquery.smartWizard.js')}}"></script>
-  <!--datetimepicker!-->
-        <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script type="text/javascript" src="http://netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-      <script type="text/javascript" src="{{asset('datetimepicker/moment.js')}}"></script>
-      <script type="text/javascript" src="{{asset('datetimepicker/daterangepicker.js')}}"></script>
-
-
-
- <!--  <script type="text/javascript" src="{{asset('datetimepicker/bootstrap/js/bootstrap.min.js')}}"></script>
-<script type="text/javascript" src="{{asset('datetimepicker/js/bootstrap-datetimepicker.js')}}" charset="UTF-8"></script>
-<script type="text/javascript" src="{{asset('datetimepicker/js/locales/bootstrap-datetimepicker.fr.js')}}" charset="UTF-8">
-</script> -->
   <script>
     $(document).ready(function(){
       $('.plan').change(function(e){
         e.preventDefault();
-         var val = $(".plan option:selected").val();
-        if(val=="daily"){
-         document.getElementById('ask').innerHTML="<center><div class='col-md-4 col-md-offset-2 demo'><h4>Your Date Range Picker</h4> <input type='text' name='daterange' id='config-demo' class='form-control'><i class='fa fa-calendar'></i></div><br>";
-         $('.savebtn').removeAttr('disabled');  
-        }
-        else if(val=="weekly"){
-         document.getElementById('ask').innerHTML="<center><h3>How many weeks? </h3><input type='number' style='width:70px; height:50px; border:2px solid #4caf50; font-size: 25px;' placeholder='1'>";
-          $('.savebtn').removeAttr('disabled'); 
-        }
-        else{
-         document.getElementById('ask').innerHTML="<center><h3> How many months?</h3><input type='number' style='width:70px; height:50px; border:2px solid #4caf50; font-size: 25px;' placeholder='1'>";
-          $('.savebtn').removeAttr('disabled'); 
-        }
+         
       })
-    });
-  </script>
 
- <script>
- $(document).ready(function(){
- $('.plan').change($(function() {
- $('#config-demo').daterangepicker(options, function(start, end, label) { console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')'); });
+      $('#config-demo').on('change', function(e) {
+        e.preventDefault();
+        $('.savebtn').removeAttr('disabled');  
       });
-});
- </script>
-  <script>
-    $(document).ready(function (){
+      $('input[name="daterange"]').daterangepicker({
+                "startDate": "01/24/2018",
+                "endDate": "01/30/2018"
+            }, function(start, end, label) {
+              console.log("New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')");
+            });
+
       $('#btnplan').on('click', function(){
         $('#content').hide();
         $('#content2').show();
@@ -204,24 +204,6 @@ hr{
         $('#content2').hide();
         $('#content3').show();
       });
-         $('#wizard1').smartWizard({
-                  transitionEffect:'fade',
-                  onFinish:onFinishCallback,
-                  onLeaveStep  : leaveAStepCallback,
-              });
-           function leaveAStepCallback(obj, context){
-                  // To check and enable finish button if needed
-                  if (context.fromStep >= 2) {
-                      $('#wizard1').smartWizard('enableFinish', true);
-                  }
-                  return true;
-              }
-        
-            function onFinishCallback(){
-              alert('Finish Called');
-              window.location.href= './plannedmeal/calendar';
-
-            }     
     });
   </script>
 @endsection

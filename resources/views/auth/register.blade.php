@@ -18,7 +18,7 @@
 		            <!--      Wizard container        -->
                     <div class="wizard-container">
                         <div class="card wizard-card" data-color="green" id="wizardProfile">
-                            <form role="form" method="POST" action="{{route('register')}}" class="f1">
+                            <form role="form" method="POST" action="{{route('register')}}" class="f1" id="registerform">
                                 {{csrf_field()}}
                                 <div class="wizard-header">
                                         <h3 class="wizard-title">
@@ -260,6 +260,9 @@
 		                        </div>
 		                    </form>
 		                </div>
+                        <div class="text-center">
+                            <label style="color:white">Already have an account?</label> <a href="{{ route('login' )}}" class="btn btn-success">Login</a>
+                        </div>
 		            </div> <!-- wizard container -->
 		        </div>
 	        </div><!-- end row -->
@@ -290,6 +293,7 @@
       // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
 
       function initMap() {
+
         var latLng = new google.maps.LatLng(10.3157007,123.88544300000001 );
         var mapOptions = {
             zoom:13,
@@ -406,6 +410,8 @@
                 $(this).each(function() {
                     if($("input:checked").length > 0) {
                         $('#tolerance').show();
+                        // var tol = "<label class='control-label'>Tolerance Level (Allergens)</label><select name='tolerance' class='form-control'><option selected disabled hidden>Select an option</option><option value='Low'>Low</option><option value='Medium'>Medium</option><option value='High'>High</option></select>";
+                        // $('#tolerance').append(tol);
                     }
                     else if($(this).prop("checked") == false) {
                         $('#tolerance').hide();

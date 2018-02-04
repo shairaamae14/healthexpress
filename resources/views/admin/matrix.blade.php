@@ -41,8 +41,8 @@
               </td>
               @if($allergies)
              
-             <td>{{$allergies->allergen_name}}</td>
-             <td>{{$allergies->tolerance_level}}</td>
+             <td>{{$allergies[0]->allergen_name}}</td>
+             <td>{{$allergies[0]->tolerance_level}}</td>
              
              @else
              <td>None</td>

@@ -25,6 +25,11 @@
   <!-- bootstrap wysihtml5 - text editor -->
   <link rel="stylesheet" href="{{asset('adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css')}}">
   <link rel="stylesheet" href="{{asset('adminlte/plugins/iCheck/all.css')}}">
+    <!-- DataTables -->
+  <link rel="stylesheet" href="{{asset('adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css')}}">
+    <!-- Pace style -->
+  <link rel="stylesheet" href="{{asset('adminlte/plugins/pace/pace.min.css')}}">
+  <link rel="stylesheet" href="{{asset('css/jquery.steps.css')}}">
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>
@@ -39,9 +44,12 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script>
 
   
-  <link rel="stylesheet" href="{{asset('css/wizard.css')}}">
+  
   
   <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="{{asset('css/dropify.min.css')}}">
+
+  @yield('heading')
 
 <style>
     h1{

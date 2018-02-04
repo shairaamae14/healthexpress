@@ -3,8 +3,8 @@
 
 
 <style>
-  @import url('http://fonts.googleapis.com/css?family=Lobster');
-  @import url('http://fonts.googleapis.com/css?family=Anton');
+  @import url('https://fonts.googleapis.com/css?family=Lobster');
+  @import url('https://fonts.googleapis.com/css?family=Anton');
   @import url('https://fonts.googleapis.com/css?family=Ubuntu+Condensed');
   @import url('https://fonts.googleapis.com/css?family=Archivo+Black');
   @import url('https://fonts.googleapis.com/css?family=Lato');
@@ -136,6 +136,13 @@
                 <div class="tab-pane text-center" id="cdc">
                   <div class="row">
                     <div class="col-md-12">
+                      <div class="text-description">
+                       We take data privacy and security very seriously. We want to reassure you that we
+                           do not save your credit card details in our system - We use a 3rd party billing solution to ensure
+                            all financial transactions are safe and secure.
+                            You can read more about it here. 
+                      </div>
+                      
                         <form method="POST" id="payment-form" action="{{ route('order.payment') }}">
                             {{csrf_field()}}
                             @foreach(Cart::content() as $item)
@@ -281,8 +288,11 @@
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
 <script src="https://js.braintreegateway.com/web/dropin/1.8.0/js/dropin.min.js"></script>
+<script src="https://js.braintreegateway.com/web/3.28.0/js/client.min.js"></script>
+<script src="https://js.braintreegateway.com/web/3.28.0/js/paypal-checkout.min.js"></script>
 <script type="text/javascript" src="{{asset('js/jquery-2.0.0.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('js/jquery.smartWizard.js')}}"></script>
+<script src="{{asset('js/pace.min.js')}}"></script>
 <script>
     var form = document.querySelector('#payment-form');
 
@@ -307,10 +317,16 @@
         });
       });
     });
-    
+    paypal.Button.render({
+      braintree: braintree,
+      client: {
+        sandbox: '{{ $clientToken }}'
+      },
+      env: 'sandbox'
+    })
   </script>
 <script>
- $(document).ready(function(){
+ $(document).ready(function(e){
    $('.service').on('change','input', function() {
    var option = $('input[name=option]:checked').val(); 
    if(option == 'pick-up') {

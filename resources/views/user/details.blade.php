@@ -1,10 +1,30 @@
- @extends('user-layouts.master')
+  @extends('user-layouts.master')
+<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
 <style>
 @import url('https://fonts.googleapis.com/css?family=Lobster');
 @import url('https://fonts.googleapis.com/css?family=Anton');
 @import url('https://fonts.googleapis.com/css?family=Ubuntu+Condensed');
 @import url('https://fonts.googleapis.com/css?family=Archivo+Black');
+@import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
 
+
+.avaliar{
+    margin-top:5px;
+  background-color:#EDEDED;
+}
+.avaliar textarea{
+  width:100%;
+}
+.stars
+{
+    margin: 20px 0;
+    font-size: 24px;
+    color: #d17581;
+}
+label{
+  color:black;
+}
 #ordermode{
   padding:20px;
 }
@@ -34,18 +54,52 @@ display: inline-block;
 #tb{
   color:white !important;
 }
-
-
-
 /*Resize the wrap to see the search bar change!*/
-
-
-    #map {
+#map {
         height: 40%;
         margin-bottom: 10px;
       }
-</style>
+fieldset, label { margin: 0; padding: 0; }
+body{ margin: 20px; }
+h1 { font-size: 1.5em; margin: 10px; }
 
+/****** Style Star Rating Widget *****/
+
+.rating { 
+  border: none;
+  float: left;
+}
+
+.rating > input { display: none; } 
+.rating > label:before { 
+  margin: 5px;
+  font-size: 1.25em;
+  font-family: FontAwesome;
+  display: inline-block;
+  content: "\f005";
+}
+
+.rating > .half:before { 
+  content: "\f089";
+  position: absolute;
+}
+
+.rating > label { 
+  color: #ddd; 
+ float: right; 
+}
+
+/***** CSS Magic to Highlight Stars on Hover *****/
+
+.rating > input:checked ~ label, /* show gold star when clicked */
+.rating:not(:checked) > label:hover, /* hover current star */
+.rating:not(:checked) > label:hover ~ label { color: orange;  } /* hover previous stars in list */
+
+.rating > input:checked + label:hover, /* hover current star when changing rating */
+.rating > input:checked ~ label:hover,
+.rating > label:hover ~ input:checked ~ label, /* lighten current selection */
+.rating > input:checked ~ label:hover ~ label { color: orange;  } 
+</style>
 
 
 @section('content')
@@ -56,114 +110,193 @@ display: inline-block;
       <center>
         <div class="col-md-6">
         <br>
-     <!--      <center><h1 class="title text-center" style="font-family: 'Lobster', cursive; font-size: 60px;">Let us all be healthy!</h1> -->
-
-    <!-- <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class=" btn btn-danger btn-raised btn-lg" ="background-color:transparent;border:2px solid white; font-family: 'Anton', sans-serif; font-size: 20px " id="ordermode">
-            <center> Express Meal</center>
-            </a>
-                <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class=" btn btn-danger btn-raised btn-lg" id="ordermode" style="background-color:transparent;  border:2px solid white; font-family: 'Anton', sans-serif; font-size: 20px ">
-             <center>Planned Meal</center>
-            </a> -->
-
+     
         </div>
-
-      
       </div>
     </div>
   </div>
 
-        <div class="main main-raised"  style="width: 65%; float: left">
-        <div class="section">
-            <div class="container" style="width: 90%;">
-          <div class="row">
-  <div class="profile-content">
-             <div class="card card-nav-tabs">
-              <div class="content">
-                <div class="tab-content text-center">
-                  <div class="box-body">
-             @foreach($dishes as $dets)
-              
-                 <img src="{{url('./dish_imgs/'.$dets->dish_img)}}" style="width:200px; height:200px; border:2px solid #F0F0F0; border-radius: 10px; float: left"></img></center>
-              
-                <div class="form-group col-md-8">   
-                <h2 style="color:#30BB6D; float:left; margin-left:10px; margin-top:-5px;"><b> {{$dets->dish_name}} </b></h2><br>
-                    </div>
-                 <div class="form-group col-md-8">
-                <h3 style="color:#30BB6D; float:left; margin-left:10px;">{{$dets->dish_desc}}</h3>
-                        </div>
-
-                <div class="form-group col-md-8" style="margin-top: 0px;">   
-                         <h3 style="float:left; margin-left:10px; color:black"><b>Php {{$dets->basePrice}}</b></h3>
-                         </div>
-                         <center><button type="button" class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; margin-top: 2px; border:none; font-size: 20px">Add to cart</button></center>
-
-              </div>
-              @endforeach
-            </div>
-
-            </div>
-            </div>
-            </div>
-            </div>
-
-
-
-
-
-          </div><!--row!-->
-          </div><!--container!-->
-
-            <!-- Tabs with icons on Card -->
+<div class="main main-raised"  style="width: 65%; float: left">
+   <div class="section">
+      @foreach($dishes as $dets)
+      <div class="container" style="width: 90%;">
+        <div class="row">
+        <!--start of profile content!-->
+          <div class="profile-content">
             <div class="card card-nav-tabs">
-                <div class="header" style="background-color:#30BB6D">
-                <!-- colors: "header-primary", "header-info", "header-success", "header-warning", "header-danger" -->
-                <div class="nav-tabs-navigation" style="background-color:#30BB6D">
-                  <div class="nav-tabs-wrapper" style="background-color:#30BB6D">
-                    <ul class="nav nav-tabs" data-tabs="tabs">
-                      <li class="active">
-                        <a href="#profile" data-toggle="tab">
-                          <i class="material-icons">face</i>
-                          Dish Details
-                        </a>
-                      </li>
-                      <li>
-                        <a href="#messages" data-toggle="tab">
-                          <i class="material-icons">chat</i>
-                          Nutritional Facts
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
               <div class="content">
                 <div class="tab-content text-center">
-                  <div class="tab-pane active" id="profile">
-                    <p> I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus. I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. </p>
-                  </div>
-                  <div class="tab-pane" id="messages">
-                    <p> I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus. I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at.</p>
-                  </div>
-                  <div class="tab-pane" id="settings">
-                    <p>I think that’s a responsibility that I have, to push possibilities, to show people, this is the level that things could be at. So when you get something that has the name Kanye West on it, it’s supposed to be pushing the furthest possibilities. I will be the leader of a company that ends up being worth billions of dollars, because I got the answers. I understand culture. I am the nucleus.</p>
-                  </div>
+                    <div class="box-body">
+                         <div class="avg">
+                          <img src="{{url('./dish_imgs/'.$dets->dish_img)}}" style="width:200px; height:200px; border:2px solid #F0F0F0; border-radius: 10px; margin:10px; float: left"/>  
+                          <center><h2 style="margin-top:-10px;">
+                          <b>{{$dets->dish_name}}&nbsp;</b>
+                          <span class="badge" style="font-family: verdana; border-radius:0px; background-color:#30BB6D; margin-top:-10px;">Php {{$dets->sellingPrice}}</span>
+                          </h2>
+                          <span class="badge" style="font-family: verdana; background-color:#30BB6D; margin-top:-10px;">Breakfast &nbsp;</span><br>
+                            <label class="avgbox" id="avgbox"></label>
+                            <label class="avgbox2" id="avgbox2"></label><br>
+                          <input type="hidden" class="avg" value="{{$average}}"/>
+                          <label>{{$average}} out of 5 stars</label>
+                          <p>{{$dets->dish_desc}}</p>
+                          </div>
+                       
+                    </div>
                 </div>
               </div>
             </div>
-            <!-- End Tabs with icons on Card -->
-
+          </div>
+          <!--end of profile content!-->
+          <!--start of modal footer!-->
+       
+          <div class="modal-footer" style="margin-bottom:2px">
+           <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-default{{$dets->did}}" style="float:right; margin-bottom:-1000px"><i class="fa fa-shopping-cart"></i> ADD TO CART
+           </button>
           </div>
 
+          <!-- end of modal footer!-->
+          <br><br>
+        </div>
+      </div><!--end!-->
+      @endforeach
+
+              <div class="row" style="margin:10px">
+                  <div class="col-sm-6">
+                  <div class="col-sm-6">
+                   <h4 class="card-title" style="color:black">Details</h4> 
+                    @foreach($dishes as $dets)
+                    <span class="badge" style="font-family: verdana; border-radius:0px; background-color:#30BB6D; margin-top:-10px;"> Cook:</span><a href="{{route('cook.details',  ['id' => $dets->authorCook_id])}}" style="text-decoration: none; color:#30BB6D; ">&nbsp;<b>{{$dets->first_name}} {{$dets->last_name}}</b></a>
+                    <span class="badge" style="font-family: verdana; border-radius:0px; background-color:#30BB6D;"> Preparation:</span><label>&nbsp;<b>{{$dets->preparation_time}}</b></label>
+                   <span class="badge" style="font-family: verdana; border-radius:0px; background-color:#30BB6D;"> Serving size:</span> 
+                   <label>&nbsp;<b>{{$dets->serving_size}}</b></label><br>
+                   @endforeach
+                  </div>
+                  </div>
+                    <div class="col-sm-6">
+                        <h4 class="card-title" style="color:black">Nutrional Facts</h4> 
+                         <center>
+                <b>Amount Per Serving</b>
+                <table>
+                @foreach($nutritional as $nutrition)
+                
+                <tr style="border-bottom:2px solid black">
+                  <td><b style="margin-right: 50px">Calories</b></td>
+                  <td>{{ $nutrition->calories }}g</td>
+                </tr>
+                <tr>
+                  <td><b style="margin-right: 50px">Total Fat</b></td>
+                  <td>{{ $nutrition->total_fat }}g</td>
+                </tr>
+                <tr>
+                  <td><b style="margin-right: 50px">Cholesterol</b></td>
+                  <td>{{ $nutrition->cholesterol }}g</td>
+                </tr>
+                <tr>
+                  <td><b style="margin-right: 50px">Sodium</b></td>
+                  <td>{{ $nutrition->sodium }}g</td>
+                </tr>
+                <tr style="border-bottom:2px solid black">
+                  <td><b style="margin-right: 50px">Total Carbohydrate</b></td>
+                  <td>{{ $nutrition->carbohydrate }}g</td>
+                </tr>
+                <tr>
+                  <td><b style="margin-right: 50px">Protein</b></td>
+                  <td>{{ $nutrition->protein }}g</td>
+                </tr>
+                
+                @endforeach
+              </table>
+                  </div>
+             </div>
+
+        <div class="row" style="margin: 10px">
+        <div class="col-md-12">
+             <h3 class="card-title" style="color:black">Reviews</h3>
+           <div class="well well-sm">
+                <div class="text-right">
+                    <a class="btn btn-success btn-green" href="#reviews-anchor" id="open-review-box">Leave a Review</a>
+                </div>
+                <div class="row" id="post-review-box" style="display:none;">
+                    <div class="col-md-12">
+                        <form action="{{route('dish.addRating')}}" method="post">
+                        {{csrf_field()}}
+                        @foreach($dishes as $dets)
+                        <input type="hidden" name="dish_id" value="{{$dets->did}}">
+                        @endforeach
+                         <h5 class="card-title text-left">Rate this dish</h5>
+                                <!--STAR!-->
+                                <fieldset class="rating">
+                                  <input type="radio" id="star5" name="rating" value="5" />
+                                  <label class = "full" for="star5" title="Excellent - 5 stars"></label>
+                                  <input type="radio" id="star4half" name="rating" value="4.5" />
+                                  <label class="half" for="star4half" title="Super Delicious - 4.5 stars"></label>
+                                  <input type="radio" id="star4" name="rating" value="4" />
+                                  <label class = "full" for="star4" title="Very Delicious - 4 stars"></label>
+                                  <input type="radio" id="star3half" name="rating" value="3.5" />
+                                  <label class="half" for="star3half" title="Delicious - 3.5 stars"></label>
+                                  <input type="radio" id="star3" name="rating" value="3" />
+                                  <label class = "full" for="star3" title="Satisfied - 3 stars"></label>
+                                  <input type="radio" id="star2half" name="rating" value="2.5" />
+                                  <label class="half" for="star2half" title="Good- 2.5 stars"></label>
+                                  <input type="radio" id="star2" name="rating" value="2" />
+                                  <label class = "full" for="star2" title="Fair - 2 stars"></label>
+                                  <input type="radio" id="star1half" name="rating" value="1.5" />
+                                  <label class="half" for="star1half" title="Bad - 1.5 stars"></label>
+                                  <input type="radio" id="star1" name="rating" value="1" />
+                                  <label class = "full" for="star1" title="Very Bad- 1 star"></label>
+                                  <input type="radio" id="starhalf" name="rating" value="0.5" />
+                                  <label class="half" for="starhalf" title="Poor - 0.5 stars"></label>
+                                </fieldset><br><br>
+
+                                <!--ENDOFSTAR!-->
+                        <h4 class="card-title text-left">Give a review</h4>
+                        <!--     <input id="ratings-hidden" name="rating" type="hidden">  -->
+                            <div class="form-group label-floating has-success">
+                            <textarea class="form-control animated" cols="100" id="new-review" name="review" placeholder="Enter your review here..." rows="5"></textarea>
+                            </div> 
+            
+                            <div class="text-right">
+                                <div class="stars starrr" data-rating="5">
+                                </div>
+                               
+                                <a class="btn btn-simple btn-success" href="#" id="close-review-box" style="display:none; margin-right: 10px;">Cancel</a>
+                                <button type="submit" class="btn btn-success btn-lg" type="submit">Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div> 
+        </div><!--end of review!-->
+      </div>
+
+       <div class="row" style="margin: 10px">
+       @foreach($ratings as $rate)
+        <div class="col-md-12 rate" id="ratebox">
+           <div class="well well-sm">
+            <div class="text-left">
+              <img src="{{url('./user_imgs/'.$rate->profpic)}}" class="img-circle" style="width:50px; height:50px"/>
+               <label style="color:#4caf50"><b>&nbsp;&nbsp;{{$rate->fname}}&nbsp;{{$rate->lname}}</b></label>
+                <label style="margin-left:10px">{{$rate->comment}}</label>
+            </div>
+               <br>
+               <label class="ratingbox" id="ratingbox"></label>
+               <label class="ratingbox2" id="ratingbox2"></label><br>
+               <label>{{$rate->rating}} out of 5 stars</label><br>
+               <ul>
+                 <li>
+                 <input type="hidden" class="ratings" id="rate_{{$rate->rating}}"  value="{{$rate->rating}}">
+                 <li>
+            </div> 
+        </div>
+        @endforeach
+        </div>
+  </div><!--section!-->
+</div><!--main-raised!-->
 
 
-          </div><!--section!-->
-          </div><!--main-raised!-->
 
 
-
-
-
-<div class="main main-raised"  style="width: 25%; float: right;">
+ <div class="main main-raised"  style="width: 25%; float: right;">
     <div class="section" style="padding-bottom: 2px">
         <div class="container" style="width: 100%">
                 <p style="color: black; float:left; margin-top: -60px;font-size: 21px; font-family: 'Lobster', cursive;">
@@ -173,102 +306,154 @@ display: inline-block;
                 </span>
                 </p>
 
-                <!-- <span id="current">hello</span><br>
-                   <input type="number" min="1" value="1" style="width: 45px; height:20px;" id="qs"> -->
 
-  <div class="row" style="padding-right:8px; padding-left: 8px">
-  @if(count(Cart::content()))
-@foreach(Cart::content() as $item)
-        
+
+ <div class="row" style="padding-right:8px; padding-left: 8px">
+      @if(count(Cart::content()))
+      @foreach(Cart::content() as $item) 
         <dl class="dl-horizontal">
             <div id="cartdiv" style="padding-left: 5px">  
-              <dt style="margin-left:-55px">
-             
-         <!--       <input type="hidden" name="_token" value="{{ csrf_token() }}"> -->
-
-                 <input type="text" min="1"  style="width: 40px; height:25px;"  name="quantity" value="{{$item->qty}}" autocomplete="off"/>
-                  
-                   <a class="cart_quantity_up" href='{{url("cart/update?dish_id=$item->id&increment=1")}}'><i class="material-icons"  style="color:#30BB6D">add_circle</i></a>
-                   
-                  <a class="cart_quantity_down" href='{{url("cart/update?dish_id=$item->id&decrease=1")}}'><i class="material-icons"  style="color:#30BB6D" id="dec">remove_circle</i></a>
-                 
+              <dt style="margin-left:-65px">
+                 <label  name="quantity" style="color:black; margin-right:20px"><b> {{$item->qty}} x</b></label>
+                    <a class="cart_quantity_up" href='{{url("detcart/update?dish_id=$item->id&increment=1")}}'>
+                    <i class="material-icons"  style="color:#30BB6D">add_circle</i></a>
+                    <a class="cart_quantity_down" href='{{url("detcart/update?dish_id=$item->id&decrease=1")}}'>
+                    <i class="material-icons"  style="color:#30BB6D" id="dec">remove_circle</i></a>
                </dt>
-           
+
               <dd style="margin-left: 2px">
                 <label style="float: left; margin-left:0px; margin-right: 0px; font-size: 15px; color:black">
                 <b>&nbsp;&nbsp;{{$item->name}}</b>
+                <br>
+                <label style="font-size: 12px"><b>Side note:{{$item->sidenote}}</label>
+               <br>
                 </label>
-               </dd>
+                <a href='{{url("/detcart/dish/remove?dish_id=$item->id&remove=true")}}' style="float:right">
+                  <i class="fa fa-trash-o" aria-hidden="true" style="color:black; font-size: 20px"></i>
+                </a>
+              </dd>
 
-                <dt style="margin-left:-2px">
-                <label style="font-size: 12px; color: gray; float:left"> Price: <b id="price">{{$item->price}}</b></label>
-                </dt>
 
-                 <dd style="margin-right: 2px">
-                <label style="font-size: 12px; color: gray; float:right">Total Amount:<b id="itemamount">{{sprintf("%.2f",$item->subtotal)}}</b></label>
-                </dd>
+              <dt style="margin-left:-2px">
+                <label style="font-size: 12px; color: gray; float:left"> Price: <b id="price">{{$item->price}} </b></label>
+                <h1>{{($item->options->has('note') ? $item->options->note : '') }}</h1>
+              </dt>
 
-               
+              <dd style="margin-right: 2px">
+                <label style="font-size: 12px; color: gray; float:right">Total Amount:<b id="itemamount">{{$item->subtotal}}</b></label>
+              </dd>
+
           </div>
-      </dl>
+      </dl>   
 
-          @endforeach
-          
-
-          @else
-<center><label style="font-size: 30px">No dish added</label>
-       
-          @endif
+      @endforeach
+      @else
+            <center>
+            <label style="font-size: 30px">Your cart is empty</label>
+            </center>
+      @endif
+      
+          <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+                 <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots">
+                 <b>Subtotal:</b>&nbsp;Php
+                 <label style="color:black" id="subtotal">{{Cart::subtotal()}}</label>
+                 </p>
+                 <br>
+          </div>
         
-    <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-           <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots">
-           <b>Subtotal:</b>&nbsp;Php
-           <label style="color:black" id="subtotal">{{Cart::subtotal()}}</label>
-           </p>
-           <br>
-        </div>
+      @if(count(Cart::content()))
         <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-          <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif', cursive;" id="tots">
-          <b>Delivery Fee:</b>&nbsp;Php
-          <label style="color:black">40.00</label>
-          <br>
+        <form method="POST" action="{{url('cart/checkout')}}">
+           <input type="hidden" name="_token" value="{{ csrf_token() }}">
+               <button class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:right; margin-top: 2px; border:none" id="chkt">
+                        Proceed
+                      </button>
+          </form>
+          <form method="POST" action="{{url('detcart/clear')}}">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="dish_id" value="$item->id">
+              <input type="submit" class="btn btn-danger btn-simple" style="float:left; margin-left: 3px; margin-top: -50px; border:none; font-size:15px" value="Clear Cart">
+              </button>
+          </form>
         </div>
-        <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-          <p style="float:right; margin-right:2px; font-size: 17px; color:black;font-family: 'Lato', sans-serif" id="tots">
-          <b>Total:</b>&nbsp;Php
-          <label style="color:black" id="alltotal">{{sprintf("%.2f", Cart::subtotal()+40)}}</label>
-          </p>
-        </div>
-         <button type="button" class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:right; margin-top: 2px; border:none" id="chkt">Checkout</button>
-              <form method="POST" action="{{url('cart/clear')}}">
+       
+
+      @else
+
+         <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+         
+             <form method="POST" action="{{url('cart/checkout')}}">
+                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
+             <button type="submit" class="btn btn-flat btn-success btn edit" style="float:right; margin-top: 2px; border:none" id="chkt" disabled>
+                        Checkout
+                      </button>
+             </form>
+
+              <form method="POST" action="{{url('detcart/clear')}}">
                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-              <button type="submit" class="btn btn-flat btn edit" style="float:left; margin-top: 2px; border:none" id="chkt">Clear Cart
+              <button type="submit" class="btn btn-danger btn-simple" style="float:left; margin-top: -10px; border:none; font-size:15px"  disabled>Clear Cart
               </button>
               </form>
+         </div>
 
+   @endif
 
-        
 
  </div>
    </div>
       </div>
          </div>
+         
 
-
-                  
-
-
-            </div>
-
+    <!-- Sart Modal -->
+@foreach($dishes as $dish)
+<div class="modal fade" id="modal-default{{$dish->did}}">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" style="color:#30BB6D"><i class="fa fa-sticky-note-o" aria-hidden="true"></i><b>&nbsp;ADD SIDE NOTE</b></h4>
               </div>
-          </div>
-    </div>
+          
+              <div class="modal-body">
+              <form method="POST" action="{{url('detcart')}}">
+              {{csrf_field()}}
+              <input type="hidden" name="dish_id" value="{{$dish->did}}">
 
-    </div>
+
+                     <label>If you have any request or specifications regarding your meal. Please indicate below:</label>
+                     <input type="text" name="sidenote" style="width:100%;" value="None">
+            
+
+                   <div class="modal-footer">
+                   <br>
+                        <button type="button" class="btn btn btn-danger btn-simple" data-dismiss="modal" aria-label="Close">Cancel</button>
+                        <button type="submit" class="btn btn-success addCart" id="{{$dish->did}}"  style="border:transparent">
+                            <b> Add to cart</b>
+                        </button>    
+                  </div>
+
+                </form>
+              </div>
+              <!--modalbody!-->
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+        </div>
+        <!-- /.modal -->
+@endforeach
+<!--  End Modal -->
+
+
+
+    
 
 @endsection
 @section('addtl_scripts')
 <!--   Core JS Files   -->
+
   <script src="{{asset('customer/assets/js/jquery.min.js')}}" type="text/javascript"></script>
   <script src="{{asset('customer/assets/js/bootstrap.min.js')}}" type="text/javascript"></script>
   <script src="{{asset('customer/assets/js/material.min.js')}}"></script>
@@ -281,91 +466,106 @@ display: inline-block;
 
   <!-- Control Center for Material Kit: activating the ripples, parallax effects, scripts from the example pages etc -->
   <script src="{{asset('customer/assets/js/material-kit.js')}}" type="text/javascript"></script>
-
-
-<script>
-      // This example requires the Places library. Include the libraries=places
-      // parameter when you first load the API. For example:
-      // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
-
-      function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: 10.3157007, lng: 123.88544300000001},
-          zoom: 13
-        });
-        var card = document.getElementById('pac-card');
-        var input = document.getElementById('location');
-        var options = {
-                        componentRestrictions: {country: 'ph'}
-                      };
-        // var types = document.getElementById('type-selector');
-        // var strictBounds = document.getElementById('strict-bounds-selector');
-
-        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
-
-        var autocomplete = new google.maps.places.Autocomplete(input, options);
-        
-        // Bind the map's bounds (viewport) property to the autocomplete object,
-        // so that the autocomplete requests use the current map bounds for the
-        // bounds option in the request.
-        autocomplete.bindTo('bounds', map);
-
-        var infowindow = new google.maps.InfoWindow();
-        var infowindowContent = document.getElementById('infowindow-content');
-        infowindow.setContent(infowindowContent);
-        var marker = new google.maps.Marker({
-          map: map,
-          anchorPoint: new google.maps.Point(0, -29)
-        });
-
-        autocomplete.addListener('place_changed', function() {
-          infowindow.close();
-          marker.setVisible(false);
-          var place = autocomplete.getPlace();
-          document.getElementById('city').value = place.name;
-          document.getElementById('cityLat').value = place.geometry.location.lat();
-          document.getElementById('cityLng').value = place.geometry.location.lng();
-          if (!place.geometry) {
-            // User entered the name of a Place that was not suggested and
-            // pressed the Enter key, or the Place Details request failed.
-            window.alert("No details available for input: '" + place.name + "'");
-            return;
-          }
-
-          // If the place has a geometry, then present it on a map.
-          if (place.geometry.viewport) {
-            map.fitBounds(place.geometry.viewport);
-          } else {
-            map.setCenter(place.geometry.location);
-            map.setZoom(17);  // Why 17? Because it looks good.
-          }
-          marker.setPosition(place.geometry.location);
-          marker.setVisible(true);
-
-          var address = '';
-          if (place.address_components) {
-            address = [
-              (place.address_components[0] && place.address_components[0].short_name || ''),
-              (place.address_components[1] && place.address_components[1].short_name || ''),
-              (place.address_components[2] && place.address_components[2].short_name || '')
-            ].join(' ');
-          }
-
-          infowindowContent.children['place-icon'].src = place.icon;
-          infowindowContent.children['place-name'].textContent = place.name;
-          infowindowContent.children['place-address'].textContent = address;
-          infowindow.open(map, marker);
-        });
-
-        // document.getElementById('use-strict-bounds')
-        //     .addEventListener('click', function() {
-        //       console.log('Checkbox clicked! New state=' + this.checked);
-        //       autocomplete.setOptions({strictBounds: this.checked});
-        //     });
+  <script>
+  $(".ratingbox").closest('.rate').find('input[class=ratings]').each(function(index, data){
+    var rating = $(this).val();
+    // $(this).closest('.rate').find('.ratingbox').append(rating);
+    if(rating < 5){
+    var num=5;
+    // console.log(rating);
+      var temp=num-rating;
+      // console.log(temp);
+      for(var i=1; i<=temp; i++){
+          $(this).closest('.rate').find('.ratingbox2').append('<i class="fa fa-star-o" aria-hidden="true" style="color:orange; font-size:20px"></i>');
       }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOkRKO79rw8RrYgfrMgqIz2du240Uyz6U&libraries=places&callback=initMap"
-        async defer></script>
+    }
+    
+    while(rating >= 1){
+      $(this).closest('.rate').find('.ratingbox').append('<i class="fa fa-star" aria-hidden="true" style="color:orange; font-size:20px"></i>');
+      rating -= 1;
+    }
+    if(rating > 0) {
+      $(this).closest('.rate').find('.ratingbox').append('<i class="fa fa-star-half-o" aria-hidden="true" style="color:orange; font-size:20px"></i>');
+    }
+    
+  
+
+  });
+
+  </script>
+   <script>
+  // $(".avgbox").closest('.avg').find('input[class=avg]').each(function(index, data){
+    $(document).ready(function(){
+    var avg = $('input[class=avg]').val();
+    console.log(avg);
+    // $(this).closest('.rate').find('.ratingbox').append(rating);
+    if(avg < 5){
+    var num=5;
+    // console.log(avg);
+      var temp=num-avg;
+      // console.log(temp);
+      for(var i=1; i<=temp; i++){
+          $('.avgbox2').append('<i class="fa fa-star-o" aria-hidden="true" style="color:orange; font-size:20px"></i>');
+      }
+    }
+    while(avg >= 1){
+      $('.avgbox').append('<i class="fa fa-star" aria-hidden="true" style="color:orange; font-size:20px"></i>');
+      avg -= 1;
+    }
+    if(avg > 0) {
+      $('.avgbox').append('<i class="fa fa-star-half-o" aria-hidden="true" style="color:orange; font-size:20px"></i>');
+    }
+    
+  
+
+  });
+
+  </script>
+
+  <script src="{{asset('js/expanding.js')}}" type="text/javascript"></script>
+<script>
+ 
+$(function(){
+
+  $('#new-review').autosize({append: "\n"});
+
+  var reviewBox = $('#post-review-box');
+  var newReview = $('#new-review');
+  var openReviewBtn = $('#open-review-box');
+  var closeReviewBtn = $('#close-review-box');
+  var ratingsField = $('#ratings-hidden');
+
+  openReviewBtn.click(function(e)
+  {
+    reviewBox.slideDown(400, function()
+      {
+        $('#new-review').trigger('autosize.resize');
+        newReview.focus();
+      });
+    openReviewBtn.fadeOut(100);
+    closeReviewBtn.show();
+  });
+
+  closeReviewBtn.click(function(e)
+  {
+    e.preventDefault();
+    reviewBox.slideUp(300, function()
+      {
+        newReview.focus();
+        openReviewBtn.fadeIn(200);
+      });
+    closeReviewBtn.hide();
+    
+  });
+
+  $('.starrr').on('starrr:change', function(e, value){
+    ratingsField.val(value);
+  });
+});
+
+
+  </script>
+
 
 
 @endsection

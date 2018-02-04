@@ -473,3 +473,43 @@
 <!-- ./wrapper -->    
 
 @endsection
+@section('addtl_scripts')
+<!-- Jquery Core Js -->
+    <script src="{{asset('adminbsb/plugins/jquery/jquery.min.js')}}"></script>
+
+    <!-- Bootstrap Core Js -->
+    <script src="{{asset('adminbsb/plugins/bootstrap/js/bootstrap.js')}}"></script>
+
+    <!-- Select Plugin Js -->
+    <script src="{{asset('adminbsb/plugins/bootstrap-select/js/bootstrap-select.js')}}"></script>
+
+    <!-- Slimscroll Plugin Js -->
+    <script src="{{asset('adminbsb/plugins/jquery-slimscroll/jquery.slimscroll.js')}}"></script>
+
+    <!-- Waves Effect Plugin Js -->
+    <script src="{{asset('adminbsb/plugins/node-waves/waves.js')}}"></script>
+
+    <!-- Jquery CountTo Plugin Js -->
+    <script src="{{asset('adminbsb/plugins/jquery-countto/jquery.countTo.js')}}"></script>
+
+    <!-- Morris Plugin Js -->
+    <script src="{{asset('adminbsb/plugins/raphael/raphael.min.js')}}"></script>
+    <script src="{{asset('adminbsb/plugins/morrisjs/morris.js')}}"></script>
+
+    <!-- ChartJs -->
+    <script src="{{asset('adminbsb/plugins/chartjs/Chart.bundle.js')}}"></script>
+
+    <!-- Flot Charts Plugin Js -->
+    <script src="{{asset('adminbsb/plugins/flot-charts/jquery.flot.js')}}"></script>
+    <script src="{{asset('adminbsb/plugins/flot-charts/jquery.flot.resize.js')}}"></script>
+    <script src="{{asset('adminbsb/plugins/flot-charts/jquery.flot.pie.js')}}"></script>
+    <script src="{{asset('adminbsb/plugins/flot-charts/jquery.flot.categories.js')}}"></script>
+    <script src="{{asset('adminbsb/plugins/flot-charts/jquery.flot.time.js')}}"></script>
+
+    <!-- Sparkline Chart Plugin Js -->
+    <script src="{{asset('adminbsb/plugins/jquery-sparkline/jquery.sparkline.js')}}"></script>
+
+    <!-- Custom Js -->
+    <script src="{{asset('adminbsb/js/admin.js')}}"></script>
+    <script src="{{asset('adminbsb/js/pages/index.js')}}"></script>
+@endsection

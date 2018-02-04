@@ -1,7 +1,7 @@
 @extends('user-layouts.master')
 <style>
-@import url('http://fonts.googleapis.com/css?family=Lobster');
-@import url('http://fonts.googleapis.com/css?family=Anton');
+@import url('https://fonts.googleapis.com/css?family=Lobster');
+@import url('https://fonts.googleapis.com/css?family=Anton');
 @import url('https://fonts.googleapis.com/css?family=Ubuntu+Condensed');
 @import url('https://fonts.googleapis.com/css?family=Archivo+Black');
 @import url('https://fonts.googleapis.com/css?family=Lato');

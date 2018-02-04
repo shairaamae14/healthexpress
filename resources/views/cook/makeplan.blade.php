@@ -32,6 +32,7 @@ dt{
         <select class="form-control has-success dishbox" name="dish_id" id="dishbox" style="width:55%; margin: 10px; margin-right: 2px; float:left">
         @foreach($dishes as $dish)
           <option value="{{$dish->did}}" id="dish" class="dish">{{$dish->dish_name}}
+            {{$dish->planned_meals['id']}}
           </option>
         @endforeach
         </select>
@@ -41,17 +42,21 @@ dt{
           <option value="Monthly" id="plan" class="plan">Monthly</option>
         </select>
         <button type="button" class="btnadd btn btn-flat btn-success btn-md" style="float:left; margin: 10px">+ Add</button><br>
+
         <form action="{{route('cook.addPlan')}}" method="post">
            {{csrf_field()}}
         <table id="part" class="plantable" style="margin:10px; margin-top: 20px; width:60%">
           <tr>
             <th style="width:250px; font-size: 20px; margin:10px">Dish Name</th>
             <th style="width:200px; font-size: 20px; margin:10px">Type of plan</th>
-            <th style="width:200px; font-size: 20px; margin:10px">Remove</th>
+            <th style="width:200px; font-size: 20px; margin:10px">Action</th>
          </tr>
        </table>
-      <button href="{{route('cook.pmdishes')}}" class="btn btn-flat btn-success" style="font-size: 12px; margin: 10px;">View all planned meal dishes</button>
-      <input type="submit" class="btn-flat btn btn-success" value="Save Dishes" style="margin-left:100px;"/>
+       <div class="modal-footer">
+          <button type="submit" class="btn-flat btn bg-olive"/>Create New Dish</button>
+          <button type="submit" class="btn-flat btn btn-success"/>Save Dishes</button>
+          <button class="btn btn-flat btn-default" onclick="window.history.back();">Cancel</button>
+      </div>
       </form>
     </div>
     </section>
@@ -69,16 +74,16 @@ dt{
 @section('addtl_scripts')
    
            
-<!-- jQuery 3 --><!-- 
-<script src="{{asset('adminlte/bower_components/jquery/dist/jquery.min.js')}}"></script> -->
+<!-- jQuery 3 -->
+<script src="{{asset('adminlte/bower_components/jquery/dist/jquery.min.js')}}"></script>
 <!-- jQuery UI 1.11.4 -->
-<!-- <script src="{{asset('adminlte/bower_components/jquery-ui/jquery-ui.min.js')}}"></script> -->
+<script src="{{asset('adminlte/bower_components/jquery-ui/jquery-ui.min.js')}}"></script>
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-<!-- <script>
+<script>
   $.widget.bridge('uibutton', $.ui.button);
-</script> -->
+</script>
 <!-- Bootstrap 3.3.7 -->
-<!-- <script src="{{asset('adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script> -->
+<script src="{{asset('adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
 <!-- Morris.js charts -->
 <script src="{{asset('adminlte/bower_components/raphael/raphael.min.js')}}"></script>
 <script src="{{asset('adminlte/bower_components/morris.js/morris.min.js')}}"></script>

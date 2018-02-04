@@ -24,7 +24,7 @@ class CookController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {   
         // $orders = UserOrder::all();
         // // $dishes = UserOrder::join('dishes','dishes.did','=','user_orders.dish_id')->get();
@@ -33,20 +33,34 @@ class CookController extends Controller
         //                     ->get();
 
         $cid  = Auth::id();
-
-        $dishes=UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
-                ->join('orders', 'orders.id', '=', 'user_orders.order_id')
-                ->join('order_mode', 'order_mode.id', '=', 'orders.om_id')
-                ->join('users', 'users.id', '=', 'user_orders.user_id')
-                ->join('user_allergens', 'user_allergens.user_id', '=', 'users.id')
-                ->join('allergens', 'allergens.allergen_id', '=', 'user_allergens.allergen_id')
-                ->join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
-                ->where('cooks.id', $cid)
-                ->orderBy('user_orders.order_date', 'desc')
-                ->get();
-
+        if($request->input('chooseStatus') == 'Completed')
+        $page_title = "Completed Orders";
+        else if($request->input('chooseStatus') == 'Pending')
+        $page_title = "Pending Orders";
+        else if($request->input('chooseStatus') == 'Cooking')
+        $page_title = "Cooking Orders";
+        else if($request->input('chooseStatus') == 'Delivering')
+        $page_title = "Delivering Orders";
+        else
+        $page_title = "All Express Orders";
+        if(!$request->input('chooseStatus'))
+        {
+           $orders = UserOrder::groupBy('user_id', 'order_date')->orderBy('user_orders.order_date', 'desc')->get(); 
+        }
+        else
+        {
+            if($request->input('chooseStatus') == 'All')
+            {
+            $orders = UserOrder::groupBy('user_id', 'order_date')->orderBy('user_orders.order_date', 'desc')->get(); 
+            }
+            else if($request->input('chooseStatus')) {
+            $orders = UserOrder::where('user_orders.order_status', $request->input('chooseStatus'))->groupBy('order_date')->orderBy('user_orders.order_date', 'desc')->get(); 
+            }
+        }
+        
+        // dd($orders);
         // $details = $details->merge($dishes)->merge($orders)->merge($oid);
-        return view('dashboard',compact('orders','dishes','oid'));
+        return view('dashboard',compact('page_title','orders','dishes','oid'));
     }
 
     public function showOrders()

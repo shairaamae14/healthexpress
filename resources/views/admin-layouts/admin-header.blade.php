@@ -1,4 +1,4 @@
- <header class="main-header">
+<header class="main-header">
 
     <!-- Logo -->
     <a href="index2.html" class="logo">
@@ -250,7 +250,15 @@
                   <a href="#" class="btn btn-default btn-flat">Profile</a>
                 </div>
                 <div class="pull-right">
-                  <a href="#" class="btn btn-default btn-flat">Sign out</a>
+                  <a href="{{ route('admin.logout') }}"
+                    onclick="event.preventDefault();
+                    document.getElementById('logout-form').submit();">
+                    Logout
+                    </a>
+
+                    <form id="logout-form" action="{{ route('admin.logout') }}" method="POST" style="display: none;">
+                    {{ csrf_field() }}
+                    </form>
                 </div>
               </li>
             </ul>

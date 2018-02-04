@@ -28,4 +28,8 @@ class Cook extends Authenticatable
         return $this->hasMany('App\Dish');
     }
     
+    public function pm_dishes()
+    {
+        return $this->hasMany('App\Pmealdishes');
+    }
 }

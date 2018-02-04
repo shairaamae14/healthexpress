@@ -8,4 +8,9 @@ class OrderMode extends Model
 {
     protected $table = 'order_mode';
     protected $fillable = ['om_name'];
+
+    public function order()
+    {
+    	return $this->belongsTo('App\Order');
+    }
 }

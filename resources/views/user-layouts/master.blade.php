@@ -24,6 +24,7 @@
     <link href="{{asset('customer/assets/css/material-kit.css')}}" rel="stylesheet"/>
     <link href="{{asset('customer/assets/css/demo.css')}}" rel="stylesheet" />
        <link href="{{asset('css/card.css')}}" rel="stylesheet" />
+       <link rel="stylesheet" type="text/css" href="{{asset('css/pace-theme-minimal.css')}}">
 
 
     <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>

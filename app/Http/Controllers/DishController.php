@@ -42,7 +42,7 @@ class DishController extends Controller
         $id = Auth::id();
         
         $dishes = Dish::where('authorCook_id', $id)
-                        ->get();  
+                        ->paginate(10);  
         foreach($dishes as $dish) {
             $dbestEaten = DishBestEaten::join('besteaten_at' , 'besteaten_at.be_id', '=' , 'dish_besteaten.be_id')
                                         ->where('dish_id', $dish->did)->get();
@@ -234,7 +234,7 @@ class DishController extends Controller
                     ->join('preparations', 'preparations.p_id', '=', 'dish_ingredients.preparation')
                     ->get();
 
-        $nutritional = NutritionFacts::where('dish_id', $id)->get();
+        $nutritional = NutritionFacts::where('ding_id', $id)->get();
         return view('cook.viewdet', compact('dishes', 'dish_ingredients','nutritional'));
     }
 
@@ -569,6 +569,8 @@ class DishController extends Controller
     public function viewPlan(){
       $id=Auth::id();
       $dishes=Dish::where('authorCook_id', $id)->get();
+      
+      
       return view('cook.makeplan', compact('dishes'));
     }
     

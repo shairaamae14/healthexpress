@@ -1,15 +1,15 @@
 @extends('user-layouts.master')
 <link href="{{asset('datetimepicker/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" media="screen">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
 <link href="{{asset('datetimepicker/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet" media="screen">
 <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.0/fullcalendar.min.css'>
 <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css'>
+
+
 @section('heading')
- <!-- Calendar -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script> -->
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.7/fullcalendar.min.js"></script> -->
-    <!-- <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"> -->
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.7/fullcalendar.min.css"/> -->
+
+    
+
     
 @endsection
 <style>
@@ -63,7 +63,6 @@ display: inline-block;
 }
 
 
-
 #tots:hover{
   font-size: 20px !important;
 }
@@ -81,17 +80,16 @@ hr{
   border-top: 1px solid #30BB6D;
   border-bottom: 1px solid #30BB6D;
 }
+div#calendar .fc-center h2 {
+  color: black;
+}
 
 /*Resize the wrap to see the search bar change!*/
-
-
-
-
-
 
 </style>
 
 @section('content')
+
 <div class="wrapper">
   <div class="header header-filter" style="background-image: url('{{asset('img/bgindex.jpg')}}')">
     <div class="container">
@@ -120,17 +118,21 @@ hr{
                 <p class="card-text text-center">Suggested dishes based your health information</p>
               </div>
               <center>
+
+
+                
               <form method="post" action="#">
               {{csrf_field()}}
                 <div id='wrap'>
                   <div id='external-events'>
+                      
                       <!-- Breakfast -->
                       <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
                       <label class="card-title text-center" style="color:#4caf50;">Breakfast</label>
                       <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
                       <div class="card" style="margin-bottom: 10px">
                         @foreach($breakfast as $bfast)
-                          <div class='fc-event' data-event='{"did": {{$bfast->did}}, "title": "{{$bfast->dish_name}}", "be":{{$bfast->be_id}} }'>{{$bfast->dish_name}}</div>
+                          <div class='fc-event'  data-event='{"timeStart": "06:00:00", "did": {{$bfast->did}}, "title": "{{$bfast->dish_name}}", "be":{{$bfast->be_id}}, "plan":{{$typeno}} }'>{{$bfast->dish_name}}</div>
                         @endforeach
                       </div>
                       <!-- Lunch -->
@@ -139,7 +141,7 @@ hr{
                       <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
                       <div class="card" style="margin-bottom: 10px">
                         @foreach($lunch as $lnch)
-                          <div class='fc-event' data-event='{"did": {{$lnch->did}}, "title": "{{$lnch->dish_name}}", "be":{{$lnch->be_id}} }'>{{$lnch->dish_name}}</div>
+                          <div class='fc-event' data-toggle="modal" data-target="#dishDetails" data-event='{"did": {{$lnch->did}}, "title": "{{$lnch->dish_name}}", "be":{{$lnch->be_id}}, "plan":{{$typeno}} }'>{{$lnch->dish_name}}</div>
                         @endforeach
                       </div>
                       <!-- Dinner -->
@@ -148,38 +150,144 @@ hr{
                       <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
                       <div class="card" style="margin-bottom: 10px">
                         @foreach($dinner as $dnr)
-                          <div class='fc-event' data-event='{"did": {{$dnr->did}}, "be":{{$dnr->be_id}}, "title": "{{$dnr->dish_name}}" }'>{{$dnr->dish_name}}</div>
+                          <div class='fc-event' data-event='{"did": {{$dnr->did}}, "be":{{$dnr->be_id}}, "title": "{{$dnr->dish_name}}", "plan":{{$typeno}} }'>{{$dnr->dish_name}}</div>
                         @endforeach
                       </div>
+
+                      <label><i>Select and drag a dish to the calendar</i></label><br>
+
+
                       <i class="fa fa-trash-o fa-2x" aria-hidden="true" id="trash"></i>
+                      
                   </div>
                   <div style='clear:both'></div>
-                  {{-- <xspan class="tt">x</xspan> --}}
                 </div>
                 <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
-                <div class="card-block">
-                  <button type="submit" class="btn btn-success btn-flat">Save Schedule</button>
-                </div>
               </form>
+            </center>
+
+
+              <div class="card-block text-center">
+                <button type="button" onclick="window.location.href='{{route('user.plan.home')}}'" class="btn btn-flat btn-danger">Go Back</button>
+                  <button type="button" class="btn btn-flat btn-success add-dish" value="./summary" onclick="window.location.href='{{route('user.pmsummary')}}'">Proceed</button>
+                </div>
+
             </div>
             <div class="card" style="width:92rem; float:right; margin-right:-10px; margin-left:10px; padding:10px">
               <div id='calendar'></div>
+              <label>Click on a meal to see more details</label>
             </div>
+
           </div><br><br><!--content!-->
         </div><!--row!-->
+      </div>
       </div><!--section!-->
     </div><!--main raised!-->
-  </div><!--wrapper!-->
 </div>
+
+
+@foreach($betype as $best)
+<div id="dishDetails{{$best->dish_id}}{{$best->pm_id}}" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span class="sr-only">close</span></button>
+                <h4 id="modalTitle" class="modal-title" style="color:#30bb6d">Dish Details</h4>
+            </div>
+            <form action="{{route('user.pmdetails')}}" method="post">
+            {{csrf_field()}}
+              <div id="modalBody" class="modal-body">
+                <div class="col-md-12">
+                  <input type="hidden" name="pm_id" value="{{$best->pm_id}}">
+                  @foreach($dishes as $dish)
+                    @if($best->dish_id == $dish->ding_id && $best->pm_id == $dish->pm_id)
+                      <div class="col-md-6">
+                        <img src="{{url('./dish_imgs/'.$dish->dish_img)}}" style="width:150px; height:150px; border:2px solid #F0F0F0; border-radius: 10px"><br><br>
+                        <label style="float:center; font-size:15px; color:black">
+                          <b>Dish Name:</b>
+                            &nbsp;{{$dish->dish_name}}
+                        </label><br>
+                        <label style="float:center; font-size:15px; color:black">
+                          <b>Cook:</b>
+                            &nbsp;{{$dish->first_name}} {{$dish->last_name}}
+                        </label><br>
+                        <label style="float:center; font-size:15px; color:black">
+                          <b>Meal For:</b>
+                            &nbsp;{{$dish->name}}
+                        </label><br>
+                        <label style="float:center; font-size:15px; color:black">
+                          <b>Price:</b>
+                            &nbsp;{{$dish->sellingPrice}}
+                        </label><br>
+                        <label style="float:center; font-size:15px; color:black">
+                          <b>No of Servings:</b>
+                            &nbsp;{{$dish->no_of_servings}}
+                        </label><br>
+                      </div>
+                      <div class="col-md-6">
+                        <h4><b>Nutritional Facts</b></h4>
+                          <b>Amount Per Serving</b>
+                          <table>
+                              <tr style="border-bottom:2px solid black">
+                                <td><b style="margin-right: 50px">Calories</b></td>
+                                <td>{{ $dish->calories }}g</td>
+                              </tr>
+                              <tr>
+                                <td><b style="margin-right: 50px">Total Fat</b></td>
+                                <td>{{ $dish->total_fat }}g</td>
+                              </tr>
+                              <tr>
+                                <td><b style="margin-right: 50px">Cholesterol</b></td>
+                                <td>{{ $dish->cholesterol }}g</td>
+                              </tr>
+                              <tr>
+                                <td><b style="margin-right: 50px">Sodium</b></td>
+                                <td>{{ $dish->sodium }}g</td>
+                              </tr>
+                              <tr style="border-bottom:2px solid black">
+                                <td><b style="margin-right: 50px">Total Carbohydrate</b></td>
+                                <td>{{ $dish->carbohydrate }}g</td>
+                              </tr>
+                              <tr>
+                                <td><b style="margin-right: 50px">Protein</b></td>
+                                <td>{{ $dish->protein }}g</td>
+                              </tr>
+                          </table><br>
+                          <b>&nbsp;Change time:</b>
+                          <input id="appt-time" type="time" name="appt-time" step="2" value="{{ Carbon\Carbon::parse($dish->start)->format('H:m:s') }}">
+                      </div>
+                    @endif
+                  @endforeach
+                </div>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-default" style="margin:10px" data-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-success"><a id="eventUrl" style="color:white" target="_blank">Save Changes</a></button>
+              </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endforeach
+
+
+
+
+
+
+
 <script src='https://code.jquery.com/jquery-1.11.2.min.js'></script>
 <script src='https://code.jquery.com/ui/1.11.2/jquery-ui.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js'></script>
 <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.0/fullcalendar.min.js'></script>
 
+<script src="{{asset('js/pace.js')}}"></script>
+
 
 <script>
 $(document).ready(function() {
+
     $('#external-events .fc-event').each(function() {
       // make the event draggable using jQuery UI
       $(this).draggable({
@@ -189,36 +297,12 @@ $(document).ready(function() {
       });
 
     });
-    /* initialize the calendar
-    -----------------------------------------------------------------*/
 
-    // $('#calendar').fullCalendar({
-    //   header: {
-    //     left: 'prev,next today',
-    //     center: 'title',
-    //     right: 'month,agendaWeek,agendaDay'
-    //   },
-    //   editable: true,
-    //   droppable: true, // this allows things to be dropped onto the calendar
-    //   drop: function() {
-    //     $(this).remove();
-    //   },
-      
-
-  // var  json_events;
     $.ajax({
       url: '{{ route("user.fetch") }}',
-      method: 'get', // Send post data
+      method: 'get', 
       data: {'type':'fetch'},
-      // async: false,
       success: function(s){
-             // $(document).click(function(event) {
-             //  // console.log(JSON.stringify(event));
-             //  console.log(event);
-             // var text = $(event.target);
-             // var id = text[0]['childNodes'][1]['value'];
-             // // alert(id);
-             //  });
         json_events = s;
         $('#calendar').fullCalendar({
             events: JSON.parse(s),
@@ -242,7 +326,7 @@ $(document).ready(function() {
             if (isElemOverDiv()) {
               var con = confirm('Are you sure to delete this permanently?');
               if(con == true) {
-              var id = event.id;
+              var id = event.pm_id;
               $.ajax({
                   url: '{{ route("user.delete") }}',
                   data: {'id':id},
@@ -268,19 +352,29 @@ $(document).ready(function() {
             var dish = event.did;
             var be = event.be;
             var om = 2;
-            var start = event.start.format("YYYY-MM-DD[T]HH:MM:SS");
-            var end = (event.end == null) ? start : event.end.format();
+            var plan = event.plan;
+            if(be == 1){
+              var start = event.start.format("YYYY-MM-DD[T]06:00:00");
+              var end = (event.end == null) ? start : event.end.format();
+            }
+            else if(be ==2){
+              var start = event.start.format("YYYY-MM-DD[T]11:00:00");
+              var end = (event.end == null) ? start : event.end.format(); 
+            }
+            else{
+              var start = event.start.format("YYYY-MM-DD[T]17:00:00");
+              var end = (event.end == null) ? start : event.end.format();
+            }
+
             $.ajax({
               url: "{{ route('user.storeplans') }}",
-              // data: 'type=new&title='+title+'&startdate='+start+'&zone='+zone,
-              data: {'title':title,'start':start,'end':end,'dish_id':dish,'be_id':be,'plan_id':'2','om_id':om},
+              data: {'title':title,'start':start,'end':end,'dish_id':dish,'be_id':be,'plan_id':plan,'om_id':om},
               method: "GET",
               dataType: 'json',
               success: function(){
-                // event.id = response.eventid;
-                // console.log(title);
-                // alert('success');
                 $('#calendar').fullCalendar('updateEvent',event);
+                location.reload();
+                Pace.restart();
               },
               error: function(e){
                 console.log('error');
@@ -289,7 +383,7 @@ $(document).ready(function() {
             $('#calendar').fullCalendar('updateEvent',event);
           },
           eventDrop: function(event, delta, revertFunc) {
-            var id = event.id;
+            var id = event.pm_id;
             var title = event.title;
             var start = event.start.format("YYYY-MM-DD[T]HH:MM:SS");
             var end = (event.end == null) ? start : event.end.format();
@@ -308,10 +402,15 @@ $(document).ready(function() {
               }
             });
           },
+          eventClick:  function(event, jsEvent, view) {
+            var id = event.dish_id;
+            var pid = event.pm_id;
+            console.log(id);
+            $('#eventUrl').attr('href',event.url);
+            $('#dishDetails'+id+pid).modal();
+          },
           eventResize: function(event, delta, revertFunc) {
-            // console.log(event);
-            var id = event.id;
-            // console.log(event.id);
+            var id = event.pm_id;
             var title = event.title;
             var end = event.end.format();
             var start = event.start.format();
@@ -330,6 +429,7 @@ $(document).ready(function() {
               }
             });
           },
+
         });
       }
     });
@@ -342,21 +442,6 @@ $(document).ready(function() {
     currentMousePos.y = event.pageY;
   });
 
-        /* initialize the external events
-        -----------------------------------------------------------------*/
-  // $('#external-events .fc-event').each(function() {
-  //   // store data so the calendar knows to render an event upon drop
-  //   $(this).data('event', {
-  //     title: $.trim($(this).text()), // use the element's text as the event title
-  //     stick: true // maintain when user navigates (see docs on the renderEvent method)
-  //   });
-  //   // make the event draggable using jQuery UI
-  //   $(this).draggable({
-  //     zIndex: 999,
-  //     revert: true,      // will cause the event to go back to its
-  //     revertDuration: 0  //  original position after the drag
-  //   });
-  // });
   function getFreshEvents(){
     $.ajax({
       url: "{{route('user.fetch')}}",
@@ -389,46 +474,48 @@ $(document).ready(function() {
 });
 
 </script>
+
+
+
+
+
 @endsection
 
 @section('addtl_scripts')
 <!--   Core JS Files   -->
-  <script src="{{asset('customer/assets/js/jquery.min.js')}}" type="text/javascript"></script>
-  <script src="{{asset('customer/assets/js/bootstrap.min.js')}}" type="text/javascript"></script>
-  <script src="{{asset('customer/assets/js/material.min.js')}}"></script>
+  {{-- <script src="{{asset('customer/assets/js/jquery.min.js')}}" type="text/javascript"></script> --}}
+       <script src="{{asset('customer/assets/js/bootstrap.min.js')}}" type="text/javascript"></script> 
+       <script src="{{asset('customer/assets/js/material.min.js')}}"></script> 
 
   <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
-  <script src="{{asset('customer/assets/js/nouislider.min.js')}}" type="text/javascript"></script>
+  {{-- <script src="{{asset('customer/assets/js/nouislider.min.js')}}" type="text/javascript"></script> --}}
 
   <!--  Plugin for the Datepicker, full documentation here: http://www.eyecon.ro/bootstrap-datepicker/ -->
-  <script src="{{asset('customer/assets/js/bootstrap-datepicker.js')}}" type="text/javascript"></script>
+  {{-- <script src="{{asset('customer/assets/js/bootstrap-datepicker.js')}}" type="text/javascript"></script> --}}
 
   <!-- Control Center for Material Kit: activating the ripples, parallax effects, scripts from the example pages etc -->
-  <script src="{{asset('customer/assets/js/material-kit.js')}}" type="text/javascript"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  {{-- <script src="{{asset('customer/assets/js/material-kit.js')}}" type="text/javascript"></script> --}}
+  {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> --}}
+  {{-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> --}}
 
-  <script type="text/javascript" src="{{asset('js/jquery-2.0.0.min.js')}}"></script>
+
+ {{--  <script type="text/javascript" src="{{asset('js/jquery-2.0.0.min.js')}}"></script>
   <script type="text/javascript" src="{{asset('js/jquery.smartWizard.js')}}"></script>
-
-  <script type="text/javascript" src="{{asset('datetimepicker/bootstrap/js/bootstrap.min.js')}}"></script>
+ --}}
+ {{--  <script type="text/javascript" src="{{asset('datetimepicker/bootstrap/js/bootstrap.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('datetimepicker/js/bootstrap-datetimepicker.js')}}" charset="UTF-8"></script>
 <script type="text/javascript" src="{{asset('datetimepicker/js/locales/bootstrap-datetimepicker.fr.js')}}" charset="UTF-8">
-</script>
-
+</script> --}}
 
   <script type='text/javascript'>
   $(document).ready(function(){
-     $('.form_datetime').datetimepicker({
-          //language:  'fr',
-          weekStart: 1,
-          todayBtn:  1,
-      autoclose: 1,
-      todayHighlight: 1,
-      startView: 2,
-      forceParse: 0,
-          showMeridian: 1
-      });
+
+    $('.set').click(function(){
+      $('.askq').removeAttr('hidden');
+      $(this).attr('disabled', 'disabled');
+    });
+     
+      // $('.timepicker').timepicker();
    });
 </script>
   <script>
@@ -455,47 +542,7 @@ $(document).ready(function() {
   </script>
 
 
-<script>
-  $(document).ready(function (){
-    $('#btnplan').on('click', function(){
-      $('#content').hide();
-      $('#content2').show();
-    });
-    $('#back').on('click', function() {
-      $('#content2').hide();
-      $('#content').show();x
-    });
-    $('#next').on('click', function() {
-      $('#content2').hide();
-      $('#content3').show();
-    });
-    $('#wizard1').smartWizard({
-              transitionEffect:'fade',
-              onFinish:onFinishCallback,
-              onLeaveStep  : leaveAStepCallback,
-          });
-       function leaveAStepCallback(obj, context){
-              // To check and enable finish button if needed
-              if (context.fromStep >= 2) {
-                  $('#wizard1').smartWizard('enableFinish', true);
-              }
-              return true;
-          }
-    
-        function onFinishCallback(){
-          alert('Finish Called');
-          window.location.href= './plannedmeal/calendar';
-
-        }
-
-          
-  });
-
-
-
-  
-</script>
-
+@endsection
 
 
 

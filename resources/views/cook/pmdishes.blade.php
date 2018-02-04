@@ -61,7 +61,7 @@ dt{
                             <i class="fa fa-star-o" id="rate"></i>
                             <i class="fa fa-star-o" id="rate"></i>
                             </small><br>
-                            <a href="{{route('cook.rating')}}"><p style="font-size: 12px; color:#30BB6D;">See Reviews</p></a>
+                            <a href="{{route('cook.rating', ['id' => $dish->did])}}"><p style="font-size: 12px; color:#30BB6D;">See Reviews</p></a>
 
                               <a class="btn btn-success" href="{{route('cook.dishes.show', ['id' => $dish->did])}}">View Details</a>
 
@@ -99,7 +99,7 @@ dt{
                           <i class="fa fa-star-o" id="rate"></i>
                           <i class="fa fa-star-o" id="rate"></i>
                           </small><br>
-                          <a href="{{route('cook.rating')}}"><p style="font-size: 12px; color:#30BB6D;">See Reviews</p></a>
+                          <a href="{{route('cook.rating', ['id' => $dish->did])}}"><p style="font-size: 12px; color:#30BB6D;">See Reviews</p></a>
 
                             <a class="btn btn-success" href="{{route('cook.dishes.show', ['id' => $dish->did])}}">View Details</a>
 
@@ -137,7 +137,7 @@ dt{
                           <i class="fa fa-star-o" id="rate"></i>
                           <i class="fa fa-star-o" id="rate"></i>
                           </small><br>
-                          <a href="{{route('cook.rating')}}"><p style="font-size: 12px; color:#30BB6D;">See Reviews</p></a>
+                          <a href="{{route('cook.rating', ['id' => $dish->did])}}"><p style="font-size: 12px; color:#30BB6D;">See Reviews</p></a>
 
                             <a class="btn btn-success" href="{{route('cook.dishes.show', ['id' => $dish->did])}}">View Details</a>
 

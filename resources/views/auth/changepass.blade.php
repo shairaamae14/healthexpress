@@ -112,7 +112,19 @@ display: inline-block;
   <div class="content">
     <form class="form-horizontal" method="POST" action="{{ url('/change/password') }}">
                         {{ csrf_field() }}
-
+                        @if(session('error'))
+                        <div class="alert alert-danger">
+                            <div class="container-fluid">
+                              <div class="alert-icon">
+                                <i class="material-icons">error_outline</i>
+                              </div>
+                              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true"><i class="material-icons">clear</i></span>
+                              </button>
+                              <b>Error:</b> {{session('error')}}
+                            </div>
+                        </div>
+                        @endif
                         <div class="form-group{{ $errors->has('passwordold') ? ' has-error' : '' }}">
                             <label for="password" class="col-md-4 control-label" style="color:#30bb6d">Old Password</label>
 
@@ -151,8 +163,11 @@ display: inline-block;
 
                         <div class="form-group">
                             <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary"  style="background-color:#30bb6d">
+                                <button type="submit" class="btn btn-primary">
                                     Reset Password
+                                </button>
+                                <button type="button" class="btn btn-default" onclick="history.back()">
+                                    Cancel
                                 </button>
                             </div>
                         </div>
