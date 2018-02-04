@@ -7,6 +7,7 @@ use App\Dish;
 use App\Orders;
 use App\UserOrder;
 use Illuminate\Http\Request;
+use App\OrderDetails;
 use Auth;
 use App\User;
 use App\OrderMode;
@@ -206,28 +207,20 @@ class OrdersController extends Controller
      */
     public function show(Orders $orders)
     {
-        $id = Auth::id();
-        if(Auth::guard('cook')->check())
-        {
-            // return view katong express orders
-            $dish = Dish::where('cook_id', $id)->get();
-            $order = OrderDetails::where('dish_id', $dish->id)->get();
-            return view('cook.eorders', compact($order));
-        }
-
-        else {
+         $id = Auth::id();
+       
                 $pending= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
                 ->join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
                 ->where('user_id', $id)
-                ->groupBy('dish_id')
+                ->groupBy('dish_name')
                 ->orderBy('order_date', 'desc')
-                 ->where('order_status', '=', 'Pending')
+                ->where('order_status', '=', 'Pending')
                 ->get();
 
                 $cooking= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
                 ->join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
                 ->where('user_id', $id)
-                ->groupBy('dish_id')
+                ->groupBy('dish_name')
                 ->orderBy('order_date', 'desc')
                 ->where('order_status', '=', 'Cooking')
                 ->get();
@@ -250,7 +243,7 @@ class OrdersController extends Controller
                
                return view('user.orderhistory', compact('pending', 'cooking', 'delivering', 'completed', 'done'));
 
-        }
+ 
          
     }
 
