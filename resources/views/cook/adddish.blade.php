@@ -411,6 +411,7 @@ $(document).ready(function () {
                         '<input type="hidden" id="prepp" name="prepp[]" value="'+prepp+'">'+
                         '<td multiple name="unit[]">'+um+'</td>'+
                         '<input type="hidden" id="umm" name="umm[]" value="'+umm+'">'+
+                        '<td><button type="button" id="remove" class="remove"><i class="fa fa-times"></i></button></td>'+
                         '</tr>';
 
 
