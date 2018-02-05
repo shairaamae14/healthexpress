@@ -216,7 +216,7 @@ class PlannedMController extends Controller
         $address=$request['d_address'];
         $lat=$request['cityLat'];
         $long=$request['cityLng'];
-       // dd($lat);
+       dd($lat);
       }
       else if($request['mode']=="Pickup"){
         $address=$request['p_address'];
@@ -228,8 +228,8 @@ class PlannedMController extends Controller
                         ->update(['note'=>$request['spec'],
                                   'mode_delivery'=>$request['mode'],
                                   'address'=>$address,
-                                  'pm_longitude'=>$long,
-                                  'pm_latitude'=>$lat
+                                  'longitude'=>$long,
+                                  'latitude'=>$lat
                                  ]);
 
     
