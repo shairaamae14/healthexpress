@@ -212,11 +212,16 @@ class PlannedMController extends Controller
     
     public function updatePm(Request $request){
       $pm_id=$request['pm_id'];
+      $distance=7; //static
+      $delcharge=40.00;
+      if($distance>5){
+        $delcharge=40+2.50*($distance-5);
+      }
       if($request['mode']=="Delivery"){
         $address=$request['d_address'];
         $lat=$request['cityLat'];
         $long=$request['cityLng'];
-       dd($lat);
+       // dd($lat, $long, $address);     
       }
       else if($request['mode']=="Pickup"){
         $address=$request['p_address'];
@@ -228,8 +233,11 @@ class PlannedMController extends Controller
                         ->update(['note'=>$request['spec'],
                                   'mode_delivery'=>$request['mode'],
                                   'address'=>$address,
-                                  'longitude'=>$long,
-                                  'latitude'=>$lat
+                                  'pm_longitude'=>$long,
+                                  'pm_latitude'=>$lat,
+                                  'contact_no'=>$request['contactnum'],
+                                  'distance'=>$distance,
+                                  'del_charge'=>$delcharge
                                  ]);
 
     

@@ -137,7 +137,7 @@ input[type="text"], input[type="number"], #mode {
                                                                       <input type="hidden" id="cityLat" name="cityLat" />
                                                                       <input type="hidden" id="cityLng" name="cityLng" /> -->
                                                                       <!-- <div id="map"></div> -->
-              <h1 style="color:#30bb6d">SUMMARY OF DISHES</h1>
+               <h1 class="text-center" style="color:white; background-color: #4caf50">SUMMARY OF DISHES</h1>
               <label>Please select a dish to change the order details.</label>
               <br>
                <div class="card" style="width:92rem; margin-right:-10px; margin-left:10px; padding:10px">
@@ -163,31 +163,31 @@ input[type="text"], input[type="number"], #mode {
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span class="sr-only">close</span></button>
-                <h4 id="modalTitle" class="modal-title" style="color: #4caf50"><b>{{$order->title}}</b></h4>
+             <h4 class="text-center" style="color:white; background-color: #4caf50">{{$order->title}}</h4>
             </div>
              <form action="{{route('user.setDetails')}}" method="post">
             {{csrf_field()}}
             <input type="hidden" name="pm_id" id="pm_id" value="{{$order->pm_id}}">
             <div id="modalBody" class="modal-body col-md-12 modall"> 
               <div class="col-md-12 details">
-             <div class="col-md-6">
-                 <img src="{{url('./dish_imgs/'.$order->dish_img)}}" style="width:150px; height:150px; border:2px solid #F0F0F0; border-radius: 10px"><br>
-                 </div>
-             <div class="col-md-6">
+             <div class="col-md-12"><center>
+                 <img src="{{url('./dish_imgs/'.$order->dish_img)}}" style="width:150px; height:150px; border:2px solid #4caf50; border-radius: 10px"><br>
+                 </div><br><center>
+             <div class="col-md-12">
                 <label style="float:center; font-size:15px; color:black">
-                  <b>&nbsp; Meal For:</b>
+                  <b style="color: #4caf50">&nbsp; Meal For:</b>
                     &nbsp;{{$order->name}}
                 </label><br>
                 <label style="float:center; font-size:15px; color:black">
-                  <b>&nbsp; Date:</b>
+                  <b style="color: #4caf50">&nbsp; Date:</b>
                     &nbsp;{{ Carbon\Carbon::parse($order->start)->format('Y-M-d H:m:s') }}
                 </label><br>
                 <label style="float:center; font-size:15px; color:black">
-                  <b>&nbsp; Status:</b>
+                  <b style="color: #4caf50">&nbsp; Status:</b>
                     &nbsp;{{$order->p_status}}
                 </label><br>
                 <label style="float:center; font-size:15px; color:black">
-                  <b>&nbsp; Mode of Delivery:</b>
+                  <b style="color: #4caf50">&nbsp; Mode of Delivery:</b>
                   @if($order->mode_delivery)
                     &nbsp;{{$order->mode_delivery}}
                   @else
@@ -195,7 +195,7 @@ input[type="text"], input[type="number"], #mode {
                   @endif
                 </label><br>
                 <label style="float:center; font-size:15px; color:black;">
-                  <b>&nbsp; Address:</b>
+                  <b style="color: #4caf50">&nbsp; Address:</b>
                   @if($order->address)
                     &nbsp;{{$order->address}}
                   @else
@@ -203,7 +203,7 @@ input[type="text"], input[type="number"], #mode {
                   @endif
                 </label><br>
                 <label style="float:center; font-size:15px; color:black">
-                  <b>&nbsp; Sidenote:</b>
+                  <bstyle="color: #4caf50">&nbsp; Sidenote:</b>
                 @if($order->sidenote)
                     &nbsp;{{$order->sidenote}}
                 @else
@@ -227,10 +227,10 @@ input[type="text"], input[type="number"], #mode {
                       <b>&nbsp;Delivery Address:</b></label>
                       <br>
                       <input type="checkbox" class="defaultadd" id="defaultadd" checked>&nbsp;Use default address
-                      <input type="text" name="d_address" class="form-control has-success loc" id="location{{$order->dish_id}}" style="width:450px">
+                      <input type="text" name="d_address" class="form-control has-success loc" id="location{{$order->dish_id}}" style="width:450px" placeholder="Enter your desired location">
                       <input type="hidden" id="city" name="city" />
-                      <input type="hidden" id="cityLat" name="cityLat" value="{{$order->latitude}}" />
-                      <input type="hidden" id="cityLng" name="cityLng" value="{{$order->longitude}}"/>
+                      <input type="hidden" id="cityLat{{$order->dish_id}}" name="cityLat"/>
+                      <input type="hidden" id="cityLng{{$order->dish_id}}" name="cityLng"/>
                       <input type="hidden" id="dish_id" value="{{$order->dish_id}}">
                       <center><div id="map{{$order->dish_id}}" class="map" style="height:200px"></div>
                     </div>
@@ -239,15 +239,22 @@ input[type="text"], input[type="number"], #mode {
                       <b>&nbsp;Pick-Up Address:</b></label>&nbsp;
                       <label>{{$order->c_location}}</label>
                       <input type="hidden" id="city" name="city" />
-                      <input type="hidden" id="cityLat" name="cityLatp"/>
-                      <input type="hidden" id="cityLng" name="cityLngp" />
+                      <input type="hidden" id="cityLat" name="cityLatp" value="{{$order->c_latitude}}"/>
+                      <input type="hidden" id="cityLng" name="cityLngp" value="{{$order->c_longitude}}" />
                       <input type="hidden" name="p_address" value="{{$order->c_location}}">
                     </div>
+                  <br>
+                  <label style="float:center; font-size:15px; color:black">
+                  <b>&nbsp;Contact number:</b><br>
+                  <input type="checkbox" class="defaultnum" id="defaultnum" checked>&nbsp;Use default contact number
+                  <input type="text" name="contactnum" class="form-control has-success numfield" placeholder="Enter your contact number">
+                  </label><br>
                   </div>
-                   <label style="float:center; font-size:15px; color:black">
+                  
+                 <!--  <label style="float:center; font-size:15px; color:black">
                   <b>&nbsp;Number of persons:</b>
                   <input type='number' name="num" class='form-control has-success' min="1" value="1" style='width:50px;'>
-                  </label><br>
+                  </label><br> -->
                 
                   <label style="float:center; font-size:15px; color:black">
                   <b>&nbsp;Do you have any specifications?</b></label>
@@ -356,8 +363,8 @@ input[type="text"], input[type="number"], #mode {
           marker.setVisible(false);
           var place = autocomplete.getPlace();
           document.getElementById('city').value = place.name;
-          document.getElementById('cityLat').value = place.geometry.location.lat();
-          document.getElementById('cityLng').value = place.geometry.location.lng();
+          document.getElementById('cityLat'+id).value = place.geometry.location.lat();
+          document.getElementById('cityLng'+id).value = place.geometry.location.lng();
           if (!place.geometry) {
             // User entered the name of a Place that was not suggested and
             // pressed the Enter key, or the Place Details request failed.
@@ -521,7 +528,7 @@ $(document).ready(function(){
         $('.btnsave').removeAttr('disabled');
          // $('.btnsave').removeAttr('hidden');
         $('.lblset').removeAttr('hidden');
-        // $('.showdet').
+        $('.showdet').removeAttr('hidden');
       
     });
    // $('.fc-event').each(function(){
@@ -570,7 +577,15 @@ function ChangeDrop(mode){
                  $(div).find('.loc').val('{{$order->location}}');
             }else{
                 $(div).find('.loc').val('');
-                $(div).find('.loc').attr('placeholder', 'Please choose delivery location')
+                $(div).find('.loc').attr('placeholder', 'Enter your desired location')
+            }
+            });              
+     $(div).find(".defaultnum").change(function(){
+            if ($(this).is(":checked")){
+                 $(div).find('.numfield').val('{{$order->contact_no}}');
+            }else{
+                $(div).find('.numfield').val('');
+                $(div).find('.numfield').attr('placeholder', 'Enter your contact number')
             }
             });              
 }
