@@ -324,8 +324,8 @@ form.steps({
 
     },"You must select at least one!");
     $(document).ready(function(){
-      $('.js-data-example-ajax').select2({
-      });
+        $('.js-data-example-ajax').css('width', '100%');
+        $('.js-data-example-ajax').select2();
     });
 
   </script>
