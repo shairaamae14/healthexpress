@@ -1,16 +1,40 @@
 @extends('user-layouts.master')
 <link href="{{asset('datetimepicker/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" media="screen">
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
 <link href="{{asset('datetimepicker/css/bootstrap-datetimepicker.min.css')}}" rel="stylesheet" media="screen">
 <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.0/fullcalendar.min.css'>
 <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css'>
 
+ 
+@section('heading')
+ <!-- Calendar -->
+<!--     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.7/fullcalendar.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/2.2.7/fullcalendar.min.css"/> -->
+    
+@endsection
 <style>
-@import url('https://fonts.googleapis.com/css?family=Lobster');
-@import url('https://fonts.googleapis.com/css?family=Anton');
+@import url('http://fonts.googleapis.com/css?family=Lobster');
+@import url('http://fonts.googleapis.com/css?family=Anton');
 @import url('https://fonts.googleapis.com/css?family=Ubuntu+Condensed');
 @import url('https://fonts.googleapis.com/css?family=Archivo+Black');
 @import url('https://fonts.googleapis.com/css?family=Lato');
 
+    #map {
+        height:250px;
+        width:250px;
+     
+       /* width:450px;
+       */
+        
+    }
+    
+    .help{
+        color:#4caf50;
+    }
+ 
 
 #ordermode{
   padding:20px;
@@ -75,11 +99,11 @@ hr{
 div#calendar .fc-center h2 {
   color: black;
 }
+input[type="text"], input[type="number"], #mode {
+  border:1px solid #F2E6E4;
 
+}
 /*Resize the wrap to see the search bar change!*/
-
-
-
 
 
 
@@ -99,7 +123,6 @@ div#calendar .fc-center h2 {
                 <button id="ordermode" style="background-color:transparent;  border:2px solid white; font-size: 40px; margin-top:-20px; margin-left:10px; font-family: 'Lobster', cursive; color:white; width: 300px">Express Meal</button>
               </a>
         </div>
-      </center>
       </div>
     </div>
   </div>
@@ -109,43 +132,48 @@ div#calendar .fc-center h2 {
         <div class="row">
           <div class="content"> 
             <center>
+         <!--    <input type="text" id="location" name="location" class="form-control">
+                                                                      <input type="hidden" id="city" name="city" />
+                                                                      <input type="hidden" id="cityLat" name="cityLat" />
+                                                                      <input type="hidden" id="cityLng" name="cityLng" /> -->
+                                                                      <!-- <div id="map"></div> -->
               <h1 style="color:#30bb6d">SUMMARY OF DISHES</h1>
               <label>Please select a dish to change the order details.</label>
               <br>
                <div class="card" style="width:92rem; margin-right:-10px; margin-left:10px; padding:10px">
               <div id='calendar'></div>
               </div>
-          <div class="footer">
+           <div class="footer">
           <button type="button" onclick="window.location.href='{{route('user.plan.index')}}'" class="btn btn-flat btn-danger">Go Back</button>
            <button type="button" class="btn btn-flat btn-success add-dish" value="./payment" onclick="window.location.href='{{route('user.payment')}}'">Payment Method</button>
           </div>
-        </center>
+
           </div><!--content!-->
         </div><!--row!-->
         </div><!--container!-->
       </div><!--section!-->
     </div><!--main raised!-->
     <br>
-</div><!--wrapper!-->
-
-
-
-
-
+  </div><!--wrapper!-->
+</div>
+<br>
 @foreach($data as $order)
-<div id="fullCalModal{{$order->dish_id}}" class="modal fade">
-    <div class="modal-dialog">
+<div id="fullCalModal{{$order->dish_id}}" class="modal fade pull-left mdl" style="align-content: center">
+    <div class="modal-dialog" style="float:center; margin-right: 1500px;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span class="sr-only">close</span></button>
-                <h4 id="modalTitle" class="modal-title" ><b>{{$order->title}}</b></h4>
+                <h4 id="modalTitle" class="modal-title" style="color: #4caf50"><b>{{$order->title}}</b></h4>
             </div>
-            <form action="{{route('user.setDetails')}}" method="post">
+             <form action="{{route('user.setDetails')}}" method="post">
             {{csrf_field()}}
-            <input type="hidden" name="pm_id" value="{{$order->pm_id}}">
-            <div id="modalBody" class="modal-body col-md-12"> 
-              <div class=col-md-6>
+            <input type="hidden" name="pm_id" id="pm_id" value="{{$order->pm_id}}">
+            <div id="modalBody" class="modal-body col-md-12 modall"> 
+              <div class="col-md-12 details">
+             <div class="col-md-6">
                  <img src="{{url('./dish_imgs/'.$order->dish_img)}}" style="width:150px; height:150px; border:2px solid #F0F0F0; border-radius: 10px"><br>
+                 </div>
+             <div class="col-md-6">
                 <label style="float:center; font-size:15px; color:black">
                   <b>&nbsp; Meal For:</b>
                     &nbsp;{{$order->name}}
@@ -160,9 +188,13 @@ div#calendar .fc-center h2 {
                 </label><br>
                 <label style="float:center; font-size:15px; color:black">
                   <b>&nbsp; Mode of Delivery:</b>
-                    &nbsp;{{$order->mode_delivery}}
+                  @if($order->mode_del)
+                    &nbsp;{{$order->mode_del}}
+                  @else
+                     &nbsp;To be set
+                  @endif
                 </label><br>
-                <label style="float:center; font-size:15px; color:black; margin-left:10px">
+                <label style="float:center; font-size:15px; color:black;">
                   <b>&nbsp; Address:</b>
                   @if($order->address)
                     &nbsp;{{$order->address}}
@@ -172,88 +204,216 @@ div#calendar .fc-center h2 {
                 </label><br>
                 <label style="float:center; font-size:15px; color:black">
                   <b>&nbsp; Sidenote:</b>
-                  @if($order->note)
-                    &nbsp;{{$order->note}}
-                  @else
+                @if($order->sidenote)
+                    &nbsp;{{$order->sidenote}}
+                @else
                     &nbsp;None
-                  @endif
+                @endif    
                 </label><br>
+             </div>
               </div>
-              <div class="col-md-6">
-              <center><button type="button" class="btn btn-flat btn-success btn-md set" style="margin-bottom:50px;">SET DETAILS</button></center>
+              <div class="col-md-12">
+              <center><button type="button" class="btn btn-flat btn-success btn-md set" id="setdetails" style="margin-bottom:50px;">SET DETAILS</button></center>
               <div class="askq" hidden>
                 <label style="float:center; font-size:15px; color:black">
                   <b>&nbsp;Mode of Delivery:</b></label>
-                  <select name="mode" class="mode form-control" id="mode">
-                    @if($order->mode_delivery == 'Delivery')
-                      <option value="Delivery" selected>Delivery</option>
-                      <option value="Pickup">Pick up</option>
-                    @else
-                      <option value="Delivery">Delivery</option>
-                      <option value="Pickup" selected>Pick up</option>
-                    @endif
+                  <select name="mode" class="mode form-control" id="mode" style="width:450px">
+                    <option value="Delivery">Delivery</option>
+                    <option value="Pickup">Pick up</option>
                   </select>
-                  <div class="address" id="address"></div>
+                  <div class="address" id="address">  
+                    <div id="del" class="del" hidden>
+                      <label style="float:center; font-size:15px; color:black">
+                      <b>&nbsp;Delivery Address:</b></label>
+                      <br>
+                      <input type="checkbox" class="defaultadd" id="defaultadd" checked>&nbsp;Use default address
+                      <input type="text" name="d_address" class="form-control has-success" id="location" style="width:450px" value="{{$order->location}}">
+                      <input type="hidden" id="city" name="city" />
+                      <input type="hidden" id="cityLat" name="cityLat" value="{{$order->latitude}}" />
+                      <input type="hidden" id="cityLng" name="cityLng" value="{{$order->longitude}}"/>
+                      <input type="hidden" id="dish_id" value="{{$order->dish_id}}">
+                      <center><div id="map{{$order->dish_id}}" class="map" style="height:200px"></div>
+                    </div>
+                    <div id="pick" class="pick" hidden>
+                      <label style="float:center; font-size:15px; color:black">
+                      <b>&nbsp;Pick-Up Address:</b></label>&nbsp;
+                      <label>{{$order->c_location}}</label>
+                      <input type="hidden" id="city" name="city" />
+                      <input type="hidden" id="cityLat" name="cityLat" value="{{$order->c_latitude}}" />
+                      <input type="hidden" id="cityLng" name="cityLng" value="{{$order->c_longitude}}" />
+                      <input type="hidden" name="p_address" value="{{$order->c_location}}">
+                    </div>
+                  </div>
                    <label style="float:center; font-size:15px; color:black">
+                  <b>&nbsp;Number of persons:</b>
+                  <input type='number' name="num" class='form-control has-success' min="1" value="1" style='width:50px;'>
+                  </label><br>
+                
+                  <label style="float:center; font-size:15px; color:black">
                   <b>&nbsp;Do you have any specifications?</b></label>
-                  <input type='text' name="spec" class='form-control has-success' style='width:250px'>
+                  <input type='text' name="spec" class='form-control has-success' style='width:250px;'>
               </div>
             </div>
             </div>
             
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-success">Save Changes</button>
+                <button type="submit" class="btn btn-success btnsave" disabled>Save Changes</button>
             </div>
             </form>
             </div>
         </div>
     </div>
 @endforeach
+<script src='https://code.jquery.com/jquery-1.11.2.min.js'></script>
+<script src='https://code.jquery.com/ui/1.11.2/jquery-ui.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js'></script>
 <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.0/fullcalendar.min.js'></script>
+<!-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script> -->
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOkRKO79rw8RrYgfrMgqIz2du240Uyz6U&libraries=places" async defer></script>
+
 <script>
-$(document).ready(function() {
-    $('#external-events .fc-event').each(function() {
-      // make the event draggable using jQuery UI
-      $(this).draggable({
-        zIndex: 999,
-        revert: true, // will cause the event to go back to its
-        revertDuration: 0 //  original position after the drag
-      });
+// $(document).ready(function() {
+// $(".modall").on("shown.bs.modal", function(e) {
+//       google.maps.event.trigger(map, "resize");
+//        return map.setCenter(latLng);
+// });     });
 
-    });
-    /* initialize the calendar
-    -----------------------------------------------------------------*/
+  function initMap(id) {
 
-    // $('#calendar').fullCalendar({
-    //   header: {
-    //     left: 'prev,next today',
-    //     center: 'title',
-    //     right: 'month,agendaWeek,agendaDay'
-    //   },
-    //   editable: true,
-    //   droppable: true, // this allows things to be dropped onto the calendar
-    //   drop: function() {
-    //     $(this).remove();
-    //   },
+
+        var latLng = new google.maps.LatLng(10.3157007,123.88544300000001 );
+        var mapOptions = {
+            zoom:13,
+            center: latLng
+        }
       
 
-  // var  json_events;
+        var map = new google.maps.Map(document.getElementById('map'+id), mapOptions);
+        var card = document.getElementById('pac-card');
+        var input = document.getElementById('location');
+        var options = {
+                        componentRestrictions: {country: 'ph'}
+                      }; 
+
+        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
+        // map2.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
+        var autocomplete = new google.maps.places.Autocomplete(input, options);
+        
+
+    // $('#fullCalModal'+id).on('shown.bs.modal', function () {
+    //     google.maps.event.trigger(map, 'resize');
+    //     // map.setCenter(center);
+    //   });
+        // Bind the map's bounds (viewport) property to the autocomplete object,
+        // so that the autocomplete requests use the current map bounds for the
+        // bounds option in the request.
+        autocomplete.bindTo('bounds', map);
+         // autocomplete.bindTo('bounds', map2);
+
+        var infowindow = new google.maps.InfoWindow();
+        var infowindowContent = document.getElementById('infowindow-content');
+        infowindow.setContent(infowindowContent);
+        var marker = new google.maps.Marker({
+          map: map,
+          draggable: true,
+          animation: google.maps.Animation.DROP,
+          position: latLng,
+          anchorPoint: new google.maps.Point(0, -29)
+        });
+       
+         geocoder = new google.maps.Geocoder();
+  
+         // google.maps.event.trigger(map, 'resize');
+                
+         google.maps.event.addListener(marker, 'dragend', function() {
+              geocoder.geocode({latLng: marker.getPosition()}, function(responses) {
+            if (responses && responses.length > 0) {
+                infowindow.setContent(
+                "<div class='place'>" + responses[0].formatted_address 
+                + "<br /> <small>" 
+                + "Latitude: " + marker.getPosition().lat() + "<br>" 
+                + "Longitude: " + marker.getPosition().lng() + "</small></div>"
+                );
+                infowindow.open(map, marker);
+                  // infowindow.open(map2, marker);
+            } else {
+                alert('Error: Google Maps could not determine the address of this location.');
+            }
+            });
+                map.panTo(marker.getPosition());
+          });
+          google.maps.event.addListener(marker, 'dragstart', function() {
+            infowindow.close(map, marker);
+              // infowindow.close(map2, marker);
+        });
+         
+
+          
+        autocomplete.addListener('place_changed', function() {
+          infowindow.close();
+          marker.setVisible(false);
+          var place = autocomplete.getPlace();
+          document.getElementById('city').value = place.name;
+          document.getElementById('cityLat').value = place.geometry.location.lat();
+          document.getElementById('cityLng').value = place.geometry.location.lng();
+          if (!place.geometry) {
+            // User entered the name of a Place that was not suggested and
+            // pressed the Enter key, or the Place Details request failed.
+            window.alert("No details available for input: '" + place.name + "'");
+            return;
+          }
+        
+
+          // If the place has a geometry, then present it on a map.
+          if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+          } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(17);  // Why 17? Because it looks good.
+          }
+          marker.setPosition(place.geometry.location);
+          marker.setVisible(true);
+
+          var address = '';
+          if (place.address_components) {
+            address = [
+              (place.address_components[0] && place.address_components[0].short_name || ''),
+              (place.address_components[1] && place.address_components[1].short_name || ''),
+              (place.address_components[2] && place.address_components[2].short_name || '')
+            ].join(' ');
+          }
+          
+
+
+          // infowindowContent.children['place-icon'].src = place.icon;
+          // infowindowContent.children['place-name'].textContent = place.name;
+          // infowindowContent.children['place-address'].textContent = address;
+          // infowindow.open(map, marker);
+        });
+
+                  $('#fullCalModal'+id).on('shown.bs.modal', (e) => {
+    this.resizeMap();
+     });
+     function resizeMap() {
+    var map = new google.maps.Map(document.getElementById('map'+id), this.options);
+    google.maps.event.trigger(map, "resize");
+     }
+
+       
+      }
+
+ 
+
+
+
+$(document).ready(function() {
     $.ajax({
       url: '{{ route("user.fetch") }}',
-      method: 'get', // Send post data
+      method: 'get', 
       data: {'type':'fetch'},
-      // async: false,
       success: function(s){
-             // $(document).click(function(event) {
-             //  // console.log(JSON.stringify(event));
-             //  console.log(event);
-             // var text = $(event.target);
-             // var id = text[0]['childNodes'][1]['value'];
-             // // alert(id);
-             //  });
         json_events = s;
         $('#calendar').fullCalendar({
             events: JSON.parse(s),
@@ -263,151 +423,27 @@ $(document).ready(function() {
             center: 'title',
             right: 'month,agendaWeek,agendaDay'
           },  
-          editable: true,
-          droppable: true, // this allows things to be dropped onto the calendar
+          editable: false,
+          droppable: false, // this allows things to be dropped onto the calendar
           dragRevertDuration: 0,
-          drop: function() {
-            // is the "remove after drop" checkbox checked?
-            if ($('#drop-remove').is(':checked')) {
-              // if so, remove the element from the "Draggable Events" list
-              $(this).remove();
-            }
-          },
-          eventDragStop: function (event, jsEvent, ui, view) {
-            if (isElemOverDiv()) {
-              var con = confirm('Are you sure to delete this permanently?');
-              if(con == true) {
-              var id = event.pm_id;
-              $.ajax({
-                  url: '{{ route("user.delete") }}',
-                  data: {'id':id},
-                  method: 'GET',
-                  dataType: 'json',
-                  success: function(response){
-                    console.log(response);
-                    if(response.status == 'success'){
-                      $('#calendar').fullCalendar('removeEvents');
-                          getFreshEvents();
-                        }
-                  },
-                  error: function(e){ 
-                    alert('Error processing your request: '+e.responseText);
-                  }
-                });
-              }   
-            }
-          },
-          eventReceive: function(event){
-            var title = event.title;
-            console.log(event);
-            var dish = event.did;
-            var be = event.be;
-            var om = 2;
-            var plan = event.plan;
-            var start = event.start.format("YYYY-MM-DD[T]HH:MM:SS");
-            var end = (event.end == null) ? start : event.end.format();
-            $.ajax({
-              url: "{{ route('user.storeplans') }}",
-              // data: 'type=new&title='+title+'&startdate='+start+'&zone='+zone,
-              data: {'title':title,'start':start,'end':end,'dish_id':dish,'be_id':be,'plan_id':plan,'om_id':om},
-              method: "GET",
-              dataType: 'json',
-              success: function(){
-                // event.id = response.eventid;
-                // console.log(title);
-                // alert('success');
-                $('#calendar').fullCalendar('updateEvent',event);
-                location.reload();
-              },
-              error: function(e){
-                console.log('error');
-              }
-            });
-            $('#calendar').fullCalendar('updateEvent',event);
-          },
-          eventDrop: function(event, delta, revertFunc) {
-            var id = event.pm_id;
-            var title = event.title;
-            var start = event.start.format("YYYY-MM-DD[T]HH:MM:SS");
-            var end = (event.end == null) ? start : event.end.format();
-            $.ajax({
-              url: "{{ route('user.resetdate') }}",
-              data: {'title':title,'start':start,'end':end,'id':id},
-              method: "GET",
-              dataType: 'json',
-              success: function(response){
-                if(response.status != 'success')                            
-                  revertFunc();
-              },
-              error: function(e){                     
-                revertFunc();
-                alert('Error processing your request: '+e.responseText);
-              }
-            });
-          },
-          eventClick: function(event, jsEvent, view) {
-            console.log(event.pm_id);
-              var note = prompt('Note(s):', event.note, { buttons: { Ok: true, Cancel: false} });
-              if (note){
-                event.note = note;
-                $.ajax({
-                  url: "{{ route('user.addnote') }}",
-                  data: {'note':note,'eventid':event.pm_id},
-                  method: "GET",
-                  dataType: 'json',
-                  success: function(response){  
-                    if(response.status == 'success')                
-                      $('#calendar').fullCalendar('updateEvent',event);
-                  },
-                  error: function(e){
-                    alert('Error processing your request: '+e.responseText);
-                  }
-                });
-              }
-          },
-
-            eventClick:  function(event, jsEvent, view) {
-              var id= event.dish_id;
+          
+          eventClick:  function(event, jsEvent, view) {
+             var id= event.dish_id;
               // alert(id);
             $('#modalTitle').html(event.title);
             $('#modalBody').html(event.description);
             $('#eventUrl').attr('href',event.url);
             $('#fullCalModal'+id).modal();
-             // $('#fullCalModal').setAttribute('id', 'fullCalModal'+id);
-        }, 
-          eventResize: function(event, delta, revertFunc) {
-            // console.log(event);
-            var id = event.pm_id;
-            // console.log(event.id);
-            var title = event.title;
-            var end = event.end.format();
-            var start = event.start.format();
-            $.ajax({
-              url: "{{ route('user.resetdate') }}",
-              data: {'title':title,'start':start,'end':end,'id':id},
-              method: 'GET',
-              dataType: 'json',
-              success: function(response){
-                if(response.status != 'success')                            
-                  revertFunc();
-              },
-              error: function(e){                     
-                revertFunc();
-                  alert('error');
-              }
-            });
+            initMap(id);
+            // resize(id);
           },
+         
+
         });
       }
     });
-    var currentMousePos = {
-      x: -1,
-      y: -1
-    };
-    jQuery(document).on("mousemove", function (event) {
-    currentMousePos.x = event.pageX;
-    currentMousePos.y = event.pageY;
-  });
+  
+
 
   function getFreshEvents(){
     $.ajax({
@@ -438,173 +474,112 @@ $(document).ready(function() {
         }
         return false;
   }
-});
-</script>
+});   
+    
+</script> 
+
+
+            
+
 @endsection
 @section('addtl_scripts')
-
-  <!--   Core JS Files   -->
+<!--   Core JS Files   -->
   <script src="{{asset('customer/assets/js/jquery.min.js')}}" type="text/javascript"></script> 
   <script src="{{asset('customer/assets/js/bootstrap.min.js')}}" type="text/javascript"></script>
   <script src="{{asset('customer/assets/js/material.min.js')}}"></script>
+
+  <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
+  <script src="{{asset('customer/assets/js/nouislider.min.js')}}" type="text/javascript"></script>
+
   <!--  Plugin for the Datepicker, full documentation here: http://www.eyecon.ro/bootstrap-datepicker/ -->
   <script src="{{asset('customer/assets/js/bootstrap-datepicker.js')}}" type="text/javascript"></script>
 
   <!-- Control Center for Material Kit: activating the ripples, parallax effects, scripts from the example pages etc -->
-  <script src="{{asset('customer/assets/js/material-kit.js')}}" type="text/javascript"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+ <script src="{{asset('customer/assets/js/material-kit.js')}}" type="text/javascript"></script>
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script> 
+ <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script> 
 
-  <script type="text/javascript" src="{{asset('datetimepicker/bootstrap/js/bootstrap.min.js')}}"></script>
+
+  <script type="text/javascript" src="{{asset('js/jquery-2.0.0.min.js')}}"></script>
+  <script type="text/javascript" src="{{asset('js/jquery.smartWizard.js')}}"></script>
+
+ <script type="text/javascript" src="{{asset('datetimepicker/bootstrap/js/bootstrap.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('datetimepicker/js/bootstrap-datetimepicker.js')}}" charset="UTF-8"></script>
-<script type="text/javascript" src="{{asset('datetimepicker/js/locales/bootstrap-datetimepicker.fr.js')}}" charset="UTF-8">
-</script>
+<script type="text/javascript" src="{{asset('datetimepicker/js/locales/bootstrap-datetimepicker.fr.js')}}" charset="UTF-8"></script>
+
+
+
+
+
 <script>
 $(document).ready(function(){
+
    $('.set').click(function(){
+      $('.details').attr('hidden', 'hidden');
       $('.askq').removeAttr('hidden');
       $(this).attr('disabled', 'disabled');
+        $('.btnsave').removeAttr('disabled');
+         // $('.btnsave').removeAttr('hidden');
+        $('.lblset').removeAttr('hidden');
+        // $('.showdet').
+      
     });
+   // $('.fc-event').each(function(){
+   //  console.log('hi');
+   // });
   $('.mode').change(function(e){
       ChangeDrop(this);
+      var id=$('.dish_id').val();
+      alert(id);
+       $('#fullCalModal'+id).modal({
+        backdrop: 'static',
+        keyboard: false
+    }).on('shown.bs.modal', function () {
+        google.maps.event.trigger(map, 'resize');
+        map.setCenter(center);
+    });
+
+ 
         });
+
  $(".mode").each(function(){
           ChangeDrop(this);
+    
         });
   });
-            
+
+      
 function ChangeDrop(mode){
               var val = $(mode).val();
-              var div = $(mode).parent().find('.address')[0]
+              var id  = $('#dish_id').val();
+              var div = $(mode).parent().find('.address')[0];
               
               if(val=="Delivery"){
-              div.innerHTML="<label style='float:center; font-size:15px; color:black'><b>&nbsp;Delivery Address:</b></label><br><input type='checkbox' class='defaultadd' id='defaultadd' checked>&nbsp;Use default address<input type='text' name='d_address' class='form-control has-success' id='location' style='width:450px' value='{{$order->location}}'><input type='hidden' id='city' name='city' /><input type='hidden' id='cityLat' name='cityLat' value='{{$order->latitude}}' /><input type='hidden' id='cityLng' name='cityLng' value='{{$order->longitude}}'/><input type='hidden' id='dish_id' value='{{$order->dish_id}}'><center><div id='map' style='width:250px; height:250px'></div>";
+                $('.del').removeAttr('hidden');
+                $('.pick').attr('hidden', 'hidden');
+                 
+  
               }
-           else {
-               div.innerHTML="<label><label style='float:center; font-size:15px; color:black'><b>&nbsp;Pick-Up Address:</b></label>&nbsp;<label>{{$order->c_location}}</label><input type='hidden' id='city' name='city' /><input type='hidden' id='cityLat' name='cityLat' value='{{$order->c_latitude}}' /><input type='hidden' id='cityLng' name='cityLng' value='{{$order->c_longitude}}' /><input type='hidden' name='p_address' value='{{$order->c_location}}'>";
-
-               }
+              else if (val=="Pickup"){
+                $('.pick').removeAttr('hidden');
+                $('.del').attr('hidden', 'hidden');
+              }
                
-               
-               $(div).find(".defaultadd").change(function(){
+    $(div).find(".defaultadd").change(function(){
             if ($(this).is(":checked")){
-                // $select.removeAttr('disabled');
-                 $(div).find('#defadd').val('{{$order->location}}');
+                 $(div).find('#location').val('{{$order->location}}');
             }else{
-                $(div).find('#defadd').val('');
-                $(div).find('#defadd').attr('placeholder', 'Please choose delivery location')
-               // $select.attr('disabled','disabled');
+                $(div).find('#location').val('');
+                $(div).find('#location').attr('placeholder', 'Please choose delivery location')
             }
-            });
-               
+            });              
 }
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBWn1eiYYrm8fbEeAC2N3-37Uzwokjs3Q4&libraries=places"
-    async defer></script>
-  <script type='text/javascript'>
-    function initMap() {
 
-        var latLng = new google.maps.LatLng(10.3157007,123.88544300000001 );
-        var mapOptions = {
-            zoom:13,
-            center: latLng
-        }
-        var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-        var card = document.getElementById('pac-card');
-        var input = document.getElementById('location');
-        var options = {
-                        componentRestrictions: {country: 'ph'}
-                      };
-        // var types = document.getElementById('type-selector');
-        // var strictBounds = document.getElementById('strict-bounds-selector');
-
-        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
-
-        var autocomplete = new google.maps.places.Autocomplete(input, options);
-        
-        // Bind the map's bounds (viewport) property to the autocomplete object,
-        // so that the autocomplete requests use the current map bounds for the
-        // bounds option in the request.
-        autocomplete.bindTo('bounds', map);
-
-        var infowindow = new google.maps.InfoWindow();
-        var infowindowContent = document.getElementById('infowindow-content');
-        infowindow.setContent(infowindowContent);
-        var marker = new google.maps.Marker({
-          map: map,
-          draggable: true,
-          animation: google.maps.Animation.DROP,
-          position: latLng,
-          anchorPoint: new google.maps.Point(0, -29)
-        });
-       
-         geocoder = new google.maps.Geocoder();
-         
-         google.maps.event.addListener(marker, 'dragend', function() {
-              geocoder.geocode({latLng: marker.getPosition()}, function(responses) {
-            if (responses && responses.length > 0) {
-                infowindow.setContent(
-                "<div class='place'>" + responses[0].formatted_address 
-                + "<br /> <small>" 
-                + "Latitude: " + marker.getPosition().lat() + "<br>" 
-                + "Longitude: " + marker.getPosition().lng() + "</small></div>"
-                );
-                infowindow.open(map, marker);
-            } else {
-                alert('Error: Google Maps could not determine the address of this location.');
-            }
-            });
-                map.panTo(marker.getPosition());
-          });
-          google.maps.event.addListener(marker, 'dragstart', function() {
-            infowindow.close(map, marker);
-        });
-          
-        autocomplete.addListener('place_changed', function() {
-          infowindow.close();
-          marker.setVisible(false);
-          var place = autocomplete.getPlace();
-          document.getElementById('city').value = place.name;
-          document.getElementById('cityLat').value = place.geometry.location.lat();
-          document.getElementById('cityLng').value = place.geometry.location.lng();
-          if (!place.geometry) {
-            // User entered the name of a Place that was not suggested and
-            // pressed the Enter key, or the Place Details request failed.
-            window.alert("No details available for input: '" + place.name + "'");
-            return;
-          }
-
-          // If the place has a geometry, then present it on a map.
-          if (place.geometry.viewport) {
-            map.fitBounds(place.geometry.viewport);
-          } else {
-            map.setCenter(place.geometry.location);
-            map.setZoom(17);  // Why 17? Because it looks good.
-          }
-          marker.setPosition(place.geometry.location);
-          marker.setVisible(true);
-
-          var address = '';
-          if (place.address_components) {
-            address = [
-              (place.address_components[0] && place.address_components[0].short_name || ''),
-              (place.address_components[1] && place.address_components[1].short_name || ''),
-              (place.address_components[2] && place.address_components[2].short_name || '')
-            ].join(' ');
-          }
-          
-         
-
-          infowindowContent.children['place-icon'].src = place.icon;
-          infowindowContent.children['place-name'].textContent = place.name;
-          infowindowContent.children['place-address'].textContent = address;
-          infowindow.open(map, marker);
-        });
-      }
-</script>
-<script>
-  $(document).ready(function (){
-$('.form_datetime').datetimepicker({
+<script type='text/javascript'>
+  $(document).ready(function(){
+     $('.form_datetime').datetimepicker({
+          //language:  'fr',
           weekStart: 1,
           todayBtn:  1,
       autoclose: 1,
@@ -613,6 +588,13 @@ $('.form_datetime').datetimepicker({
       forceParse: 0,
           showMeridian: 1
       });
+   });
+</script> 
+
+
+
+<!-- <script>
+  $(document).ready(function (){
     $('#btnplan').on('click', function(){
       $('#content').hide();
       $('#content2').show();
@@ -625,12 +607,33 @@ $('.form_datetime').datetimepicker({
       $('#content2').hide();
       $('#content3').show();
     });
+    $('#wizard1').smartWizard({
+              transitionEffect:'fade',
+              onFinish:onFinishCallback,
+              onLeaveStep  : leaveAStepCallback,
+          });
+       function leaveAStepCallback(obj, context){
+              // To check and enable finish button if needed
+              if (context.fromStep >= 2) {
+                  $('#wizard1').smartWizard('enableFinish', true);
+              }
+              return true;
+          }
+    
+        function onFinishCallback(){
+          alert('Finish Called');
+          window.location.href= './plannedmeal/calendar';
 
+        }
 
           
   });
+  </script> -->
+   
+
 
 </script>
+
 
 
 
