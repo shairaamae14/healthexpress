@@ -131,8 +131,7 @@ class PlannedMController extends Controller
                                         'start' => $request['start'],
                                         'end' => $request['end'],
                                         'allDay' => 'false',
-                                        'order_status' => 'not',
-                                        'mode_delivery' => 'Delivery'
+                                        'order_status' => 'not'
         ]);
         return response()->json(['data'=>$events]);     
     }
@@ -215,16 +214,25 @@ class PlannedMController extends Controller
       $pm_id=$request['pm_id'];
       if($request['mode']=="Delivery"){
         $address=$request['d_address'];
+        $lat=$request['cityLat'];
+        $long=$request['cityLng'];
+       // dd($lat);
       }
       else if($request['mode']=="Pickup"){
         $address=$request['p_address'];
+         $lat=$request['cityLatp'];
+        $long=$request['cityLngp'];
       }
-
+       
       $pm=PlannedMeals::where('pm_id', $pm_id)
                         ->update(['note'=>$request['spec'],
                                   'mode_delivery'=>$request['mode'],
-                                  'address'=>$address
+                                  'address'=>$address,
+                                  'pm_longitude'=>$long,
+                                  'pm_latitude'=>$lat
                                  ]);
+
+    
 
       return redirect()->route('user.pmsummary');
 
@@ -250,6 +258,28 @@ class PlannedMController extends Controller
       return redirect()->route('user.plan.index');
     }
 
+
+// function distance($lat1, $lon1, $lat2, $lon2, $unit) {
+
+//   $theta = $lon1 - $lon2;
+//   $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
+//   $dist = acos($dist);
+//   $dist = rad2deg($dist);
+//   $miles = $dist * 60 * 1.1515;
+//   $unit = strtoupper($unit);
+
+//   if ($unit == "K") {
+//     return ($miles * 1.609344);
+//   } else if ($unit == "N") {
+//       return ($miles * 0.8684);
+//     } else {
+//         return $miles;
+//       }
+// }
+
+// echo distance(32.9697, -96.80322, 29.46786, -98.53506, "M") . " Miles<br>";
+// echo distance(32.9697, -96.80322, 29.46786, -98.53506, "K") . " Kilometers<br>";
+// echo distance(32.9697, -96.80322, 29.46786, -98.53506, "N") . " Nautical Miles<br>";
 
 
 }

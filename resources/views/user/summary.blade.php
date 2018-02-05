@@ -188,8 +188,8 @@ input[type="text"], input[type="number"], #mode {
                 </label><br>
                 <label style="float:center; font-size:15px; color:black">
                   <b>&nbsp; Mode of Delivery:</b>
-                  @if($order->mode_del)
-                    &nbsp;{{$order->mode_del}}
+                  @if($order->mode_delivery)
+                    &nbsp;{{$order->mode_delivery}}
                   @else
                      &nbsp;To be set
                   @endif
@@ -227,7 +227,7 @@ input[type="text"], input[type="number"], #mode {
                       <b>&nbsp;Delivery Address:</b></label>
                       <br>
                       <input type="checkbox" class="defaultadd" id="defaultadd" checked>&nbsp;Use default address
-                      <input type="text" name="d_address" class="form-control has-success" id="location" style="width:450px" value="{{$order->location}}">
+                      <input type="text" name="d_address" class="form-control has-success loc" id="location{{$order->dish_id}}" style="width:450px">
                       <input type="hidden" id="city" name="city" />
                       <input type="hidden" id="cityLat" name="cityLat" value="{{$order->latitude}}" />
                       <input type="hidden" id="cityLng" name="cityLng" value="{{$order->longitude}}"/>
@@ -239,8 +239,8 @@ input[type="text"], input[type="number"], #mode {
                       <b>&nbsp;Pick-Up Address:</b></label>&nbsp;
                       <label>{{$order->c_location}}</label>
                       <input type="hidden" id="city" name="city" />
-                      <input type="hidden" id="cityLat" name="cityLat" value="{{$order->c_latitude}}" />
-                      <input type="hidden" id="cityLng" name="cityLng" value="{{$order->c_longitude}}" />
+                      <input type="hidden" id="cityLat" name="cityLatp"/>
+                      <input type="hidden" id="cityLng" name="cityLngp" />
                       <input type="hidden" name="p_address" value="{{$order->c_location}}">
                     </div>
                   </div>
@@ -271,7 +271,7 @@ input[type="text"], input[type="number"], #mode {
 <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js'></script>
 <script src='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.8.0/fullcalendar.min.js'></script>
 <!-- <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script> -->
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOkRKO79rw8RrYgfrMgqIz2du240Uyz6U&libraries=places" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOkRKO79rw8RrYgfrMgqIz2du240Uyz6U&libraries=places&callback=initMap" async defer></script>
 
 <script>
 // $(document).ready(function() {
@@ -292,7 +292,7 @@ input[type="text"], input[type="number"], #mode {
 
         var map = new google.maps.Map(document.getElementById('map'+id), mapOptions);
         var card = document.getElementById('pac-card');
-        var input = document.getElementById('location');
+        var input = document.getElementById('location'+id);
         var options = {
                         componentRestrictions: {country: 'ph'}
                       }; 
@@ -393,7 +393,7 @@ input[type="text"], input[type="number"], #mode {
           // infowindow.open(map, marker);
         });
 
-                  $('#fullCalModal'+id).on('shown.bs.modal', (e) => {
+ $('#fullCalModal'+id).on('shown.bs.modal', (e) => {
     this.resizeMap();
      });
      function resizeMap() {
@@ -567,10 +567,10 @@ function ChangeDrop(mode){
                
     $(div).find(".defaultadd").change(function(){
             if ($(this).is(":checked")){
-                 $(div).find('#location').val('{{$order->location}}');
+                 $(div).find('.loc').val('{{$order->location}}');
             }else{
-                $(div).find('#location').val('');
-                $(div).find('#location').attr('placeholder', 'Please choose delivery location')
+                $(div).find('.loc').val('');
+                $(div).find('.loc').attr('placeholder', 'Please choose delivery location')
             }
             });              
 }
