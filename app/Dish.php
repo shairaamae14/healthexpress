@@ -30,7 +30,7 @@ class Dish extends Model
     
     public function planned_meals()
     {
-        return $this->hasOne('App\Pmealdishes', 'dish_id', 'did');
+        return $this->hasOne('App\Pmealdishes', 'did', 'dish_id');
     }
 
     public function user_order()
