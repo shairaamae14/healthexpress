@@ -158,12 +158,13 @@ input[type="text"], input[type="number"], #mode {
 </div>
 <br>
 @foreach($data as $order)
-<div id="fullCalModal{{$order->dish_id}}" class="modal fade pull-left mdl" style="align-content: center">
+  @foreach($order->dishes as $d)
+<div id="fullCalModal{{$order->pm_id}}" class="modal fade pull-left mdl" style="align-content: center">
     <div class="modal-dialog" style="float:center; margin-right: 1500px;">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span class="sr-only">close</span></button>
-             <h4 class="text-center" style="color:white; background-color: #4caf50">{{$order->title}}</h4>
+                <h4 class="text-center" style="color:white; background-color: #4caf50">{{$order->title}}</h4>
             </div>
              <form action="{{route('user.setDetails')}}" method="post">
             {{csrf_field()}}
@@ -171,12 +172,14 @@ input[type="text"], input[type="number"], #mode {
             <div id="modalBody" class="modal-body col-md-12 modall"> 
               <div class="col-md-12 details">
              <div class="col-md-12"><center>
-                 <img src="{{url('./dish_imgs/'.$order->dish_img)}}" style="width:150px; height:150px; border:2px solid #4caf50; border-radius: 10px"><br>
+                  <img src="{{url('./dish_imgs/'.$d['dish_img'])}}" style="width:150px; height:150px; border:2px solid #F0F0F0; border-radius: 10px"><br>
                  </div><br><center>
              <div class="col-md-12">
                 <label style="float:center; font-size:15px; color:black">
                   <b style="color: #4caf50">&nbsp; Meal For:</b>
-                    &nbsp;{{$order->name}}
+                  @foreach($order->dishes as $db)
+                    &nbsp;{{$db->besteaten[0]['name']}}
+                  @endforeach
                 </label><br>
                 <label style="float:center; font-size:15px; color:black">
                   <b style="color: #4caf50">&nbsp; Date:</b>
@@ -185,6 +188,18 @@ input[type="text"], input[type="number"], #mode {
                 <label style="float:center; font-size:15px; color:black">
                   <b style="color: #4caf50">&nbsp; Status:</b>
                     &nbsp;{{$order->p_status}}
+                </label><br>
+                  <label style="float:center; font-size:15px; color:black">
+                    <b style="color: #4caf50">&nbsp; Price:</b>
+                @if($d['sellingPrice'])
+                    &nbsp;{{$d['sellingPrice']}}
+                @else
+                    &nbsp;None
+                @endif    
+                </label><br>
+                   <label style="float:center; font-size:15px; color:black">
+                  <b style="color: #4caf50">&nbsp; Cook:</b>
+                    &nbsp;{{$d->cook['first_name']}}&nbsp;{{$d->cook['last_name']}}
                 </label><br>
                 <label style="float:center; font-size:15px; color:black">
                   <b style="color: #4caf50">&nbsp; Mode of Delivery:</b>
@@ -202,8 +217,16 @@ input[type="text"], input[type="number"], #mode {
                     &nbsp;To be set
                   @endif
                 </label><br>
+                 <label style="float:center; font-size:15px; color:black;">
+                  <b style="color: #4caf50">&nbsp; Delivery Charge:</b>
+                  @if($order->del_charge)
+                    Php&nbsp;{{$order->del_charge}}
+                  @else
+                    Php&nbsp;40.00
+                  @endif
+                </label><br>
                 <label style="float:center; font-size:15px; color:black">
-                  <bstyle="color: #4caf50">&nbsp; Sidenote:</b>
+                    <b style="color: #4caf50">&nbsp;Sidenote:</b>
                 @if($order->sidenote)
                     &nbsp;{{$order->sidenote}}
                 @else
@@ -226,39 +249,33 @@ input[type="text"], input[type="number"], #mode {
                       <label style="float:center; font-size:15px; color:black">
                       <b>&nbsp;Delivery Address:</b></label>
                       <br>
-                      <input type="checkbox" class="defaultadd" id="defaultadd" checked>&nbsp;Use default address
-                      <input type="text" name="d_address" class="form-control has-success loc" id="location{{$order->dish_id}}" style="width:450px" placeholder="Enter your desired location">
+                      <input type="checkbox" class="defaultadd" id="defaultadd">&nbsp;Use default address
+                      <input type="text" name="d_address" class="form-control has-success loc" id="location{{$order->pm_id}}" style="width:450px" value="{{$order->address}}">
                       <input type="hidden" id="city" name="city" />
-                      <input type="hidden" id="cityLat{{$order->dish_id}}" name="cityLat"/>
-                      <input type="hidden" id="cityLng{{$order->dish_id}}" name="cityLng"/>
-                      <input type="hidden" id="dish_id" value="{{$order->dish_id}}">
-                      <center><div id="map{{$order->dish_id}}" class="map" style="height:200px"></div>
+                      <input type="hidden" id="cityLat{{$order->pm_id}}" name="cityLat" class="cityLat"/>
+                      <input type="hidden" id="cityLng{{$order->pm_id}}" name="cityLng" class="cityLng"/>
+                      <input type="hidden" id="dish_id" value="{{$order->pm_id}}">
+                      <center><div id="map{{$order->pm_id}}" class="map" style="height:200px"></div>
                     </div>
                     <div id="pick" class="pick" hidden>
                       <label style="float:center; font-size:15px; color:black">
-                      <b>&nbsp;Pick-Up Address:</b></label>&nbsp;
-                      <label>{{$order->c_location}}</label>
+                      <b>&nbsp;Pick-Up Address:</b></label>&nbsp;<br>
+                      <label style="color: #4caf50; font-size: 20px"><b>{{$d->cook['location']}}</b></label>
                       <input type="hidden" id="city" name="city" />
-                      <input type="hidden" id="cityLat" name="cityLatp" value="{{$order->c_latitude}}"/>
-                      <input type="hidden" id="cityLng" name="cityLngp" value="{{$order->c_longitude}}" />
-                      <input type="hidden" name="p_address" value="{{$order->c_location}}">
+                      <input type="hidden" id="cityLat" name="cityLatp" value="{{$d->cook['latitude']}}"/>
+                      <input type="hidden" id="cityLng" name="cityLngp" value="{{$d->cook['longitude']}}" />
+                      <input type="hidden" name="p_address" value="{{$d->cook['location']}}">
                     </div>
                   <br>
                   <label style="float:center; font-size:15px; color:black">
                   <b>&nbsp;Contact number:</b><br>
-                  <input type="checkbox" class="defaultnum" id="defaultnum" checked>&nbsp;Use default contact number
-                  <input type="text" name="contactnum" class="form-control has-success numfield" placeholder="Enter your contact number">
+                  <input type="checkbox" class="defaultnum" id="defaultnum">&nbsp;Use default contact number
+                  <input type="text" name="contactnum" class="form-control has-success numfield" placeholder="Enter your contact number" value="{{$order->contact_num}}">
                   </label><br>
                   </div>
-                  
-                 <!--  <label style="float:center; font-size:15px; color:black">
-                  <b>&nbsp;Number of persons:</b>
-                  <input type='number' name="num" class='form-control has-success' min="1" value="1" style='width:50px;'>
-                  </label><br> -->
-                
                   <label style="float:center; font-size:15px; color:black">
                   <b>&nbsp;Do you have any specifications?</b></label>
-                  <input type='text' name="spec" class='form-control has-success' style='width:250px;'>
+                  <input type='text' name="spec" class='form-control has-success' style='width:250px;' value="{{$order->sidenote}}">
               </div>
             </div>
             </div>
@@ -271,6 +288,9 @@ input[type="text"], input[type="number"], #mode {
             </div>
         </div>
     </div>
+
+
+@endforeach
 @endforeach
 <script src='https://code.jquery.com/jquery-1.11.2.min.js'></script>
 <script src='https://code.jquery.com/ui/1.11.2/jquery-ui.min.js'></script>
@@ -435,7 +455,7 @@ $(document).ready(function() {
           dragRevertDuration: 0,
           
           eventClick:  function(event, jsEvent, view) {
-             var id= event.dish_id;
+             var id= event.pm_id;
               // alert(id);
             $('#modalTitle').html(event.title);
             $('#modalBody').html(event.description);
@@ -574,7 +594,9 @@ function ChangeDrop(mode){
                
     $(div).find(".defaultadd").change(function(){
             if ($(this).is(":checked")){
-                 $(div).find('.loc').val('{{$order->location}}');
+                 $(div).find('.loc').val('{{$order->user["location"]}}');
+                 $(div).find('.cityLat').val('{{$order->user["latitude"]}}');
+                 $(div).find('.cityLng').val('{{$order->user["longitude"]}}');
             }else{
                 $(div).find('.loc').val('');
                 $(div).find('.loc').attr('placeholder', 'Enter your desired location')
@@ -582,7 +604,7 @@ function ChangeDrop(mode){
             });              
      $(div).find(".defaultnum").change(function(){
             if ($(this).is(":checked")){
-                 $(div).find('.numfield').val('{{$order->contact_no}}');
+                 $(div).find('.numfield').val('{{$order->user["contact_no"]}}');
             }else{
                 $(div).find('.numfield').val('');
                 $(div).find('.numfield').attr('placeholder', 'Enter your contact number')
@@ -645,13 +667,6 @@ function ChangeDrop(mode){
   });
   </script> -->
    
-
-
-</script>
-
-
-
-
 
 
                     

@@ -191,32 +191,68 @@ class PlannedMController extends Controller
 
     public function summary(){
       $id = Auth::id();
-      $data = PlannedMeals::join('dishes','planned_meals.dish_id', '=', 'dishes.did')
-                            ->join('cooks', 'dishes.authorCook_id' , '=', 'cooks.id')
-                            ->join('users', 'planned_meals.user_id', '=', 'users.id')
-                            ->join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
-                            ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
-                            ->join('plans', 'planned_meals.plan_id', '=', 'plans.id')
-                            ->join('order_mode', 'planned_meals.om_id', '=', 'order_mode.id')
-                            ->where('user_id', $id)
+      $data = PlannedMeals::where('user_id', $id)
                             ->where('p_status', 'Pending')
                             ->where('order_status', 'not')
                             ->get();
+ 
 
       return view('user.summary', compact('data'));
     }
     public function modeOfDelivery(){
       return view('user.modeofdel');
     }
-    
-    
+  
     public function updatePm(Request $request){
-      $pm_id=$request['pm_id'];
-      $distance=7; //static
+    $pm_id=$request['pm_id'];
+    //TO GET LATLONG OF THE USER AND COOK
+    $pm= PlannedMeals::where('pm_id', $pm_id)
+                      ->where('mode_delivery', "Delivery")
+                      ->get();
+      $userlat=0;
+      $userlng=0;
+      $cooklat=0;
+      $cooklng=0;
+     foreach($pm as $p){
+      foreach($p->user as $pmuser){
+       foreach($p->dishes as $pdishes){
+            //USER LATLNG
+            $userlat=$request['cityLat'];
+            $userlng=$request['cityLng'];
+            //COOK LATLNG
+            $cooklat=$pdishes->cook['latitude'];
+            $cooklng=$pdishes->cook['longitude'];
+          }
+           
+   }
+  }
+
+
+
       $delcharge=40.00;
-      if($distance>5){
-        $delcharge=40+2.50*($distance-5);
+      if($request['mode']=="Delivery"){
+      //CALCULATION OF DISTANCE
+      $theta = $cooklng - $userlng;
+      $dist = sin(deg2rad($cooklat)) * sin(deg2rad($userlat)) +  cos(deg2rad($cooklat)) * cos(deg2rad($userlat)) * cos(deg2rad($theta));
+      $distacos = acos($dist);
+      $distrad= rad2deg($distacos);
+      $miles = $distrad * 60 * 1.1515;
+      $distance=$miles * 1.609344;
+      $distance=round($distance,2);
+      if($distance>5.00){
+        $delcharge=40.00+(2.50*($distance-5));
+        // dd($delcharge);
       }
+     else if ($distance<=5.00){
+      $delcharge=40.00;
+      }
+    }
+
+    else{
+      $delcharge-40;
+      $distance=0;
+    }
+ 
       if($request['mode']=="Delivery"){
         $address=$request['d_address'];
         $lat=$request['cityLat'];
@@ -235,7 +271,7 @@ class PlannedMController extends Controller
                                   'address'=>$address,
                                   'pm_longitude'=>$long,
                                   'pm_latitude'=>$lat,
-                                  'contact_no'=>$request['contactnum'],
+                                  'contact_num'=>$request['contactnum'],
                                   'distance'=>$distance,
                                   'del_charge'=>$delcharge
                                  ]);

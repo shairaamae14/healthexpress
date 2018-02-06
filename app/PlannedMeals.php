@@ -13,7 +13,7 @@ class PlannedMeals extends Model
 
     public function dishes()
     {
-    	return $this->hasMany('App\Dish', 'dish_id', 'did');
+    	return $this->hasMany('App\Dish', 'did', 'dish_id');
     }
 
     public function user() 
