@@ -55,4 +55,9 @@ class User extends Authenticatable
     {
         return $this->hasMany('App\UserOrder', 'user_id', 'id');
     }
+
+    public function planned_meal()
+    {
+        return $this->hasOne('App\PlannedMeals');
+    }
 }
