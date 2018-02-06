@@ -14,6 +14,7 @@ use App\Dish;
 use App\DishIngredient;
 use App\IngredientList;
 use App\ToleranceValues;
+use App\Cook;
 class AdminController extends Controller
 {
 
@@ -33,162 +34,21 @@ class AdminController extends Controller
     {
 
         $user = Auth::user();
-   
-        $allergies = User::join('user_allergens', 'user_allergens.user_id', 'users.id')
-                        ->join('allergens', 'user_allergens.allergen_id', 'allergens.allergen_id')
-                        ->where('id', $user->id)
-                        ->first();
-        // dd($allergies);
-        if($allergies) {
-        $tol_values = ToleranceValues::where('aid', $allergies->allergen_id)
-                                ->where('level', $allergies->tolerance_level)
-                                ->first();
-        }   
-        $medcondition = $user->conditions;
+        $cook = Cook::first();
 
-        $comparisons = array('protein', 'total_fat', 'carbohydrate', 'fibre', 'sodium',
-                            'sat_fat', 'cholesterol');
+        $theta = $cook->latitude - $user->latitude;
+        $distance = (sin(deg2rad($cook->longitude)) * sin(deg2rad($user->longitude))) + (cos(deg2rad($cook->longitude)) * cos(deg2rad($user->longitude)) * cos(deg2rad($theta)));
+        $distance = acos($distance);
+        $distance = rad2deg($distance);
+        $distance = $distance * 60 * 1.1515;
+        $distance = $distance * 1.609344;
 
-        $dishes = Dish::all();
-        $recommendation = [];
-        $separate = [];
-        $compare_first = [];
-        
-        $count = 0;
-        $ct = 0;
-        $scount = 0;
+        $delivery_fee = floatval(40);
+        $additional_charge = $delivery_fee + ($distance - floatval(5));
+        // dd(round($additional_charge,2));
+        dd($distance);
 
-        
-
-    if(!$allergies && count($medcondition) == 0) {
-        
-          for ($i=0; $i < count($dishes); $i++) {
-            $nfacts = $dishes[$i]->nfacts;
-            for ($k=0; $k < count($nfacts); $k++) { 
-                if($nfacts['calories'] <= $user['dcr']) {
-                    $recommendation[$count] = $dishes[$i];
-                }
-            }
-            $count++;
-        }  
-    }
-    else if($allergies && count($medcondition) == 0) {
-        
-        for ($var=0; $var < count($dishes); $var++) { 
-            $ingredients = $dishes[$j]->ingredients;
-            for($ing = 0 ; $ing < count($ingredients); $ing++) {
-                $res = $ingredients[$ing]->Shrt_Desc;
-                if(preg_match('/'.$allergies['allergen_name'].'/i', $ingredients[$ing]->Shrt_Desc)) {
-                     $protein = $tol_values['threshold_value'] /100;
-                    if($tol_values['level'] == 'High') {
-                        $recommendation[$ct] = $dishes[$var];
-                    }
-                    else if($tol_values['level'] == 'Medium') {
-                        $proteinMin = $tol_values['min'] / 100;
-                        $proteinMax = $tol_values['max'] / 100;
-                        if($ingredients[$ing]->Protein_g <= $proteinMin || $ingredients[$ing]->Protein_g <= $proteinMax) {
-                            $recommendation[$ct] = $dishes[$var];
-                        }
-                    }
-                    else {
-                        if($ingredients[$ing]->Protein_g < $protein) {
-                            $recommendation[$ct] = $dishes[$var];
-                        }
-                    }
-                }
-                else {
-                     $recommendation[$ct] = $dishes[$var];
-                }
-            }
-        $ct++;
-
-        }
-    }
-    else if(!$allergies && count($medcondition) != 0) {
-     
-        for ($ind=0; $ind < count($dishes); $ind++) { 
-            $nfacts = $dishes[$ind]->nfacts;
-            for ($l=0; $l < count($medcondition); $l++) {
-                    $restrictions = $medcondition[$l]->restrictions;
-                    for ($index=0; $index < count($restrictions); $index++) { 
-                       for ($x=0; $x < count($comparisons); $x++) { 
-                            if($nfacts[$comparisons[$x]] <= $restrictions[$index][$comparisons[$x]]) {
-                                    $recommendation[$ct] = $dishes[$ind];
-
-                            }   
-                       }
-                   }
-               }
-           $ct++;
-        }
-    }
-    else if($allergies && count($medcondition) != 0){
-        
-        for ($j=0; $j < count($dishes); $j++) { 
-            $nfacts = $dishes[$j]->nfacts;
-            $ingredients = $dishes[$j]->ingredients;
-             for($ing = 0 ; $ing < count($ingredients); $ing++) {
-                for ($l=0; $l < count($medcondition); $l++) {
-                    $restrictions = $medcondition[$l]->restrictions;
-                    for ($index=0; $index < count($restrictions); $index++) { 
-                       for ($x=0; $x < count($comparisons); $x++) { 
-
-                        $protein = $tol_values['threshold_value'] /100;
-                            
-                            if(preg_match('/'.$allergies['allergen_name'].'/i', $ingredients[$ing]->Shrt_Desc)) {
-
-                                 // dd($ingredients[1]->Shrt_Desc);
-                                
-                                if($tol_values['level'] == 'High') {
-
-                                    if($nfacts[$comparisons[$x]] <= $restrictions[$index][$comparisons[$x]]) {
-                                        $recommendation[$ct] = $dishes[$j];
-                                    }
-                                }
-                                else if($tol_values['level'] == 'Medium') {
-
-                                    $proteinMin = $tol_values['min'] / 100;
-                                    $proteinMax = $tol_values['max'] / 100;
-                                    if($ingredients[$ing]->Protein_g <= $proteinMin || $ingredients[$ing]->Protein_g <= $proteinMax) {
-                                        $recommendation[$ct] = $dishes[$var];
-                                    }
-                                }
-                                
-                                else if($tol_values['level'] == 'Low'){
-                                    // dd($ingredients[$ing]->Shrt_Desc);
-                                    if($ingredients[$ing]->Protein_g < $protein && $nfacts[$comparisons[$x]] <= $restrictions[$index][$comparisons[$x]]) {
-
-                                        $recommendation[$ct] = $dishes[$j];
-                                    }
-                                    // else {
-                                    //     if($nfacts[$comparisons[$x]] <= $restrictions[$index][$comparisons[$x]]) {
-                                    //         $recommendation[$ct] = $dishes[$j];
-                                    //     }
-                                    // }
-                                }
-                                }
-                                else {
-                                    if($nfacts[$comparisons[$x]] <= $restrictions[$index][$comparisons[$x]]) {
-                                            $recommendation[$ct] = $dishes[$j];
-                                    }  
-                                }
-                               
-
-                            }
-                         
-                       }
-                        
-                    }
-                }
-                $ct++; 
-            }
-            
-            
-
-        }
-    
-    // dd($recommendation);
-    // dd(count($recommendation));
+        dd($cook);
 
 
   

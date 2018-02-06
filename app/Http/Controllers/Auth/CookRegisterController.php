@@ -76,8 +76,8 @@ class CookRegisterController extends Controller
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
             'location' => $data['location'],
-            'longitude' => $data['cityLat'],
-            'latitude' => $data['cityLng'],
+            'longitude' => $data['cityLng'],
+            'latitude' => $data['cityLat'],
             'cook_status' => 'Offline',
             'status' => 1
         ]);

@@ -16,7 +16,6 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Input;
-
 class RegisterController extends Controller
 {
     /*
@@ -74,8 +73,17 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        
         $bday = date('Y-m-d', strtotime($data['bday']));
-
+        $birth = date('Y', strtotime($data['bday']));
+        $age = date('Y') - $birth;
+        if($data['gender'] == 'Male') {
+            $bmr = 88.362 + (13.397 * $data['weight']) + (4.799 * $data['height']) - (5.677 * $age);
+        }
+        else if($data['gender'] == 'Female'){
+            $bmr = 447.593 + (9.247 * $data['weight']) + (3.098 * $data['height']) - (4.330 * $age);
+        }
+        
         $user = User::create([
             'fname' => $data['fname'],
             'lname' => $data['lname'],
@@ -87,52 +95,62 @@ class RegisterController extends Controller
             'birthday' => $bday,
             'gender' => $data['gender'],
             'location' => $data['location'],
-            'longitude' => $data['cityLat'],
-            'latitude' => $data['cityLng'],
-            'status' => 1
+            'longitude' => $data['cityLng'],
+            'latitude' => $data['cityLat'],
+            'status' => 1,
+            'age' => $age,
+            'bmr' => $bmr
         ]);
         
         $goal = UserHGoals::create(['hg_id' => $data['goal'],
                                     'user_id' => $user->id,
                                     'date_started' => $data['dateStarted'],
                                     'status' => 1]);
-        
+        $usergoal = HealthGoals::findOrFail($data['goal']);
         $lifestyle= UserLifestyle::create(['user_id' => $user->id,
                                             'lifestyle_id' =>$data['lifestyle'],
                                             'status' => 1 ]);
+        $getUserLifestyle = $user->lifestyle;
+        foreach($getUserLifestyle as $lf) {
+            $pal_value = $lf->pal_value;
+        }
+
+        
+
+        switch($usergoal->hgoal_name)
+        {
+            case 'Lose Weight':
+                $init = ($bmr * $pal_value) * 0.15;
+                $dcr = ($bmr * $pal_value) + $init;
+            break;
+            case 'Maintain Weight':
+                $dcr = $bmr * $pal_value;
+            break;
+            case 'Gain Weight':
+                $dcr = $bmr * $pal_value + 500;
+            break;
+        }
+
+        $updateUser = User::where('id', $user->id)->update(['dcr' => $dcr]);
 
         $allergen = Input::get('allergen');
-
-        if($allergen!=null){
-            for($i =0; $i < count($data['allergen']); $i++) {
-                $allergen = UserAllergen::create(['user_id' => $user->id,
-                                               'allergen_id' => $data['allergen'][$i],
-                                               'tolerance_level' => $data['tolerance'],
-                                                'status' => 1]);
-            }
+        if($allergen != null) {
+        for($i =0; $i < count($data['allergen']); $i++) {
+            $allergen = UserAllergen::create(['user_id' => $user->id,
+                                           'allergen_id' => $data['allergen'][$i],
+                                           'tolerance_level' => $data['tolerance'],
+                                            'status' => 1]);
         }
-        // else{
-        //     $allergen = UserAllergen::create(['user_id' => $user->id,
-        //                                        'allergen_id' => null,
-        //                                        'tolerance_level' => null,
-        //                                         'status' => 1]);
-            
-        // }
+        }
 
         $med = Input::get('med_condition');
-        if($med!=null){
-            for($j = 0; $j < count($data['med_condition']); $j++) {
-                $condition = UserMCondition::create(['user_id' => $user->id,
-                                                 'medcon_id' => $data['med_condition'][$j],
-                                                 'status' => 1]);
-            }
+        if($med != null) {
+        for($j = 0; $j < count($data['med_condition']); $j++) {
+            $condition = UserMCondition::create(['user_id' => $user->id,
+                                             'medcon_id' => $data['med_condition'][$j],
+                                             'status' => 1]);
         }
-        // else{
-        //     $condition = UserMCondition::create(['user_id' => $user->id,
-        //                                          'medcon_id' => null,
-        //                                          'status' => 1]);
-            
-        // }
+        }
        
 
         return $user;
