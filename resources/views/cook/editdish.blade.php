@@ -69,6 +69,7 @@ fieldset{
     <section class="content">
         <div class="container">
              <div class="container">
+
     @foreach($dishes as $dish)
        <form id="example-advanced-form" method="post" action="{{route('cook.dishes.update', ['id' => $dish->did])}}" enctype="multipart/form-data">
         {{csrf_field()}}
@@ -166,14 +167,17 @@ fieldset{
                 <tr class="iRow" id="iRow">
                     <input type="hidden" name="ding_id[]" value="{{$di->ding_id}}">
                     <td>{{$di->Shrt_Desc}}</td>
-                    <input type="hidden" id="ingid" name="ingids[]" value="{{$di->ding_id}}">
-                    <td id="quanN">{{$di->quantity}}</td>
-                    <input type="hidden" id="qtyy" name="qtyys[]" value="{{$di->quantity}}">
-                    <td id="prepN">{{$di->p_name}}</td>
-                    <input type="hidden" id="prepp" name="prepps[]" value="{{$di->preparation}}">
-                    <td id="unitN">{{$di->um_name}}</td>
-                    <input type="hidden" id="umm" name="umms[]" value="{{$di->um_id}}">
-                    <td><button type="button" id="remove" onclick="remove({{$di->ding_id}})" class="remove"><i class="fa fa-times"></i></button><button type="button" class="btn btn-flat fa fa-edit" style="background-color:#30BB6D; color:white; border:none; margin-top: 0px; line-height: 100%; float:right" data-toggle="modal" data-target="#myModal{{$di->id}}"></button></td>
+                    <input type="hidden" id="ingid{{$di->ding_id}}" name="ingids[]" value="{{$di->ding_id}}">
+
+                    <td id="quanN{{$di->ding_id}}">{{$di->quantity}}</td>
+                    <input type="hidden" id="qtyy{{$di->ding_id}}" name="qtyys[]" value="{{$di->quantity}}">
+
+                    <td id="prepN{{$di->ding_id}}">{{$di->p_name}}</td>
+                    <input type="hidden" id="prepp{{$di->ding_id}}" name="prepps[]" value="{{$di->preparation}}">
+
+                    <td id="unitN{{$di->ding_id}}">{{$di->um_name}}</td>
+                    <input type="hidden" id="umm{{$di->ding_id}}" name="umms[]" value="{{$di->um_id}}">
+                    <td><button type="button" id="remove" onclick="remove({{$di->ding_id}})" class="remove"><i class="fa fa-times"></i></button><button type="button" class="btn btn-flat fa fa-edit" style="background-color:#30BB6D; color:white; border:none; margin-top: 0px; line-height: 100%; float:right" data-toggle="modal" data-target="#myModal{{$di->ding_id}}" {{-- data-id="{{$di->ding_id}}" --}}></button></td>
                 </tr>
                 @endforeach
             </table>
@@ -194,27 +198,28 @@ fieldset{
 
  <!-- modal -->
 @foreach($dish_ingredients as $di)
-<div class="modal fade" id="myModal{{$di->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="myModal{{$di->ding_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span class="sr-only">close</span></button>
                 <h4 class="modal-title" id="myModalLabel"><i class="fa fa-edit"></i><b>&nbsp;&nbsp;Change</b></h4>
-            </div>&nbsp;&nbsp;
+            </div>&nbsp;&nbsp;{{-- 
+            <form method="post" action="changes({{$di->ding_id}})" enctype="multipart/form-data">
+                {{csrf_field()}}  --}}
             <div class="modal-body">
-                <form method="post" action="#" enctype="multipart/form-data">
-                {{csrf_field()}} 
+                
                     <h4 class="modal-title" id="myModalLabel">&nbsp;&nbsp;<b>Ingredient Details</b></h4>
                 <div class="col-sm-12">
                     <div class="form-group label-floating has-success">
                         <label class="control-label">Quantity</label>
-                        <input type="text" class="form-control" id="quantityN" name="quantityN" value="{{$di->quantity}}" />
+                        <input type="text" class="form-control" id="quantityN{{$di->ding_id}}" name="quantityN" value="{{$di->quantity}}" />
                     </div>
                 </div>
                 <div class="col-sm-6">
                     <div class="form-group label-floating has-success">
                         <label class="control-label">Preparation</label>
-                        <select class="form-control" id="preparationN" name="preparationN[]" id="preparation" name="preparation" style="width:100px;" autofocus>
+                        <select class="form-control" id="preparationN{{$di->ding_id}}" name="preparationN[]" id="preparation" name="preparation" style="width:100px;" autofocus>
                             @foreach($preps as $prep)
                                 @if($di->preparation == $prep->p_id)
                                 <option selected value="{{ $prep->p_id }}">{{$prep->p_name}}</option>
@@ -228,7 +233,7 @@ fieldset{
                 <div class="col-sm-6">
                     <div class="form-group label-floating has-success">
                         <label class="control-label">Unit of Measure</label>
-                        <select class="form-control" id="umN" name="umN[]" style="width:150px;">
+                        <select class="form-control" id="umN{{$di->ding_id}}" name="umN[]" style="width:150px;">
                             @foreach($units as $um)
                                 @if($di->um_id == $um->um_id)
                                 <option selected value="{{ $um->um_id }}">{{$um->um_name}}</option>
@@ -239,13 +244,14 @@ fieldset{
                         </select>
                     </div>
                 </div>
-                </form>
+                <input type="hidden" id="dishid" value="{{$di->ding_id}}"/>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Cancel</button>
-                <button type="buton" class="btn btn-info btn-simple" onclick="changes(); return false;">Change</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="changes({{$di->ding_id}})">Save Changes</button>
             </div>
+            {{-- </form> --}}
         </div>
+        
     </div>
 </div>
 @endforeach
@@ -321,7 +327,7 @@ fieldset{
         },
         onFinished: function (event, currentIndex)
         {
-            alert("Submitted!");
+            var form = $(this); form.submit();
         }
     }).validate({
         errorPlacement: function errorPlacement(error, element) { element.before(error); },
@@ -331,7 +337,12 @@ fieldset{
             }
         }
     });
-      $('.js-data-example-ajax').select2();
+
+        $(document).ready(function(){
+            $('.js-data-example-ajax').css('width', '100%');
+            $('.js-data-example-ajax').select2();
+        });
+      
 </script>
 <script>
   $.widget.bridge('uibutton', $.ui.button);
@@ -357,7 +368,6 @@ fieldset{
     // Duration
     $('#duration').durationPicker();
 
-    
     //Change image
     function readURL(input) {
         if (input.files && input.files[0]) {
@@ -404,25 +414,29 @@ $(document).ready(function () {
 
 
 
-    function changes(){
+    function changes(id){
+        // alert(id);
 
-        var quan = document.getElementById('quantityN').value;
-        var prep = $("#preparationN option:selected").map(function() {
+        // var id = document.getElementById('dishid').value;
+        var quan = document.getElementById('quantityN'+id).value;
+        var prep = $("#preparationN"+id+" option:selected").map(function() {
             return $(this).text();
           }).get();
-        var prepp = $('#preparationN').val();
-        var um = $("#umN option:selected").map(function() {
+        var prepp = $('#preparationN'+id).val();
+        var um = $("#umN"+id+" option:selected").map(function() {
             return $(this).text();
           }).get();
-        var umm = $('#umN').val();
+        var umm = $('#umN'+id).val();
 
-        document.getElementById("quanN").innerHTML = quan;
-        document.getElementById("prepN").innerHTML = prep;
-        document.getElementById("unitN").innerHTML = um;
 
-        document.getElementById("qtyy").value = quan;
-        document.getElementById("prepp").value = prepp;
-        document.getElementById("umm").value = umm;
+
+        document.getElementById("quanN"+id).innerHTML = quan;
+        document.getElementById("prepN"+id).innerHTML = prep;
+        document.getElementById("unitN"+id).innerHTML = um;
+
+        document.getElementById("qtyy"+id).value = quan;
+        document.getElementById("prepp"+id).value = prepp;
+        document.getElementById("umm"+id).value = umm;k
 
 
 
@@ -478,7 +492,7 @@ $(document).ready(function () {
             return this.defaultSelected;
         });
 
-        return false;
+        // return false;
 
     }
 

@@ -386,9 +386,8 @@ class DishController extends Controller
         $cholesterol/=$request->serving;
 
 
-            $nutrifacts = NutritionFacts::where('dish_id', $id)
+            $nutrifacts = NutritionFacts::where('ding_id', $id)
                             ->update([
-                            'dish_id' => $id,
                             'gram_weight' => '123',
                             'calories' => $energy,
                             'protein' => $protein,
