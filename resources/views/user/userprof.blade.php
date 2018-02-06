@@ -1,9 +1,49 @@
 @extends('user-layouts.master')
+@section('heading')
+   <script src="{{asset('customer/assets/js/jquery.min.js')}}" type="text/javascript"></script>
+   <script src="{{asset('js/jquery-2.0.0.min.js')}}" type="text/javascript"></script>
+ <script src="{{asset('js/userform-validation.js')}}" type="text/javascript"></script>
+ <script src="{{asset('js/jquery.validate.min.js')}}" type="text/javascript"></script>
+ @endsection
 <style>
 @import url('https://fonts.googleapis.com/css?family=Lobster');
 @import url('https://fonts.googleapis.com/css?family=Anton');
 @import url('https://fonts.googleapis.com/css?family=Ubuntu+Condensed');
 @import url('https://fonts.googleapis.com/css?family=Archivo+Black');
+
+.map{
+  height:20%;
+}
+
+.validations{
+  font-size: 12px;
+   color:#30BB6D;
+}
+#addaller_form label.error {
+color:#D83131;
+font-size:10px;
+
+}
+#addaller_form input.error {
+border:1px solid #D83131;
+}
+#gen_form label.error {
+color:#D83131;
+font-size:10px;
+
+}
+#gen_form input.error {
+border:1px solid #D83131;
+}
+
+#health_form label.error {
+color:#D83131;
+font-size:10px;
+
+}
+#health_form input.error {
+border:1px solid #D83131;
+}
 
 #ordermode{
   padding:20px;
@@ -47,17 +87,13 @@ display: inline-block;
 </style>
 
 
-
 @section('content')
 <div class="wrapper">
   <div class="header header-filter" style="background-image: url('{{asset('img/bgindex.jpg')}}')">
     <div class="container">
       <div class="row">
            <center>
-        <div class="col-md-6">
-        <br>
-     <!--<center><h1 class="title text-center" style="font-family: 'Lobster', cursive; font-size: 60px;">Let us all be healthy!</h1> -->
-    <!-- <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class=" btn btn-danger btn-raised btn-lg" ="background-color:transparent;border:2px solid white; font-family: 'Anton', sans-serif; font-size: 20px " id="ordermode"><center> Express Meal</center> </a><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class=" btn btn-danger btn-raised btn-lg" id="ordermode" style="background-color:transparent;  border:2px solid white; font-family: 'Anton', sans-serif; font-size: 20px "><center>Planned Meal</center></a> -->
+          <div class="col-md-6">
         </div>
       </div>
     </div>
@@ -70,18 +106,18 @@ display: inline-block;
             <div class="profile" >
                 <div class="avatar">
                      <center>
-                 <div style="width:200px; height:200px; margin-top: -100px; background-color:#30BB6D; border-radius: 100px; border:2px white solid;">
-                   <img src="{{url('./user_imgs/'.$user->profpic)}}" class="img-circle" id="img-tag" width="200px" />
-            <!--          <label style="font-size: 150px; color:white; float:center">{{$user->fname[0]}}</label> -->
+                   <div style="width:200px; height:200px; margin-top: -100px; background-color:#30BB6D; border-radius: 100px; border:2px white solid;">
+                      <img src="{{url('./user_imgs/'.$user->profpic)}}" class="img-circle" id="img-tag" width="200px"/>
                    </div>
                 </div>
-                    <br>
-                   <center><button class="btn btn-success" data-toggle="modal" data-target="#myModal9{{$user->id}}">Upload image</button>
+                   <br>
+                   <center><button class="btn btn-success" data-toggle="modal" data-target="#myModal9{{$user->id}}" style="background-color:#30BB6D">Upload image</button>
+                   </center>
                 <div class="name">
-                     <center><h3 class="title" style="color:#30BB6D">{{Auth::user()->fname." ".Auth::user()->lname}}</h3>
+                  <center><h3 class="title" style="color:#30BB6D">{{Auth::user()->fname." ".Auth::user()->lname}}</h3></center>
                 </div>
-           </div>
-          </div>
+           </div><!--profile!-->
+          </div><!--row!-->
                
   <div class="card card-nav-tabs">
     <div class="header" style="background-color:#30BB6D">
@@ -104,7 +140,7 @@ display: inline-block;
                 </ul>
            </div>
         </div>
-    </div>
+    </div><!--header!-->
 
   <div class="content">
     <div class="tab-content text-center" id="who">
@@ -113,10 +149,12 @@ display: inline-block;
             <i class="fa fa-edit"></i>
             </button>
             <br><br>
-            <h2 style="color:black; float:left; margin-left: 12px; font-size:20px"><b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;General Information</b> 
+            <h2 style="color:black; float:left; margin-left: 12px; font-size:20px">
+            <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;General Information</b> 
             </h2>
             <br><br>
-  <div class="col-md-8 col-md-8" style="width: 100%;">
+   <div class="col-md-8 col-md-8" style="width: 100%;">
+
       <div class="col-md-8 col-md-8" style="width: 50%; margin-left:10px; margin-top: 8px;">
           <ul class="list-group" style="width: 100%; float:left; margin-right: 10px">
               <li class="list-group-item" style="height: 50px">
@@ -139,6 +177,7 @@ display: inline-block;
               </li> 
           </ul>
       </div>
+
    <div class="col-md-8 col-md-8" style="width: 50%; float:right; margin-top: -180px;">
       <h2 style="color:black; float:left; margin-left: 12px; font-size:20px;">
       <b>Contact Information</b>
@@ -165,8 +204,10 @@ display: inline-block;
                <a href="{{ route('user.changepass') }}" style="text-decoration:underline;" data-toggle="modal"><label style="float:left; font-size:15px; color:black"> &nbsp;Change Password</label></a>
             </li>
       </div>
+
     </div>
-  </div>
+  </div> <!--tab pane active!-->
+
    <div class="tab-pane" id="settings">
         <h2 style="color:black; float:left; margin-left: 12px; font-size:20px"><b>Health Information</b></h2>
         <button type="button" class="btn btn-flat btn-primary edit" style="background-color:#30BB6D; border:none; float:right" data-toggle="modal" data-target="#myModal3{{$user->id}}">
@@ -177,7 +218,7 @@ display: inline-block;
         <ul class="list-group" style="width: 100%">
            <li class="list-group-item" style="height: 50px">
                <label style="float:left; font-size:15px; color:black"><b>Birthdate:</b>{{$user->birthday}}</label>
-               <label style="float:left; font-size:15px; color:black"><b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Age:</b>&nbsp;{{$user->age}}</label>
+               <label style="float:left; font-size:15px; color:black"><b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Age:</b>&nbsp;{{$user->age()}}</label>
            </li>
            <li class="list-group-item" style="height: 50px">
                 <label style="float:left; font-size:15px; color:black">
@@ -278,41 +319,19 @@ display: inline-block;
    </div><!--after who!-->
        
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            
                   </div>
 
               </div>
           </div>
     </div>
-
-    </div>
+</div><!--wrapper!-->
 
 
 
 
 <!-- Modal Core -->
- 
-
-<div class="modal fade" id="myModal{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!--general information!-->
+<div class="modal fade mdl" id="myModal{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -320,38 +339,45 @@ display: inline-block;
         <h4 class="modal-title" id="myModalLabel"><i class="fa fa-edit"></i><b>&nbsp;&nbsp;Change</b></h4>
       </div>&nbsp;&nbsp;
         <div class="modal-body">
-             <form method="post" action="{{route('profile.update', ['id'=> Auth::id()])}}" enctype="multipart/form-data">
+             <form method="post" action="{{route('profile.update', ['id'=> Auth::id()])}}" enctype="multipart/form-data" id="gen_form">
                 {{csrf_field()}} 
                 <h4 class="modal-title" id="myModalLabel">&nbsp;&nbsp;<b>General Information</b></h4>
+
           <div class="col-sm-6">
             <div class="form-group label-floating has-success">
                 <label class="control-label">Last Name</label>
-                <input type="text" class="form-control" name="lname" value="{{$user->lname}}" />
+                <input type="text" class="form-control" id="lname" name="lname" value="{{$user->lname}}" />
             </div>
           </div>
           <div class="col-sm-6">
             <div class="form-group label-floating has-success">
                 <label class="control-label">First Name</label>
-                <input type="text" class="form-control" name="fname" value="{{$user->fname}}" />
+                <input type="text" class="form-control" id="fname" name="fname" value="{{$user->fname}}" />
             </div>
           </div>
           <div class="col-sm-12">
+           <h4 class="modal-title" id="myModalLabel"><b>Contact Information</b></h4>
             <div class="form-group label-floating has-success">
               <label class="control-label">Location</label>
-              <input type="text" class="form-control" name="location" value="{{$user->location}}" />
+               <input type="text" class="form-control" name="location" id="location" value="{{$user->location}}" />
+               <input type="hidden" id="city" name="city" />
+               <input type="hidden" id="cityLat" name="cityLat" value="{[$user->latitude}}" />
+               <input type="hidden" id="cityLng" name="cityLng" value="{{$user->longitude}}" />
+               <div class="map" id="map"></div>
            </div>
-         </div>
-          <h4 class="modal-title" id="myModalLabel">&nbsp;&nbsp;<b>Contact Information</b></h4>
+         </div><br>
          <div class="col-sm-6">
            <div class="form-group label-floating has-success">
               <label class="control-label">Contact Number</label>
-              <input type="text" class="form-control" name="contact_no" value="{{$user->contact_no}}" />
+              <input type="text" class="form-control" id="contact_no" name="contact_no" value="{{$user->contact_no}}" />
+           
            </div>
          </div>
         <div class="col-sm-6">
           <div class="form-group label-floating has-success">
               <label class="control-label">Email</label>
-              <input type="text" class="form-control" name="email" value="{{$user->email}}" />
+              <input type="email" class="form-control" id="email" name="email" value="{{$user->email}}" />
+            
           </div>
         </div>
          <!--HIDDEN!-->
@@ -407,339 +433,10 @@ display: inline-block;
         </form>
       </div><!--MODAL BODY!-->
     </div>
-  </div>
-</div>
-<!--END!-->
-
-
-
-
-
-<!--start!-->
-<div class="modal fade" id="myModal3{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-edit"></i><b>&nbsp;&nbsp;Change</b></h4>
-      </div>
-        <div class="modal-body">   
-          <form method="post" action="{{route('profile.update', ['id'=> Auth::id()])}}" enctype="multipart/form-data">
-          {{csrf_field()}} 
-          <h4 class="modal-title" id="myModalLabel">&nbsp;&nbsp;<b>Health Information</b></h4>      
-            <div class="col-sm-6">
-               <div class="form-group label-floating has-success">
-                   <label class="control-label">Birthday</label>
-                    <input type="date" class="form-control" name="birthday" value="{{$user->birthday}}" />
-                 </div>
-            </div>
-            <div class="col-sm-3">
-                <div class="form-group label-floating has-success">
-                    <label class="control-label">Weight(kg)</label>
-                    <input type="text" class="form-control" name="weight" value="{{$user->weight}}" />
-               </div>
-            </div>
-            <div class="col-sm-3">
-               <div class="form-group label-floating has-success">
-                      <label class="control-label">Height(cm)</label>
-                      <input type="text" class="form-control" name="height" value="{{$user->height}}" />
-                </div>
-             </div>
-             <div class="col-sm-6">
-                <div class="form-group label-floating has-success">
-                      <label class="control-label">Health Goal</label>            
-                      <select name="hgoal" class="form-control" style="margin-top:2px">   
-                      @if($healthgoals->count())
-                      @foreach($healthgoals as $goal)
-                       <option value="{{ $goal->hg_id }}" {{ $selectedGoal == $goal->hg_id ? 'selected="selected"' : '' }}>{{ $goal->hgoal_name}}</option>    
-                      @endforeach
-                      @endif            
-                        </select>
-                </div>
-              </div>
-              <div class="col-sm-6">
-                <div class="form-group label-floating has-success">
-                      <label class="control-label">Lifestyle</label>
-                      <select name="lifestyle" class="form-control" style="margin-top:2px">
-                       @if($lifestyles->count())
-                       @foreach($lifestyles as $lstyle)
-                                <option value="{{ $lstyle->lifestyle_id }}" {{ $selectedLifestyle == $lstyle->lifestyle_id ? 'selected="selected"' : '' }}>{{ $lstyle->lifestyle_name}}</option>    
-                       @endforeach
-                       @endif          
-                       </select>      
-                </div>
-              </div>
-              <!--HIDDEN!-->
-              <div class="col-sm-1">
-                <div class="form-group label-floating has-success">
-                      <input type="hidden" class="form-control" name="lname" value="{{$user->lname}}" />
-                </div>
-              </div>
-              <div class="col-sm-1">
-                <div class="form-group label-floating has-success">
-                        <input type="hidden" class="form-control" name="fname" value="{{$user->fname}}" />
-                </div>
-              </div>
-              <div class="col-sm-1">
-                <div class="form-group label-floating has-success">
-                        <input type="hidden" class="form-control" name="location" value="{{$user->location}}" />
-                </div>
-              </div>
-              <div class="col-sm-1">
-                <div class="form-group label-floating has-success">
-                          <input type="hidden" class="form-control" name="contact_no" value="{{$user->contact_no}}" />
-                </div>
-              </div>
-              <div class="col-sm-1">
-                <div class="form-group label-floating has-success">
-                            <input type="hidden" class="form-control" name="long" value="{{$user->longitude}}" />
-                </div>
-              </div>
-              <div class="col-sm-1">
-                 <div class="form-group label-floating has-success">
-                            <input type="hidden" class="form-control" name="lat" value="{{$user->latitude}}" />
-                  </div>
-               </div>
-               <div class="col-sm-1">
-                  <div class="form-group label-floating has-success">
-                              <input type="hidden" class="form-control" name="gender" value="{{$user->gender}}" />
-                  </div>
-               </div>
-               <div class="col-sm-1">
-                  <div class="form-group label-floating has-success">
-                          <input type="hidden" class="form-control" name="email" value="{{$user->email}}" />
-                   </div>
-                </div>
-                <div class="col-sm-1">
-                   <div class="form-group label-floating has-success">
-                      @foreach($userhealthgoals as $goal)         
-                          <input type="hidden" class="form-control" name="hgoal" value=" {{$goal->hgoal_name}}" />
-                       @endforeach
-                   </div>
-                </div>
-                <div class="col-sm-2">
-                   <div class="form-group label-floating has-success">
-                        @foreach($userallergens as $allergen)         
-                          <input type="hidden" class="form-control" name="allergen" value=" {{$allergen->allergen_name}}" />
-                         @endforeach
-                   </div>
-                </div>
-                <div class="col-sm-1">
-                  <div class="form-group label-floating has-success">
-                         @foreach($userlifestyle as $lifestyle)
-                           <input type="hidden" class="form-control" name="lifestyle" value="{{$lifestyle->lifestyle_name}}" />     
-                         @endforeach
-                  </div>
-                </div>
-                <div class="col-sm-2">
-                   <div class="form-group label-floating has-success">
-                        @foreach($usermedcons as $medcon)
-                          <input type="hidden" class="form-control" name="medcon" value="{{$medcon->medcon_name}}" />     
-                        @endforeach
-                    </div>
-                </div>
-            <!--HIDDEN!-->
-               <div class="modal-footer">
-                  <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Cancel</button>
-                  <button type="submit" class="btn btn-info btn-simple" style="color:#30BB6D">Change</button>
-              </div>
-          </form>
-        </div><!--MODAL BODY!-->
-    </div>   
-  </div>
-</div>
- <!--end!-->
-
-<!--START!-->
-<div class="modal fade" id="myModal4{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-edit"></i><b>&nbsp;&nbsp;Add</b></h4>
-      </div>
-          <form method="post" action="{{route('allergen.add', ['id'=>Auth::user()->id])}}">
-              <input type="hidden" name="_token" value="{{ csrf_token() }}">
-          <div class="modal-body">   
-               <h4 class="modal-title" id="myModalLabel">&nbsp;&nbsp;
-               <b>Add Allergens</b>
-               </h4>
-          <div class="col-sm-12">
-            <div class="form-group label-floating has-success">
-                <label class="control-label">Tolerance Level | Allergens</label>
-                   @if ($allergies)
-                   @foreach($allergies as $aller)
-                   <select name="tolerance[]" class="tol" id="tol">
-                          <option value="Low">Low</option>
-                          <option value="Medium">Medium</option>
-                          <option value="High">High</option>
-                    </select>
-                       <input type="checkbox" class="allergies" name="allergen[]" value="{{$aller->allergen_id}}">
-                       {{ $aller->allergen_name}}<br> 
-                       
-                  @endforeach
-                  @endif    
-             </div>
-          </div> 
-          </div> <!--MODAL BODY!-->
-          <div class="modal-footer">
-              <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Cancel</button>
-              <button type="submit" class="btn btn-info btn-simple" style="color:#30BB6D">Add</button>
-         </div>
-     </form>
-    </div>   
   </div>
 </div>
 <!--end!-->
-
-<div class="modal fade" id="myModal5{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-       <h4 class="modal-title" id="myModalLabel"><i class="fa fa-edit"></i><b>&nbsp;&nbsp;Add</b></h4>
-      </div>
-      <form method="post" action="{{route('medcon.add', ['id'=>Auth::user()->id])}}">
-            <input type="hidden" name="_token" value="{{ csrf_token() }}">
-          <div class="modal-body">   
-                   <h4 class="modal-title" id="myModalLabel">&nbsp;&nbsp;
-                     <b>Add Medical Condition</b>
-                    </h4>
-                     <div class="col-sm-12">
-                      <div class="form-group label-floating has-success">
-                          <label class="control-label">Medical Condition</label>
-                         
-                                @if ($medcons->count())
-
-                                @foreach($medcons as $med)
-                                <input type="checkbox" name="medcon[]" value="{{$med->medcon_id}}">
-                                {{ $med->medcon_name}}<br> 
-                             @endforeach
-                                  @endif
-                                     
-                                     </div>
-                    </div> 
-               </div>
-
- <!--end!-->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-info btn-simple" style="color:#30BB6D">Add</button>
-      </div>
-     </form>
-    </div>   
-  </div>
-</div>
-
-
-
-<!-- Modal Core -->
- 
-
-<div class="modal fade" id="myModal{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel"><i class="fa fa-edit"></i><b>&nbsp;&nbsp;Change</b></h4>
-      </div>&nbsp;&nbsp;
-        <div class="modal-body">
-             <form method="post" action="{{route('profile.update', ['id'=> Auth::id()])}}" enctype="multipart/form-data">
-                {{csrf_field()}} 
-                <h4 class="modal-title" id="myModalLabel">&nbsp;&nbsp;<b>General Information</b></h4>
-          <div class="col-sm-6">
-            <div class="form-group label-floating has-success">
-                <label class="control-label">Last Name</label>
-                <input type="text" class="form-control" name="lname" value="{{$user->lname}}" />
-            </div>
-          </div>
-          <div class="col-sm-6">
-            <div class="form-group label-floating has-success">
-                <label class="control-label">First Name</label>
-                <input type="text" class="form-control" name="fname" value="{{$user->fname}}" />
-            </div>
-          </div>
-          <div class="col-sm-12">
-            <div class="form-group label-floating has-success">
-              <label class="control-label">Location</label>
-              <input type="text" class="form-control" name="location" value="{{$user->location}}" />
-           </div>
-         </div>
-          <h4 class="modal-title" id="myModalLabel">&nbsp;&nbsp;<b>Contact Information</b></h4>
-         <div class="col-sm-6">
-           <div class="form-group label-floating has-success">
-              <label class="control-label">Contact Number</label>
-              <input type="text" class="form-control" name="contact_no" value="{{$user->contact_no}}" />
-           </div>
-         </div>
-        <div class="col-sm-6">
-          <div class="form-group label-floating has-success">
-              <label class="control-label">Email</label>
-              <input type="text" class="form-control" name="email" value="{{$user->email}}" />
-          </div>
-        </div>
-         <!--HIDDEN!-->
-         <div class="col-sm-1">
-            <div class="form-group label-floating has-success">
-                <input type="hidden" class="form-control" name="long" value="{{$user->longitude}}" />
-            </div>
-          </div>
-          <div class="col-sm-1">
-             <div class="form-group label-floating has-success">
-              <input type="hidden" class="form-control" name="lat" value="{{$user->latitude}}" />
-             </div>
-          </div>
-          <div class="col-sm-1">
-             <div class="form-group label-floating has-success">
-                <input type="hidden" class="form-control" name="weight" value="{{$user->weight}}" />
-              </div>
-           </div>
-          <div class="col-sm-1">
-             <div class="form-group label-floating has-success">
-               <input type="hidden" class="form-control" name="height" value="{{$user->height}}" />
-             </div>
-          </div>
-          <div class="col-sm-1">
-             <div class="form-group label-floating has-success">
-              <input type="hidden" class="form-control" name="birthday" value="{{$user->birthday}}" />
-             </div>
-          </div>
-          <div class="col-sm-1">
-             <div class="form-group label-floating has-success">
-              <input type="hidden" class="form-control" name="gender" value="{{$user->gender}}" />
-            </div>
-          </div>
-          <div class="col-sm-1">
-             <div class="form-group label-floating has-success">
-                @foreach($userhealthgoals as $goal)         
-                   <input type="hidden" class="form-control" name="hgoal" value=" {{$goal->hg_id}}" />
-                @endforeach
-              </div>
-           </div>
-           <div class="col-sm-1">
-              <div class="form-group label-floating has-success">
-                    @foreach($userlifestyle as $lifestyle)
-                  <input type="hidden" class="form-control" name="lifestyle" value="{{$lifestyle->lifestyle_id}}" />     
-                          @endforeach
-              </div>
-          </div>
-          <br>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Cancel</button>
-            <button type="submit" class="btn btn-info btn-simple" style="color:#30BB6D">Change</button>
-          </div>
-        </form>
-      </div><!--MODAL BODY!-->
-    </div>
-  </div>
-</div>
-<!--END!-->
-
-
-
-
-
-<!--start!-->
+<!--health information!-->
 <div class="modal fade" id="myModal3{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -748,7 +445,7 @@ display: inline-block;
         <h4 class="modal-title" id="myModalLabel"><i class="fa fa-edit"></i><b>&nbsp;&nbsp;Change</b></h4>
       </div>
         <div class="modal-body">   
-          <form method="post" action="{{route('profile.update', ['id'=> Auth::id()])}}" enctype="multipart/form-data">
+          <form method="post" action="{{route('profile.update', ['id'=> Auth::id()])}}" enctype="multipart/form-data" id="health_form">
           {{csrf_field()}} 
           <h4 class="modal-title" id="myModalLabel">&nbsp;&nbsp;<b>Health Information</b></h4>      
             <div class="col-sm-6">
@@ -777,7 +474,7 @@ display: inline-block;
                       @foreach($healthgoals as $goal)
                        <option value="{{$goal->hg_id }}" {{ $selectedGoal == $goal->hg_id ? 'selected="selected"' : '' }}>{{ $goal->hgoal_name}}</option>    
                       @endforeach
-                      @endif            
+                      @endif          
                         </select>
                 </div>
               </div>
@@ -834,33 +531,7 @@ display: inline-block;
                           <input type="hidden" class="form-control" name="email" value="{{$user->email}}" />
                    </div>
                 </div>
-                <div class="col-sm-1">
-                   <div class="form-group label-floating has-success">
-                      @foreach($userhealthgoals as $goal)         
-                          <input type="hidden" class="form-control" name="hgoal" value=" {{$goal->hgoal_name}}" />
-                       @endforeach
-                   </div>
-                </div>
-                <div class="col-sm-2">
-                   <div class="form-group label-floating has-success">
-                        @foreach($userallergens as $allergen)         
-                          <input type="hidden" class="form-control" name="allergen" value=" {{$allergen->allergen_name}}" />
-                         @endforeach
-                   </div>
-                </div>
-                <div class="col-sm-1">
-                  <div class="form-group label-floating has-success">
-                         @foreach($userlifestyle as $lifestyle)
-                           <input type="hidden" class="form-control" name="lifestyle" value="{{$lifestyle->lifestyle_name}}" />     
-                         @endforeach
-                  </div>
-                </div>
-                <div class="col-sm-2">
-                   <div class="form-group label-floating has-success">
-                        @foreach($usermedcons as $medcon)
-                          <input type="hidden" class="form-control" name="medcon" value="{{$medcon->medcon_name}}" />     
-                        @endforeach
-                    </div>
+               
                 </div>
             <!--HIDDEN!-->
                <div class="modal-footer">
@@ -873,11 +544,7 @@ display: inline-block;
   </div>
 </div>
  <!--end!-->
-
-
-
 <!-- password modal -->
-
 <div class="modal fade" id="modalpass" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -919,11 +586,7 @@ display: inline-block;
     </div>
   </div>
 </div>
-
-
-
-
-<!--START!-->
+<!--Add allergen!-->
 <div class="modal fade" id="myModal4{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -931,7 +594,7 @@ display: inline-block;
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="myModalLabel"><i class="fa fa-plus"></i><b>Add Allergens</b></h4>
       </div>
-          <form method="post" action="{{route('allergen.add', ['id'=>Auth::user()->id])}}">
+          <form method="post" action="{{route('allergen.add', ['id'=>Auth::user()->id])}}" id="addaller_form">
               <input type="hidden" name="_token" value="{{ csrf_token() }}">
           <div class="modal-body">   
           <div class="col-sm-12">
@@ -940,7 +603,7 @@ display: inline-block;
                  
                    @foreach($allergies as $aller)
                 
-                   <select multiple name="tolerance[]" class="tol" id="tol" style="width:20%" disabled>
+                   <select name="tolerance[]" class="tol" id="tol" style="width:20%" disabled>
                           <option value="Low">Low</option>
                           <option value="Medium">Medium</option>
                           <option value="High">High</option>
@@ -964,7 +627,7 @@ display: inline-block;
   </div>
 </div>
 <!--end!-->
-
+<!--Add medical condition!-->
 <div class="modal fade" id="myModal5{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -999,8 +662,7 @@ display: inline-block;
     </div>   
   </div>
 </div>
-
-
+<!--Edit allergen!-->
  @foreach($userallergens as $aller)
 <div class="modal fade" id="myModal6{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -1055,10 +717,8 @@ display: inline-block;
   </div>
 </div>
 <!--end!-->
-       @endforeach
-
-
-
+@endforeach
+<!--Delete allergen!-->
 <div class="modal fade" id="myModal7{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -1094,8 +754,7 @@ display: inline-block;
   </div>
 </div>
 <!--end!-->
-
-
+<!--Delete med condition!-->
 <div class="modal fade" id="myModal8{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -1130,9 +789,7 @@ display: inline-block;
   </div>
 </div>
 <!--end!-->
-
-
-
+<!--Upload Image!-->
 <div class="modal fade" id="myModal9{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -1144,10 +801,7 @@ display: inline-block;
              {{csrf_field()}}
           <div class="modal-body">  
           <center>
-             <img src="{{asset('img/chooseimg.jpg')}}" class="img-circle" id="img-tag" width="200px" />
-             <br>
-             <label for="exampleInputFile"><b>Your chosen image</b></label>
-             <input type="file" id="img" name="img" class="btn btn-flat btn-success">
+            <input type="file" class="dropify" data-height="160" data-allowed-file-extensions="jpg jpeg png svg"/ name="img" id="img">
  
           </div> <!--MODAL BODY!-->
           <div class="modal-footer">
@@ -1160,20 +814,18 @@ display: inline-block;
 </div>
 <!--end!-->
 
-
-
-
-
-
-
-
-
 @endsection
 @section('addtl_scripts')
+
 <!--   Core JS Files   -->
-  <script src="{{asset('customer/assets/js/jquery.min.js')}}" type="text/javascript"></script>
+  
+  <!-- <script src="https://cdn.jsdelivr.net/jquery/1.12.4/jquery.min.js" type="text/javascript"></script> -->
   <script src="{{asset('customer/assets/js/bootstrap.min.js')}}" type="text/javascript"></script>
   <script src="{{asset('customer/assets/js/material.min.js')}}"></script>
+
+<!--jquery validation!-->
+ <script src="{{asset('js/form-validation.js')}}" type="text/javascript"></script>
+ <script src="{{asset('js/jquery.validate.min.js')}}" type="text/javascript"></script>
 
   <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
   <script src="{{asset('customer/assets/js/nouislider.min.js')}}" type="text/javascript"></script>
@@ -1183,6 +835,188 @@ display: inline-block;
 
   <!-- Control Center for Material Kit: activating the ripples, parallax effects, scripts from the example pages etc -->
   <script src="{{asset('customer/assets/js/material-kit.js')}}" type="text/javascript"></script>
+  <script src="{{asset('js/dropify.min.js')}}"></script>
+      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOkRKO79rw8RrYgfrMgqIz2du240Uyz6U&libraries=places&callback=initMap"
+    async defer></script>
+    <script>
+      // This example requires the Places library. Include the libraries=places
+      // parameter when you first load the API. For example:
+      // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+
+      function initMap() {
+        // lat=document.getElementById('cityLat').value;
+        // lng=document.getElementById('cityLng').value;
+        // alert(lng);
+        var latLng = new google.maps.LatLng(10.3157007,123.88544300000001);
+        var mapOptions = {
+            zoom:12,
+            center: latLng
+        }
+        var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+        var card = document.getElementById('pac-card');
+        var input = document.getElementById('location');    
+        var options = {
+                        componentRestrictions: {country: 'ph'}
+                      };
+        // var types = document.getElementById('type-selector');
+        // var strictBounds = document.getElementById('strict-bounds-selector');
+
+        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
+
+        var autocomplete = new google.maps.places.Autocomplete(input, options);
+        
+        // Bind the map's bounds (viewport) property to the autocomplete object,
+        // so that the autocomplete requests use the current map bounds for the
+        // bounds option in the request.
+        autocomplete.bindTo('bounds', map);
+
+        var infowindow = new google.maps.InfoWindow();
+        var infowindowContent = document.getElementById('infowindow-content');
+        infowindow.setContent(infowindowContent);
+        var marker = new google.maps.Marker({
+          map: map,
+          draggable: true,
+          animation: google.maps.Animation.DROP,
+          position: latLng,
+          anchorPoint: new google.maps.Point(0, -29)
+        });
+       
+         geocoder = new google.maps.Geocoder();
+         
+         google.maps.event.addListener(marker, 'dragend', function() {
+              geocoder.geocode({latLng: marker.getPosition()}, function(responses) {
+            if (responses && responses.length > 0) {
+                infowindow.setContent(
+                "<div class='place'>" + responses[0].formatted_address 
+                + "<br /> <small>" 
+                + "Latitude: " + marker.getPosition().lat() + "<br>" 
+                + "Longitude: " + marker.getPosition().lng() + "</small></div>"
+                );
+                infowindow.open(map, marker);
+            } else {
+                alert('Error: Google Maps could not determine the address of this location.');
+            }
+            });
+                map.panTo(marker.getPosition());
+          });
+          google.maps.event.addListener(marker, 'dragstart', function() {
+            infowindow.close(map, marker);
+        });
+          
+        autocomplete.addListener('place_changed', function() {
+          infowindow.close();
+          marker.setVisible(false);
+          var place = autocomplete.getPlace();
+          document.getElementById('city').value = place.name;
+          document.getElementById('cityLat').value = place.geometry.location.lat();
+          document.getElementById('cityLng').value = place.geometry.location.lng();
+          if (!place.geometry) {
+            // User entered the name of a Place that was not suggested and
+            // pressed the Enter key, or the Place Details request failed.
+            window.alert("No details available for input: '" + place.name + "'");
+            return;
+          }
+
+          // If the place has a geometry, then present it on a map.
+          if (place.geometry.viewport) {
+            map.fitBounds(place.geometry.viewport);
+          } else {
+            map.setCenter(place.geometry.location);
+            map.setZoom(17);  // Why 17? Because it looks good.
+          }
+          marker.setPosition(place.geometry.location);
+          marker.setVisible(true);
+
+          var address = '';
+          if (place.address_components) {
+            address = [
+              (place.address_components[0] && place.address_components[0].short_name || ''),
+              (place.address_components[1] && place.address_components[1].short_name || ''),
+              (place.address_components[2] && place.address_components[2].short_name || '')
+            ].join(' ');
+          }
+          
+         
+
+          infowindowContent.children['place-icon'].src = place.icon;
+          infowindowContent.children['place-name'].textContent = place.name;
+          infowindowContent.children['place-address'].textContent = address;
+          infowindow.open(map, marker);
+        });
+
+        // document.getElementById('use-strict-bounds')
+        //     .addEventListener('click', function() {
+        //       console.log('Checkbox clicked! New state=' + this.checked);
+        //       autocomplete.setOptions({strictBounds: this.checked});
+        //     });
+      }
+    </script>
+     <script>
+    $('.mdl').on('shown.bs.modal', function () {
+        // lat=document.getElementById('cityLat').value;
+        // lng=document.getElementById('cityLng').value;
+    google.maps.event.trigger(map, "resize");
+    // map.setCenter(lat, lng);
+     });
+    </script>
+
+    
+    <script>
+        $(document).ready(function() {
+            $('.datepicker').datepicker({
+                weekStart:1
+            });
+            
+            $('.allergens').on('click',':checkbox', function() {
+                $(this).each(function() {
+                    if($("input:checked").length > 0) {
+                        $('#tolerance').show();
+                    }
+                    else if($(this).prop("checked") == false) {
+                        $('#tolerance').hide();
+                    } 
+
+                });
+            });
+//            $('#medcon').on('click',':checkbox', function() {
+//                $(this).each(function() {
+//                    if($("input:checked").length <= 0) {
+//                        var empty ="<input type='hidden' value='' name='med_condition'>";
+//                        $('.medcon').append(empty);
+//                    }
+//                    else if($(this).prop("checked") == false) {
+//                        var empty ="<input type='hidden' value='' name='med_condition'>";
+//                        $('.medcon').append(empty);
+//                    } 
+//                  
+//                });    
+//                
+//                    
+//
+//            });
+           
+    });
+    </script>
+ <!--  <script type="text/javascript">
+  $(document).ready(function(){
+    //Change image
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#img-tag').attr('src', e.target.result);
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    
+    $("#img").change(function(){
+        readURL(this);
+    });
+  });
+
+</script> -->
 <script>
 $(document).ready(function(){
     // $('.tol').attr('disabled', 'disabled');
@@ -1198,8 +1032,8 @@ $(document).ready(function(){
         }
     });
 });
-
 </script>
+
 <script>
 $(document).ready(function(){
 $('.tol').attr('disabled', 'disabled');
@@ -1267,23 +1101,6 @@ $checkBox.on('change',function(e){
 
       });
 
-      // function checkoldpass(){
-      //   var pass = $("#oldpass").val();
-      //     $.ajax({
-      //               method: 'POST',
-      //               url: "{{ url('/user/changepass') }}" ,
-      //               dataType: 'json',
-      //               headers: {'X_CSRF_TOKEN': '{{csrf_token()}}'},
-      //               data: {'pass':pass},
-      //               success: function(json) {
-      //                   console.log('success');
-      //               },
-      //               error: function(xhr,error){
-      //                   console.log(xhr);
-      //               }
-      //     });
-      // }
-
       function checkpass(password){
         var oldpass = document.getElementById('oldpass').value;
         if(password!=oldpass){
@@ -1294,109 +1111,7 @@ $checkBox.on('change',function(e){
               }
       }
 
-
-      // function checkpass(password){
-      //   var oldpass = $('#oldpass').val();
-      //   $.ajax({
-      //       url: "{{ url('/user/password') }}",
-      //       dataType: "json",
-      //       method: 'get',
-      //       data: {'password':oldpass},
-      //       success:function(json){
-      //         if(password!=oldpass){
-      //           $('#checkpass').html('Password incorrect!').css('color', 'red');
-      //         }
-      //       },
-      //       error:function(){
-      //         console.log(xhr);
-      //       }
-      //   });
-        
-      // }
-
-
-
-
-
-      function initMap() {
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: 10.3157007, lng: 123.88544300000001},
-          zoom: 13
-        });
-        var card = document.getElementById('pac-card');
-        var input = document.getElementById('location');
-        var options = {
-                        componentRestrictions: {country: 'ph'}
-                      };
-        // var types = document.getElementById('type-selector');
-        // var strictBounds = document.getElementById('strict-bounds-selector');
-
-        map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
-
-        var autocomplete = new google.maps.places.Autocomplete(input, options);
-        
-        // Bind the map's bounds (viewport) property to the autocomplete object,
-        // so that the autocomplete requests use the current map bounds for the
-        // bounds option in the request.
-        autocomplete.bindTo('bounds', map);
-
-        var infowindow = new google.maps.InfoWindow();
-        var infowindowContent = document.getElementById('infowindow-content');
-        infowindow.setContent(infowindowContent);
-        var marker = new google.maps.Marker({
-          map: map,
-          anchorPoint: new google.maps.Point(0, -29)
-        });
-
-        autocomplete.addListener('place_changed', function() {
-          infowindow.close();
-          marker.setVisible(false);
-          var place = autocomplete.getPlace();
-          document.getElementById('city').value = place.name;
-          document.getElementById('cityLat').value = place.geometry.location.lat();
-          document.getElementById('cityLng').value = place.geometry.location.lng();
-          if (!place.geometry) {
-            // User entered the name of a Place that was not suggested and
-            // pressed the Enter key, or the Place Details request failed.
-            window.alert("No details available for input: '" + place.name + "'");
-            return;
-          }
-
-          // If the place has a geometry, then present it on a map.
-          if (place.geometry.viewport) {
-            map.fitBounds(place.geometry.viewport);
-          } else {
-            map.setCenter(place.geometry.location);
-            map.setZoom(17);  // Why 17? Because it looks good.
-          }
-          marker.setPosition(place.geometry.location);
-          marker.setVisible(true);
-
-          var address = '';
-          if (place.address_components) {
-            address = [
-              (place.address_components[0] && place.address_components[0].short_name || ''),
-              (place.address_components[1] && place.address_components[1].short_name || ''),
-              (place.address_components[2] && place.address_components[2].short_name || '')
-            ].join(' ');
-          }
-
-          infowindowContent.children['place-icon'].src = place.icon;
-          infowindowContent.children['place-name'].textContent = place.name;
-          infowindowContent.children['place-address'].textContent = address;
-          infowindow.open(map, marker);
-        });
-
-        // document.getElementById('use-strict-bounds')
-        //     .addEventListener('click', function() {
-        //       console.log('Checkbox clicked! New state=' + this.checked);
-        //       autocomplete.setOptions({strictBounds: this.checked});
-        //     });
-      }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOkRKO79rw8RrYgfrMgqIz2du240Uyz6U&libraries=places&callback=initMap"
-        async defer></script>
-
+</script>
 
 @endsection
 

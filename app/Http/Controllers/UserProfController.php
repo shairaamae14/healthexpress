@@ -26,12 +26,6 @@ class UserProfController extends Controller
         $this->middleware('auth');
     }
 
-public function getAgeAttribute(){
-  $birthday=Auth::user()->birthday;
-  // $datenow=Carbon::now();
-  return Carbon::parse($this->attributes['birthday'])->age();
-}
-
  public function show($id){
   $userid=Auth::id();
   $user=User::find($userid);     
@@ -42,7 +36,8 @@ public function getAgeAttribute(){
             $usermedcons = UserMCondition::join('medical_conditions', 'medical_conditions.medcon_id', '=', 'user_medcondition.medcon_id')->where('user_id', $user->id)->get();
   
 // $age= $user->getAgeAttribute();
-
+// $age=getAgeAttribute();
+// dd($age);
   $healthgoals = HealthGoals::all();
   $selectedGoal = UserHGoals::first()->hg_id;
 
@@ -57,7 +52,7 @@ public function getAgeAttribute(){
   $selectedTolerance= UserAllergen::first()->user_id;
  
   $medcons= MedicalConditions::all();
-  $selectedMedCons= UserMCondition::first()->medcon_id;
+  // $selectedMedCons= UserMCondition::first()->medcon_id;
 
   $selectedGender= User::first()->id;
 
@@ -157,6 +152,7 @@ $id=Auth::user()->id;
       $id = Auth::id();
 
    // $email=Auth::User()->email;
+      // dd($request['lifestyle']);
    $user = User::where('id', $id)
                            ->update(['lname' => $request->lname,
                                  'fname' => $request->fname,
@@ -169,8 +165,6 @@ $id=Auth::user()->id;
                                  'location'=>$request->location, 
                                   'longitude' =>$request->long,
                                   'latitude' => $request->lat  ]);
-
-         
 
         $user = UserHGoals::where('user_id', $id)
             ->update(['hg_id' => $request['hgoal']]);

@@ -6,6 +6,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Cashier\Billable;
+use Carbon\Carbon;
 class User extends Authenticatable
 {
     use Notifiable;
@@ -60,4 +61,10 @@ class User extends Authenticatable
     {
         return $this->hasOne('App\PlannedMeals');
     }
+
+       public function age(){
+  $temp = new Carbon($this->birthday);
+return $temp->diffInYears(Carbon::now());
+}
+
 }
