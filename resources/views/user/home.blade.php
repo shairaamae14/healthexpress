@@ -27,14 +27,14 @@
   font-family: 'Ubuntu Condensed', sans-serif; color:#30BB6D;
   text-decoration: none;
   }
-  .box-solid:hover{
+/*  .box-solid:hover{
   box-shadow: 0 16px 24px 2px rgba(0,0,0,0.14), 0 6px 30px 5px rgba(0,0,0,0.12), 0 8px 10px -5px rgba(0,0,0,0.3) !important;
   }
   .box-solid img:hover{
   box-shadow: 0 16px 24px 2px rgba(0,0,0,0.14), 0 6px 30px 5px rgba(0,0,0,0.12), 0 8px 10px -5px rgba(0,0,0,0.3) !important;
   border-radius: 10px !important;
   border:2px solid #30BB6D !important;
-  }
+  }*/
   #tots:hover{
   font-size: 20px !important;
   }
@@ -76,9 +76,13 @@
         </button>
         </a>
       </div>
+      </center>
     </div>
+    <!--row!-->
   </div>
+  <!--container!-->
 </div>
+<!--headder!-->
 <div class="main main-raised"  style="width: 65%; float: left">
   <div class="section">
     <div class="container" style="width: 90%;">
@@ -96,6 +100,7 @@
             </select>
           </form>
         </div>
+
         <div class="search col-md-4">
           <form method="POST" action="{{route('show.dish')}}">
             {{csrf_field()}}
@@ -114,46 +119,45 @@
               <div class="nav-tabs-wrapper">
                 <ul class="nav nav-tabs" data-tabs="tabs">
                   <li class="active"><a href="#all" data-toggle="tab" style="color:#30BB6D">{{$title}} Dishes</a></li>
-                  <li style="float:right; margin-left:250px">
-                  </li>
                 </ul>
               </div>
             </div>
-          </div>
+          </div><!--header-success!-->
+
           <div class="content">
             <div class="tab-content text-center">
               <div class="tab-pane active" id="all">
                 @if($dishes)
                 @foreach($dishes as $dish)
-                <div class="col-sm-3">
-                  <div class="box box-solid" style="border-radius:5px; box-shadow: 0 4px 5px 0 rgba(0,0,0,0.14), 0 1px 10px 0 rgba(0,0,0,0.12), 0 2px 4px -1px rgba(0,0,0,0.3); height:280px">
+                <div class="col-sm-3 rate" style="margin-top: 20px">
+                  <div class="box box-solid" style="border-radius:5px; box-shadow: 0 4px 0px 0 rgba(0,0,0,0), 0 1px 0px 0 rgba(0,0,0,0), 0 2px 4px 0px rgba(0,0,0,0.3); height:190px">
                     <div class="box-header with-border">
                       <a href="{{route('home.details', ['id' => $dish->did])}}">
                       <center><img src="{{asset('dish_imgs/'.$dish->dish_img)}}" style="width:100%; height:150px; border:1px solid #F0F0F0;"></center>
                       </a>
                     </div>
-                    <center>
-                    <h4 class="openModal box-title" style="margin-top: 5px; font-size: 12px;">
-                    <a href="{{route('home.details', ['id' => $dish->did])}}" style="border-top: 1px solid #30BB6D; border-bottom: 1px solid #30BB6D; color:#30BB6D; font-size:11px" value="{{$dish->dish_name}}" id="dish_name"><b>{{$dish->dish_name}}</b></a><br>
-                    <small>click to see details</small><br><br>
-                    <center>
-                      <small>
-                      <i class="fa fa-star" id="rate"></i>
-                      <i class="fa fa-star" id="rate"></i>
-                      <i class="fa fa-star" id="rate"></i>
-                      <i class="fa fa-star-o" id="rate"></i>
-                      <i class="fa fa-star-o" id="rate"></i>
-                      </small><br>
-                    <!--   <a href="{{route('cook.rating')}}">
-                        <p style="font-size: 12px; color:#30BB6D; background-color:#E3E3E3">See Reviews</p>
-                      </a> -->
+                     <center>
+                     <a href="{{route('home.details', ['id' => $dish->did])}}" style="border-top: 1px solid #30BB6D; border-bottom: 1px solid #30BB6D; color:#30BB6D; font-size:11px" value="{{$dish->dish_name}}" id="dish_name">
+                     <b>{{$dish->dish_name}}</b>
+                     </a><br>
+                    </center>
+                  </div>
+                    <br>
+                    @if($dish->average['average'])
+                     <label class="ratingbox" id="ratingbox"></label>
+                     <label class="ratingbox2" id="ratingbox2"></label><br>
+                     <!-- <label style="font-size: 12px">{{$dish->average['average']}} out of 5 stars</label><br> -->
+                     <input type="hidden" class="ratings" id="rate_{{$dish->average['average']}}"  value="{{$dish->average['average']}}">
+                  @else
+                     <label style="font-size: 12px">No ratings yet</label>
+                 @endif
                     <p style="margin-left:5px; margin-top: 12px; font-size: 12px; color:black;" id="tots">Php {{$dish->sellingPrice}}</p>
                     <br>
                     <button type="button" class="btn btn-flat btn-sm btn-success" data-toggle="modal" data-target="#modal-default{{$dish->did}}" style="margin-top:-15px; margin-right:10px; margin-left: 10px"><i class="material-icons">add_circle</i>&nbsp;Add to cart
                     </button>
                     </br>
-                  </div>
                 </div>
+                <!--RATE!-->
                 @endforeach
                 @endif
               </div>
@@ -165,11 +169,14 @@
       <!--row!-->
     </div>
     <!--container!-->
-    <div class="text-center">
     </div>
-  </div>
   <!--section!-->
 </div>
+<!--main-raised!-->
+</div>
+
+
+
 <!--main raised!-->
 <div class="main main-raised"  style="width: 25%; float: right;">
   <div class="section" style="padding-bottom: 2px">
@@ -267,6 +274,10 @@
     </div>
   </div>
 </div>
+<!--main-raised!-->
+</div>
+<!--wrappler!-->
+
 <!-- Sart Modal -->
 @foreach($dishes as $dish)
 <div class="modal fade" id="modal-default{{$dish->did}}">
@@ -317,6 +328,35 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.js"></script>
 <script src="{{asset('js/jquery.form.min.js')}}"></script>
 <script src="{{asset('js/pace.min.js')}}"></script>
+<script>
+    $(document).ready(function(){
+  $(".ratingbox").closest('.rate').find('input[class=ratings]').each(function(index, data){
+    var rating = $(this).val();
+    // $(this).closest('.rate').find('.ratingbox').append(rating);
+    if(rating < 5){
+    var num=5;
+    console.log(rating);
+      var temp=num-rating;
+      // console.log(temp);
+      for(var i=1; i<=temp; i++){
+          $(this).closest('.rate').find('.ratingbox2').append('<i class="fa fa-star-o" aria-hidden="true" style="color:orange; font-size:13px"></i>');
+      }
+    }
+    
+    while(rating >= 1){
+      $(this).closest('.rate').find('.ratingbox').append('<i class="fa fa-star" aria-hidden="true" style="color:orange; font-size:13px"></i>');
+      rating -= 1;
+    }
+    if(rating > 0) {
+      $(this).closest('.rate').find('.ratingbox').append('<i class="fa fa-star-half-o" aria-hidden="true" style="color:orange; font-size:13px"></i>');
+    }
+    
+  
+
+});
+  });
+
+  </script>
 <!-- <script>
   $(document).ready(function(e){
     $('.addCart').click(function(e){

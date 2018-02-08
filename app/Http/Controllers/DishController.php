@@ -19,6 +19,8 @@ use App\CookCatalog;
 use App\Event;
 use App\CookPlan;
 use App\Pmealdishes;
+use App\Ratings;
+use App\DishAverage;
 use Calendar;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -453,9 +455,6 @@ class DishController extends Controller
     }
 
 
-   public function viewrating(){
-    return view('cook.reviews');
-   }
    
    public function addCatalog() {
        return view('cook.catalog');
@@ -590,5 +589,13 @@ class DishController extends Controller
 
         return redirect()->route('cook.pmdishes');
      }
+
+     public function viewrating($id){
+    // dd($id);
+    $rate=Ratings::join('users', 'users.id', '=', 'dish_ratings.user_id')->where('dish_id', $id)->get();
+    $avg=Dish::where('did', $id)->get();
+   
+    return view('cook.reviews', compact('rate', 'avg'));
+   }
 
 }
