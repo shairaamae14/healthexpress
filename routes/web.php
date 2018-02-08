@@ -49,7 +49,8 @@ Route::prefix('user')->group(function() {
 	Route::get('/logout', 'Auth\LoginController@userLogout')->name('user.logout');
 	Route::post('/Adduserimg/{id}', 'UserProfController@storeUserImg')->name('user.img');
 	Route::get('/changepass', 'UserProfController@resetPassword')->name('user.changepass');
-	Route::post('/change/password', 'UserProfController@changePassword');
+	Route::post('/change/password', 'UserProfController@changePassword')->name('user.reset');
+	
 	
 	//Calendar Routes
 	Route::get('/calendar', 'PlannedMController@storePlans')->name('user.storeplans');
@@ -81,7 +82,7 @@ Route::prefix('user')->group(function() {
 
 //Planned Meals
 Route::get('/braintree/token', 'PlannedMController@token');
-Route::get('/pmeals', 'PlannedMController@index')->name('user.plan.index');
+Route::post('/pmeals', 'PlannedMController@index')->name('user.plan.index');
 Route::get('/plannedm', 'PlannedMController@index1')->name('user.plan.home');
 Route::post('/newplan', 'PlannedMController@storeEvent')->name('user.plan.store');
 Route::get('/summary', 'PlannedMController@summary')->name('user.pmsummary');
