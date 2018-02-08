@@ -149,7 +149,13 @@
                      <!-- <label style="font-size: 12px">{{$dish->average['average']}} out of 5 stars</label><br> -->
                      <input type="hidden" class="ratings" id="rate_{{$dish->average['average']}}"  value="{{$dish->average['average']}}">
                   @else
-                     <label style="font-size: 12px">No ratings yet</label>
+                  <center><small>
+                   <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                   <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                   <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                   <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                   <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                  </small></center>
                  @endif
                     <p style="margin-left:5px; margin-top: 12px; font-size: 12px; color:black;" id="tots">Php {{$dish->sellingPrice}}</p>
                     <br>

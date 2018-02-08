@@ -51,7 +51,13 @@ dt{
                           <label class="ratingbox2" id="ratingbox2"></label><br>
                           <input type="hidden" class="ratings" id="rate_{{$dish->average['average']}}" value="{{$dish->average['average']}}">
                          @else
-                            <label style="font-size: 12px; color:#30BB6D"><b>No ratings yet</b></label>
+                           <center><small>
+                           <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                           <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                           <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                           <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                           <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                          </small></center>
                          @endif
                          <a href="{{route('cook.rating', ['id' => $dish->did])}}">
                          <p style="font-size: 12px; color:#30BB6D;">See Reviews</p></a>
