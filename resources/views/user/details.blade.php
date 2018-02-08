@@ -136,8 +136,10 @@ h1 { font-size: 1.5em; margin: 10px; }
                           <span class="badge" style="font-family: verdana; background-color:#30BB6D; margin-top:-10px;">Breakfast &nbsp;</span><br>
                             <label class="avgbox" id="avgbox"></label>
                             <label class="avgbox2" id="avgbox2"></label><br>
-                          <input type="hidden" class="avg" value="{{$average}}"/>
-                          <label>{{$average}} out of 5 stars</label>
+                            @foreach($avgrate as $avg)
+                            <input type="hidden" class="avg" value="{{$avg->average}}"/>
+                            <label>{{$avg->average}} out of 5 stars</label>
+                          @endforeach
                           <p>{{$dets->dish_desc}}</p>
                           </div>
                        
@@ -270,6 +272,7 @@ h1 { font-size: 1.5em; margin: 10px; }
       </div>
 
        <div class="row" style="margin: 10px">
+        @if($ratings)
        @foreach($ratings as $rate)
         <div class="col-md-12 rate" id="ratebox">
            <div class="well well-sm">
@@ -289,6 +292,9 @@ h1 { font-size: 1.5em; margin: 10px; }
             </div> 
         </div>
         @endforeach
+        @else
+        <h1> No ratings and reviews for this dish </h1>
+        @endif
         </div>
   </div><!--section!-->
 </div><!--main-raised!-->
@@ -391,7 +397,7 @@ h1 { font-size: 1.5em; margin: 10px; }
 
               <form method="POST" action="{{url('detcart/clear')}}">
                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-              <button type="submit" class="btn btn-danger btn-simple" style="float:left; margin-top: -10px; border:none; font-size:15px"  disabled>Clear Cart
+              <input type="submit" class="btn btn-danger btn-simple" style="float:left; border:none; font-size:15px"  disabled>Clear Cart
               </button>
               </form>
          </div>

@@ -37,5 +37,9 @@ class Dish extends Model
     {
         return $this->hasMany('App\UserOrder', 'dish_id', 'did');
     }
+
+    public function average(){
+        return $this->hasOne('App\DishAverage', 'dish_id', 'did');
+    }
     
 }

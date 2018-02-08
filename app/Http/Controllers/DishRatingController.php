@@ -8,6 +8,7 @@ use App\Dish;
 use App\UserOrder;
 use App\CookRating;
 use App\PlannedMeals;
+use App\DishAverage;
 
 use Carbon\Carbon;
 
@@ -32,40 +33,108 @@ class DishRatingController extends Controller
         
     }
 
-
     public function storeRating(Request $request){
-    	    $userid = Auth::id();
+          $userid = Auth::id();
             $id= $request['dish_id'];
             $dishes = Ratings::create(['user_id' => $userid,
                                     'dish_id' => $request['dish_id'],
                                     'comment' => $request['review'],
                                     'rating'  => $request['rating']
                                   ]);
-          
-            // $avgrate=0;
-            // $count=1;
-           
-         // dd($id);
-               // $average = $rate->rating->sum('aggregate') / count($rate->rating);
-           
- 		 return redirect()->route('home.details', compact('id'));
+               $ratings = Ratings::where('dish_id', $id)->join('users' , 'users.id', '=' , 'dish_ratings.user_id')->get();
+
+            $rate=Ratings::where('dish_id', $id)->get();
+            $avg=0;
+            $average=0;
+            $tempwhole=0;
+            $r=count($rate);
+            for($i=0; $i<$r; $i++){
+              $avg+=$rate[$i]->rating/$r;
+            }
+
+               $average=round($avg, 1);
+               $tempavg=$average;
+               $tempwhole=floor($tempavg);
+               $tempdec=$tempavg-$tempwhole;
+               // dd($tempdec);
+                if($tempdec==0.0){
+                $average=$average;
+                // dd($average);
+               }
+               else if($tempdec<=0.5 || $tempdec>=0.5){
+                $tempdec=0.5;
+                $average=$tempwhole + $tempdec;
+                // dd($average, "hello");
+                 
+               }
+                
+               //                      // dd($average, $id);
+
+             $averagedish = DishAverage::where('dish_id', $id)->get();
+            if($averagedish->isEmpty()) {
+            $avg= DishAverage::create(['dish_id'=>$id,
+                                      'average'=>$average
+                                     ]);
+              
+            }
+
+             // foreach($averagedish as $avgrate){
+              $avgrate= DishAverage::where('dish_id', $id)
+                                    ->update(['dish_id'=>$id,
+                                              'average'=>$average
+                                     ]);
+                                    // dd($average);
+          // }
+
+            
+
+         return redirect()->route('home.details', compact('id', 'ratings', 'avgrate'));
     }
 
         public function storeRating2(Request $request){
             $userid = Auth::id();
             $id= $request['dish_id'];
-            // dd($request['review']);
             $dishes = Ratings::create(['user_id' => $userid,
                                     'dish_id' => $request['dish_id'],
                                     'comment' => $request['review'],
                                     'rating'  => $request['rating']
                                   ]);
-          
-            // $avgrate=0;
-            // $count=1;
-           
-         // dd($id);
-               // $average = $rate->rating->sum('aggregate') / count($rate->rating);
+               $ratings = Ratings::where('dish_id', $id)->join('users' , 'users.id', '=' , 'dish_ratings.user_id')->get();
+
+              $rate=Ratings::where('dish_id', $id)->get();
+              $avg=0;
+              $average=0;
+              $tempwhole=0;
+              $r=count($rate);
+              for($i=0; $i<$r; $i++){
+                $avg+=$rate[$i]->rating/$r;
+              }
+
+               $average=round($avg, 1);
+               $tempavg=$average;
+               $tempwhole=floor($tempavg);
+               $tempdec=$tempavg-$tempwhole;
+               // dd($tempdec);
+                if($tempdec==0.0){
+                $average=$average;
+                // dd($average);
+               }
+               else if($tempdec<=0.5 || $tempdec>=0.5){
+                $tempdec=0.5;
+                $average=$tempwhole + $tempdec;
+                // dd($average, "hello");
+               }
+             $averagedish = DishAverage::where('dish_id', $id)->get();
+            if($averagedish->isEmpty()) {
+            $avg= DishAverage::create(['dish_id'=>$id,
+                                      'average'=>$average]);
+          }
+              $avgrate= DishAverage::where('dish_id', $id)
+                                    ->update(['dish_id'=>$id,
+                                              'average'=>$average]);
+                     
+            
+
          $cook = Dish::join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
                          ->where('did', $id)->get();
   
@@ -73,20 +142,48 @@ class DishRatingController extends Controller
     }
 
       public function storeRating3(Request $request){
-            $userid = Auth::id();
+         $userid = Auth::id();
             $id= $request['dish_id'];
-            // dd($request['review']);
             $dishes = Ratings::create(['user_id' => $userid,
                                     'dish_id' => $request['dish_id'],
                                     'comment' => $request['review'],
                                     'rating'  => $request['rating']
                                   ]);
-          
-            // $avgrate=0;
-            // $count=1;
-           
-         // dd($id);
-               // $average = $rate->rating->sum('aggregate') / count($rate->rating);
+               $ratings = Ratings::where('dish_id', $id)->join('users' , 'users.id', '=' , 'dish_ratings.user_id')->get();
+
+              $rate=Ratings::where('dish_id', $id)->get();
+              $avg=0;
+              $average=0;
+              $tempwhole=0;
+              $r=count($rate);
+              for($i=0; $i<$r; $i++){
+                $avg+=$rate[$i]->rating/$r;
+              }
+
+               $average=round($avg, 1);
+               $tempavg=$average;
+               $tempwhole=floor($tempavg);
+               $tempdec=$tempavg-$tempwhole;
+               // dd($tempdec);
+                if($tempdec==0.0){
+                $average=$average;
+                // dd($average);
+               }
+               else if($tempdec<=0.5 || $tempdec>=0.5){
+                $tempdec=0.5;
+                $average=$tempwhole + $tempdec;
+                // dd($average, "hello");
+               }
+             $averagedish = DishAverage::where('dish_id', $id)->get();
+            if($averagedish->isEmpty()) {
+            $avg= DishAverage::create(['dish_id'=>$id,
+                                      'average'=>$average]);
+          }
+              $avgrate= DishAverage::where('dish_id', $id)
+                                    ->update(['dish_id'=>$id,
+                                              'average'=>$average]);
+                     
+            
          $cook = Dish::join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
                          ->where('did', $id)->get();
   
@@ -106,7 +203,40 @@ class DishRatingController extends Controller
                                     'rating'  => $request['rating'],
                                     'date_rate' =>$date
                                   ]);
-            $delivering= UserOrder::all();
+          //   $rate=CookRating::where('cook_id', $id)->get();
+          //     $avg=0;
+          //     $average=0;
+          //     $tempwhole=0;
+          //     $r=count($rate);
+          //     for($i=0; $i<$r; $i++){
+          //       $avg+=$rate[$i]->rating/$r;
+          //     }
+
+          //      $average=round($avg, 1);
+          //      $tempavg=$average;
+          //      $tempwhole=floor($tempavg);
+          //      $tempdec=$tempavg-$tempwhole;
+          //      // dd($tempdec);
+          //       if($tempdec==0.0){
+          //       $average=$average;
+          //       // dd($average);
+          //      }
+          //      else if($tempdec<=0.5 || $tempdec>=0.5){
+          //       $tempdec=0.5;
+          //       $average=$tempwhole + $tempdec;
+          //       // dd($average, "hello");
+          //      }
+          //    $averagedish = DishAverage::where('dish_id', $id)->get();
+          //   if($averagedish->isEmpty()) {
+          //   $avg= DishAverage::create(['dish_id'=>$id,
+          //                             'average'=>$average]);
+          // }
+          //     $avgrate= DishAverage::where('dish_id', $id)
+          //                           ->update(['dish_id'=>$id,
+          //                                     'average'=>$average]);
+                     
+            
+          //   $delivering= UserOrder::all();
             return view('user.userconfirm', compact('delivering'));
    }
     public function storeCookR2(request $request){
@@ -162,6 +292,7 @@ class DishRatingController extends Controller
        // dd($delivering);
     return view('user.pmuserconfirm', compact('delivering'));
    }
+   
 
 
 }
