@@ -31,6 +31,12 @@ Route::get('/cart/update', 'CartController@updateCart');
 Route::post('/cart/clear', 'CartController@destroyCart');
 Route::get('/cart/dish/remove', 'CartController@removeDish');
 
+//Express Meal Details Cart
+Route::post('/detcart', 'CartController@detcart');
+Route::get('/detcart/update', 'CartController@detupdateCart');
+Route::post('/detcart/clear', 'CartController@detdestroyCart');
+Route::get('/detcart/dish/remove', 'CartController@detremoveDish');
+
 //Payment Method
 Route::post('/cart/checkout', 'OrdersController@checkout');
 Route::post('/cart/order', 'OrdersController@store')->name('order.place');
@@ -97,6 +103,13 @@ Route::post('/pmeals/pay', 'PmOrdersController@payment')->name('user.pmpayment')
 
 Route::post('braintree/webhooks','\Laravel\Cashier\Http\Controllers\WebhookController@handleWebhook');
 
+//Order Status
+Route::get('/orderstatus/plannedmeal', 'OrdersController@showPm')->name('pmorder.orderhistory');
+Route::get('/orderstatus/plannedmeal', 'OrdersController@showPm')->name('pmorder.orderhistory');
+Route::post('/pmorder/updatestatus/{id}', 'OrdersController@pmchangeToReceived')->name('pmorder.statuschange');
+Route::get('/pmpastorders', 'OrdersController@pmpastOrders')->name('pmorder.pastorders');
+
+
 
 Route::prefix('cook')->group(function() {
 	// Registration routes
@@ -134,13 +147,14 @@ Route::prefix('cook')->group(function() {
 	Route::post('dishes/delete/{id}', 'DishController@destroy')->name('cook.dishes.delete');
 	Route::post('dishes/update/{id}', 'DishController@update')->name('cook.dishes.update');
 	Route::get('dishes/edit/{id}', 'DishController@edit')->name('cook.dishes.edit');
-	Route::get('dishes/reviews', 'DishController@viewrating')->name('cook.rating');
+    Route::get('dishes/reviews/{id}', 'DishController@viewrating')->name('cook.rating');
         
 	Route::get('/displayDishes', 'DishController@searchDishes')->name('display');
 	Route::get('/previewDishes/{id}', 'DishController@previewDish')->name('preview');
 	Route::get('/searchIngredients', 'DishController@searchIngredient')->name('search.ingredient');
 	Route::post('/status', 'CookController@changeAvailabilityStat')->name('status.change');
 	Route::post('/orderstat', 'CookController@changeOrderStats')->name('orderstat.change');
+	Route::get('reviews', 'CookController@cookviewrating')->name('cook.view.ratings');
 
 	Route::get('/viewmakeplan', 'DishController@viewPlan')->name('cook.view.plan');
 	Route::post('/addplan', 'DishController@storePlan')->name('cook.addPlan');

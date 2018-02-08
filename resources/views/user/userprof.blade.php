@@ -96,10 +96,11 @@ display: inline-block;
           <div class="col-md-6">
         </div>
       </div>
+      <br><br><br>
     </div>
   </div>
 
- <div class="main main-raised" style="height:800px">
+ <div class="main main-raised">
    <div class="profile-content">
        <div class="container">
           <div class="row"> 
@@ -128,7 +129,7 @@ display: inline-block;
            </div><!--profile!-->
           </div><!--row!-->
           @if(session('success'))
-                <div class="alert alert-success">
+          <div class="alert alert-success">
             <div class="container">
                 <div class="alert-icon">
                     <i class="material-icons">check</i>
@@ -140,6 +141,19 @@ display: inline-block;
             </div>
         </div>
         @endif
+  @if($errors->any())
+  <div class="alert alert-danger">
+     <div class="container-fluid">
+         <div class="alert-icon">
+         <i class="material-icons">error_outline</i>
+         </div>
+         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+         <span aria-hidden="true"><i class="material-icons">clear</i></span>
+        </button>
+       <b>Error Alert:</b>&nbsp; {{$errors->first()}}
+    </div>
+  </div>
+  @endif
   <div class="card card-nav-tabs">
     <div class="header" style="background-color:#30BB6D">
        <div class="nav-tabs-navigation" style="background-color:#30BB6D">
@@ -342,14 +356,10 @@ display: inline-block;
        
 
                   </div>
-
               </div>
           </div>
     </div>
 </div><!--wrapper!-->
-
-
-
 
 <!-- Modal Core -->
 <!--general information!-->

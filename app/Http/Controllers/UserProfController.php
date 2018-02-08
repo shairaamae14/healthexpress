@@ -15,6 +15,7 @@ use App\Allergens;
 use Validator;
 use Carbon\Carbon;  
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Redirect;
 use Hash;
 use Illuminate\Support\Facades\Auth;
 
@@ -108,42 +109,47 @@ public function uploadImage($file)
 
   $img = $filename;
 }
-
-
-
 return $img;
 }
 
 public function storeAllergen(Request $request){
-  // $tolerance="Low";
-
   $id=Auth::user()->id;
-  $user=User::find($id);
-  for($i =0; $i < count($request['allergen']); $i++) {
-    $allergen=UserAllergen::create(['user_id' =>$id,
-      'allergen_id' => $request['allergen'][$i],
-      'tolerance_level' =>$request['tolerance'][$i],
-      'status' => 1]);
+    for($k = 0; $k < count($request['allergen']); $k++) {
+  $useraller=UserAllergen::where('user_id', $id)->where('allergen_id', $request['allergen'][$k])->get();
   }
-     // dd($id);
-  return redirect()->route('user.profile', compact('id', 'user'));
-
-
-}
+  if($useraller->isEmpty()){
+           for($i =0; $i < count($request['allergen']); $i++) {
+                $allergen=UserAllergen::create(['user_id' =>$id,
+                                                'allergen_id' => $request['allergen'][$i],
+                                                'tolerance_level' =>$request['tolerance'][$i],
+                                                'status' => 1]);
+        }
+      }
+        else {
+              return Redirect::back()->withErrors(['Selected allergen/s already exist.']);
+        }
+         return redirect()->route('user.profile', compact('id', 'user'))->with('success', 'You have succesfully added  allergen/s!');
+      }
 
 public function storeMedcon(Request $request, $id){
   $id=Auth::user()->id;
-  $user=User::find($id);
-  
-  for($j = 0; $j < count($request['medcon']); $j++) {
-    $condition = UserMCondition::create(['user_id' => $id,
-     'medcon_id' => $request['medcon'][$j],
-     'status' => 1]);
+    for($k = 0; $k < count($request['medcon']); $k++) {
+  $medcon=UserMCondition::where('user_id', $id)->where('medcon_id', $request['medcon'][$k])->get();
   }
-  return redirect()->route('user.profile', compact('id', 'user'));
-
-
-}
+  if($medcon->isEmpty()){
+           for($j = 0; $j < count($request['medcon']); $j++) {
+            $condition = UserMCondition::create(['user_id' => $id,
+                                             'medcon_id' => $request['medcon'][$j],
+                                             'status' => 1]);
+        }
+      }
+     else{
+       return Redirect::back()->withErrors(['Selected medical condition/s already exist.']);
+     }
+    
+   return redirect()->route('user.profile', compact('id', 'user'))->with('success', 'You have successfully added medical condition/s !');
+     
+ }
 
 
 
@@ -172,7 +178,7 @@ public function update(Request $request, $id){
   ->update(['lifestyle_id' => $request['lifestyle']]);
 
 
-  return redirect()->route('user.profile', compact('id', 'user'));
+  return redirect()->route('user.profile', compact('id', 'user'))->with('success', 'You have successfully saved changes!');;
 }
 
 
@@ -186,7 +192,7 @@ public function destroyM(Request $request){
   }
 
 
-  return redirect()->route('user.profile', compact('user', 'id'));
+  return redirect()->route('user.profile', compact('user', 'id'))->with('success', 'You have successfully deleted medical condition/s!');;
 }
 
 public function update2(Request $request, $id){
@@ -211,7 +217,7 @@ public function update2(Request $request, $id){
     ]);
   }
 
-  return redirect()->route('user.profile', compact('id', 'user'));
+  return redirect()->route('user.profile', compact('id', 'user'))->with('success', 'You have successfully added medical condition/s !');;
 }
 
     public function destroyA(Request $request){
@@ -225,7 +231,7 @@ public function update2(Request $request, $id){
     // dd('hello');
 
 
-        return redirect()->route('user.profile', compact('user', 'id'));
+        return redirect()->route('user.profile', compact('user', 'id'))->with('success', 'You have successfully deleted allergen/s!');;
     }
 
 
