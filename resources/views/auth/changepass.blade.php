@@ -59,8 +59,7 @@ display: inline-block;
            <center>
         <div class="col-md-6">
         <br>
-     <!--<center><h1 class="title text-center" style="font-family: 'Lobster', cursive; font-size: 60px;">Let us all be healthy!</h1> -->
-    <!-- <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class=" btn btn-danger btn-raised btn-lg" ="background-color:transparent;border:2px solid white; font-family: 'Anton', sans-serif; font-size: 20px " id="ordermode"><center> Express Meal</center> </a><a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" class=" btn btn-danger btn-raised btn-lg" id="ordermode" style="background-color:transparent;  border:2px solid white; font-family: 'Anton', sans-serif; font-size: 20px "><center>Planned Meal</center></a> -->
+
         </div>
       </div>
     </div>
@@ -78,7 +77,6 @@ display: inline-block;
                    </div>
                 </div>
                 <br>
-                <center> <input type="file" id="img" class="btn btn-flat btn-success" name="img">
                                 
                 <div class="name">
                      <center><h3 class="title" style="color:#30BB6D">{{Auth::user()->fname." ".Auth::user()->lname}}</h3>
@@ -110,7 +108,7 @@ display: inline-block;
     </div>
 
   <div class="content">
-    <form class="form-horizontal" method="POST" action="{{ url('/change/password') }}">
+    <form class="form-horizontal" method="POST" action="{{ route('user.reset') }}">
                         {{ csrf_field() }}
                         @if(session('error'))
                         <div class="alert alert-danger">

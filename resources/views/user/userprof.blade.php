@@ -104,12 +104,21 @@ display: inline-block;
        <div class="container">
           <div class="row"> 
             <div class="profile" >
+              @if($user->profic)
                 <div class="avatar">
                      <center>
                    <div style="width:200px; height:200px; margin-top: -100px; background-color:#30BB6D; border-radius: 100px; border:2px white solid;">
                       <img src="{{url('./user_imgs/'.$user->profpic)}}" class="img-circle" id="img-tag" width="200px"/>
                    </div>
                 </div>
+              @else
+              <div class="avatar">
+                     <center>
+                   <div style="width:200px; height:200px; margin-top: -100px; background-color:#30BB6D; border-radius: 100px; border:2px white solid;">
+                     <label style="font-size: 150px; color:white; float:center">{{Auth::user()->fname[0]}}</label>
+                   </div>
+                </div>
+              @endif
                    <br>
                    <center><button class="btn btn-success" data-toggle="modal" data-target="#myModal9{{$user->id}}" style="background-color:#30BB6D">Upload image</button>
                    </center>
@@ -118,7 +127,19 @@ display: inline-block;
                 </div>
            </div><!--profile!-->
           </div><!--row!-->
-               
+          @if(session('success'))
+                <div class="alert alert-success">
+            <div class="container">
+                <div class="alert-icon">
+                    <i class="material-icons">check</i>
+                </div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true"><i class="material-icons">clear</i></span>
+                </button>
+                <b>Success!</b> {{session('success')}}
+            </div>
+        </div>
+        @endif
   <div class="card card-nav-tabs">
     <div class="header" style="background-color:#30BB6D">
        <div class="nav-tabs-navigation" style="background-color:#30BB6D">
@@ -143,6 +164,7 @@ display: inline-block;
     </div><!--header!-->
 
   <div class="content">
+
     <div class="tab-content text-center" id="who">
        <div class="tab-pane active" id="profile">
            <button type="button" class="btn btn-flat btn-primary edit" style="background-color:#30BB6D; border:none; margin-top: 1px; float:right" data-toggle="modal" data-target="#myModal{{$user->id}}">
