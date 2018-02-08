@@ -34,30 +34,29 @@ dt{
         <div class="box box-solid"> 
             <div class="box-body">
                 @foreach($dishes as $dish)
-                    <div class="col-sm-3">
+                    <div class="col-sm-3 rate">
                         <div class="box box-solid" style="border-radius: 20px;">
                             <div class="box-header with-border">
                                 <center>
                                 <img src="{{url('./dish_imgs/'.$dish->dish_img)}}" style="width:150px; height:150px; border:2px solid #F0F0F0">
-                                </center>
+                               </center>
                             </div>
-
-                                <center>
+                            <center>
+                         
                                     <h4 class="openModal box-title" style="margin-top: 5px; font-size: 15px;"><a href="{{route('cook.dishes.show', ['id' => $dish->did])}}" style="color:#30BB6D">{{$dish['dish_name']}}</a></h4><br>
-                                </center>
-                                    <br>
-                          <center><small>
-                          <i class="fa fa-star" id="rate"></i>
-                          <i class="fa fa-star" id="rate"></i>
-                          <i class="fa fa-star" id="rate"></i>
-                          <i class="fa fa-star-o" id="rate"></i>
-                          <i class="fa fa-star-o" id="rate"></i>
-                          </small><br>
-                          <a href="{{route('cook.rating')}}"><p style="font-size: 12px; color:#30BB6D;">See Reviews</p></a>
-
-                            <a class="btn btn-success" href="{{route('cook.dishes.show', ['id' => $dish->did])}}">View Details</a>
-
-                          </center>
+                         </center>
+                         <center>
+                          @if($dish->average['average'])
+                          <label class="ratingbox" id="ratingbox"></label>
+                          <label class="ratingbox2" id="ratingbox2"></label><br>
+                          <input type="hidden" class="ratings" id="rate_{{$dish->average['average']}}" value="{{$dish->average['average']}}">
+                         @else
+                            <label style="font-size: 12px; color:#30BB6D"><b>No ratings yet</b></label>
+                         @endif
+                         <a href="{{route('cook.rating', ['id' => $dish->did])}}">
+                         <p style="font-size: 12px; color:#30BB6D;">See Reviews</p></a>
+                         <a class="btn btn-success" href="{{route('cook.dishes.show', ['id' => $dish->did])}}">View Details</a>
+                        </center>
                            <br>
                         </div>
                     </div>
@@ -117,7 +116,35 @@ dt{
 <script src="{{asset('adminlte/bower_components/fastclick/lib/fastclick.js')}}"></script>
 <!-- AdminLTE App -->
 <script src="{{asset('adminlte/dist/js/adminlte.min.js')}}"></script>
+<script>
+    $(document).ready(function(){
+  $(".ratingbox").closest('.rate').find('input[class=ratings]').each(function(index, data){
+    var rating = $(this).val();
+    // $(this).closest('.rate').find('.ratingbox').append(rating);
+    if(rating < 5){
+    var num=5;
+    console.log(rating);
+      var temp=num-rating;
+      // console.log(temp);
+      for(var i=1; i<=temp; i++){
+          $(this).closest('.rate').find('.ratingbox2').append('<i class="fa fa-star-o" aria-hidden="true" style="color:orange; font-size:13px"></i>');
+      }
+    }
+    
+    while(rating >= 1){
+      $(this).closest('.rate').find('.ratingbox').append('<i class="fa fa-star" aria-hidden="true" style="color:orange; font-size:13px"></i>');
+      rating -= 1;
+    }
+    if(rating > 0) {
+      $(this).closest('.rate').find('.ratingbox').append('<i class="fa fa-star-half-o" aria-hidden="true" style="color:orange; font-size:13px"></i>');
+    }
+    
+  
 
+});
+  });
+
+  </script>
   
 
 <script type="text/javascript">
