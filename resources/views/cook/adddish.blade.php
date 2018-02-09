@@ -153,7 +153,7 @@ fieldset{
         <div class="form-group col-md-3">
             <label>Best Eaten during:</label><br>
             @foreach($beaten as $be)
-            <input type="checkbox" class="flat-red" value="{{$be->be_id}}" id="best" name="best[]"><label>{{$be->name}}</label>
+            <input type="checkbox" class="best" value="{{$be->be_id}}" id="best" name="best[]"><label>{{$be->name}}</label>
             @endforeach
         </div> 
 
@@ -182,7 +182,7 @@ fieldset{
         </div>
         </div>
         <div class="form-group col-md-4">
-            <input type="number" class="form-control" id="quantity" name="quantity" placeholder="Quantity" ng-model="choice.name" min="0" autofocus >
+            <input type="number" class="form-control quantity" id="quantity" name="quantity" placeholder="Quantity" ng-model="choice.name" min="0" autofocus >
         </div>
         <div class="form-group col-md-3">
             <select class="form-control" id="preparation" name="preparation" style="width:100px;" autofocus>
@@ -214,11 +214,11 @@ fieldset{
  
     <h3>Dish Summary</h3>
     <fieldset>
-        <legend>Dish Summary</legend>
+        {{-- <legend>Dish Summary</legend> --}}
  
-        <p>Dish Details</p>
+        <legend style="color:#30bb6d">Dish Summary</legend>
         <div id="summary"></div>
-        <p>Ingredient Details</p>
+        {{-- <p>Ingredient Details</p> --}}
     </fieldset>
 
     </form>
@@ -282,22 +282,59 @@ form.steps({
         // Used to skip the "Warning" step if the user is old enough.
         if (currentIndex === 2 && Number($("#age-2").val()) >= 18)
         {
-            form.steps("next");
+            // if(currentIndex === 2) //if mo sud sya ato nga part sa wizard
+            // {
+            //     if($('table#part').find('tr.ingredappend').length == 0 ){ //if way sud ang div (which is naa man daan HOWWWWW)
+            //         form.find('li').attr('aria-disabled', 'true');//pag change to disable if way sud
+            //     }
+            //     else
+            //         form.steps("next");
+            // }
+            // else
+            //     form.steps("next");
+            // form.find('li').attr('aria-disabled', 'true');
+            $('.actions').find('ul > li.disabled').innerHTML+="OMG RICHARD IS SO HANDSOME ❤";
+                   
         }
         // Used to skip the "Warning" step if the user is old enough and wants to the previous step.
         if (currentIndex === 2 && priorIndex === 3)
         {
             form.steps("previous");
         }
+
+        // if(currentIndex === 2)
+        // {
+        //     if($('#part').children().length ==0 ){
+
+        //     }
+        // }
+
+        if(currentIndex === 1)
+        {
+            $('#summary').empty();
+        }
+
+        if(currentIndex === 2 || currentIndex === 3)
+        {
+            if ( $('#summary').children().length == 0 ) {
+                summary();
+            }
+            
+        }
     },
     onFinishing: function (event, currentIndex)
     {
         form.validate().settings.ignore = ":disabled";
+        $container = $('#add_dish').find('section[data-step="' + currentIndex +'"]');
+        console.log($container);
+
+
+
         return form.valid();
     },
     onFinished: function (event, currentIndex)
     {
-        $('#add_dish').submit();
+        var form = $(this); form.submit();
     }
 }).validate({
     errorPlacement: function errorPlacement(error, element) { element.before(error); },
@@ -308,7 +345,9 @@ form.steps({
         'duration' : {required: true},
         'price' : {required: true},
         'signDish' : { checked: true },
-        'price' : {required: true}
+        'best' : { checked: true },
+        'price' : {required: true},
+        'quantity' : {required: true}
 
     }
 
@@ -323,6 +362,19 @@ form.steps({
 
 
     },"You must select at least one!");
+
+    $.validator.addMethod("checked", function(value, elem, param) {
+    if($(".best:checkbox:checked").length > 0){
+       return true;
+    }else {
+       return false;
+    }
+
+
+    },"You must select one!");
+
+
+
     $(document).ready(function(){
         $('.js-data-example-ajax').css('width', '100%');
         $('.js-data-example-ajax').select2();
@@ -368,14 +420,19 @@ $(document).ready(function () {
         'replace': 'Drag and drop or click to replace',
         'remove':  'Remove',
         'error':   'Ooops, something wrong happened.'
-    }
-       });
+        }
+    });
   
     $('#cancel').on('click', function() {
       window.location = '{{url("/cook/dishes")}}';
     });
 
-    });
+
+    // var div = $('.actions');
+    
+    // div.innerHTML+="OMG RICHARD IS SO HANDSOME ❤";   
+
+});
 
 function remove(id){
         $('#remove'+id).remove();
@@ -405,7 +462,7 @@ function remove(id){
         var div = document.getElementById("part");
 
         div.innerHTML += 
-                        '<tr style="text-align:center" id="remove'+ingid+'">'+
+                        '<tr style="text-align:center" class="ingredappend" id="remove'+ingid+'">'+
                         '<td multiple>'+ingred+'</td>'+
                         '<input type="hidden" id="ingid" name="ingid[]" value="'+ingid+'">'+
                         '<td multiple multiple name="qty[]">'+quan+'</td>'+
@@ -450,15 +507,25 @@ function remove(id){
           }).get();
 
           var div = document.getElementById('summary');
-          var div2 = document.getElementById('ingred-part');
+          // var div2 = document.getElementById('ingred-part');
           
-            div.innerHTML += 'Name: '+name+'<br>'+
-                              'Serving: '+serving+'<br>'+
-                              'Preparation Time: '+ptime+'<br>'+
-                              'Price: '+price+'<br>'+
-                              'Description: '+desc+'<br>'+
-                              'Best Eaten: '+best+'<br>'+
-                              'Sign Dish: '+signDish+'<br>';
+            div.innerHTML +=  '<div class="col-md-6">'+
+                                '<span class="" style="font-family: verdana; color:#30bb6d; font-size: 12px">NAME</span>&nbsp;<br>'+
+                                    '<div style="padding:10px;"><span style="margin-left:30px; font-size:15px">'+name+'</span></div><br>'+
+                                '<span class="" style="font-family: verdana; color:#30bb6d; font-size: 12px">SERVING</span>&nbsp;<br>'+
+                                    '<div style="padding:10px;"><span style="margin-left:30px; font-size:15px">'+serving+'</span></div><br>'+
+                                '<span class="" style="font-family: verdana; color:#30bb6d; font-size: 12px">PREPARATION TIME</span>&nbsp;<br>'+
+                                    '<div style="padding:10px;"><span style="margin-left:30px; font-size:15px">'+ptime+'</span></div><br>'+
+                                '<span class="" style="font-family: verdana; color:#30bb6d; font-size: 12px">PRICE</span>&nbsp;<br>'+
+                                    '<div style="padding:10px;"><span style="margin-left:30px; font-size:15px">'+price+'</span></div><br>'+
+                              '</div>'+
+                              '<div class="col-md-6">'+
+                                '<span class="" style="font-family: verdana; color:#30bb6d; font-size: 12px">DESCRIPTION</span>&nbsp;<br>'+'<div style="padding:10px;"><span style="margin-left:30px; font-size:15px">'+desc+'</span></div><br>'+
+                                '<span class="" style="font-family: verdana; color:#30bb6d; font-size: 12px">BEST EATEN</span>&nbsp;<br>'+
+                                    '<div style="padding:10px;"><span style="margin-left:30px; font-size:15px">'+best+'</span></div><br>'+
+                                '<span class="" style="font-family: verdana; color:#30bb6d; font-size: 12px">SIGN DISH</span>&nbsp;<br>'+
+                                    '<div style="padding:10px;"><span style="margin-left:30px; font-size:15px">'+signDish+'</span></div><br>'+
+                                '</div>';
 
     }
 </script>

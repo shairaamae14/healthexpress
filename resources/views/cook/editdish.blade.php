@@ -247,6 +247,7 @@ fieldset{
                 <input type="hidden" id="dishid" value="{{$di->ding_id}}"/>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                 <button type="button" class="btn btn-success" data-dismiss="modal" onclick="changes({{$di->ding_id}})">Save Changes</button>
             </div>
             {{-- </form> --}}
@@ -318,6 +319,19 @@ fieldset{
             if (currentIndex === 2 && priorIndex === 3)
             {
                 form.steps("previous");
+            }
+            
+            if(currentIndex === 1)
+            {
+                $('#summary').empty();
+            }
+
+            if(currentIndex === 2 || currentIndex === 3)
+            {
+                if ( $('#summary').children().length == 0 ) {
+                    summary();
+                }
+                
             }
         },
         onFinishing: function (event, currentIndex)
