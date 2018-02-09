@@ -56,6 +56,12 @@
             <span>Planned Meals</span>
           </a>
         </li>
+         <li>
+        <a href="{{route('cook.view.ratings')}}">
+            <i class="fa fa-star"></i>
+            <span>Ratings</span>
+          </a>
+        </li>
         @elseif(Route::currentRouteName() == 'cook.dishes' || Route::currentRouteName() == 'cook.dishes.add'
         || Route::currentRouteName() == 'cook.dishes.update' || Route::currentRouteName() == 'cook.dishes.show')
          <li>
@@ -86,6 +92,12 @@
           <a href="{{route('cook.pmdishes')}}">
             <i class="fa fa-calendar-check-o"></i>
             <span>Planned Meals</span>
+          </a>
+        </li>
+         <li>
+        <a href="{{route('cook.view.ratings')}}">
+            <i class="fa fa-star"></i>
+            <span>Ratings</span>
           </a>
         </li>
         @elseif(Route::currentRouteName() == 'cook.view.plan' || Route::currentRouteName() == 'cook.add.plan' ||
@@ -149,6 +161,12 @@
         <a href="{{route('cook.pmdishes')}}">
             <i class="fa fa-calendar-check-o"></i>
             <span>Planned Meals</span>
+          </a>
+        </li>
+         <li>
+         <a href="{{route('cook.view.ratings')}}">
+            <i class="fa fa-star"></i>
+            <span>Ratings</span>
           </a>
         </li>
         @endif

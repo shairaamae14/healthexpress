@@ -32,4 +32,12 @@ class Cook extends Authenticatable
     {
         return $this->hasMany('App\Pmealdishes');
     }
+
+    public function rating(){
+        return $this->hasMany('App\CookRating', 'cook_id', 'id');
+    }
+
+      public function average(){
+        return $this->hasOne('App\CookAverage', 'cook_id', 'id');
+    }
 }

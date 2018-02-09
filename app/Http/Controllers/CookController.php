@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\UserOrder;
 use App\PlannedMeals;
+use App\Cook;
 
 
 
@@ -149,5 +150,14 @@ class CookController extends Controller
 
       return view('cook.userplans', compact('meals'));
     }
+
+
+     public function cookviewrating(){
+        $cid  = Auth::id();
+    $cookrev=Cook::where('id', $cid)->get();
+    // dd($cookrev);        
+
+    return view('cook.cookreviews', compact('cookrev'));
+   }
 
 }

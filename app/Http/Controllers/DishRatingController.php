@@ -9,6 +9,7 @@ use App\UserOrder;
 use App\CookRating;
 use App\PlannedMeals;
 use App\DishAverage;
+use App\CookAverage;
 
 use Carbon\Carbon;
 
@@ -203,55 +204,84 @@ class DishRatingController extends Controller
                                     'rating'  => $request['rating'],
                                     'date_rate' =>$date
                                   ]);
-          //   $rate=CookRating::where('cook_id', $id)->get();
-          //     $avg=0;
-          //     $average=0;
-          //     $tempwhole=0;
-          //     $r=count($rate);
-          //     for($i=0; $i<$r; $i++){
-          //       $avg+=$rate[$i]->rating/$r;
-          //     }
+            $rate=CookRating::where('cook_id', $request['cook_id'])->get();
+              $avg=0;
+              $average=0;
+              $tempwhole=0;
+              $r=count($rate);
+              for($i=0; $i<$r; $i++){
+                $avg+=$rate[$i]->rating/$r;
+              }
 
-          //      $average=round($avg, 1);
-          //      $tempavg=$average;
-          //      $tempwhole=floor($tempavg);
-          //      $tempdec=$tempavg-$tempwhole;
-          //      // dd($tempdec);
-          //       if($tempdec==0.0){
-          //       $average=$average;
-          //       // dd($average);
-          //      }
-          //      else if($tempdec<=0.5 || $tempdec>=0.5){
-          //       $tempdec=0.5;
-          //       $average=$tempwhole + $tempdec;
-          //       // dd($average, "hello");
-          //      }
-          //    $averagedish = DishAverage::where('dish_id', $id)->get();
-          //   if($averagedish->isEmpty()) {
-          //   $avg= DishAverage::create(['dish_id'=>$id,
-          //                             'average'=>$average]);
-          // }
-          //     $avgrate= DishAverage::where('dish_id', $id)
-          //                           ->update(['dish_id'=>$id,
-          //                                     'average'=>$average]);
+               $average=round($avg, 1);
+               $tempavg=$average;
+               $tempwhole=floor($tempavg);
+               $tempdec=$tempavg-$tempwhole;
+               // dd($tempdec);
+                if($tempdec==0.0){
+                $average=$average;
+                // dd($average);
+               }
+               else if($tempdec<=0.5 || $tempdec>=0.5){
+                $tempdec=0.5;
+                $average=$tempwhole + $tempdec;
+                // dd($average, "hello");
+               }
+             $averagedish = CookAverage::where('cook_id', $request['cook_id'])->get();
+            if($averagedish->isEmpty()) {
+            $avg= CookAverage::create(['cook_id'=>$request['cook_id'],
+                                      'average'=>$average]);
+          }
+              $avgrate= CookAverage::where('cook_id', $request['cook_id'])
+                                    ->update(['cook_id'=>$request['cook_id'],
+                                              'average'=>$average]);
                      
             
-          //   $delivering= UserOrder::all();
+            $delivering= UserOrder::all();
             return view('user.userconfirm', compact('delivering'));
    }
     public function storeCookR2(request $request){
       $userid = Auth::id();
        $date=Carbon::now();
-        // dd($request['review']);
-            // $id= $request['cook_id'];
-            // dd($request['review'], $request['cook_id'], $request['rating'], $id);
-            $dishes = CookRating::create(['user_id' => $userid,
+          $dishes = CookRating::create(['user_id' => $userid,
                                     'cook_id' => $request['cook_id'],
                                     'comment' => $request['review'],
                                     'rating'  => $request['rating'],
                                     'date_rate' =>$date
                                   ]);
-            $delivering= UserOrder::all();
+            $rate=CookRating::where('cook_id', $request['cook_id'])->get();
+              $avg=0;
+              $average=0;
+              $tempwhole=0;
+              $r=count($rate);
+              for($i=0; $i<$r; $i++){
+                $avg+=$rate[$i]->rating/$r;
+              }
+
+               $average=round($avg, 1);
+               $tempavg=$average;
+               $tempwhole=floor($tempavg);
+               $tempdec=$tempavg-$tempwhole;
+               // dd($tempdec);
+                if($tempdec==0.0){
+                $average=$average;
+                // dd($average);
+               }
+               else if($tempdec<=0.5 || $tempdec>=0.5){
+                $tempdec=0.5;
+                $average=$tempwhole + $tempdec;
+                // dd($average, "hello");
+               }
+             $averagedish = CookAverage::where('cook_id', $request['cook_id'])->get();
+            if($averagedish->isEmpty()) {
+            $avg= CookAverage::create(['cook_id'=>$request['cook_id'],
+                                      'average'=>$average]);
+          }
+              $avgrate= CookAverage::where('cook_id', $request['cook_id'])
+                                    ->update(['cook_id'=>$request['cook_id'],
+                                              'average'=>$average]);
+                     
+            $delivering= PlannedMeals::all();
             return view('user.pmuserconfirm', compact('delivering'));
    }
       
