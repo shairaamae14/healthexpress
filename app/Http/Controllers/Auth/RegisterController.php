@@ -95,8 +95,8 @@ class RegisterController extends Controller
             'birthday' => $bday,
             'gender' => $data['gender'],
             'location' => $data['location'],
-            'longitude' => $data['cityLng'],
-            'latitude' => $data['cityLat'],
+            'longitude' => $data['cityLat'],
+            'latitude' => $data['cityLng'],
             'status' => 1,
             'age' => $age,
             'bmr' => $bmr
@@ -156,7 +156,7 @@ class RegisterController extends Controller
         return $user;
     }
     
-    public function showRegistrationForm() {
+    public function index() {
         $goals = HealthGoals::all();
         $lifestyles = Lifestyles::all();
         $allergens = Allergens::all();
