@@ -24,6 +24,12 @@ use App\DishAverage;
 use Illuminate\Session\Store;
 
 
+// use Request;
+// use Illuminate\Routing\Redirector;
+// // use Illuminate\Support\Facades\Request;
+// use Illuminate\Support\Facades\Redirect;
+// use Cart;
+
 class HomeController extends Controller
 {
     /**
