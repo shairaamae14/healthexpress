@@ -97,6 +97,7 @@ fieldset{
 }
 
 
+
 </style>
 
 
@@ -183,6 +184,7 @@ fieldset{
         </div>
         <div class="form-group col-md-4">
             <input type="number" class="form-control quantity" id="quantity" name="quantity" placeholder="Quantity" ng-model="choice.name" min="0" autofocus >
+            <label style="color:red" id="err"></label>
         </div>
         <div class="form-group col-md-3">
             <select class="form-control" id="preparation" name="preparation" style="width:100px;" autofocus>
@@ -200,13 +202,14 @@ fieldset{
         </div>
         <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
         <button class="addfields remove" onclick="addChoice(); return false;" ng-click="addNewChoice()">+</button>
-        <div class="form-group">
-            <table id="part">
+        <div class="col-md-12">
+            <table id="part" style="margin-top:30px; margin-right:30px">
                 <tr>
-                  <th style="width:150px">Ingredient Name</th>
-                  <th style="width:150px">Quantity</th>
-                  <th style="width:150px">Preparation</th>
-                  <th style="width:150px">Unit of Measure</th>
+                  <th style="width:250px; text-align:center;">Ingredient Name</th>
+                  <th style="width:150px; text-align:center;">Quantity</th>
+                  <th style="width:150px; text-align:center;">Preparation</th>
+                  <th style="width:150px; text-align:center;">Unit of Measure</th>
+                  <th style="width:150px; text-align:center;">Action</th>
                 </tr>
             </table>
         </div>
@@ -250,6 +253,9 @@ fieldset{
 <script type="text/javascript">
 
     var form = $("#add_dish").show();
+
+
+
  
 form.steps({
     headerTag: "h3",
@@ -277,6 +283,7 @@ form.steps({
         form.validate().settings.ignore = ":disabled,:hidden";
         return form.valid();
     },
+
     onStepChanged: function (event, currentIndex, priorIndex)
     {
         // Used to skip the "Warning" step if the user is old enough.
@@ -288,12 +295,13 @@ form.steps({
             //         form.find('li').attr('aria-disabled', 'true');//pag change to disable if way sud
             //     }
             //     else
-            //         form.steps("next");
+                    form.steps("next");
             // }
             // else
             //     form.steps("next");
             // form.find('li').attr('aria-disabled', 'true');
-            $('.actions').find('ul > li.disabled').innerHTML+="OMG RICHARD IS SO HANDSOME ❤";
+            // $('.actions').find('ul > li.disabled').innerHTML+="OMG RICHARD IS SO HANDSOME ❤";
+            console.log($(".disabled").size());
                    
         }
         // Used to skip the "Warning" step if the user is old enough and wants to the previous step.
@@ -309,9 +317,18 @@ form.steps({
         //     }
         // }
 
-        if(currentIndex === 1)
+
+        if(currentIndex == 1)
         {
+            // alert("This script works");
+            if($('#part').find('tr.ingredappend').length == 0)
+            {
+                $('.actions > ul > li:eq(1)').attr("class",'disabled');
+            }
+            
             $('#summary').empty();
+
+
         }
 
         if(currentIndex === 2 || currentIndex === 3)
@@ -327,8 +344,6 @@ form.steps({
         form.validate().settings.ignore = ":disabled";
         $container = $('#add_dish').find('section[data-step="' + currentIndex +'"]');
         console.log($container);
-
-
 
         return form.valid();
     },
@@ -346,8 +361,7 @@ form.steps({
         'price' : {required: true},
         'signDish' : { checked: true },
         'best' : { checked: true },
-        'price' : {required: true},
-        'quantity' : {required: true}
+        'price' : {required: true}
 
     }
 
@@ -378,6 +392,9 @@ form.steps({
     $(document).ready(function(){
         $('.js-data-example-ajax').css('width', '100%');
         $('.js-data-example-ajax').select2();
+        // $('.action ').find(attr(role))
+        
+
     });
 
   </script>
@@ -440,9 +457,12 @@ function remove(id){
 
     function addChoice()
     {
+
+        
+
         var ingid = document.getElementById('ingredients').value;
         var quan = document.getElementById('quantity').value;
-        // var ingid = document.getElementById('ing_id').value;
+        console.log(quan);
         var prepp = $('#preparation').val();
         var umm = $('#um').val();
 
@@ -457,36 +477,43 @@ function remove(id){
         var um = $("#um option:selected").map(function() {
             return $(this).text();
           }).get();
-        
-
-        var div = document.getElementById("part");
-
-        div.innerHTML += 
-                        '<tr style="text-align:center" class="ingredappend" id="remove'+ingid+'">'+
-                        '<td multiple>'+ingred+'</td>'+
-                        '<input type="hidden" id="ingid" name="ingid[]" value="'+ingid+'">'+
-                        '<td multiple multiple name="qty[]">'+quan+'</td>'+
-                        '<input type="hidden" id="qtyy" name="qtyy[]" value="'+quan+'">'+
-                        '<td multiple name="prep[]">'+prep+'</td>'+
-                        '<input type="hidden" id="prepp" name="prepp[]" value="'+prepp+'">'+
-                        '<td multiple name="unit[]">'+um+'</td>'+
-                        '<input type="hidden" id="umm" name="umm[]" value="'+umm+'">'+
-                        '<td><button type="button" onclick="remove('+ingid+')" class="remove"><i class="fa fa-times"></i></button></td>'+
-                        '</tr>';
 
 
-       
-        $('select').select2().select2('val', $('#ingredients option:eq(0)').val());
-      
-        document.getElementById('quantity').value='';
-        $('#preparation option').prop('selected', function() {
-            return this.defaultSelected;
-        });
-        $('#um option').prop('selected', function() {
-            return this.defaultSelected;
-        });
+        if(quan == null || quan == 0 || quan == ''){
+            document.getElementById('err').innerHTML+="This field is required";
+        }
+        else{
+            
+            $('.actions > ul > li:eq(1)').removeAttr("class");
+            $('#err').empty();
 
-                        return false;
+            var div = document.getElementById("part");
+
+            div.innerHTML += 
+                '<tr class="ingredappend" id="remove'+ingid+'">'+
+                '<td style="text-align:center;" multiple>'+ingred+'</td>'+
+                '<input type="hidden" id="ingid" name="ingid[]" value="'+ingid+'">'+
+                '<td style="text-align:center;" multiple name="qty[]">'+quan+'</td>'+
+                '<input type="hidden" id="qtyy" name="qtyy[]" value="'+quan+'">'+
+                '<td style="text-align:center;" multiple name="prep[]">'+prep+'</td>'+
+                '<input type="hidden" id="prepp" name="prepp[]" value="'+prepp+'">'+
+                '<td style="text-align:center;" multiple name="unit[]">'+um+'</td>'+
+                '<input type="hidden" id="umm" name="umm[]" value="'+umm+'">'+
+                '<td style="text-align:center;"><button type="button" onclick="remove('+ingid+')" class="remove"><i class="fa fa-times"></i></button></td>'+
+                '</tr>';
+
+            $('select').select2().select2('val', $('#ingredients option:eq(0)').val());
+          
+            document.getElementById('quantity').value='';
+            $('#preparation option').prop('selected', function() {
+                return this.defaultSelected;
+            });
+            $('#um option').prop('selected', function() {
+                return this.defaultSelected;
+            });
+        }
+        return false;
+
 
 
 
