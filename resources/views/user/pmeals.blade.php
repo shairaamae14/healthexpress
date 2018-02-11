@@ -19,6 +19,9 @@
 @import url('https://fonts.googleapis.com/css?family=Archivo+Black');
 @import url('https://fonts.googleapis.com/css?family=Lato');
 
+.modal{
+      padding-right: 600px !important;
+}
 
 #ordermode{
   padding:20px;
