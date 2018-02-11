@@ -95,8 +95,8 @@ class RegisterController extends Controller
             'birthday' => $bday,
             'gender' => $data['gender'],
             'location' => $data['location'],
-            'longitude' => $data['cityLat'],
-            'latitude' => $data['cityLng'],
+            'longitude' => $data['cityLng'],
+            'latitude' => $data['cityLat'],
             'status' => 1,
             'age' => $age,
             'bmr' => $bmr
