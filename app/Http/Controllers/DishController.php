@@ -61,18 +61,7 @@ class DishController extends Controller
         
         $pmdishes = PmealDishes::join('dishes', 'dishes.did','=', 'pm_dishes.dish_id')->where('cook_id', $id)
                         ->get(); 
-          $pmdaily = PmealDishes::join('dishes', 'dishes.did','=', 'pm_dishes.dish_id')
-                                ->where('cook_id', $id)
-                                ->where('plan', 'Daily')
-                                ->get();
-         $pmweekly = PmealDishes::join('dishes', 'dishes.did','=', 'pm_dishes.dish_id')
-                                ->where('cook_id', $id)
-                                ->where('plan', 'Weekly')
-                                ->get();  
-          $pmmonthly = PmealDishes::join('dishes', 'dishes.did','=', 'pm_dishes.dish_id')
-                                ->where('cook_id', $id)
-                                ->where('plan', 'Monthly')
-                                ->get();    
+       
         foreach($pmdishes as $dish) {
             $dbestEaten = DishBestEaten::join('besteaten_at' , 'besteaten_at.be_id', '=' , 'dish_besteaten.be_id')
               ->where('dish_id', $dish->did)->get();
@@ -262,8 +251,13 @@ class DishController extends Controller
                     ->join('unit_measurements', 'unit_measurements.um_id', '=', 'dish_ingredients.um_id')
                     ->join('preparations', 'preparations.p_id', '=', 'dish_ingredients.preparation')
                     ->get();
-        
-        return view('cook.editdish',compact('dishes', 'list', 'units', 'preps', 'beaten', 'dish_ingredients'));
+
+        $duration = str_replace(',', '', $dishes[0]->preparation_time);
+        $hours = preg_split('[h]', $duration);
+        $hr = $hours[0];
+        $minutes =preg_split('[m]', $hours[1]);
+        $min = $minutes[0];
+        return view('cook.editdish',compact('dishes', 'list', 'units', 'preps', 'beaten', 'dish_ingredients', 'hr', 'min'));
     }
 
     /**
@@ -566,7 +560,7 @@ class DishController extends Controller
 
     public function viewPlan(){
       $id=Auth::id();
-      $dishes=Dish::where('authorCook_id', $id)->get();
+      $dishes=Dish::where('authorCook_id', $id)->where('no_of_servings' , 1)->get();
       
       
       return view('cook.makeplan', compact('dishes'));
@@ -574,18 +568,25 @@ class DishController extends Controller
     
 
     public function storePlan(Request $request){
-       $id = Auth::id();
+      $cook = Auth::user();
       $dish_id= Input::get('dish_id');
-      $plans= Input::get('plan');
       // dd($plan);
       // dd($request['dish_id']);
-    
-    for($i=0; $i<count($dish_id);$i++){
-         $plan =Pmealdishes::create(['cook_id'=>$id,
-                                    'dish_id'=>$dish_id[$i],
-                                    'plan'=>$plans[$i]          
-                          ]);
-        }
+      
+      $dish = Dish::findOrFail($dish_id);
+
+      // for($i=0; $i<count($dish_id);$i++){
+      //    $plan =Pmealdishes::create(['cook_id'=>$cook->id,
+      //                               'dish_id'=>$dish_id[$i],
+      //                                 'dish_name' => $dish_id[$i],
+      //                                 'basePrice' => $request['price'],
+      //                                 'sellingPrice' => $sPrice,
+      //                                 'dish_desc' => $request['dish_desc'],   
+      //                                 'dish_img' => $image,
+      //                                 'preparation_time' => $request['duration'],
+      //                                 'no_of_servings' => $request['serving'],
+      //                                 'status' => 1]);
+      //   }
 
         return redirect()->route('cook.pmdishes');
      }
@@ -598,4 +599,117 @@ class DishController extends Controller
     return view('cook.reviews', compact('rate', 'avg'));
    }
 
+   public function createPlan()
+   {
+
+    $beaten = BestEaten::all();
+        $list = IngredientList::all();
+        $units = UnitMeasurement::all();
+        $preps = Preparation::all();
+
+    return view('cook.plancreatedish', compact('beaten', 'list', 'units', 'preps'));
+   }
+
+   public function makePlan(Request $request)
+   {
+      $cook = Auth::user();
+        $validator =  Validator::make($request->all(), [
+            'img' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048']);
+       if($validator->fails())
+       {
+        return redirect()->back()
+                        ->withErrors($validator)
+                        ->withInput();
+
+       }
+    
+        $file = $request->file('img');
+        
+        $image = $this->uploadImage($file);
+
+        $dish = Pmealdishes::create(['cook_id' => $cook->id, 'dish_name' => $request['dish_name'],
+            'basePrice' => $request['price'],
+            'sellingPrice' => $sPrice,
+            'dish_desc' => $request['dish_desc'],   
+            'dish_img' => $image,
+            'preparation_time' => $request['duration'],
+            'no_of_servings' => $request['serving'],
+            'status' => 1]);
+
+        for($i = 0 ; $i < count($request['best']); $i++) {
+            $bestEaten = DishBestEaten::create(['dish_id' => $dish->did,
+                                            'be_id' => $request['best'][$i],
+                                            'status' => 1]);
+        }
+
+
+        $ingred = Input::get('ingid');
+        $quan = Input::get('qtyy');
+        $prep = Input::get('prepp');
+        $um = Input::get('umm');
+
+        for($i=0; $i<count($ingred);$i++)
+        {
+            
+            $ing = DishIngredient::create([
+                'um_id' => $um[$i],
+                'dish_id' => $dish->did,
+                'ing_id' => $ingred[$i],
+                'quantity' => $quan[$i],
+                'preparation' => $prep[$i],
+                'status' => 1
+                ]);
+        }   
+        
+
+        $dish_ing = DishIngredient::join('unit_measurements', 'unit_measurements.um_id','=','dish_ingredients.um_id')
+                            ->join('ingredient_list','ingredient_list.id','=','dish_ingredients.ing_id')
+                            ->where('dish_ingredients.dish_id', $dish->did)
+                            ->get();
+
+        // dd($dish_ing->ding_id);
+        $energy = 0;
+        $protein = 0;
+        $total_fat=0;
+        $carbs=0;
+        $fibre=0;
+        $sodium=0;
+        $sat_fat=0;
+        $cholesterol=0;
+
+        foreach ($dish_ing as $dishi) {
+            $energy+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->Energ_Kcal))/100;
+            $protein+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->Protein_g))/100;
+            $total_fat+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->Lipid_Tot_g))/100;
+            $carbs+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->Carbohydrt_g))/100;
+            $fibre+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->Fiber_TD_g))/100;
+            $sodium+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->Sodium_mg))/100;
+            $sat_fat+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->FA_Sat_g))/100;
+            $cholesterol+= (($dishi->quantity*$dishi->unit_grams)*floatval($dishi->Cholestrl_mg))/100;
+        }
+        $energy/=$request['serving'];
+        $protein/=$request['serving'];
+        $total_fat/=$request['serving'];
+        $carbs/=$request['serving'];
+        $fibre/=$request['serving'];
+        $sodium/=$request['serving'];
+        $sat_fat/=$request['serving'];
+        $cholesterol/=$request['serving'];
+
+            $nutrifacts = NutritionFacts::create([
+                            'ding_id' => $dish->did,
+                            'gram_weight' => '123',
+                            'calories' => $energy,
+                            'protein' => $protein,
+                            'total_fat' => $total_fat,
+                            'carbohydrate' => $carbs,
+                            'fibre' => $fibre,
+                            'sodium' => $sodium,
+                            'sat_fat' => $sat_fat,
+                            'cholesterol' => $cholesterol  
+
+            ]);
+
+
+   }
 }

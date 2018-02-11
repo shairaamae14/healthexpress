@@ -36,11 +36,6 @@ dt{
           </option>
         @endforeach
         </select>
-        <select class="form-control has-success plan" name="plan" id="plan" style="width:15%; margin:10px;float:left">
-          <option value="Daily" id="plan" class="plan">Daily</option>
-          <option value="Weekly" id="plan" class="plan">Weekly</option>
-          <option value="Monthly" id="plan" class="plan">Monthly</option>
-        </select>
         <button type="button" class="btnadd btn btn-flat btn-success btn-md" style="float:left; margin: 10px">+ Add</button><br>
 
         <form action="{{route('cook.addPlan')}}" method="post">
@@ -48,12 +43,11 @@ dt{
         <table id="part" class="plantable" style="margin:10px; margin-top: 20px; width:60%">
           <tr>
             <th style="width:250px; font-size: 20px; margin:10px">Dish Name</th>
-            <th style="width:200px; font-size: 20px; margin:10px">Type of plan</th>
             <th style="width:200px; font-size: 20px; margin:10px">Action</th>
          </tr>
        </table>
        <div class="modal-footer">
-          <button type="submit" class="btn-flat btn bg-olive"/>Create New Dish</button>
+          <button type="button" class="btn-flat btn bg-olive create"/>Create New Dish</button>
           <button type="submit" class="btn-flat btn btn-success"/>Save Dishes</button>
           <button class="btn btn-flat btn-default" onclick="window.history.back();">Cancel</button>
       </div>
@@ -111,11 +105,12 @@ dt{
 <!-- <script src="https://code.jquery.com/jquery-1.10.2.js"></script> -->
 <script type="text/javascript">
 $(document).ready(function(){
+  $('.create').on('click', function() {
+    window.location.href = '/cook/createplan';
+  });
     $(".btnadd").click(function(){
         var dish = $(".dishbox option:selected").text();
         var dish_id =$(".dishbox option:selected").val();
-          var plan = $(".plan option:selected").val();
-        console.log(dish, plan);
 
         div = document.getElementById('part');
         div.innerHTML += 
@@ -123,8 +118,6 @@ $(document).ready(function(){
                           '<tr class="trtable" style="margin-top:10px">'+
                             '<th style="width:150px; font-size: 15px">'+dish+'</th>'+
                             '<input type="hidden" name="dish_id[]" value="'+dish_id+'"/>'+
-                            '<th style="width:150px; font-size: 15px">'+plan+'</th>'+
-                            '<input type="hidden" name="plan[]" value="'+plan+'"/>'+
                             '<th style="width:150px; font-size: 15px">'+
                             '<button type="button" class="btnrem btn btn-flat btn-danger btn-sm" id="btnrem">Remove</button></th>'+
                           '</tr>'

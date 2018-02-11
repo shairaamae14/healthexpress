@@ -41,35 +41,7 @@ dt{
               <div class="active tab-pane" id="daily">
                       <div class="box box-solid"> 
               <div class="box-body">
-                  @foreach($pmdaily as $dish)
-                      <div class="col-sm-3" id="Daily">
-                          <div class="box box-solid" style="border-radius: 20px;">
-                              <div class="box-header with-border">
-                                  <center>
-                                  <img src="{{url('./dish_imgs/'.$dish->dish_img)}}" style="width:150px; height:150px; border:2px solid #F0F0F0">
-                                  </center>
-                              </div>
-
-                                  <center>
-                                      <h4 class="openModal box-title" style="margin-top: 5px; font-size: 15px;"><a href="{{route('cook.dishes.show', ['id' => $dish->did])}}" style="color:#30BB6D">{{$dish['dish_name']}}</a></h4><br>
-                                  </center>
-                                      <br>
-                            <center><small>
-                            <i class="fa fa-star" id="rate"></i>
-                            <i class="fa fa-star" id="rate"></i>
-                            <i class="fa fa-star" id="rate"></i>
-                            <i class="fa fa-star-o" id="rate"></i>
-                            <i class="fa fa-star-o" id="rate"></i>
-                            </small><br>
-                            <a href="{{route('cook.rating', ['id' => $dish->did])}}"><p style="font-size: 12px; color:#30BB6D;">See Reviews</p></a>
-
-                              <a class="btn btn-success" href="{{route('cook.dishes.show', ['id' => $dish->did])}}">View Details</a>
-
-                            </center>
-                             <br>
-                          </div>
-                      </div>
-              @endforeach
+                  
               </div>
           </div>
         <!-- Default box!-->
@@ -79,35 +51,7 @@ dt{
             <div class="tab-pane" id="weekly">
                    <div class="box box-solid"> 
             <div class="box-body">
-                @foreach($pmweekly as $dish)
-                    <div class="col-sm-3">
-                        <div class="box box-solid" style="border-radius: 20px;">
-                            <div class="box-header with-border">
-                                <center>
-                                <img src="{{url('./dish_imgs/'.$dish->dish_img)}}" style="width:150px; height:150px; border:2px solid #F0F0F0">
-                                </center>
-                            </div>
-
-                                <center>
-                                    <h4 class="openModal box-title" style="margin-top: 5px; font-size: 15px;"><a href="{{route('cook.dishes.show', ['id' => $dish->did])}}" style="color:#30BB6D">{{$dish['dish_name']}}</a></h4><br>
-                                </center>
-                                    <br>
-                          <center><small>
-                          <i class="fa fa-star" id="rate"></i>
-                          <i class="fa fa-star" id="rate"></i>
-                          <i class="fa fa-star" id="rate"></i>
-                          <i class="fa fa-star-o" id="rate"></i>
-                          <i class="fa fa-star-o" id="rate"></i>
-                          </small><br>
-                          <a href="{{route('cook.rating', ['id' => $dish->did])}}"><p style="font-size: 12px; color:#30BB6D;">See Reviews</p></a>
-
-                            <a class="btn btn-success" href="{{route('cook.dishes.show', ['id' => $dish->did])}}">View Details</a>
-
-                          </center>
-                           <br>
-                        </div>
-                    </div>
-            @endforeach
+            
             </div>
         </div>
       <!-- Default box!-->
@@ -117,35 +61,7 @@ dt{
             <div class="tab-pane" id="monthly">
                      <div class="box box-solid"> 
             <div class="box-body">
-                @foreach($pmmonthly as $dish)
-                    <div class="col-sm-3">
-                        <div class="box box-solid" style="border-radius: 20px;">
-                            <div class="box-header with-border">
-                                <center>
-                                <img src="{{url('./dish_imgs/'.$dish->dish_img)}}" style="width:150px; height:150px; border:2px solid #F0F0F0">
-                                </center>
-                            </div>
-
-                                <center>
-                                    <h4 class="openModal box-title" style="margin-top: 5px; font-size: 15px;"><a href="{{route('cook.dishes.show', ['id' => $dish->did])}}" style="color:#30BB6D">{{$dish['dish_name']}}</a></h4><br>
-                                </center>
-                                    <br>
-                          <center><small>
-                          <i class="fa fa-star" id="rate"></i>
-                          <i class="fa fa-star" id="rate"></i>
-                          <i class="fa fa-star" id="rate"></i>
-                          <i class="fa fa-star-o" id="rate"></i>
-                          <i class="fa fa-star-o" id="rate"></i>
-                          </small><br>
-                          <a href="{{route('cook.rating', ['id' => $dish->did])}}"><p style="font-size: 12px; color:#30BB6D;">See Reviews</p></a>
-
-                            <a class="btn btn-success" href="{{route('cook.dishes.show', ['id' => $dish->did])}}">View Details</a>
-
-                          </center>
-                           <br>
-                        </div>
-                    </div>
-            @endforeach
+            
             </div>
         </div>
       <!-- Default box!-->
