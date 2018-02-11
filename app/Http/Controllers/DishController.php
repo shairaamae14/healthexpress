@@ -290,15 +290,69 @@ class DishController extends Controller
         $additional = $request['price'] * .10;
         $sPrice = $request['price'] + $additional;
 
-       $dishes = Dish::where('did', $id)
+       $duration = $request->duration;
+        $cduration = $request->cduration;
+        $hrs = $request['hours'];
+        $mins = $request['mins'];
+
+        // dd($duration);
+
+        $split = explode(",",$duration);
+        $hour = rtrim($split[0],"h");
+        $min = rtrim($split[1],"m");
+
+
+        // $regex ="/^[0-9]+$/";
+        // dd($duration);
+
+        if($hour == 0 && $min == 0 ){
+          $dishes = Dish::where('did', $id)
                        ->where('authorCook_id', $cook)
                        ->update(['dish_name' => $request->dish_name,
                                  'basePrice' => $request->price,
                                  'sellingPrice' => $sPrice,
                                  'dish_desc' => $request->dish_desc,
                                  'dish_img' =>  $img,
-                                 'preparation_time' => $request->duration,
+                                 'preparation_time' => $cduration,
                                  'no_of_servings' => $request->serving]);
+        }
+        else if($hour == 0){
+            $ndur = $hrs.'h,'.$split[1];
+
+            $dishes = Dish::where('did', $id)
+                       ->where('authorCook_id', $cook)
+                       ->update(['dish_name' => $request->dish_name,
+                                 'basePrice' => $request->price,
+                                 'sellingPrice' => $sPrice,
+                                 'dish_desc' => $request->dish_desc,
+                                 'dish_img' =>  $img,
+                                 'preparation_time' => $ndur,
+                                 'no_of_servings' => $request->serving]);
+        }
+        else if($min == 0){
+            $ndur = $split[0].','.$mins.'m';
+
+            $dishes = Dish::where('did', $id)
+                       ->where('authorCook_id', $cook)
+                       ->update(['dish_name' => $request->dish_name,
+                                 'basePrice' => $request->price,
+                                 'sellingPrice' => $sPrice,
+                                 'dish_desc' => $request->dish_desc,
+                                 'dish_img' =>  $img,
+                                 'preparation_time' => $ndur,
+                                 'no_of_servings' => $request->serving]);
+        }
+        else{
+          $dishes = Dish::where('did', $id)
+                       ->where('authorCook_id', $cook)
+                       ->update(['dish_name' => $request->dish_name,
+                                 'basePrice' => $request->price,
+                                 'sellingPrice' => $sPrice,
+                                 'dish_desc' => $request->dish_desc,
+                                 'dish_img' =>  $img,
+                                 'preparation_time' => $duration,
+                                 'no_of_servings' => $request->serving]);
+        }
      
         for($i= 0; $i < count($request['best']) ; $i++) {
         $dishes = DishBestEaten::where('dish_id', $dishes)
