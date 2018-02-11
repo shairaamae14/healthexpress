@@ -252,12 +252,8 @@ class DishController extends Controller
                     ->join('preparations', 'preparations.p_id', '=', 'dish_ingredients.preparation')
                     ->get();
 
-        $duration = str_replace(',', '', $dishes[0]->preparation_time);
-        $hours = preg_split('[h]', $duration);
-        $hr = $hours[0];
-        $minutes =preg_split('[m]', $hours[1]);
-        $min = $minutes[0];
-        return view('cook.editdish',compact('dishes', 'list', 'units', 'preps', 'beaten', 'dish_ingredients', 'hr', 'min'));
+        
+        return view('cook.editdish',compact('dishes', 'list', 'units', 'preps', 'beaten', 'dish_ingredients'));
     }
 
     /**
