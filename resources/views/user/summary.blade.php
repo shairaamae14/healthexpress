@@ -34,7 +34,9 @@
     .help{
         color:#4caf50;
     }
- 
+ .modal{
+      padding-right: 600px !important;
+    }
 
 #ordermode{
   padding:20px;
