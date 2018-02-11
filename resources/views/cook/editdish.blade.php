@@ -77,7 +77,8 @@ fieldset{
     <fieldset>
         <legend>Dish Details</legend>
             <div class="form-group col-md-4">
-              <input type="file" class="dropify" data-height="160" data-default-file="{{asset('dish_imgs/'.$dish->dish_img)}}" data-allowed-file-extensions="jpg jpeg png svg" name="img">
+              <input type="file" class="dropify" data-height="160" data-default-file="{{asset('dish_imgs/'.$dish->dish_img)}}" data-allowed-file-extensions="jpg jpeg png svg" name="img"> 
+              <input type="hidden" name="img" value="{{$dish->dish_img}}"/>
         </div>
 
         <div class="form-group col-md-3">
@@ -90,7 +91,8 @@ fieldset{
         </div>
         <div class="form-group col-md-3">
             <!-- <label>Preparation Time:</label>  -->
-            <input type="text" id="duration" name="duration"  required>
+            <input type="text" id="duration" name="duration" required>
+            <input type="hidden" name="cduration" value="{{$dish->preparation_time}}"/>
         </div>
 
         <div class="form-group col-md-3">
@@ -190,8 +192,21 @@ fieldset{
  
         <p>Dish Details</p>
         <div id="summary"></div>
-        <p>Ingredient Details</p>
     </fieldset>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var time = '{{$dish->preparation_time}}';
+            var split = time.split(",");
+            var hour = split[0].slice(0,-1);
+            var min = split[1].slice(0,-1);
+
+            $('#duration-hours').attr('value',hour);
+            $('#duration-hours').attr('name','hours');
+            $('#duration-minutes').attr('value',min);
+            $('#duration-minutes').attr('name','mins');
+        });
+    </script>
 </form>
 @endforeach
 </div>
@@ -426,6 +441,11 @@ $(document).ready(function () {
         $('#remove'+id).remove();
     }
 
+    function setAttributes(el, attrs) {
+      for(var key in attrs) {
+        el.setAttribute(key, attrs[key]);
+      }
+    }
 
 
     function changes(id){
@@ -528,13 +548,23 @@ $(document).ready(function () {
           var div = document.getElementById('summary');
           var div2 = document.getElementById('ingred-part');
           // var i;
-            div.innerHTML += 'Name: '+name+'<br>'+
-                              'Serving: '+serving+'<br>'+
-                              'Preparation Time: '+ptime+'<br>'+
-                              'Price: '+price+'<br>'+
-                              'Description: '+desc+'<br>'+
-                              'Best Eaten: '+best+'<br>'+
-                              'Sign Dish: '+signDish+'<br>';
+            div.innerHTML += '<div class="col-md-6">'+
+                                '<span class="" style="font-family: verdana; color:#30bb6d; font-size: 12px">NAME</span>&nbsp;<br>'+
+                                    '<div style="padding:10px;"><span style="margin-left:30px; font-size:15px">'+name+'</span></div><br>'+
+                                '<span class="" style="font-family: verdana; color:#30bb6d; font-size: 12px">SERVING</span>&nbsp;<br>'+
+                                    '<div style="padding:10px;"><span style="margin-left:30px; font-size:15px">'+serving+'</span></div><br>'+
+                                '<span class="" style="font-family: verdana; color:#30bb6d; font-size: 12px">PREPARATION TIME</span>&nbsp;<br>'+
+                                    '<div style="padding:10px;"><span style="margin-left:30px; font-size:15px">'+ptime+'</span></div><br>'+
+                                '<span class="" style="font-family: verdana; color:#30bb6d; font-size: 12px">PRICE</span>&nbsp;<br>'+
+                                    '<div style="padding:10px;"><span style="margin-left:30px; font-size:15px">'+price+'</span></div><br>'+
+                              '</div>'+
+                              '<div class="col-md-6">'+
+                                '<span class="" style="font-family: verdana; color:#30bb6d; font-size: 12px">DESCRIPTION</span>&nbsp;<br>'+'<div style="padding:10px;"><span style="margin-left:30px; font-size:15px">'+desc+'</span></div><br>'+
+                                '<span class="" style="font-family: verdana; color:#30bb6d; font-size: 12px">BEST EATEN</span>&nbsp;<br>'+
+                                    '<div style="padding:10px;"><span style="margin-left:30px; font-size:15px">'+best+'</span></div><br>'+
+                                '<span class="" style="font-family: verdana; color:#30bb6d; font-size: 12px">SIGN DISH</span>&nbsp;<br>'+
+                                    '<div style="padding:10px;"><span style="margin-left:30px; font-size:15px">'+signDish+'</span></div><br>'+
+                                '</div>';
 
     }
 </script>
