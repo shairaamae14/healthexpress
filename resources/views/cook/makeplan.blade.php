@@ -26,7 +26,7 @@ dt{
     </section>
   <!-- Main content -->
     <section class="content"><br><center>
-      <div class="box box-solid" style="padding:10px; width:70%"> 
+      <div class="box box-solid" id="error" style="padding:10px; width:70%"> 
         <h1 class="text-left has-success" style="margin:10px">Planned Meal Dishes</h1>
         <p class="text-left" style="margin: 10px"> Please select a dish to include in your planned meal dishes. You may add a new dish.</p>
         <select class="form-control has-success dishbox" name="dish_id" id="dishbox" style="width:55%; margin: 10px; margin-right: 2px; float:left">
@@ -56,6 +56,9 @@ dt{
     </section>
   </div>
 
+<div id="dialog" title="Error">
+  <p>You already selected the same dish! Please select another dish</p>
+</div>
 
 
       <!-- Default box -->
@@ -103,6 +106,8 @@ dt{
 <script src="{{asset('adminlte/dist/js/adminlte.min.js')}}"></script>
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
 <!-- <script src="https://code.jquery.com/jquery-1.10.2.js"></script> -->
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
   $('.create').on('click', function() {
@@ -112,19 +117,31 @@ $(document).ready(function(){
         var dish = $(".dishbox option:selected").text();
         var dish_id =$(".dishbox option:selected").val();
 
+        var p_id=$("#p_id"+dish_id).val();
+
+       if(dish_id===p_id){
+       $( function() {
+       $( "#dialog" ).dialog();
+        } );
+        $('table').on('click','.btnrem ',function(){
+        $(this).closest('tr').remove()
+       });
+       }
+       else if(dish_id!=p_id){
+        console.log("hi");
         div = document.getElementById('part');
         div.innerHTML += 
 
                           '<tr class="trtable" style="margin-top:10px">'+
                             '<th style="width:150px; font-size: 15px">'+dish+'</th>'+
-                            '<input type="hidden" name="dish_id[]" value="'+dish_id+'"/>'+
+                            '<input type="hidden" id="p_id'+dish_id+'" name="dish_id[]" value="'+dish_id+'"/>'+
                             '<th style="width:150px; font-size: 15px">'+
                             '<button type="button" class="btnrem btn btn-flat btn-danger btn-sm" id="btnrem">Remove</button></th>'+
                           '</tr>'
+            }            
         
        });
       });
-
 $('table').on('click','.btnrem ',function(){
    $(this).closest('tr').remove()
 });
