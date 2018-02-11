@@ -124,11 +124,6 @@ fieldset{
     <fieldset>
         <legend>Dish Details</legend>
             <div class="form-group col-md-4">
-           <!--  <img src="{{asset('img/choose.png')}}" class="img-circle" id="img-tag" width="200px" />
-            <br>
-            <label for="exampleInputFile">Dish Image</label>
-            <input type="file" id="img" name="img">
-              <p class="help-block">jpg., jpeg., png. extension only</p> -->
               <input type="file" class="dropify" data-height="160" data-allowed-file-extensions="jpg jpeg png svg"/ name="img" id="img">
         </div>
 
@@ -217,11 +212,9 @@ fieldset{
  
     <h3>Dish Summary</h3>
     <fieldset>
-        {{-- <legend>Dish Summary</legend> --}}
  
         <legend style="color:#30bb6d">Dish Summary</legend>
         <div id="summary"></div>
-        {{-- <p>Ingredient Details</p> --}}
     </fieldset>
 
     </form>
@@ -289,19 +282,7 @@ form.steps({
         // Used to skip the "Warning" step if the user is old enough.
         if (currentIndex === 2 && Number($("#age-2").val()) >= 18)
         {
-            // if(currentIndex === 2) //if mo sud sya ato nga part sa wizard
-            // {
-            //     if($('table#part').find('tr.ingredappend').length == 0 ){ //if way sud ang div (which is naa man daan HOWWWWW)
-            //         form.find('li').attr('aria-disabled', 'true');//pag change to disable if way sud
-            //     }
-            //     else
-                    form.steps("next");
-            // }
-            // else
-            //     form.steps("next");
-            // form.find('li').attr('aria-disabled', 'true');
-            // $('.actions').find('ul > li.disabled').innerHTML+="OMG RICHARD IS SO HANDSOME ❤";
-            console.log($(".disabled").size());
+            form.steps("next");
                    
         }
         // Used to skip the "Warning" step if the user is old enough and wants to the previous step.
@@ -309,14 +290,6 @@ form.steps({
         {
             form.steps("previous");
         }
-
-        // if(currentIndex === 2)
-        // {
-        //     if($('#part').children().length ==0 ){
-
-        //     }
-        // }
-
 
         if(currentIndex == 1)
         {
@@ -443,11 +416,6 @@ $(document).ready(function () {
     $('#cancel').on('click', function() {
       window.location = '{{url("/cook/dishes")}}';
     });
-
-
-    // var div = $('.actions');
-    
-    // div.innerHTML+="OMG RICHARD IS SO HANDSOME ❤";   
 
 });
 
