@@ -55,6 +55,16 @@ return [
             'provider' => 'cooks',
         ],
 
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
+        ],
+
+         'admin-api' => [
+            'driver' => 'token',
+            'provider' => 'admins',
+        ],
+
     ],
 
     /*
@@ -82,6 +92,10 @@ return [
         'cooks' => [
             'driver' => 'eloquent',
             'model' => App\Cook::class,
+        ],
+        'admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Admin::class,
         ],
 
         // 'users' => [
@@ -113,6 +127,11 @@ return [
         ],
         'cooks' => [
             'provider' => 'cooks',
+            'table' => 'password_resets',
+            'expire' => 60,
+        ],
+        'admins' => [
+            'provider' => 'admins',
             'table' => 'password_resets',
             'expire' => 60,
         ],

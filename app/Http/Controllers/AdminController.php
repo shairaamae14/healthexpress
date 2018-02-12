@@ -15,40 +15,61 @@ use App\DishIngredient;
 use App\IngredientList;
 use App\ToleranceValues;
 use App\Cook;
+use App\OrderMode;
+use App\HealthGoals;
+use App\Lifestyles;
+use App\MedicalRestrictions;
 class AdminController extends Controller
 {
 
+    public function __construct()
+    {
+        $this->middleware('auth:admin');
+    }
+
     public function index()
     {
-        $allergens = Allergens::all();
-        $medcons = MedicalConditions::all();
         $preparation = Preparation::all();
         $measurements = UnitMeasurement::all();
         $besteaten = BestEaten::all();
 
 
-        return view('admin.dashboard', compact('allergens', 'medcons', 'preparation', 'measurements','besteaten'));
+        return view('admin.dashboard', compact('preparation', 'measurements','besteaten'));
     }
 
+    public function user_side()
+    {
+        $allergens = Allergens::all();
+        $medcons = MedicalConditions::all();
+
+        return view('admin.user-side', compact('allergens', 'medcons'));
+    }
+
+    public function order_side()
+    {
+        $modes = OrderMode::all();
+
+        return view('admin.order-side', compact('modes'));
+    }
     public function matrix()
     {
 
-        $user = Auth::user();
-        $cook = Cook::first();
+        // $user = Auth::user();
+        // $cook = Cook::first();
 
-        $theta = $cook->latitude - $user->latitude;
-        $distance = (sin(deg2rad($cook->longitude)) * sin(deg2rad($user->longitude))) + (cos(deg2rad($cook->longitude)) * cos(deg2rad($user->longitude)) * cos(deg2rad($theta)));
-        $distance = acos($distance);
-        $distance = rad2deg($distance);
-        $distance = $distance * 60 * 1.1515;
-        $distance = $distance * 1.609344;
+        // $theta = $cook->latitude - $user->latitude;
+        // $distance = (sin(deg2rad($cook->longitude)) * sin(deg2rad($user->longitude))) + (cos(deg2rad($cook->longitude)) * cos(deg2rad($user->longitude)) * cos(deg2rad($theta)));
+        // $distance = acos($distance);
+        // $distance = rad2deg($distance);
+        // $distance = $distance * 60 * 1.1515;
+        // $distance = $distance * 1.609344;
 
-        $delivery_fee = floatval(40);
-        $additional_charge = $delivery_fee + ($distance - floatval(5));
-        // dd(round($additional_charge,2));
-        dd($distance);
+        // $delivery_fee = floatval(40);
+        // $additional_charge = $delivery_fee + ($distance - floatval(5));
+        // // dd(round($additional_charge,2));
+        // dd($distance);
 
-        dd($cook);
+        // dd($cook);
 
 
   
@@ -191,6 +212,70 @@ public function storeTolerance(Request $request)
     return redirect()->back();
 }
 
+public function storeMode(Request $request) 
+{
+    $mode = OrderMode::create(['om_name' => $request['mname']]);
+
+    return redirect()->back();
+}
+
+public function storeHealthGoal(Request $request) 
+{
+    $goal = HealthGoal::create(['hgoal_name' => $request['goal_name'], 'description' => $request['desc'], 'status' =>1]);
+
+    return redirect()->back();
+}
+
+public function storeLifestyle(Request $request) 
+{
+    $lifestyle = Lifestyles::create(['lifestyle_name' => $request['lifestyle_name'], 'description' => $request['desc'], 'status'=>1]);
+
+    return redirect()->back();
+}
+
+public function storeRestriction(Request $request) 
+{
+    $restriction = MedicalRestrictions::create(['mcon_id' => $request['medcon'], 'calories' => $request['calories'], 
+        'protein' => $request['protein'], 'total_fat' => $request['total_fat'], 'carbohydrate' => $request['carbohydrate'], 
+        'fibre' => $request['fibre'], 'sodium' => $request['sodium'], 'sat_fat' => $request['sat_fat'], 
+        'cholesterol' => $request['cholesterol'], 'status'=> 1]);
+
+    return redirect()->back();
+}
+
+
+
+public function storePlannedPreparation(Request $request) 
+{
+    $restriction = MedicalRestrictions::create(['mcon_id' => $request['medcon'], 'calories' => $request['calories'], 
+        'protein' => $request['protein'], 'total_fat' => $request['total_fat'], 'carbohydrate' => $request['carbohydrate'], 
+        'fibre' => $request['fibre'], 'sodium' => $request['sodium'], 'sat_fat' => $request['sat_fat'], 
+        'cholesterol' => $request['cholesterol'], 'status'=> 1]);
+
+    return redirect()->back();
+}
+
+public function storePlannedMeasurement(Request $request) 
+{
+    $restriction = MedicalRestrictions::create(['mcon_id' => $request['medcon'], 'calories' => $request['calories'], 
+        'protein' => $request['protein'], 'total_fat' => $request['total_fat'], 'carbohydrate' => $request['carbohydrate'], 
+        'fibre' => $request['fibre'], 'sodium' => $request['sodium'], 'sat_fat' => $request['sat_fat'], 
+        'cholesterol' => $request['cholesterol'], 'status'=> 1]);
+
+    return redirect()->back();
+}
+
+public function storePlannedBestEaten(Request $request) 
+{
+    $restriction = MedicalRestrictions::create(['mcon_id' => $request['medcon'], 'calories' => $request['calories'], 
+        'protein' => $request['protein'], 'total_fat' => $request['total_fat'], 'carbohydrate' => $request['carbohydrate'], 
+        'fibre' => $request['fibre'], 'sodium' => $request['sodium'], 'sat_fat' => $request['sat_fat'], 
+        'cholesterol' => $request['cholesterol'], 'status'=> 1]);
+
+    return redirect()->back();
+}
+
+
 
 public function show($id)
 {
@@ -237,6 +322,37 @@ public function updateBestEaten(Request $request, $id)
     return redirect()->back();
 }
 
+public function updateOrderMode(Request $request, $id)
+{
+    $medcon = OrderMode::where('id', $id)->update(['om_name' => $request['bename']]);
+
+    return redirect()->back();
+}
+
+public function updateHealthGoal(Request $request, $id)
+{
+    $medcon = HealthGoals::where('hg_id', $id)->update(['hgoal_name' => $request['goal_name']]);
+
+    return redirect()->back();
+}
+
+public function updateLifestyle(Request $request, $id)
+{
+    $medcon = Lifestyles::where('lifestyle_id', $id)->update(['lifestyle_name' => $request['lifestyle_name'], 'description' => $request['desc']]);
+
+    return redirect()->back();
+}
+
+public function updateRestriction(Request $request, $id)
+{
+    $medcon = MedicalRestrictions::where('id', $id)->update(['mcon_id' => $request['medcon'], 'calories' => $request['calories'], 'protein' => $request['protein'], 'total_fat' => $request['total_fat'], 'carbohydrate' => $request['carbohydrate'], 
+        'fibre' => $request['fibre'], 'sodium' => $request['sodium'], 'sat_fat' => $request['sat_fat'], 
+        'cholesterol' => $request['cholesterol'], 'status'=> 1]);
+
+    return redirect()->back();
+}
+
+
 public function deleteAllergen(Request $request)
 {
     $allergen = Allergen::where('allergen_id', $request['id'])->delete();
@@ -271,6 +387,61 @@ public function deleteBestEaten($id)
 
     return redirect()->back();
 }
+
+
+public function deleteOrderMode($id)
+{
+    $medcon = BestEaten::where('be_id', $id)->delete();
+
+    return redirect()->back();
+}
+
+
+public function deleteHealthGoal($id)
+{
+    $medcon = BestEaten::where('be_id', $id)->delete();
+
+    return redirect()->back();
+}
+
+public function deleteLifestyle($id)
+{
+    $medcon = BestEaten::where('be_id', $id)->delete();
+
+    return redirect()->back();
+}
+
+
+public function deleteRestriction($id)
+{
+    $medcon = BestEaten::where('be_id', $id)->delete();
+
+    return redirect()->back();
+}
+
+
+public function deletePlannedPreparation(Request $request)
+{
+    $medcon = Preparation::where('p_id', $request['id'])->delete();
+
+    return redirect()->back();
+}
+
+public function deletePlannedMeasurement(Request $request)
+{
+    $medcon = UnitMeasurement::where('um_id', $request['id'])->delete();
+
+    return redirect()->back();
+}
+
+public function deletePlannedBestEaten($id)
+{
+    $medcon = BestEaten::where('be_id', $id)->delete();
+
+    return redirect()->back();
+}
+
+
 
 public function recommendation() {
  $dishes = \App\Dish::all()->load('nfacts');

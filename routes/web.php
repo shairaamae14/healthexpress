@@ -119,7 +119,7 @@ Route::prefix('cook')->group(function() {
 	Route::post('/register', 'Auth\CookRegisterController@create')->name('cook.register.submit');
 	Route::get('/', 'CookController@index')->name('cook.dashboard');
 	Route::post('/', 'CookController@index')->name('cook.sort');
-	Route::get('/logout', 'Auth\CookLoginController@logout')->name('cook.logout');
+	Route::post('/logout', 'Auth\CookLoginController@logout')->name('cook.logout');
 	
 	//Password reset routes
 	Route::post('/password/email', 'Auth\CookForgotPasswordController@sendResetLinkEmail')->name('cook.password.email');
@@ -168,7 +168,7 @@ Route::prefix('cook')->group(function() {
         
 });
 
-Route::get('/matrix', 'AdminController@matrix')->name('matrix');
+
 //Admin
 Route::prefix('admin')->group(function() {
 	Route::get('/', 'AdminController@index')->name('admin.home');
@@ -179,7 +179,12 @@ Route::prefix('admin')->group(function() {
 	// Registration routes
 	Route::get('/login', 'Auth\AdminLoginController@show')->name('admin.login');
 	Route::post('/login', 'Auth\AdminLoginController@login')->name('admin.login.submit');
-	Route::get('/logout', 'Auth\AdminLoginController@logout')->name('admin.logout');
+	Route::post('/logout', 'Auth\AdminLoginController@logout')->name('admin.logout');
+
+	// Route::get('/matrix', 'AdminController@matrix')->name('matrix');
+	Route::get('/useradds', 'AdminController@user_side')->name('admin.user.addtl');
+	Route::get('/orderadds', 'AdminController@order_side')->name('admin.order.addtl');
+
 	//Add
 	Route::post('/addAllergen', 'AdminController@storeAllergens')->name('add.allergen');
 	Route::post('/addMedcon', 'AdminController@storeMedCon')->name('add.medcon');
@@ -187,17 +192,48 @@ Route::prefix('admin')->group(function() {
 	Route::post('/addMeasurement', 'AdminController@storeMeasurement')->name('add.measure');
 	Route::post('/addBestEaten', 'AdminController@storeBestEaten')->name('add.best');
 	Route::post('/addTolerance', 'AdminController@storeTolerance')->name('add.tolerance');
+	Route::post('/addOrderMode', 'AdminController@storeMode')->name('add.mode');
+	Route::post('/addHealthGoals', 'AdminController@storeHealthGoal')->name('add.healthgoal');
+	Route::post('/addLifeStyle', 'AdminController@storeLifestyle')->name('add.lifestyle');
+	Route::post('/addMedConRestrictions', 'AdminController@storeRestriction')->name('add.restriction');
+
+	//Add Plan
+	Route::post('/planned/addPreparation', 'AdminController@storePlannedPreparation');
+	Route::post('/planned/addMeasurement', 'AdminController@storePlannedMeasurement');
+	Route::post('/planned/addBestEaten', 'AdminController@storePlannedBestEaten');
+
+	//Update Plan
+	Route::post('/planned/updatePreparation', 'AdminController@updatePlannedPreparation');
+	Route::post('/planned/updateMeasurement', 'AdminController@updatePlannedMeasurement');
+	Route::post('/planned/updateBestEaten', 'AdminController@updatePlannedBestEaten');
+
 	//Update
 	Route::post('/updateAllergen/{id}', 'AdminController@updateAllergens')->name('update.allergen');
 	Route::post('/updateMedCon/{id}', 'AdminController@updateMedCon')->name('update.medcon');
 	Route::post('/updatePreparation/{id}', 'AdminController@updatePreparation')->name('update.prep');
 	Route::post('/updateMeasurement/{id}', 'AdminController@updateMeasurement')->name('update.measure');
 	Route::post('/updateBestEaten/{id}', 'AdminController@updateBestEaten')->name('update.best');
+	Route::post('/updateOrderMode/{id}', 'AdminController@updateMode')->name('update.mode');
+	Route::post('/updateHealthGoals/{id}', 'AdminController@updateHealthGoal')->name('update.goals');
+	Route::post('/updateLifestyle/{id}', 'AdminController@updateLifestyle')->name('update.lifestyle');
+	Route::post('/updateMedConRestricions/{id}', 'AdminController@updateRestriction')->name('update.restriction');
+
+
+	//Delete Plan
+	Route::post('/planned/deletePreparation', 'AdminController@deletePlannedPreparation');
+	Route::post('/planned/deleteMeasurement', 'AdminController@deletePlannedMeasurement');
+	Route::post('/planned/deleteBestEaten', 'AdminController@deletePlannedBestEaten');
+
 	//Delete
-	Route::post('/deleteAllergen' , 'CoachingFormController@deleteAllergen');
-	Route::post('/deleteMedCon' , 'CoachingFormController@deleteMedCon');
-	Route::post('/deletePreparation' , 'CoachingFormController@deletePreparation');
-	Route::post('/deleteMeasurement' , 'CoachingFormController@deleteMeasurement');
-	Route::post('/deleteBestEaten' , 'CoachingFormController@deleteBestEaten');
+	Route::post('/deleteAllergen' , 'AdminController@deleteAllergen');
+	Route::post('/deleteMedCon' , 'AdminController@deleteMedCon');
+	Route::post('/deletePreparation' , 'AdminController@deletePreparation');
+	Route::post('/deleteMeasurement' , 'AdminController@deleteMeasurement');
+	Route::post('/deleteBestEaten' , 'AdminController@deleteBestEaten');
+	Route::post('/deleteOrderMode', 'AdminController@deleteOrderMode');
+	Route::post('/deleteHealthGoal', 'AdminController@deleteHealthGoal');
+	Route::post('/deleteLifestyle', 'AdminController@deleteLifestyle');
+	Route::post('/deleteRestrictions', 'AdminController@deleteRestriction');
+
 
 });
