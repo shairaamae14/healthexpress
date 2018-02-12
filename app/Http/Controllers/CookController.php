@@ -154,7 +154,7 @@ class CookController extends Controller
 
      public function cookviewrating(){
         $cid  = Auth::id();
-    $cookrev=Cook::where('id', $cid)->get();
+    $cookrev=Cook::where('id', $cid)->get()->paginate(6);
     // dd($cookrev);        
 
     return view('cook.cookreviews', compact('cookrev'));

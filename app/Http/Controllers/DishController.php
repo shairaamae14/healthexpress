@@ -643,7 +643,7 @@ class DishController extends Controller
 
      public function viewrating($id){
     // dd($id);
-    $rate=Ratings::join('users', 'users.id', '=', 'dish_ratings.user_id')->where('dish_id', $id)->get();
+    $rate=Ratings::join('users', 'users.id', '=', 'dish_ratings.user_id')->where('dish_id', $id)->paginate(6);
     $avg=Dish::where('did', $id)->get();
    
     return view('cook.reviews', compact('rate', 'avg'));
