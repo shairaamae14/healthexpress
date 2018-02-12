@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Redirect;
 use Hash;
 use Illuminate\Support\Facades\Auth;
+use Image;
 
 class UserProfController extends Controller
 {
@@ -82,16 +83,25 @@ public function storeUserImg(Request $request){
   $file = $request->file('img');
   $file2 = $request->input('img');
         // dd($request);
+  // $img = Image::make('public/foo.jpg')->resize(200, 200)->insert('public/.png');
   if($file != null)
   {
 
-    $img = $this->uploadImage($file);
+        $imagename = $file->getClientOriginalExtension(); 
+   
+        $destinationPath = public_path('/user_imgs');
+        $thumb_img = Image::make($file->getRealPath())->fit(200);
+        $thumb_img->save($destinationPath.'/'.$imagename);
+                    
+        $img = $imagename;
+
 
   }
   else 
   {
 
     $img = $file2;
+    
   }
   $image = User::where('id', $id)
   ->update(['profpic' =>  $img]);
