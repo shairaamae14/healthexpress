@@ -22,74 +22,71 @@
 @section('content')
 
 <!-- Content Wrapper. Contains page content -->
-    <div class="content-wrapper">
-        <!-- Content Header (Page header) -->
-        <section class="content-header">
-             <h1>{{$page_title}}</h1>
-            <ol class="breadcrumb">
-                <li class="active"><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            </ol>
-        </section>
-       <br> 
-        <section class="content">
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>{{$page_title}}</h1>
+        <ol class="breadcrumb">
+            <li class="active"><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+        </ol>
+    </section>
+    <br> 
+    <section class="content">
+<center>
+
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-green"><i class="ion ion-ios-cart-outline" style="margin-top:20px"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Sales</span>
+              <span class="info-box-number">{{count($sales)}}</span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-yellow"><i class="ion ion-spoon" style="margin-top:20px"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Pending</span>
+              <span class="info-box-number">{{count($pendingem)+count($pendingpm)}}</span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <br><br><br><br><br><br>
+
+
+
+
+
         <div class="box">
             <div class="box-body">
-                <form id ="sortorder" action =" {{url('cook/')}}" method ='POST'>
-                    {{csrf_field()}}
-                <div class="form-inline">
-                    <select id="chooseStatus" class="form-control" name="chooseStatus">
-                        <option value="none" class="w" selected disabled hidden>Sort Orders</option>
-                        <option value="All" class="w" value = "All">All</option>
-                        <option value="Pending" class="w" value = "Pending">Pending</option>
-                        <option value="Cooking" class="w" value = "Ongoing">Cooking</option>
-                        <option value="Delivering" class="w" value = "Complete">Delivering</option>
-                         <option value="Completed" class="w" value = "Complete">Completed</option>
-                    </select>
-                </div>
-                </form>
+                <h4><b>Express Orders Pending</b></h4>
                 <div class="table-responsive">
                     <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                         <thead>
                             <tr>
                                 <th>Name</th>
-                                <th>Order(s)</th>
+                                <th>Date Range</th>
                                 <th>Order Mode</th>
-                                <th>Date & Time Ordered</th>
-                                <th>Status</th>
                                 <th class="disabled-sorting text-right">Action</th>
                                 
                             </tr>
                         </thead>
                         <tbody>
-                            @if($orders)
-                            @foreach($orders as $order)
+                            @if($pendingem)
+                            @foreach($pendingem as $order)
                             <tr>
-                                <td>{{$order->user->fname}} {{$order->user->lname}}</td>
-                                <td>{{$order->dishes[0]['dish_name']}}</td>
-                                <td>{{$order->order->order_mode->om_name}}</td>
-                                <td>{{date_format($order->created_at,'F d Y h:i:s A')}}</td>
-                                @if($order->order_status == 'Pending')
-                                <td><span class="label label-default">Pending</span></td>
-                                <td class="text-right">
-                                    <button class="btn btn-default btn-flat" data-toggle="modal" data-target="#view_details{{$order->user_id}}">View Details</button>
-                                    <button class="btn btn-default btn-flat" data-toggle="tooltip" data-placement="top" title="Change to Cooking" onclick="cooking({{$order->uo_id}})" id="Cooking" value="Cooking">Cooking</button>
-                                </td>
-                                @elseif($order->order_status == 'Cooking')
-                                <td><span class="label label-warning">Cooking</span></td>
-                                <td class="text-right">
-                                    <button class="btn btn-default btn-flat" data-toggle="modal" data-target="#view_details{{$order->user_id}}">View Details</button>
-                                    <button class="btn btn-default btn-flat" onclick="delivering({{$order->uo_id}})" id="Done" value="Done" data-toggle="tooltip" data-placement="top" title="Change to Delivering">Deliver</button></a>
-                                </td>
-                                @elseif($order->order_status == 'Delivering')
-                                <td><span class="label label-info">Delivering</span></td>
-                                <td class="text-right">
-                                    <button class="btn btn-default btn-flat" data-toggle="modal" data-target="#view_details{{$order->user_id}}">View Details</button>
-                                    Waiting for customer response.
-                                </td>
-                                @else
-                                <td><span class="label label-success">Complete</span></td>
-                                <td class="text-right">Done</td>
-                                @endif
+                                <td>{{$order->fname}} {{$order->lname}}</td>
+                                <td>{{ Carbon\Carbon::parse($order->start)->format('F d Y H:m:s') }}</td>
+                                <td>{{$order->om_name}}</td>
+                                <td><button class="btn btn-default btn-flat"><a href="{{route('cook.expressorders',['id' => $order->user_id, 'planid'=>$order->plan_id])}}">View Details</a></button></td>
                             </tr>
                             @endforeach
                             @endif
@@ -98,6 +95,42 @@
                 </div>              
             </div>
         </div>
+
+        <div class="box">
+            <div class="box-body">
+                <h4><b>Planned Meal Orders Pending</b></h4>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Date Range</th>
+                                <th>Order Mode</th>
+                                <th class="disabled-sorting text-right">Action</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if($pendingpm)
+                            @foreach($pendingpm as $order)
+                            <tr>
+                                <td>{{$order->fname}} {{$order->lname}}</td>
+                                <td>{{ Carbon\Carbon::parse($order->start)->format('F d Y H:m:s') }}</td>
+                                <td>{{$order->om_name}}</td>
+                                <td><button class="btn btn-default btn-flat"><a href="{{route('cook.porders',['id' => $order->user_id, 'planid'=>$order->plan_id])}}">View Details</a></button></td>
+                            </tr>
+                            @endforeach
+                            @endif
+                        </tbody>
+                    </table>
+                </div>              
+            </div>
+        </div>
+
+
+
+
+
     </section>
 </div>
 
@@ -192,6 +225,9 @@
 <!-- DataTables -->
 <script src="{{asset('adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
+<!-- jvectormap  -->
+<script src="{{asset('plugins/jvectormap/jquery-jvectormap-1.2.2.min.js')}}"></script>
+<script src="{{asset('plugins/jvectormap/jquery-jvectormap-world-mill-en.js')}}"></script>
 
 
 
@@ -265,6 +301,13 @@
                         Pace.restart();
                     },
                     error: function(xhr,error){
+                        console.log(xhr);
+                    }
+                });
+        }
+
+    </script>
+@endsectionr){
                         console.log(xhr);
                     }
                 });

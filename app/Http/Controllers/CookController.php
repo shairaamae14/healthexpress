@@ -60,10 +60,30 @@ class CookController extends Controller
             $orders = UserOrder::where('user_orders.order_status', $request->input('chooseStatus'))->groupBy('order_date')->orderBy('user_orders.order_date', 'desc')->get(); 
             }
         }
-        
-        // dd($orders);
+        $sales = UserOrder::join('dishes', 'user_orders.dish_id', '=', 'dishes.did')
+                            ->where('order_status','Received')
+                            ->where('authorCook_id', $cid)
+                            ->get();
+        $pendingem = UserOrder::join('users', 'user_orders.user_id', '=', 'users.id')
+                            ->join('orders', 'user_orders.order_id', '=', 'orders.id')
+                            ->join('order_mode', 'orders.om_id', '=', 'order_mode.id')
+                            ->join('dishes', 'user_orders.dish_id', '=', 'dishes.did')
+                            ->whereBetween('user_orders.created_at', [\Carbon\Carbon::today()->startOfWeek(), \Carbon\Carbon::today()->endOfWeek()] )
+                            ->where('authorCook_id',$cid)
+                            ->where('user_orders.order_status', 'Pending')
+                            ->get();
+        $pendingpm = PlannedMeals::join('users', 'planned_meals.user_id', '=', 'users.id')
+                            ->join('order_mode', 'planned_meals.om_id', '=', 'order_mode.id')
+                            ->join('dishes', 'planned_meals.dish_id', '=', 'dishes.did')
+                            ->whereBetween('planned_meals.created_at', [\Carbon\Carbon::today()->startOfWeek(), \Carbon\Carbon::today()->endOfWeek()] )
+                            ->where('authorCook_id',$cid)
+                            ->where('planned_meals.p_status', 'Pending')
+                            ->get();
+
+
+        // dd($pending);
         // $details = $details->merge($dishes)->merge($orders)->merge($oid);
-        return view('dashboard',compact('page_title','orders','dishes','oid'));
+        return view('dashboard',compact('page_title','orders','dishes','oid','sales','pendingem','pendingpm'));
     }
 
     public function showOrders()
@@ -154,7 +174,7 @@ class CookController extends Controller
 
      public function cookviewrating(){
         $cid  = Auth::id();
-    $cookrev=Cook::where('id', $cid)->get()->paginate(6);
+    $cookrev=Cook::where('id', $cid)->get();
     // dd($cookrev);        
 
     return view('cook.cookreviews', compact('cookrev'));
