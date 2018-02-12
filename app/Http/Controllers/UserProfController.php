@@ -114,10 +114,9 @@ return $img;
 
 public function storeAllergen(Request $request){
   $id=Auth::user()->id;
-    for($k = 0; $k < count($request['allergen']); $k++) {
-  $useraller=UserAllergen::where('user_id', $id)->where('allergen_id', $request['allergen'][$k])->get();
-  }
-  if($useraller->isEmpty()){
+    for($k=0; $k < count($request['allergen']); $k++) {
+  $useraller[$k]=UserAllergen::where('user_id', $id)->where('allergen_id', $request['allergen'][$k])->get();
+  if($useraller[$k]->isEmpty()){
            for($i =0; $i < count($request['allergen']); $i++) {
                 $allergen=UserAllergen::create(['user_id' =>$id,
                                                 'allergen_id' => $request['allergen'][$i],
@@ -128,6 +127,11 @@ public function storeAllergen(Request $request){
         else {
               return Redirect::back()->withErrors(['Selected allergen/s already exist.']);
         }
+}
+  
+
+        
+
          return redirect()->route('user.profile', compact('id', 'user'))->with('success', 'You have succesfully added  allergen/s!');
       }
 

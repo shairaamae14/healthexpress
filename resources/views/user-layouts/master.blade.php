@@ -25,10 +25,11 @@
     <link href="{{asset('customer/assets/css/demo.css')}}" rel="stylesheet" />
        <link href="{{asset('css/card.css')}}" rel="stylesheet" />
        <link rel="stylesheet" type="text/css" href="{{asset('css/pace-theme-minimal.css')}}">
-
-
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+  <link rel="stylesheet" href="{{asset('css/dropify.min.css')}}">
     <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
 
+@yield('heading')
   <style>
     pre.prettyprint{
         background-color: #eee;

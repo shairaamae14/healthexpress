@@ -105,7 +105,7 @@ display: inline-block;
        <div class="container">
           <div class="row"> 
             <div class="profile" >
-              @if($user->profic)
+              @if($user->profpic)
                 <div class="avatar">
                      <center>
                    <div style="width:200px; height:200px; margin-top: -100px; background-color:#30BB6D; border-radius: 100px; border:2px white solid;">
@@ -121,7 +121,7 @@ display: inline-block;
                 </div>
               @endif
                    <br>
-                   <center><button class="btn btn-success" data-toggle="modal" data-target="#myModal9{{$user->id}}" style="background-color:#30BB6D">Upload image</button>
+                    <center><button class="btn btn-success" data-toggle="modal" data-target="#myModal9{{$user->id}}" style="background-color:#30BB6D">Upload image</button>
                    </center>
                 <div class="name">
                   <center><h3 class="title" style="color:#30BB6D">{{Auth::user()->fname." ".Auth::user()->lname}}</h3></center>
@@ -822,6 +822,7 @@ display: inline-block;
 </div>
 <!--end!-->
 <!--Upload Image!-->
+<!--Upload Image!-->
 <div class="modal fade" id="myModal9{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -829,14 +830,17 @@ display: inline-block;
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="myModalLabel"><b>Upload Image</b></h4>
       </div>
-          <form method="post" action="{{route('user.img', ['id'=>Auth::user()->id])}}" enctype="multipart/form-data">    
-             {{csrf_field()}}
-          <div class="modal-body">  
-          <center>
-            <input type="file" class="dropify" data-height="160" data-allowed-file-extensions="jpg jpeg png svg"/ name="img" id="img">
- 
-          </div> <!--MODAL BODY!-->
-          <div class="modal-footer">
+        <form method="post" action="{{route('user.img', ['id'=>Auth::user()->id])}}" enctype="multipart/form-data">    
+           {{csrf_field()}}
+        <div class="modal-body">  
+        <center>
+        @if(!$user->profpic)
+          <input type="file" class="dropify" data-height="160" data-allowed-file-extensions="jpg jpeg png svg"/ name="img" id="img">
+       @else
+       <input type="file" class="dropify" data-height="160" data-default-file="{{asset('user_imgs/'.$user->profpic)}}" data-allowed-file-extensions="jpg jpeg png svg" name="img">
+       @endif
+        </div> <!--MODAL BODY!-->
+        <div class="modal-footer">
               <button type="button" class="btn btn-default btn-simple" data-dismiss="modal">Cancel</button>
               <button type="submit" class="btn btn-info btn-simple" style="color:#30BB6D">Save</button>
          </div>
@@ -844,6 +848,7 @@ display: inline-block;
     </div>   
   </div>
 </div>
+<!--end!-->
 <!--end!-->
 
 @endsection
@@ -995,6 +1000,15 @@ display: inline-block;
     
     <script>
         $(document).ready(function() {
+              var dropify = $('.dropify').dropify({
+        messages: {
+        'default': 'Drag and drop a file here or click',
+        'replace': 'Drag and drop or click to replace',
+        'remove':  'Remove',
+        'error':   'Ooops, something wrong happened.'
+    }
+       });
+  
             $('.datepicker').datepicker({
                 weekStart:1
             });
