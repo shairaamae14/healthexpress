@@ -233,11 +233,19 @@ public function showDetails($id){
                     ->get();
 
              $nutritional = NutritionFacts::where('ding_id', $id)->get();
-             $ratings = Ratings::where('dish_id', $id)->join('users' , 'users.id', '=' , 'dish_ratings.user_id')->get();
+             $ratings = Ratings::join('user_orders', 'user_orders.uo_id', '=', 'dish_ratings.uorder_id')
+                        ->join('orders', 'orders.id', '=', 'user_orders.order_id')
+                        ->join('dishes', 'dishes.did', '=', 'orders.dish_id')
+                        ->where('dish_id', $id)
+                        ->paginate(5);
 
             // $rate=Ratings::where('dish_id', $id)->get();
-            $avgrate=DishAverage::where('dish_id', $id)
-                                     ->get();
+            $avgrate=DishAverage::join('dish_ratings', 'dish_ratings.id', '=', 'dishrating_avg.dr_id')
+                        ->join('user_orders', 'user_orders.uo_id', '=', 'dish_ratings.uorder_id')
+                        ->join('orders', 'orders.id', '=', 'user_orders.order_id')
+                        ->join('dishes', 'dishes.did', '=', 'orders.dish_id')
+                        ->where('did', $id)
+                        ->get();
 
          return view('user.details', compact('dishes', 'nutritional', 'dish_ingredients', 'ratings', 'avgrate'));
     }
@@ -248,7 +256,7 @@ public function showDetails($id){
             $dishes=Dish::where('authorCook_id', $id)->paginate(12);
               // $dishes = Dish::paginate(12);
 
-              $ratings = CookRating::where('cook_id', $id)->join('users' , 'users.id', '=' , 'cook_ratings.user_id')->get();
+              $ratings = CookRating::where('cook_id', $id)->join('users' , 'users.id', '=' , 'cook_ratings.user_id')->paginate(4);
 
             $rate=CookRating::where('cook_id', $id)->get();
             $avg=0;
