@@ -143,7 +143,7 @@
                   <tbody>
                     <tr>
                       <td class="text-center">{{$pend->totalQty}}</td>
-                      <td><img src="{{url('./dish_imgs/'.$pend->dish_img)}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
+                      <td><img src="{{url('./dish_imgs/'.$pend->orders->dishes['dish_img'])}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
                         {{$pend->dish_name}}
                       </td>
                       <td>Php {{$pend->totalAmount}}</td>

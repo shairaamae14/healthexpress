@@ -7,17 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 class Orders extends Model
 {
     protected $table = 'orders';
-    protected $fillable = ['om_id'];
+    protected $fillable = ['om_id', 'dish_id', 'price', 'quantity'];
 
 
-    public function user() {
-    	return $this->belongsTo('App\User', 'user_id');
+    public function dishes() {
+    	return $this->belongsTo('App\Dish', 'dish_id', 'did');
     }
 
     public function order_mode()
     {
-    	return $this->hasOne('App\OrderMode', 'id', 'om_id');
+    	return $this->belongsTo('App\OrderMode', 'id', 'om_id');
     }
 
+    public function user_orders()
+    {
+    	return $this->hasMany('App\UserOrder', 'order_id', 'id');
+    }
   
 }
