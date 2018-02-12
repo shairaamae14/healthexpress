@@ -126,7 +126,7 @@ class CookController extends Controller
                             ->join('order_mode', 'planned_meals.om_id', '=', 'order_mode.id')
                             ->where('order_status', 'ordered')
                             ->distinct()
-                            ->get(['fname','lname','om_name','user_id','note']);
+                            ->get(['fname','lname','om_name','user_id','note', 'plan_id']);
                             // dd($fetch);
 
 

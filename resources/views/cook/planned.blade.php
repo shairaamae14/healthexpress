@@ -63,34 +63,10 @@
                             @foreach($fetch as $order)
                             <tr>
                                 <td>{{$order->fname}} {{$order->lname}}</td>
-                                {{-- <td>{{$order->dishes[0]['dish_name']}}</td> --}}
-                                <td>Dateeeee</td>
+                                <td>{{ Carbon\Carbon::parse($order->start)->format('F d Y H:m:s') }}</td>
                                 <td>{{$order->om_name}}</td>
-                                {{-- <td>{{date_format($order->created_at,'F d Y h:i:s A')}}</td> --}}
-                                {{-- <td>January 02, 2018 12:30:00 PM</td> --}}
                                 <td><button class="btn btn-default btn-flat"><a href="{{route('cook.planorder',['id' => $order->user_id, 'planid'=>$order->plan_id])}}">View Details</a></button></td>
-                                {{-- @if($order->order_status == 'Pending')
-                                <td><span class="label label-default">Pending</span></td>
-                                <td class="text-right">
-                                    <button class="btn btn-default btn-flat" data-toggle="modal" data-target="#view_details{{$order->user_id}}">View Details</button>
-                                    <button class="btn btn-default btn-flat" data-toggle="tooltip" data-placement="top" title="Change to Cooking" onclick="cooking({{$order->uo_id}})" id="Cooking" value="Cooking">Cooking</button>
-                                </td>
-                                @elseif($order->order_status == 'Cooking')
-                                <td><span class="label label-warning">Cooking</span></td>
-                                <td class="text-right">
-                                    <button class="btn btn-default btn-flat" data-toggle="modal" data-target="#view_details{{$order->user_id}}">View Details</button>
-                                    <button class="btn btn-default btn-flat" onclick="delivering({{$order->uo_id}})" id="Done" value="Done" data-toggle="tooltip" data-placement="top" title="Change to Delivering">Deliver</button></a>
-                                </td>
-                                @elseif($order->order_status == 'Delivering')
-                                <td><span class="label label-info">Delivering</span></td>
-                                <td class="text-right">
-                                    <button class="btn btn-default btn-flat" data-toggle="modal" data-target="#view_details{{$order->user_id}}">View Details</button>
-                                    Waiting for customer response.
-                                </td>
-                                @else
-                                <td><span class="label label-success">Complete</span></td>
-                                <td class="text-right">Done</td>
-                                @endif --}}
+                                
                             </tr>
                             @endforeach
                             @endif
