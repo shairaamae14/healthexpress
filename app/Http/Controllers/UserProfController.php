@@ -133,14 +133,12 @@ public function storeAllergen(Request $request){
                                                 'tolerance_level' =>$request['tolerance'][$i],
                                                 'status' => 1]);
         }
+         return redirect()->route('user.profile', compact('id', 'user'))->with('success', 'You have succesfully added  allergen/s!');
       }
         else {
               return Redirect::back()->withErrors(['Selected allergen/s already exist.']);
         }
-}
-  
-
-        
+     }
 
          return redirect()->route('user.profile', compact('id', 'user'))->with('success', 'You have succesfully added  allergen/s!');
       }
@@ -156,6 +154,7 @@ public function storeMedcon(Request $request, $id){
                                              'medcon_id' => $request['medcon'][$j],
                                              'status' => 1]);
         }
+         return redirect()->route('user.profile', compact('id', 'user'))->with('success', 'You have successfully added medical condition/s !');
       }
      else{
        return Redirect::back()->withErrors(['Selected medical condition/s already exist.']);
