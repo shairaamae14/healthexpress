@@ -124,7 +124,7 @@ fieldset{
     <fieldset>
         <legend>Dish Details</legend>
             <div class="form-group col-md-4">
-              <input type="file" class="dropify" data-height="160" data-allowed-file-extensions="jpg jpeg png svg"/ name="img" id="img">
+              <input type="file" class="dropify" data-height="160" data-allowed-file-extensions="jpg jpeg png svg" name="img" id="img"/>
         </div>
 
         <div class="form-group col-md-3">
