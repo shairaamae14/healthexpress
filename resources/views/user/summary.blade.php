@@ -22,14 +22,19 @@
 @import url('https://fonts.googleapis.com/css?family=Archivo+Black');
 @import url('https://fonts.googleapis.com/css?family=Lato');
 
-    #map {
+    /*#map {
         height:250px;
         width:250px;
      
-       /* width:450px;
-       */
+       //width:450px;
+       
         
-    }
+    }*/
+
+    #map{
+  width:500px;
+  height:300px;
+  padding-bottom:5px}
     
     .help{
         color:#4caf50;
@@ -161,22 +166,85 @@ input[type="text"], input[type="number"], #mode {
 <br>
 @foreach($data as $order)
   @foreach($order->dishes as $d)
-<div id="fullCalModal{{$order->pm_id}}" class="modal fade pull-left mdl" style="align-content: center">
+  <div id="fullCalModal{{$order->pm_id}}" class="modal fade pull-left mdl" style="align-content: center">
     <div class="modal-dialog" style="float:center; margin-right: 1500px;">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span class="sr-only">close</span></button>
-                <h4 class="text-center" style="color:white; background-color: #4caf50">{{$order->title}}</h4>
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span class="sr-only">close</span></button>
+          <h4 class="text-center" style="color:white; background-color: #4caf50">{{$order->title}}</h4>
+        </div>
+        <form action="{{route('user.setDetails')}}" method="post">
+        {{csrf_field()}}
+          <input type="hidden" name="pm_id" id="pm_id" value="{{$order->pm_id}}">
+          <div id="modalBody" class="modal-body col-md-12 modall"> 
+
+
+            <div class="col-md-12 details">
+
+              <label style="float:center; font-size:15px; color:black">
+                  <b>&nbsp;Mode of Delivery:</b></label>
+                  <select name="mode" class="mode form-control" id="mode" style="width:450px">
+                    <option value="Delivery">Delivery</option>
+                    <option value="Pickup">Pick up</option>
+                  </select>
+                  <div class="address" id="address">  
+                    <div id="del" class="del" hidden>
+                      <label style="float:center; font-size:15px; color:black">
+                      <b>&nbsp;Delivery Address:</b></label>
+                      <br>
+                      <input type="checkbox" class="defaultadd" id="defaultadd">&nbsp;Use default address
+                      <input type="text" name="d_address" class="form-control has-success loc" id="location{{$order->pm_id}}" style="width:450px" value="{{$order->address}}">
+                      <input type="hidden" id="city" name="city" />
+                      <input type="hidden" id="cityLat{{$order->pm_id}}" name="cityLat" class="cityLat"/>
+                      <input type="hidden" id="cityLng{{$order->pm_id}}" name="cityLng" class="cityLng"/>
+                      <input type="hidden" id="dish_id" value="{{$order->pm_id}}">
+                      <center><div id="map{{$order->pm_id}}" class="map" style="height:200px"></div>
+                    </div>
+                    <div id="pick" class="pick" hidden>
+                      <label style="float:center; font-size:15px; color:black">
+                      <b>&nbsp;Pick-Up Address:</b></label>&nbsp;<br>
+                      <label style="color: #4caf50; font-size: 20px"><b>{{$d->cook['c_location']}}</b></label>
+                      <input type="hidden" id="city" name="city" />
+                      <input type="hidden" id="cityLat" name="cityLatp" value="{{$d->cook['latitude']}}"/>
+                      <input type="hidden" id="cityLng" name="cityLngp" value="{{$d->cook['longitude']}}" />
+                      <input type="hidden" name="p_address" value="{{$d->cook['location']}}">
+                    </div>
+                    <br>
+                    <label style="float:center; font-size:15px; color:black">
+                    <b>&nbsp;Contact number:</b><br>
+                    <input type="checkbox" class="defaultnum" id="defaultnum">&nbsp;Use default contact number
+                    <input type="text" name="contactnum" class="form-control has-success numfield" placeholder="Enter your contact number" value="{{$order->contact_num}}">
+                    </label><br>
+                  </div>
+                  <label style="float:center; font-size:15px; color:black">
+                  <b>&nbsp;Do you have any specifications?</b></label>
+                  <input type='text' name="spec" class='form-control has-success' style='width:250px;' value="{{$order->sidenote}}">
+
+              
+
+
+
+
             </div>
-             <form action="{{route('user.setDetails')}}" method="post">
-            {{csrf_field()}}
-            <input type="hidden" name="pm_id" id="pm_id" value="{{$order->pm_id}}">
-            <div id="modalBody" class="modal-body col-md-12 modall"> 
-              <div class="col-md-12 details">
-             <div class="col-md-12"><center>
-                  <img src="{{url('./dish_imgs/'.$d['dish_img'])}}" style="width:150px; height:150px; border:2px solid #F0F0F0; border-radius: 10px"><br>
-                 </div><br><center>
-             <div class="col-md-12">
+
+
+
+
+            <div class="col-md-12">
+              <center><button type="button" class="btn btn-flat btn-success btn-md set" id="setdetails" style="margin-bottom:50px;">SEE DISH DETAILS</button></center>
+              <div class="askq" hidden>
+
+
+
+
+                
+
+
+
+                  <div class="col-md-12"><center>
+                <img src="{{url('./dish_imgs/'.$d['dish_img'])}}" style="width:150px; height:150px; border:2px solid #F0F0F0; border-radius: 10px"><br>
+              </div><br><center>
+              <div class="col-md-12">
                 <label style="float:center; font-size:15px; color:black">
                   <b style="color: #4caf50">&nbsp; Meal For:</b>
                   @foreach($order->dishes as $db)
@@ -194,9 +262,9 @@ input[type="text"], input[type="number"], #mode {
                   <label style="float:center; font-size:15px; color:black">
                     <b style="color: #4caf50">&nbsp; Price:</b>
                 @if($d['sellingPrice'])
-                    &nbsp;{{$d['sellingPrice']}}
+                  &nbsp;{{$d['sellingPrice']}}
                 @else
-                    &nbsp;None
+                  &nbsp;None
                 @endif    
                 </label><br>
                    <label style="float:center; font-size:15px; color:black">
@@ -236,63 +304,30 @@ input[type="text"], input[type="number"], #mode {
                 @endif    
                 </label><br>
              </div>
+
+
+
+
+
+                </div>
               </div>
-              <div class="col-md-12">
-              <center><button type="button" class="btn btn-flat btn-success btn-md set" id="setdetails" style="margin-bottom:50px;">SET DETAILS</button></center>
-              <div class="askq" hidden>
-                <label style="float:center; font-size:15px; color:black">
-                  <b>&nbsp;Mode of Delivery:</b></label>
-                  <select name="mode" class="mode form-control" id="mode" style="width:450px">
-                    <option value="Delivery">Delivery</option>
-                    <option value="Pickup">Pick up</option>
-                  </select>
-                  <div class="address" id="address">  
-                    <div id="del" class="del" hidden>
-                      <label style="float:center; font-size:15px; color:black">
-                      <b>&nbsp;Delivery Address:</b></label>
-                      <br>
-                      <input type="checkbox" class="defaultadd" id="defaultadd">&nbsp;Use default address
-                      <input type="text" name="d_address" class="form-control has-success loc" id="location{{$order->pm_id}}" style="width:450px" value="{{$order->address}}">
-                      <input type="hidden" id="city" name="city" />
-                      <input type="hidden" id="cityLat{{$order->pm_id}}" name="cityLat" class="cityLat"/>
-                      <input type="hidden" id="cityLng{{$order->pm_id}}" name="cityLng" class="cityLng"/>
-                      <input type="hidden" id="dish_id" value="{{$order->pm_id}}">
-                      <center><div id="map{{$order->pm_id}}" class="map" style="height:200px"></div>
-                    </div>
-                    <div id="pick" class="pick" hidden>
-                      <label style="float:center; font-size:15px; color:black">
-                      <b>&nbsp;Pick-Up Address:</b></label>&nbsp;<br>
-                      <label style="color: #4caf50; font-size: 20px"><b>{{$d->cook['location']}}</b></label>
-                      <input type="hidden" id="city" name="city" />
-                      <input type="hidden" id="cityLat" name="cityLatp" value="{{$d->cook['latitude']}}"/>
-                      <input type="hidden" id="cityLng" name="cityLngp" value="{{$d->cook['longitude']}}" />
-                      <input type="hidden" name="p_address" value="{{$d->cook['location']}}">
-                    </div>
-                  <br>
-                  <label style="float:center; font-size:15px; color:black">
-                  <b>&nbsp;Contact number:</b><br>
-                  <input type="checkbox" class="defaultnum" id="defaultnum">&nbsp;Use default contact number
-                  <input type="text" name="contactnum" class="form-control has-success numfield" placeholder="Enter your contact number" value="{{$order->contact_num}}">
-                  </label><br>
-                  </div>
-                  <label style="float:center; font-size:15px; color:black">
-                  <b>&nbsp;Do you have any specifications?</b></label>
-                  <input type='text' name="spec" class='form-control has-success' style='width:250px;' value="{{$order->sidenote}}">
-              </div>
+
+
+
+
+
+
+
             </div>
-            </div>
-            
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-success btnsave" disabled>Save Changes</button>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-success btnsave">Save Changes</button>
             </div>
-            </form>
-            </div>
+          </form>
         </div>
+      </div>
     </div>
-
-
-@endforeach
+  @endforeach
 @endforeach
 <script src='https://code.jquery.com/jquery-1.11.2.min.js'></script>
 <script src='https://code.jquery.com/ui/1.11.2/jquery-ui.min.js'></script>
@@ -303,38 +338,29 @@ input[type="text"], input[type="number"], #mode {
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOkRKO79rw8RrYgfrMgqIz2du240Uyz6U&libraries=places&callback=initMap" async defer></script>
 
 <script>
-// $(document).ready(function() {
-// $(".modall").on("shown.bs.modal", function(e) {
-//       google.maps.event.trigger(map, "resize");
-//        return map.setCenter(latLng);
-// });     });
 
   function initMap(id) {
-
-
         var latLng = new google.maps.LatLng(10.3157007,123.88544300000001 );
         var mapOptions = {
             zoom:13,
             center: latLng
         }
-      
-
         var map = new google.maps.Map(document.getElementById('map'+id), mapOptions);
         var card = document.getElementById('pac-card');
         var input = document.getElementById('location'+id);
+        var types = document.getElementById('type-selector');
+        var strictBounds = document.getElementById('strict-bounds-selector');
         var options = {
                         componentRestrictions: {country: 'ph'}
                       }; 
 
         map.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
-        // map2.controls[google.maps.ControlPosition.TOP_RIGHT].push(card);
+        $('#fullCalModal'+id).on('shown.bs.modal', function() {
+          var currentCenter = map.getCenter();  // Get current center before resizing
+          google.maps.event.trigger(map, "resize");
+          map.setCenter(currentCenter); // Re-set previous center
+        });
         var autocomplete = new google.maps.places.Autocomplete(input, options);
-        
-
-    // $('#fullCalModal'+id).on('shown.bs.modal', function () {
-    //     google.maps.event.trigger(map, 'resize');
-    //     // map.setCenter(center);
-    //   });
         // Bind the map's bounds (viewport) property to the autocomplete object,
         // so that the autocomplete requests use the current map bounds for the
         // bounds option in the request.
@@ -414,23 +440,7 @@ input[type="text"], input[type="number"], #mode {
             ].join(' ');
           }
           
-
-
-          // infowindowContent.children['place-icon'].src = place.icon;
-          // infowindowContent.children['place-name'].textContent = place.name;
-          // infowindowContent.children['place-address'].textContent = address;
-          // infowindow.open(map, marker);
-        });
-
- $('#fullCalModal'+id).on('shown.bs.modal', (e) => {
-    this.resizeMap();
-     });
-     function resizeMap() {
-    var map = new google.maps.Map(document.getElementById('map'+id), this.options);
-    google.maps.event.trigger(map, "resize");
-     }
-
-       
+        });       
       }
 
  
@@ -457,14 +467,12 @@ $(document).ready(function() {
           dragRevertDuration: 0,
           
           eventClick:  function(event, jsEvent, view) {
-             var id= event.pm_id;
-              // alert(id);
+            var id= event.pm_id;
+            initMap(id);
             $('#modalTitle').html(event.title);
             $('#modalBody').html(event.description);
             $('#eventUrl').attr('href',event.url);
             $('#fullCalModal'+id).modal();
-            initMap(id);
-            // resize(id);
           },
          
 
@@ -542,107 +550,86 @@ $(document).ready(function() {
 
 <script>
 $(document).ready(function(){
-
-   $('.set').click(function(){
-      $('.details').attr('hidden', 'hidden');
-      $('.askq').removeAttr('hidden');
-      $(this).attr('disabled', 'disabled');
-        $('.btnsave').removeAttr('disabled');
-         // $('.btnsave').removeAttr('hidden');
-        $('.lblset').removeAttr('hidden');
-        $('.showdet').removeAttr('hidden');
+  $('.set').click(function(){
+    $('.details').attr('hidden', 'hidden');
+    $('.askq').removeAttr('hidden');
+    $(this).attr('disabled', 'disabled');
+    $('.lblset').removeAttr('hidden');
+    $('.showdet').removeAttr('hidden');
       
-    });
-   // $('.fc-event').each(function(){
-   //  console.log('hi');
-   // });
-  $('.mode').change(function(e){
-      ChangeDrop(this);
-      var id=$('.dish_id').val();
-      alert(id);
-       $('#fullCalModal'+id).modal({
-        backdrop: 'static',
-        keyboard: false
-    }).on('shown.bs.modal', function () {
-        google.maps.event.trigger(map, 'resize');
-        map.setCenter(center);
-    });
-
- 
-        });
-
- $(".mode").each(function(){
-          ChangeDrop(this);
-    
-        });
   });
+  $('.mode').change(function(e){
+    ChangeDrop(this);
+    var id=$('.dish_id').val();
+    $('#fullCalModal'+id).modal({
+      backdrop: 'static',
+      keyboard: false
+    }).on('shown.bs.modal', function () {
+      var currentCenter = map.getCenter();  // Get current center before resizing
+      google.maps.event.trigger(map, "resize");
+      map.setCenter(currentCenter); // Re-set previous center
+    });
+  });
+
+  $(".mode").each(function(){
+    ChangeDrop(this);
+  });
+});
 
       
 function ChangeDrop(mode){
-              var val = $(mode).val();
-              var id  = $('#dish_id').val();
-              var div = $(mode).parent().find('.address')[0];
+  var val = $(mode).val();
+  var id  = $('#dish_id').val();
+  var div = $(mode).parent().find('.address')[0];
               
-              if(val=="Delivery"){
-                $('.del').removeAttr('hidden');
-                $('.pick').attr('hidden', 'hidden');
-                 
-  
-              }
-              else if (val=="Pickup"){
-                $('.pick').removeAttr('hidden');
-                $('.del').attr('hidden', 'hidden');
-              }
-               
-    $(div).find(".defaultadd").change(function(){
-            if ($(this).is(":checked")){
-                 $(div).find('.loc').val('{{$order->user["location"]}}');
-                 $(div).find('.cityLat').val('{{$order->user["latitude"]}}');
-                 $(div).find('.cityLng').val('{{$order->user["longitude"]}}');
-            }else{
-                $(div).find('.loc').val('');
-                $(div).find('.loc').attr('placeholder', 'Enter your desired location')
-            }
-            });              
-     $(div).find(".defaultnum").change(function(){
-            if ($(this).is(":checked")){
-                 $(div).find('.numfield').val('{{$order->user["contact_no"]}}');
-            }else{
-                $(div).find('.numfield').val('');
-                $(div).find('.numfield').attr('placeholder', 'Enter your contact number')
-            }
-            });              
+  if(val=="Delivery"){
+    $('.del').removeAttr('hidden');
+    $('.pick').attr('hidden', 'hidden');            
+  }
+  else if (val=="Pickup"){
+    $('.pick').removeAttr('hidden');
+    $('.del').attr('hidden', 'hidden');
+  }             
+  $(div).find(".defaultadd").change(function(){
+    if ($(this).is(":checked")){
+      $(div).find('.loc').val('{{$order->user["location"]}}');
+      $(div).find('.cityLat').val('{{$order->user["latitude"]}}');
+      $(div).find('.cityLng').val('{{$order->user["longitude"]}}');
+    }else{
+      $(div).find('.loc').val('');
+      $(div).find('.loc').attr('placeholder', 'Enter your desired location')
+    }
+  });              
+  $(div).find(".defaultnum").change(function(){
+    if ($(this).is(":checked")){
+      $(div).find('.numfield').val('{{$order->user["contact_no"]}}');
+    }else{
+      $(div).find('.numfield').val('');
+      $(div).find('.numfield').attr('placeholder', 'Enter your contact number')
+    }
+  });              
 }
 </script>
 
 <script type='text/javascript'>
   $(document).ready(function(){
      $('.form_datetime').datetimepicker({
-          //language:  'fr',
-          weekStart: 1,
-          todayBtn:  1,
-      autoclose: 1,
-      todayHighlight: 1,
-      startView: 2,
-      forceParse: 0,
-          showMeridian: 1
+        //language:  'fr',
+        weekStart: 1,
+        todayBtn:  1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        forceParse: 0,
+        showMeridian: 1
       });
    });
 </script> 
 
 
 
-<!-- <script>
-  $(document).ready(function (){
-    $('#btnplan').on('click', function(){
-      $('#content').hide();
-      $('#content2').show();
-    });
-    $('#back').on('click', function() {
-      $('#content2').hide();
-      $('#content').show();x
-    });
-    $('#next').on('click', function() {
+                    
+() {
       $('#content2').hide();
       $('#content3').show();
     });
