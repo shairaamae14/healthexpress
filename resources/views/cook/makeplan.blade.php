@@ -29,7 +29,7 @@ dt{
       <div class="box box-solid" id="error" style="padding:10px; width:70%"> 
         <h1 class="text-left has-success" style="margin:10px">Planned Meal Dishes</h1>
         <p class="text-left" style="margin: 10px"> Please select a dish to include in your planned meal dishes. You may add a new dish.</p>
-        <select class="form-control has-success dishbox" name="dish_id" id="dishbox" style="width:55%; margin: 10px; margin-right: 2px; float:left">
+        <select class="form-control has-success dishbox" name="dish_idsel" id="dishbox" style="width:55%; margin: 10px; margin-right: 2px; float:left">
         @foreach($dishes as $dish)
           <option value="{{$dish->did}}" id="dish" class="dish">{{$dish->dish_name}}
             {{$dish->planned_meals['id']}}
@@ -145,6 +145,22 @@ $(document).ready(function(){
 $('table').on('click','.btnrem ',function(){
    $(this).closest('tr').remove()
 });
+
+// $('.btn-success').on('click', function(){
+//   $.ajax({
+//     method: 'POST',
+//                     url: "{{ url('/cook/orderstat') }}" ,
+//                     dataType: 'json',
+//                     headers: {'X_CSRF_TOKEN': '{{csrf_token()}}'},
+//                     data: {'status':status, 'id':id},
+//                     success: function(json) {
+//                         Pace.restart();
+//                     },
+//                     error: function(xhr,error){
+//                         console.log(xhr);
+//                     }
+//   });
+// });
 
 </script>
 

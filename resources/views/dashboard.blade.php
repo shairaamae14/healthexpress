@@ -40,7 +40,11 @@
 
             <div class="info-box-content">
               <span class="info-box-text">Sales</span>
+              @if($sales)
               <span class="info-box-number">{{count($sales)}}</span>
+              @else
+              <span class="info-box-number">0</span>
+              @endif
             </div>
             <!-- /.info-box-content -->
           </div>
@@ -53,7 +57,11 @@
 
             <div class="info-box-content">
               <span class="info-box-text">Pending</span>
+              @if($pendingem || $pendingpm)
               <span class="info-box-number">{{count($pendingem)+count($pendingpm)}}</span>
+              @else
+              <span class="info-box-number">0</span>
+              @endif
             </div>
             <!-- /.info-box-content -->
           </div>

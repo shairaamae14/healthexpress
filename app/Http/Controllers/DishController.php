@@ -58,17 +58,17 @@ class DishController extends Controller
        public function pmindex()
     {
         $id = Auth::id();
-        
-        $pmdishes = PmealDishes::join('dishes', 'dishes.did','=', 'pm_dishes.dish_id')->where('cook_id', $id)
-                        ->get(); 
-       
+
+        $pmdishes = Dish::where('authorCook_id', $id)
+                        ->where('dish_type','Planned')
+                        ->paginate(10);  
         foreach($pmdishes as $dish) {
             $dbestEaten = DishBestEaten::join('besteaten_at' , 'besteaten_at.be_id', '=' , 'dish_besteaten.be_id')
-              ->where('dish_id', $dish->did)->get();
-        }               
+                                        ->where('dish_id', $dish->did)->get();
+        }   
+
         
-        
-      return view('cook.pmdishes', compact('pmdishes', 'pmdaily', 'pmweekly', 'pmmonthly', 'dbestEaten'));
+      return view('cook.pmdishes', compact('pmdishes', 'dbestEaten','ratings','average'));
     
     }
 
@@ -610,7 +610,7 @@ class DishController extends Controller
 
     public function viewPlan(){
       $id=Auth::id();
-      $dishes=Dish::where('authorCook_id', $id)->where('no_of_servings' , 1)->get();
+      $dishes=Dish::where('authorCook_id', $id)->where('no_of_servings' , 1)->where('dish_type','Planned')->get();
       
       
       return view('cook.makeplan', compact('dishes'));
@@ -620,25 +620,18 @@ class DishController extends Controller
     public function storePlan(Request $request){
       $cook = Auth::user();
       $dish_id= Input::get('dish_id');
-      // dd($plan);
-      // dd($request['dish_id']);
       
       $dish = Dish::findOrFail($dish_id);
+      // dd($dish[1]);
+      // abort(403, 'Unauthorized action.');
+      // $pmeal = Pmealdishes::where('dish_id',$dish_id);
+      // dd($pmeal);
 
-      // for($i=0; $i<count($dish_id);$i++){
-      //    $plan =Pmealdishes::create(['cook_id'=>$cook->id,
-      //                               'dish_id'=>$dish_id[$i],
-      //                                 'dish_name' => $dish_id[$i],
-      //                                 'basePrice' => $request['price'],
-      //                                 'sellingPrice' => $sPrice,
-      //                                 'dish_desc' => $request['dish_desc'],   
-      //                                 'dish_img' => $image,
-      //                                 'preparation_time' => $request['duration'],
-      //                                 'no_of_servings' => $request['serving'],
-      //                                 'status' => 1]);
-      //   }
+        
 
-        return redirect()->route('cook.pmdishes');
+        $pdishes = Pmealdishes::all();
+
+        return redirect()->route('cook.pmdishes', compact('pdishes'));
      }
 
      public function viewrating($id){
@@ -676,15 +669,20 @@ class DishController extends Controller
         $file = $request->file('img');
         
         $image = $this->uploadImage($file);
+        $additional = $request['price'] * .10;
+        $sPrice = $request['price'] + $additional;
 
-        $dish = Pmealdishes::create(['cook_id' => $cook->id, 'dish_name' => $request['dish_name'],
+        $dish = Dish::create(['authorCook_id' => $cook->id, 
+            'dish_name' => $request['dish_name'],
             'basePrice' => $request['price'],
             'sellingPrice' => $sPrice,
             'dish_desc' => $request['dish_desc'],   
             'dish_img' => $image,
             'preparation_time' => $request['duration'],
             'no_of_servings' => $request['serving'],
-            'status' => 1]);
+            'status' => 1,
+            'dish_type' => 'Planned'
+          ]);
 
         for($i = 0 ; $i < count($request['best']); $i++) {
             $bestEaten = DishBestEaten::create(['dish_id' => $dish->did,
@@ -751,6 +749,19 @@ class DishController extends Controller
                             'gram_weight' => '123',
                             'calories' => $energy,
                             'protein' => $protein,
+                            'total_fat' => $total_fat,
+                            'carbohydrate' => $carbs,
+                            'fibre' => $fibre,
+                            'sodium' => $sodium,
+                            'sat_fat' => $sat_fat,
+                            'cholesterol' => $cholesterol  
+
+            ]);
+
+            return redirect()->route('cook.view.plan');
+   }
+}
+               'protein' => $protein,
                             'total_fat' => $total_fat,
                             'carbohydrate' => $carbs,
                             'fibre' => $fibre,

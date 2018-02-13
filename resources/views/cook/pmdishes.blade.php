@@ -30,51 +30,47 @@ dt{
         <section class="content"> 
             <button type="button" class="btn btn-flat btn-success add-dish" onclick="window.location.href='{{route('cook.view.plan')}}'" style="margin-bottom:20px"><i class="fa fa-plus"></i> Create Plan</button><br>
 
-           <div style="width:100%">
-          <div class="nav-tabs-custom">
-            <ul class="nav nav-tabs">
-              <li class="active"><a href="#daily" data-toggle="tab">Daily </a></li>
-              <li><a href="#weekly" data-toggle="tab">Weekly</a></li>
-              <li><a href="#monthly" data-toggle="tab">Monthly</a></li>
-            </ul>
-              <div class="tab-content">
-              <div class="active tab-pane" id="daily">
-                      <div class="box box-solid"> 
-              <div class="box-body">
-                  
-              </div>
-          </div>
-        <!-- Default box!-->
-                
-            </div>
-            <!-- /.tab-pane -->
-            <div class="tab-pane" id="weekly">
-                   <div class="box box-solid"> 
+           <div class="box box-solid"> 
             <div class="box-body">
-            
+                @foreach($pmdishes as $dish)
+                    <div class="col-sm-3 rate">
+                        <div class="box box-solid" style="border-radius: 20px;">
+                            <div class="box-header with-border">
+                                <center>
+                                <img src="{{url('./dish_imgs/'.$dish->dish_img)}}" style="width:150px; height:150px; border:2px solid #F0F0F0">
+                               </center>
+                            </div>
+                            <center>
+                         
+                                    <h4 class="openModal box-title" style="margin-top: 5px; font-size: 15px;"><a href="{{route('cook.dishes.show', ['id' => $dish->did])}}" style="color:#30BB6D">{{$dish['dish_name']}}</a></h4><br>
+                         </center>
+                         <center>
+                          {{-- @if($dish->average['average'])
+                          <label class="ratingbox" id="ratingbox"></label>
+                          <label class="ratingbox2" id="ratingbox2"></label><br>
+                          <input type="hidden" class="ratings" id="rate_{{$dish->average['average']}}" value="{{$dish->average['average']}}">
+                         @else --}}
+                           <center><small>
+                           <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                           <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                           <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                           <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                           <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                          </small></center>
+                         {{-- @endif --}}
+                         <a href="{{route('cook.rating', ['id' => $dish->did])}}">
+                         <p style="font-size: 12px; color:#30BB6D;">See Reviews</p></a>
+                         <a class="btn btn-success" href="{{route('cook.dishes.show', ['id' => $dish->did])}}">View Details</a>
+                        </center>
+                           <br>
+                        </div>
+                    </div>
+            @endforeach
+            </div>
+            <div class="text-center">
+            {{$pmdishes->links()}}
             </div>
         </div>
-      <!-- Default box!-->
-            </div>
-            <!-- /.tab-pane -->
-
-            <div class="tab-pane" id="monthly">
-                     <div class="box box-solid"> 
-            <div class="box-body">
-            
-            </div>
-        </div>
-      <!-- Default box!-->
-            </div>
-            <!-- /.tab-pane -->
-          </div>
-          <!-- /.tab-content -->
-        </div>
-        <!-- /.nav-tabs-custom -->
-      </div>
-      <!-- /.col -->
-    </div>
-
 
 
         </section>
