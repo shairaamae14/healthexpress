@@ -14,7 +14,7 @@ class AddAttrToUserOrdersTable extends Migration
     public function up()
     {
         Schema::table('user_orders', function (Blueprint $table) {
-            $table->string('dish_name')->nullable();
+            $table->string('title')->nullable();
             $table->date('planner_start')->nullable();
             $table->date('planner_end')->nullable();
             $table->string('start')->nullable();
