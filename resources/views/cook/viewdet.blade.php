@@ -25,6 +25,9 @@ a:hover{
         <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
         <li class="active">Dish Details</li>
       </ol>
+      <div>
+                <button type="button" class="btn bg-olive btn-flat btn-lg" onclick="window.history.back();"><i class="fa fa-arrow-left"></i> Back</button>
+            </div>
     </section>
 
     <!-- Main content -->
