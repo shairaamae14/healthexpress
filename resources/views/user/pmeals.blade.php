@@ -135,7 +135,7 @@ div#calendar .fc-center h2 {
                       <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
                       <div class="card" style="margin-bottom: 10px">
                         @foreach($breakfast as $bfast)
-                          <div class='fc-event'  data-event='{"timeStart": "06:00:00", "did": {{$bfast->did}}, "title": "{{$bfast->dish_name}}", "be":{{$bfast->be_id}}, "plan":{{$typeno}} }'>{{$bfast->dish_name}}</div>
+                          <div class='fc-event'  data-event='{"timeStart": "06:00:00", "did": {{$bfast->did}}, "title": "{{$bfast->dish_name}}", "be":{{$bfast->be_id}} }'>{{$bfast->dish_name}}</div>
                         @endforeach
                       </div>
                       <!-- Lunch -->
@@ -144,7 +144,7 @@ div#calendar .fc-center h2 {
                       <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
                       <div class="card" style="margin-bottom: 10px">
                         @foreach($lunch as $lnch)
-                          <div class='fc-event' data-toggle="modal" data-target="#dishDetails" data-event='{"did": {{$lnch->did}}, "title": "{{$lnch->dish_name}}", "be":{{$lnch->be_id}}, "plan":{{$typeno}} }'>{{$lnch->dish_name}}</div>
+                          <div class='fc-event' data-toggle="modal" data-target="#dishDetails" data-event='{"did": {{$lnch->did}}, "title": "{{$lnch->dish_name}}", "be":{{$lnch->be_id}} }'>{{$lnch->dish_name}}</div>
                         @endforeach
                       </div>
                       <!-- Dinner -->
@@ -153,7 +153,7 @@ div#calendar .fc-center h2 {
                       <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
                       <div class="card" style="margin-bottom: 10px">
                         @foreach($dinner as $dnr)
-                          <div class='fc-event' data-event='{"did": {{$dnr->did}}, "be":{{$dnr->be_id}}, "title": "{{$dnr->dish_name}}", "plan":{{$typeno}} }'>{{$dnr->dish_name}}</div>
+                          <div class='fc-event' data-event='{"did": {{$dnr->did}}, "be":{{$dnr->be_id}}, "title": "{{$dnr->dish_name}}" }'>{{$dnr->dish_name}}</div>
                         @endforeach
                       </div>
 
@@ -190,7 +190,7 @@ div#calendar .fc-center h2 {
 
 
 @foreach($betype as $best)
-<div id="dishDetails{{$best->dish_id}}{{$best->pm_id}}" class="modal fade">
+<div id="dishDetails{{$best->dish_id}}{{$best->uo_id}}" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -201,9 +201,9 @@ div#calendar .fc-center h2 {
             {{csrf_field()}}
               <div id="modalBody" class="modal-body">
                 <div class="col-md-12">
-                  <input type="hidden" name="pm_id" value="{{$best->pm_id}}">
+                  <input type="hidden" name="uo_id" value="{{$best->uo_id}}">
                   @foreach($dishes as $dish)
-                    @if($best->dish_id == $dish->ding_id && $best->pm_id == $dish->pm_id)
+                    @if($best->dish_id == $dish->ding_id && $best->uo_id == $dish->uo_id)
                       <div class="col-md-6">
                         <img src="{{url('./dish_imgs/'.$dish->dish_img)}}" style="width:150px; height:150px; border:2px solid #F0F0F0; border-radius: 10px"><br><br>
                         <label style="float:center; font-size:15px; color:black">
@@ -318,6 +318,8 @@ $(document).ready(function() {
           editable: true,
           droppable: true, // this allows things to be dropped onto the calendar
           dragRevertDuration: 0,
+          eventLimit: 3,
+          
           drop: function() {
             // is the "remove after drop" checkbox checked?
             if ($('#drop-remove').is(':checked')) {
@@ -329,7 +331,7 @@ $(document).ready(function() {
             if (isElemOverDiv()) {
               var con = confirm('Are you sure to delete this permanently?');
               if(con == true) {
-              var id = event.pm_id;
+              var id = event.uo_id;
               $.ajax({
                   url: '{{ route("user.delete") }}',
                   data: {'id':id},
@@ -355,7 +357,6 @@ $(document).ready(function() {
             var dish = event.did;
             var be = event.be;
             var om = 2;
-            var plan = event.plan;
             if(be == 1){
               var start = event.start.format("YYYY-MM-DD[T]06:00:00");
               var end = (event.end == null) ? start : event.end.format();
@@ -371,7 +372,7 @@ $(document).ready(function() {
 
             $.ajax({
               url: "{{ route('user.storeplans') }}",
-              data: {'title':title,'start':start,'end':end,'dish_id':dish,'be_id':be,'plan_id':plan,'om_id':om},
+              data: {'title':title,'start':start,'end':end,'dish_id':dish,'be_id':be,'om_id':om},
               method: "GET",
               dataType: 'json',
               success: function(){
@@ -386,7 +387,7 @@ $(document).ready(function() {
             $('#calendar').fullCalendar('updateEvent',event);
           },
           eventDrop: function(event, delta, revertFunc) {
-            var id = event.pm_id;
+            var id = event.uo_id;
             var title = event.title;
             var start = event.start.format("YYYY-MM-DD[T]HH:MM:SS");
             var end = (event.end == null) ? start : event.end.format();
@@ -407,13 +408,13 @@ $(document).ready(function() {
           },
           eventClick:  function(event, jsEvent, view) {
             var id = event.dish_id;
-            var pid = event.pm_id;
+            var pid = event.uo_id;
             console.log(id);
             $('#eventUrl').attr('href',event.url);
             $('#dishDetails'+id+pid).modal();
           },
           eventResize: function(event, delta, revertFunc) {
-            var id = event.pm_id;
+            var id = event.uo_id;
             var title = event.title;
             var end = event.end.format();
             var start = event.start.format();

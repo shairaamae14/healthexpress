@@ -9,6 +9,7 @@ use App\Dish;
 use App\BestEaten;
 use App\PlannedMeals;
 use App\NutritionFacts;
+use App\UserOrder;
 use Braintree_ClientToken;
 use Braintree_Transaction;
 use Braintree_CreditCard;
@@ -40,7 +41,7 @@ class PlannedMController extends Controller
         $id = Auth::id();
 
         //show nutritional facts of dishes
-        $dishes = PlannedMeals::join('dishes', 'planned_meals.dish_id', '=', 'dishes.did')
+        $dishes = UserOrder::join('dishes', 'user_orders.dish_id', '=', 'dishes.did')
                                   ->join('cooks', 'dishes.authorCook_id' , '=', 'cooks.id')
                                   ->join('dish_besteaten', 'dishes.did', '=', 'dish_besteaten.dish_id')
                                   ->join('besteaten_at', 'dish_besteaten.be_id', '=', 'besteaten_at.be_id')
@@ -67,11 +68,10 @@ class PlannedMController extends Controller
                             ->get();
 
         //all dishes
-        $betype = PlannedMeals::join('dishes','planned_meals.dish_id', '=', 'dishes.did')
+        $betype = UserOrder::join('dishes','user_orders.dish_id', '=', 'dishes.did')
                             ->join('cooks', 'dishes.authorCook_id' , '=', 'cooks.id')
-                            ->join('users', 'planned_meals.user_id', '=', 'users.id')
-                            ->join('plans', 'planned_meals.plan_id', '=', 'plans.id')
-                            ->join('order_mode', 'planned_meals.om_id', '=', 'order_mode.id')
+                            ->join('users', 'user_orders.user_id', '=', 'users.id')
+                            ->join('order_mode', 'user_orders.om_id', '=', 'order_mode.id')
                             ->get();
 
        //get all besteaten
@@ -90,7 +90,7 @@ class PlannedMController extends Controller
 
     public function index1(){
       $id = Auth::id();
-      $plans = PlannedMeals::where('user_id', $id)->get();
+      $plans = UserOrder::where('user_id', $id)->get();
       $iteration = FALSE;
       // dd($plans);
       if(count($plans)>0){
@@ -114,24 +114,21 @@ class PlannedMController extends Controller
       return redirect()->route('user.plan.show');
     }
 
-    public function showCalendar(){
-        return view('user.planCalendar');
-    }
+    // public function showCalendar(){
+    //     return view('user.planCalendar');
+    // }
 
     public function storePlans(Request $request){
         $id = Auth::id();
-        $events = PlannedMeals::create([
+        $events = UserOrder::create([
                                         'title' => $request['title'],
                                         'user_id' => $id,
                                         'om_id' => $request['om_id'],
                                         'dish_id' => $request['dish_id'],
-                                        'be_id'=> $request['be_id'],
-                                        'plan_id' => $request['plan_id'],
-                                        'p_status' => 'Pending',
+                                        'order_status' => 'Pending',
                                         'start' => $request['start'],
                                         'end' => $request['end'],
-                                        'allDay' => 'false',
-                                        'order_status' => 'not'
+                                        'allDay' => 'false'
         ]);
         return response()->json(['data'=>$events]);     
     }
@@ -142,7 +139,7 @@ class PlannedMController extends Controller
       $enddate = $request['end'];
       $eventid = $request['id'];
 
-      $update = PlannedMeals::where('pm_id',$eventid)
+      $update = UserOrder::where('uo_id',$eventid)
                       ->update(['title'=>$title, 
                                 'start'=>$startdate,
                                 'end'=>$enddate
@@ -157,10 +154,9 @@ class PlannedMController extends Controller
 
         $id=Auth::id();
         $events = array();
-        $query = PlannedMeals::where('user_id', $id)
-                            ->where('p_status', 'Pending')
-                            
-                            ->select('pm_id', 'title', 'dish_id', 'start', 'end', 'allDay')->get();
+        $query = UserOrder::where('user_id', $id)
+                            ->where('order_status', 'Pending')
+                            ->select('uo_id', 'title', 'dish_id', 'start', 'end', 'allDay')->get();
 
         return $query->toJson();
     }
@@ -168,7 +164,7 @@ class PlannedMController extends Controller
     public function deletePlan(Request $request){
       $id = $request['id'];
 
-      $delete = PlannedMeals::where('pm_id', $id)->delete();
+      $delete = PlannedMeals::where('uo_id', $id)->delete();
                              
       if($delete)
         return response()->json(['status'=>'success']);
@@ -176,24 +172,24 @@ class PlannedMController extends Controller
         return response()->json(['status'=>'failed']);
     }
 
-    public function addNote(Request $request){
-      $id = $request['eventid'];
-      $note = $request['note'];
+    // public function addNote(Request $request){
+    //   $id = $request['eventid'];
+    //   $note = $request['note'];
 
-      $update = PlannedMeals::where('pm_id', $id)
-                            ->update(['note'=>$note]);
-      if($update)
-        return response()->json(['status'=>'success']);
-      else
-        return response()->json(['status'=>'failed']);
+    //   $update = PlannedMeals::where('pm_id', $id)
+    //                         ->update(['note'=>$note]);
+    //   if($update)
+    //     return response()->json(['status'=>'success']);
+    //   else
+    //     return response()->json(['status'=>'failed']);
 
-    }
+    // }
 
     public function summary(){
       $id = Auth::id();
-      $data = PlannedMeals::where('user_id', $id)
-                            ->where('p_status', 'Pending')
-                            ->where('order_status', 'not')
+      $data = UserOrder::join('dishes','user_orders.dish_id','=','dishes.did')
+                            ->where('user_id', $id)
+                            ->where('order_status', 'Pending')
                             ->get();
  
 
@@ -204,9 +200,9 @@ class PlannedMController extends Controller
     }
   
     public function updatePm(Request $request){
-    $pm_id=$request['pm_id'];
+    $pm_id=$request['uo_id'];
     //TO GET LATLONG OF THE USER AND COOK
-    $pm= PlannedMeals::where('pm_id', $pm_id)
+    $pm= UserOrder::where('uo_id', $pm_id)
                       ->where('mode_delivery', "Delivery")
                       ->get();
       $userlat=0;
@@ -265,7 +261,7 @@ class PlannedMController extends Controller
         $long=$request['cityLngp'];
       }
        
-      $pm=PlannedMeals::where('pm_id', $pm_id)
+      $pm=UserOrder::where('uo_id', $pm_id)
                         ->update(['note'=>$request['spec'],
                                   'mode_delivery'=>$request['mode'],
                                   'address'=>$address,
@@ -283,9 +279,9 @@ class PlannedMController extends Controller
     }
 
     public function updateTimePm(Request $request){
-      $id = $request['pm_id'];
+      $id = $request['uo_id'];
 
-      $data = PlannedMeals::where('pm_id', $id)
+      $data = UserOrder::where('uo_id', $id)
                             ->select('start')
                             ->get();
 
@@ -296,7 +292,7 @@ class PlannedMController extends Controller
       $arr = array($ndata[0],$request['appt-time']);
       $new = implode("T",$arr);
 
-      $update = PlannedMeals::where('pm_id', $id)
+      $update = UserOrder::where('uo_id', $id)
                               ->update(['start' => $new
                             ]);
       return redirect()->route('user.plan.index');
