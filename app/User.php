@@ -62,6 +62,11 @@ class User extends Authenticatable
         return $this->hasOne('App\PlannedMeals');
     }
 
+    public function dishes()
+    {
+        return $this->belongsToMany('App\Dish', 'user_orders', 'user_id', 'dish_id');
+    }
+
        public function age(){
   $temp = new Carbon($this->birthday);
 return $temp->diffInYears(Carbon::now());

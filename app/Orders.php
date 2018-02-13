@@ -16,7 +16,7 @@ class Orders extends Model
 
     public function order_mode()
     {
-    	return $this->belongsTo('App\OrderMode', 'id', 'om_id');
+    	return $this->belongsTo('App\OrderMode', 'om_id', 'id');
     }
 
     public function user_orders()

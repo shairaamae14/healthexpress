@@ -169,8 +169,8 @@ h1 { font-size: 1.5em; margin: 10px; }
                     @foreach($dishes as $dets)
                     <span class="badge" style="font-family: verdana; border-radius:0px; background-color:#30BB6D; margin-top:-10px;"> Cook:</span><a href="{{route('cook.details',  ['id' => $dets->authorCook_id])}}" style="text-decoration: none; color:#30BB6D; ">&nbsp;<b>{{$dets->first_name}} {{$dets->last_name}}</b></a>
                     <span class="badge" style="font-family: verdana; border-radius:0px; background-color:#30BB6D;"> Preparation:</span><label>&nbsp;<b>{{$dets->preparation_time}}</b></label>
-                   <span class="badge" style="font-family: verdana; border-radius:0px; background-color:#30BB6D;"> Serving size:</span> 
-                   <label>&nbsp;<b>{{$dets->serving_size}}</b></label><br>
+                   <span class="badge" style="font-family: verdana; border-radius:0px; background-color:#30BB6D;"> No. of servings:</span> 
+                   <label>&nbsp;<b>{{$dets->no_of_servings}}</b></label><br>
                    @endforeach
                   </div>
                   </div>

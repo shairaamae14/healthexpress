@@ -89,7 +89,7 @@ Route::prefix('user')->group(function() {
 //Planned Meals
 Route::get('/braintree/token', 'PlannedMController@token');
 Route::get('/plannedm', 'PlannedMController@index1')->name('user.plan.home');
-Route::post('/pmeals', 'PlannedMController@index')->name('user.plan.index');
+Route::get('/pmeals', 'PlannedMController@index')->name('user.plan.index');
 Route::post('/newplan', 'PlannedMController@storeEvent')->name('user.plan.store');
 Route::get('/summary', 'PlannedMController@summary')->name('user.pmsummary');
 Route::get('/mode', 'PlannedMController@modeOfDelivery')->name('user.modeofdel');

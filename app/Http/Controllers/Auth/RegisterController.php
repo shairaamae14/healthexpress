@@ -161,7 +161,6 @@ class RegisterController extends Controller
         $lifestyles = Lifestyles::all();
         $allergens = Allergens::all();
         $mconditions = MedicalConditions::all();
-   
         return view('auth.register', compact('goals', 'lifestyles', 'allergens', 'mconditions'));
     }
 

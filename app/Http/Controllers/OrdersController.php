@@ -67,6 +67,8 @@ class OrdersController extends Controller
     public function payment(Request $request) {
         $customer = Auth::user();
         $user = User::find($customer->id);
+
+        
         $total_amount = $request['amount'];
         $nonce = $request['payment_method_nonce'];
         
@@ -127,9 +129,16 @@ class OrdersController extends Controller
         ];
         
         if(in_array($transaction->status, $transactionStatuses)) {
-           
-        }
+          for ($index = 0; $index < count($request->dish); $index++) {
+              $user_order[$i] = UserOrder::create(['user_id' => $user->id, 
+                'order_id' => $orders[$i]['id'],'payment_id' => 1, 
+                'order_date' => \Carbon\Carbon::now(),'totalQty' => $request['qty'][$index], 
+                 'totalAmount' => $request['total'][$index], 'order_status' => $status,
+                  'sidenote' => $sidenote, 'om_id' => 1, 'dish_id' => $request['dish'][$index]]);
+               
+            }
     }
+}
     
     public function initCustomer(Request $request) {
         $customer = Auth::user();
@@ -152,46 +161,18 @@ class OrdersController extends Controller
      */
     public function store(Request $request)
     {
-        $user = Auth::id();
-//        dd($request);
-//        $mode = OrderMode::create(['om_name' => 'Express Meal']);
-        
-        
-         $nonce = $request['payment_method_nonce'];
-         $transact = Braintree_Transaction::sale([
-                    'amount' => $request['total'],
-                    'paymentMethodNonce' => $nonceFromTheClient,
-                    'options' => [
-                      'submitForSettlement' => True
-                    ]
-          ]);
-         
-         
-        $transact = Braintree_Transaction::submitForSettlement('the_transaction_id');
-        if ($transact->success) {
-            $settledTransaction = $transact->transaction;
-        } else {
-            $errors = $transact->errors;
-        }
-        
-        
-        
-        
-        
-        $order= Orders::create(['om_id' => 1]);
+        $user = Auth::user();
+        $orders = collect();
+        $user_order = collect();
         $status = 'Pending';
+        $sidenote = $request->sidenote;
         if($request['payment_mode'] == 'COD') {
             for ($index = 0; $index < count($request->dish); $index++) {
-                $details = UserOrder::create(['user_id' => $user,
-                'order_id' => $order->id,
-                'dish_id' => $request['dish'][$index],
-                'payment_id' => 1,
-                'order_date' => $request['order_date'],
-                'totalQty' => $request['qty'][$index],
-                'totalAmount' => $request['total'][$index],
-                'order_status' => $status
-                
-            ]); 
+              $user_order = UserOrder::create(['user_id' => $user->id, 'payment_id' => 1, 
+                'order_date' => \Carbon\Carbon::now(),'totalQty' => $request['qty'][$index], 
+                 'totalAmount' => $request['total'][$index], 'order_status' => $status,
+                  'sidenote' => $sidenote, 'om_id' => 1, 'dish_id' => $request['dish'][$index]]);
+               
             }
         }
         Cart::destroy();
@@ -203,139 +184,85 @@ class OrdersController extends Controller
      *
      * @param  \App\Orders  $orders
      * @return \Illuminate\Http\Response
-     */
+     */ 
     public function show(Orders $orders)
     {
-        $id = Auth::id();
-        if(Auth::guard('cook')->check())
-        {
-            // return view katong express orders
-            $dish = Dish::where('cook_id', $id)->get();
-            $order = OrderDetails::where('dish_id', $dish->id)->get();
-            return view('cook.eorders', compact($order));
-        }
+        $user = Auth::user();
 
-        else {
-                $pending= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
-                ->join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
-                ->where('user_id', $id)
-                ->groupBy('dish_id')
-                ->orderBy('order_date', 'desc')
-                 ->where('order_status', '=', 'Pending')
-                ->get();
+        $orders = UserOrder::where('user_id', $user->id)->orderBy('order_date', 'desc')->get();
 
-                $cooking= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
-                ->join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
-                ->where('user_id', $id)
-                ->groupBy('dish_id')
-                ->orderBy('order_date', 'desc')
-                ->where('order_status', '=', 'Cooking')
-                ->get();
+        $pending = UserOrder::where('user_id', $user->id)->where('order_status', 'Pending')
+                            ->orderBy('order_date', 'desc')->get();
+        $cooking = UserOrder::where('user_id', $user->id)->where('order_status', 'Cooking')
+                            ->orderBy('order_date', 'desc')->get();
+        $delivering = UserOrder::where('user_id', $user->id)->where('order_status', 'Delivering')
+                            ->orderBy('order_date', 'desc')->get();
+        $datetoday = Carbon::now('Asia/Manila')->format('Y-m-d');
+        $completed = UserOrder::where('user_id', $user->id)->where('order_status', 'Completed')
+                            ->where('order_date', $datetoday)->orderBy('order_date', 'desc')->get();
+                // $pending= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
+                // ->join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
+                // ->where('user_id', $id)
+                // ->groupBy('dish_id')
+                // ->orderBy('order_date', 'desc')
+                //  ->where('order_status', '=', 'Pending')
+                // ->get();
 
-                $delivering= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
-                ->where('user_id', $id)
-                 ->groupBy('dish_id')
-                 ->orderBy('order_date', 'desc')
-                 ->where('order_status', '=', 'Delivering')
-                ->get();
+                // $cooking= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
+                // ->join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
+                // ->where('user_id', $id)
+                // ->groupBy('dish_id')
+                // ->orderBy('order_date', 'desc')
+                // ->where('order_status', '=', 'Cooking')
+                // ->get();
 
-                $datetoday=Carbon::now('Asia/Manila')->format('Y-m-d');
-                $completed= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
-                ->where('user_id', $id)
-                ->groupBy('dish_id')
-                ->orderBy('order_date', 'desc')
-                ->where('order_status', '=', 'Completed')
-                 ->where('order_date', '=', $datetoday)
-                ->get();
+                // $delivering= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
+                // ->where('user_id', $id)
+                //  ->groupBy('dish_id')
+                //  ->orderBy('order_date', 'desc')
+                //  ->where('order_status', '=', 'Delivering')
+                // ->get();
+
+                // $datetoday=Carbon::now('Asia/Manila')->format('Y-m-d');
+                // $completed= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
+                // ->where('user_id', $id)
+                // ->groupBy('dish_id')
+                // ->orderBy('order_date', 'desc')
+                // ->where('order_status', '=', 'Completed')
+                //  ->where('order_date', '=', $datetoday)
+                // ->get();
                
-               return view('user.orderhistory', compact('pending', 'cooking', 'delivering', 'completed', 'done'));
-
-        }
+               return view('user.orderhistory', compact('orders','pending', 'cooking', 'delivering', 'completed', 'done'));
          
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Orders  $orders
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Orders $orders)
-    {
-         $id = Auth::id();
-        if(Auth::guard('cook')->check())
-        {
-            // mailisan niya ang status 
-            // return view katong pwede sha maka ilis status
-            return view('cook.eorderstatus'); //*new
-        }
-        else{
-
-        }
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Orders  $orders
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request)
-    {
-
-         if(Auth::guard('cook')->check())
-        {
-            
-            $order = Orders::where('id', $id)
-                            ->where('user_id', $request->uid)
-                            ->update(['status' => $request->status]);
-        }
-
-        
-}
 
     public function changeToReceived($id){
           $status='Completed';      
              $completed= UserOrder::where('uo_id',$id)
-                ->update(['order_status'=>$status]);
-
-
-                        
+                ->update(['order_status'=>$status]);           
           return redirect()->route('order.orderhistory');
     }
 
     public function changeToDone($id){
         $datetoday=Carbon::now('Asia/Manila')->format('Y-m-d');
           $status=''; 
-          // $finddate=UserOrder::find($id);
-         
-        
-        
-             return redirect()->route('order.pastorders');
 
-      
-    
+        return redirect()->route('order.pastorders');
     }
 
 
 
     public function pastOrders(){
             $uid = Auth::id();
-           $done= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
-                ->where('user_id', $uid)
-                ->groupBy('dish_id', 'order_id')
+           $done= UserOrder::where('user_id', $uid)
+                ->groupBy('uo_id')
                 ->orderBy('order_date', 'desc')
                 ->where('order_status', '=', 'Completed')
                 ->get();
                  return view('user.pastorders', compact('done'));
                
     }
-
-
-
-
-
 
     /**
      * Remove the specified resource from storage.
@@ -350,4 +277,3 @@ class OrdersController extends Controller
 
 
 }
-    

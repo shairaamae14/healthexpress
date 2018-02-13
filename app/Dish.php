@@ -28,13 +28,18 @@ class Dish extends Model
         return $this->hasOne('App\NutritionFacts', 'ding_id', 'did');
     }
     
-    public function order()
+    public function user_orders()
     {
-        return $this->hasMany('App\Orders', 'dish_id', 'did');
+        return $this->hasMany('App\UserOrder', 'did', 'dish_id');
     }
 
     public function average(){
         return $this->hasOne('App\DishAverage', 'dish_id', 'did');
+    }
+
+    public function user()
+    {
+        return $this->belongsToMany('App\User', 'user_orders', 'user_id', 'dish_id');
     }
     
 }
