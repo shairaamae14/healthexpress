@@ -164,7 +164,7 @@ class PlannedMController extends Controller
     public function deletePlan(Request $request){
       $id = $request['id'];
 
-      $delete = PlannedMeals::where('uo_id', $id)->delete();
+      $delete = UserOrder::where('uo_id', $id)->delete();
                              
       if($delete)
         return response()->json(['status'=>'success']);
