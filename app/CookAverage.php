@@ -9,7 +9,7 @@ class CookAverage extends Model
    protected $table = 'cookrating_avg';
         protected $fillable = ['cook_id', 'average'];
 
-    public function cook(){
-    	return $this->belongsTo('App\Cook', 'cook_id', 'id');
-    }
+     public function rating(){
+   	return $this->hasMany('App\CookRating', 'id', 'cr_id');
+   }
 }
