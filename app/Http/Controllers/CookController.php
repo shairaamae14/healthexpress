@@ -9,6 +9,8 @@ use App\PlannedMeals;
 use App\Cook;
 use App\Orders;
 use App\User;
+use App\CookRating;
+use App\CookAverage;
 
 class CookController extends Controller
 {
@@ -225,7 +227,18 @@ class CookController extends Controller
 
      public function cookviewrating(){
         $cid  = Auth::id();
-    $cookrev=Cook::where('id', $cid)->get();
+        $cookrev = CookRating::join('user_orders', 'user_orders.uo_id', '=', 'cook_ratings.uorder_id')
+                        ->join('dishes', 'dishes.did', '=', 'user_orders.dish_id')
+                         ->join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
+                        ->where('authorCook_id', $cid)
+                        ->paginate(5);
+   
+            $avgrate=CookAverage::join('cook_ratings', 'cook_ratings.id', '=', 'cookrating_avg.cr_id')
+                        ->join('user_orders', 'user_orders.uo_id', '=', 'cook_ratings.uorder_id')
+                        ->join('dishes', 'dishes.did', '=', 'user_orders.dish_id')
+                        ->join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
+                        ->where('authorCook_id', $cid)
+                        ->get();
     // dd($cookrev);        
 
     return view('cook.cookreviews', compact('cookrev'));
