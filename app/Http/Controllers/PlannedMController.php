@@ -262,14 +262,14 @@ class PlannedMController extends Controller
       }
        
       $pm=UserOrder::where('uo_id', $pm_id)
-                        ->update(['note'=>$request['spec'],
+                        ->update(['sidenote'=>$request['spec'],
                                   'mode_delivery'=>$request['mode'],
                                   'address'=>$address,
-                                  'pm_longitude'=>$long,
-                                  'pm_latitude'=>$lat,
-                                  'contact_num'=>$request['contactnum'],
+                                  'longitude'=>$long,
+                                  'latitude'=>$lat,
+                                  'contact_no'=>$request['contactnum'],
                                   'distance'=>$distance,
-                                  'del_charge'=>$delcharge
+                                  'delivery_fee'=>$delcharge
                                  ]);
 
     
