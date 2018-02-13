@@ -761,16 +761,3 @@ class DishController extends Controller
             return redirect()->route('cook.view.plan');
    }
 }
-               'protein' => $protein,
-                            'total_fat' => $total_fat,
-                            'carbohydrate' => $carbs,
-                            'fibre' => $fibre,
-                            'sodium' => $sodium,
-                            'sat_fat' => $sat_fat,
-                            'cholesterol' => $cholesterol  
-
-            ]);
-
-
-   }
-}
