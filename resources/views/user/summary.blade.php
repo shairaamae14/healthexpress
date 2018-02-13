@@ -164,9 +164,9 @@ input[type="text"], input[type="number"], #mode {
   </div><!--wrapper!-->
 </div>
 <br>
+<!--modal!-->
 @foreach($data as $order)
-  
-  <div id="fullCalModal{{$order->pm_id}}" class="modal fade pull-left mdl" style="align-content: center">
+  <div id="fullCalModal{{$order->uo_id}}" class="modal fade pull-left mdl" style="align-content: center">
     <div class="modal-dialog" style="float:center; margin-right: 1500px;">
       <div class="modal-content">
         <div class="modal-header">
@@ -193,20 +193,20 @@ input[type="text"], input[type="number"], #mode {
                       <b>&nbsp;Delivery Address:</b></label>
                       <br>
                       <input type="checkbox" class="defaultadd" id="defaultadd">&nbsp;Use default address
-                      <input type="text" name="d_address" class="form-control has-success loc" id="location{{$order->pm_id}}" style="width:450px" value="{{$order->address}}">
+                      <input type="text" name="d_address" class="form-control has-success loc" id="location{{$order->uo_id}}" style="width:450px" value="{{$order->address}}">
                       <input type="hidden" id="city" name="city" />
                       <input type="hidden" id="cityLat{{$order->pm_id}}" name="cityLat" class="cityLat"/>
                       <input type="hidden" id="cityLng{{$order->pm_id}}" name="cityLng" class="cityLng"/>
                       <input type="hidden" id="dish_id" value="{{$order->pm_id}}">
-                      <center><div id="map{{$order->pm_id}}" class="map" style="height:200px"></div>
+                      <center><div id="map{{$order->uo_id}}" class="map" style="height:200px"></div>
                     </div>
                     <div id="pick" class="pick" hidden>
                       <label style="float:center; font-size:15px; color:black">
                       <b>&nbsp;Pick-Up Address:</b></label>&nbsp;<br>
-                      <label style="color: #4caf50; font-size: 20px"><b>{{$order->dishes->cook['c_location']}}</b></label>
+                      <label style="color: #4caf50; font-size: 20px"><b>{{$order->dishes->cook['location']}}</b></label>
                       <input type="hidden" id="city" name="city" />
-                      <input type="hidden" id="cityLat" name="cityLatp" value="{{$order->dishes->cook['latitude']}}"/>
-                      <input type="hidden" id="cityLng" name="cityLngp" value="{{$order->dishes->cook['longitude']}}" />
+                      <input type="text" id="cityLat" name="cityLatp" value="{{$order->dishes->cook['latitude']}}"/>
+                      <input type="text" id="cityLng" name="cityLngp" value="{{$order->dishes->cook['longitude']}}" />
                       <input type="hidden" name="p_address" value="{{$order->dishes->cook['location']}}">
                     </div>
                     <br>
@@ -219,27 +219,10 @@ input[type="text"], input[type="number"], #mode {
                   <label style="float:center; font-size:15px; color:black">
                   <b>&nbsp;Do you have any specifications?</b></label>
                   <input type='text' name="spec" class='form-control has-success' style='width:250px;' value="{{$order->sidenote}}">
-
-              
-
-
-
-
             </div>
-
-
-
-
             <div class="col-md-12">
               <center><button type="button" class="btn btn-flat btn-success btn-md set" id="setdetails" style="margin-bottom:50px;">SEE DISH DETAILS</button></center>
               <div class="askq" hidden>
-
-
-
-
-                
-
-
 
                   <div class="col-md-12"><center>
                 <img src="{{url('./dish_imgs/'.$order->dishes['dish_img'])}}" style="width:150px; height:150px; border:2px solid #F0F0F0; border-radius: 10px"><br>
@@ -309,13 +292,6 @@ input[type="text"], input[type="number"], #mode {
 
                 </div>
               </div>
-
-
-
-
-
-
-
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -465,12 +441,12 @@ $(document).ready(function() {
           dragRevertDuration: 0,
           
           eventClick:  function(event, jsEvent, view) {
-            var id= event.pm_id;
-            initMap(id);
+            var id= event.uo_id;
             $('#modalTitle').html(event.title);
             $('#modalBody').html(event.description);
             $('#eventUrl').attr('href',event.url);
             $('#fullCalModal'+id).modal();
+            initMap(id);
           },
          
 
@@ -625,35 +601,6 @@ function ChangeDrop(mode){
 </script> 
 
 
-
-                    
-() {
-      $('#content2').hide();
-      $('#content3').show();
-    });
-    $('#wizard1').smartWizard({
-              transitionEffect:'fade',
-              onFinish:onFinishCallback,
-              onLeaveStep  : leaveAStepCallback,
-          });
-       function leaveAStepCallback(obj, context){
-              // To check and enable finish button if needed
-              if (context.fromStep >= 2) {
-                  $('#wizard1').smartWizard('enableFinish', true);
-              }
-              return true;
-          }
-    
-        function onFinishCallback(){
-          alert('Finish Called');
-          window.location.href= './plannedmeal/calendar';
-
-        }
-
-          
-  });
-  </script> -->
-   
 
 
                     
