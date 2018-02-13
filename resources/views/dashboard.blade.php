@@ -91,9 +91,9 @@
                             @if($pendingem)
                             @foreach($pendingem as $order)
                             <tr>
-                                <td>{{$order->fname}} {{$order->lname}}</td>
+                                <td>{{$order->user->fname}} {{$order->user->lname}}</td>
                                 <td>{{ Carbon\Carbon::parse($order->start)->format('F d Y H:m:s') }}</td>
-                                <td>{{$order->om_name}}</td>
+                                <td>{{$order->order_mode->om_name}}</td>
                                 <td><button class="btn btn-default btn-flat"><a href="{{route('cook.expressorders',['id' => $order->user_id, 'planid'=>$order->plan_id])}}">View Details</a></button></td>
                             </tr>
                             @endforeach
@@ -122,7 +122,7 @@
                             @if($pendingpm)
                             @foreach($pendingpm as $order)
                             <tr>
-                                <td>{{$order->fname}} {{$order->lname}}</td>
+                                <td>{{$order->user->fname}} {{$order->user->lname}}</td>
                                 <td>{{ Carbon\Carbon::parse($order->start)->format('F d Y H:m:s') }}</td>
                                 <td>{{$order->om_name}}</td>
                                 <td><button class="btn btn-default btn-flat"><a href="{{route('cook.porders',['id' => $order->user_id, 'planid'=>$order->plan_id])}}">View Details</a></button></td>
@@ -172,9 +172,9 @@
                     <th>Side Note</th>
                 </thead>
                 <tbody>
-                        @foreach($order->dishes as $dish)
+                        @foreach($orders as $order)
                     <tr>
-                        <td>{{$dish->dish_name}}</td>
+                        <td>{{$order->dishes['dish_name']}}</td>
                         <td>{{$order->totalQty}}</td>
                         <td>{{$order->payment->method_name}}</td>
                         <td>{{$order->totalAmount}}</td>
