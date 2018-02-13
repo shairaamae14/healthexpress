@@ -47,14 +47,23 @@ public function show($id){
   $selectedLifestyle=UserLifestyle::first()->lifestyle_id;
 
   $allergies= Allergens::all();
-  
-  $selectedAllergens = UserAllergen::first()->allergen_id;
+  if(count($userallergens)>0){
+    $selectedAllergens = UserAllergen::first()->allergen_id;
 
-  $tolerance=UserAllergen::all();
-  $selectedTolerance= UserAllergen::first()->user_id;
-
+    $tolerance=UserAllergen::all();
+    $selectedTolerance= UserAllergen::first()->user_id;
+  }
+  else{
+    $selectedAllergens = "None";
+  }
   $medcons= MedicalConditions::all();
-  // $selectedMedCons= UserMCondition::first()->medcon_id;
+  if(count($usermedcons)>0){
+    
+    $selectedMedCons= UserMCondition::first()->medcon_id;
+  }
+  else{
+    $selectedMedCons = "None";
+  }
 
   $selectedGender= User::first()->id;
 
