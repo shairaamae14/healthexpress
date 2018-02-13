@@ -16,8 +16,8 @@ class CreateUserOrdersTable extends Migration
         Schema::create('user_orders', function (Blueprint $table) {
             $table->increments('uo_id');
             $table->integer('user_id')->unsigned();
-            $table->integer('order_id')->unsigned();
-            $table->integer('payment_id')->unsigned();
+            $table->integer('order_id')->nullable()->unsigned();
+            $table->integer('payment_id')->nullable()->unsigned();
             $table->integer('dish_id')->unsigned();
             $table->date('order_date');
             $table->integer('totalQty');
