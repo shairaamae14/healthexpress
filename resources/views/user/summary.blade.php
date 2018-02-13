@@ -165,7 +165,7 @@ input[type="text"], input[type="number"], #mode {
 </div>
 <br>
 @foreach($data as $order)
-  @foreach($order->dishes as $d)
+  
   <div id="fullCalModal{{$order->pm_id}}" class="modal fade pull-left mdl" style="align-content: center">
     <div class="modal-dialog" style="float:center; margin-right: 1500px;">
       <div class="modal-content">
@@ -203,11 +203,11 @@ input[type="text"], input[type="number"], #mode {
                     <div id="pick" class="pick" hidden>
                       <label style="float:center; font-size:15px; color:black">
                       <b>&nbsp;Pick-Up Address:</b></label>&nbsp;<br>
-                      <label style="color: #4caf50; font-size: 20px"><b>{{$d->cook['c_location']}}</b></label>
+                      <label style="color: #4caf50; font-size: 20px"><b>{{$order->dishes->cook['c_location']}}</b></label>
                       <input type="hidden" id="city" name="city" />
-                      <input type="hidden" id="cityLat" name="cityLatp" value="{{$d->cook['latitude']}}"/>
-                      <input type="hidden" id="cityLng" name="cityLngp" value="{{$d->cook['longitude']}}" />
-                      <input type="hidden" name="p_address" value="{{$d->cook['location']}}">
+                      <input type="hidden" id="cityLat" name="cityLatp" value="{{$order->dishes->cook['latitude']}}"/>
+                      <input type="hidden" id="cityLng" name="cityLngp" value="{{$order->dishes->cook['longitude']}}" />
+                      <input type="hidden" name="p_address" value="{{$order->dishes->cook['location']}}">
                     </div>
                     <br>
                     <label style="float:center; font-size:15px; color:black">
@@ -242,14 +242,12 @@ input[type="text"], input[type="number"], #mode {
 
 
                   <div class="col-md-12"><center>
-                <img src="{{url('./dish_imgs/'.$d['dish_img'])}}" style="width:150px; height:150px; border:2px solid #F0F0F0; border-radius: 10px"><br>
+                <img src="{{url('./dish_imgs/'.$order->dishes['dish_img'])}}" style="width:150px; height:150px; border:2px solid #F0F0F0; border-radius: 10px"><br>
               </div><br><center>
               <div class="col-md-12">
                 <label style="float:center; font-size:15px; color:black">
                   <b style="color: #4caf50">&nbsp; Meal For:</b>
-                  @foreach($order->dishes as $db)
-                    &nbsp;{{$db->besteaten[0]['name']}}
-                  @endforeach
+                    &nbsp;{{$order->dishes->besteaten[0]['name']}}
                 </label><br>
                 <label style="float:center; font-size:15px; color:black">
                   <b style="color: #4caf50">&nbsp; Date:</b>
@@ -261,15 +259,15 @@ input[type="text"], input[type="number"], #mode {
                 </label><br>
                   <label style="float:center; font-size:15px; color:black">
                     <b style="color: #4caf50">&nbsp; Price:</b>
-                @if($d['sellingPrice'])
-                  &nbsp;{{$d['sellingPrice']}}
+                @if($order->dishes['sellingPrice'])
+                  &nbsp;{{$order->dishes['sellingPrice']}}
                 @else
                   &nbsp;None
                 @endif    
                 </label><br>
                    <label style="float:center; font-size:15px; color:black">
                   <b style="color: #4caf50">&nbsp; Cook:</b>
-                    &nbsp;{{$d->cook['first_name']}}&nbsp;{{$d->cook['last_name']}}
+                    &nbsp;{{$order->dishes->cook['first_name']}}&nbsp;{{$order->dishes->cook['last_name']}}
                 </label><br>
                 <label style="float:center; font-size:15px; color:black">
                   <b style="color: #4caf50">&nbsp; Mode of Delivery:</b>
@@ -327,7 +325,7 @@ input[type="text"], input[type="number"], #mode {
         </div>
       </div>
     </div>
-  @endforeach
+ 
 @endforeach
 <script src='https://code.jquery.com/jquery-1.11.2.min.js'></script>
 <script src='https://code.jquery.com/ui/1.11.2/jquery-ui.min.js'></script>
