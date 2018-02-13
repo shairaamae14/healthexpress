@@ -175,7 +175,7 @@ h1 { font-size: 1.5em; margin: 10px; }
                   </div>
                   </div>
                     <div class="col-sm-6">
-                        <h4 class="card-title" style="color:black">Nutrional Facts</h4> 
+                        <h4 class="card-title" style="color:black">Nutritional Facts</h4> 
                          <center>
                 <b>Amount Per Serving</b>
                 <table>

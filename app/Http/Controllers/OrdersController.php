@@ -67,11 +67,20 @@ class OrdersController extends Controller
     public function payment(Request $request) {
         $customer = Auth::user();
         $user = User::find($customer->id);
-
-        
+        $status = 'Pending';
+        $sidenote = $request->sidenote;
         $total_amount = $request['amount'];
         $nonce = $request['payment_method_nonce'];
         
+        $transactionStatuses = [
+            Braintree_Transaction::AUTHORIZED,
+            Braintree_Transaction::AUTHORIZING,
+            Braintree_Transaction::SETTLED,
+            Braintree_Transaction::SETTLING,
+            Braintree_Transaction::SETTLEMENT_CONFIRMED,
+            Braintree_Transaction::SETTLEMENT_PENDING,
+            Braintree_Transaction::SUBMITTED_FOR_SETTLEMENT,
+        ];
         if(!$customer->braintree_id) {
             $cust = Braintree_Customer::create([
                     'paymentMethodNonce' => $nonce,
@@ -100,8 +109,16 @@ class OrdersController extends Controller
                     'submitForSettlement' => true
                 ]
             ]);
-            
-            $this->orderStatus($result->transaction->id);
+            $transaction = Braintree_Transaction::find($result->transaction->id);
+            if(in_array($transaction->status, $transactionStatuses)) {
+                for ($index = 0; $index < count($request->dish); $index++) {
+                    $user_order = UserOrder::create(['user_id' => $user->id, 'payment_id' => 1, 
+                            'order_date' => \Carbon\Carbon::now(),'totalQty' => $request['qty'][$index], 
+                            'totalAmount' => $request['total'][$index], 'order_status' => $status,
+                            'sidenote' => $sidenote, 'om_id' => 1, 'dish_id' => $request['dish'][$index]]);
+                }   
+                Cart::destroy();
+            }
         }
         else {
             $result = Braintree_Transaction::sale([
@@ -111,13 +128,25 @@ class OrdersController extends Controller
                     'submitForSettlement' => true
                 ]
             ]);
+            $transaction = Braintree_Transaction::find($result->transaction->id);
+            if(in_array($transaction->status, $transactionStatuses)) {
+                for ($index = 0; $index < count($request->dish); $index++) {
+                    $user_order = UserOrder::create(['user_id' => $user->id, 'payment_id' => 1, 
+                            'order_date' => \Carbon\Carbon::now(),'totalQty' => $request['qty'][$index], 
+                            'totalAmount' => $request['total'][$index], 'order_status' => $status,
+                            'sidenote' => $sidenote, 'om_id' => 1, 'dish_id' => $request['dish'][$index]]);
+                }   
+                Cart::destroy();
+            }
         }
-        
+        return redirect()->route('order.orderhistory');
     }
     
-    public function orderStatus($id) {
+    public function orderStatus($id, Request $request,$user) {
         $transaction = Braintree_Transaction::find($id);
-        
+        $status = 'Pending';
+        $sidenote = $request->sidenote;
+
         $transactionStatuses = [
             Braintree_Transaction::AUTHORIZED,
             Braintree_Transaction::AUTHORIZING,
@@ -129,16 +158,10 @@ class OrdersController extends Controller
         ];
         
         if(in_array($transaction->status, $transactionStatuses)) {
-          for ($index = 0; $index < count($request->dish); $index++) {
-              $user_order[$i] = UserOrder::create(['user_id' => $user->id, 
-                'order_id' => $orders[$i]['id'],'payment_id' => 1, 
-                'order_date' => \Carbon\Carbon::now(),'totalQty' => $request['qty'][$index], 
-                 'totalAmount' => $request['total'][$index], 'order_status' => $status,
-                  'sidenote' => $sidenote, 'om_id' => 1, 'dish_id' => $request['dish'][$index]]);
-               
-            }
+          
+        }
+    
     }
-}
     
     public function initCustomer(Request $request) {
         $customer = Auth::user();
