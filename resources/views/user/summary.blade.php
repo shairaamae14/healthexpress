@@ -145,7 +145,11 @@ input[type="text"], input[type="number"], #mode {
                                                                       <input type="hidden" id="cityLng" name="cityLng" /> -->
                                                                       <!-- <div id="map"></div> -->
                <h1 class="text-center" style="color:white; background-color: #4caf50">SUMMARY OF DISHES</h1>
-              <label>Please select a dish to change the order details.</label>
+              <label>Please select a dish to change the order details.</label><br>
+              <label style="font-size: 20px;"><b style="font-size: 20px; color:#4caf50">Total Meal Cost</b>: Php {{$allMealCost}}</label>
+              <label style="font-size: 20px;"><b style="font-size: 20px; color:#4caf50">Total Delivery Fee</b>: Php {{$totalDelFee}}</label>
+              <br>
+              <label style="font-size: 20px;"><b style="font-size: 20px; color:#4caf50">All Cost</b>: Php {{$allcost}}</label>
               <br>
                <div class="card" style="width:92rem; margin-right:-10px; margin-left:10px; padding:10px">
               <div id='calendar'></div>
@@ -175,7 +179,7 @@ input[type="text"], input[type="number"], #mode {
         </div>
         <form action="{{route('user.setDetails')}}" method="post">
         {{csrf_field()}}
-          <input type="hidden" name="pm_id" id="pm_id" value="{{$order->pm_id}}">
+          <input type="hidden" name="uo_id" id="pm_id" value="{{$order->uo_id}}">
           <div id="modalBody" class="modal-body col-md-12 modall"> 
 
 
@@ -193,10 +197,10 @@ input[type="text"], input[type="number"], #mode {
                       <b>&nbsp;Delivery Address:</b></label>
                       <br>
                       <input type="checkbox" class="defaultadd" id="defaultadd">&nbsp;Use default address
-                      <input type="text" name="d_address" class="form-control has-success loc" id="location{{$order->uo_id}}" style="width:450px" value="{{$order->address}}">
+                      <input type="text" name="d_address" class="form-control has-success loc" id="location{{$order->uo_id}}" style="width:450px">
                       <input type="hidden" id="city" name="city" />
-                      <input type="hidden" id="cityLat{{$order->pm_id}}" name="cityLat" class="cityLat"/>
-                      <input type="hidden" id="cityLng{{$order->pm_id}}" name="cityLng" class="cityLng"/>
+                      <input type="hidden" id="cityLat{{$order->uo_id}}" name="cityLat" class="cityLat"/>
+                      <input type="hidden" id="cityLng{{$order->uo_id}}" name="cityLng" class="cityLng"/>
                       <input type="hidden" id="dish_id" value="{{$order->pm_id}}">
                       <center><div id="map{{$order->uo_id}}" class="map" style="height:200px"></div>
                     </div>
@@ -205,8 +209,8 @@ input[type="text"], input[type="number"], #mode {
                       <b>&nbsp;Pick-Up Address:</b></label>&nbsp;<br>
                       <label style="color: #4caf50; font-size: 20px"><b>{{$order->dishes->cook['location']}}</b></label>
                       <input type="hidden" id="city" name="city" />
-                      <input type="text" id="cityLat" name="cityLatp" value="{{$order->dishes->cook['latitude']}}"/>
-                      <input type="text" id="cityLng" name="cityLngp" value="{{$order->dishes->cook['longitude']}}" />
+                      <input type="hidden" id="cityLat" name="cityLatp" value="{{$order->dishes->cook['latitude']}}"/>
+                      <input type="hidden" id="cityLng" name="cityLngp" value="{{$order->dishes->cook['longitude']}}" />
                       <input type="hidden" name="p_address" value="{{$order->dishes->cook['location']}}">
                     </div>
                     <br>
@@ -285,11 +289,6 @@ input[type="text"], input[type="number"], #mode {
                 @endif    
                 </label><br>
              </div>
-
-
-
-
-
                 </div>
               </div>
             </div>
@@ -527,6 +526,7 @@ $(document).ready(function(){
   $('.set').click(function(){
     $('.details').attr('hidden', 'hidden');
     $('.askq').removeAttr('hidden');
+    // document.getElementById('setdetails')..style.visibility = 'hidden';
     $(this).attr('disabled', 'disabled');
     $('.lblset').removeAttr('hidden');
     $('.showdet').removeAttr('hidden');
