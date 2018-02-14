@@ -187,22 +187,51 @@ class PlannedMController extends Controller
 
     public function summary(){
       $id = Auth::id();
-      $data = UserOrder::join('dishes','user_orders.dish_id','=','dishes.did')
+      $data = UserOrder::join('dishes','dishes.did','=','user_orders.dish_id')
                             ->where('user_id', $id)
                             ->where('order_status', 'Pending')
                             ->get();
- 
+      $initialdishes = UserOrder::join('dishes','dishes.did','=','user_orders.dish_id')
+                            ->where('user_id', $id)
+                            ->where('om_id', 2)
+                            ->get();
+                            // dd($initialdishes);
+       $allMealCost=0.00;
+       $totalDelFee=0.00;
+       $allcost=0.00;
+        for($i=0; $i<count($initialdishes); $i++){
+          $allMealCost+=$initialdishes[$i]->dishes['sellingPrice'];
+          $totalDelFee+=$initialdishes[$i]->delivery_fee;
+          $allcost=$allMealCost+$totalDelFee;
 
-      return view('user.summary', compact('data'));
+          $allMealCost=round($allMealCost,2);
+          $totalDelFee=round($totalDelFee,2);
+          $allcost=round($allcost, 2);
+
+        }
+        // dd($totalDelFee);
+      
+      return view('user.summary', compact('data', 'allMealCost', 'totalDelFee', 'allcost'));
     }
     public function modeOfDelivery(){
       return view('user.modeofdel');
     }
   
     public function updatePm(Request $request){
-    $pm_id=$request['uo_id'];
+    $uo_id=$request['uo_id'];
+        if($request['mode']=="Delivery"){
+        $address=$request['d_address'];
+        $lat=$request['cityLat'];
+        $long=$request['cityLng'];
+       // dd($lat, $long, $address);     
+      }
+      else if($request['mode']=="Pickup"){
+        $address=$request['p_address'];
+         $lat=$request['cityLatp'];
+        $long=$request['cityLngp'];
+      }
     //TO GET LATLONG OF THE USER AND COOK
-    $pm= UserOrder::where('uo_id', $pm_id)
+    $pm= UserOrder::where('uo_id', $uo_id)
                       ->where('mode_delivery', "Delivery")
                       ->get();
       $userlat=0;
@@ -211,22 +240,19 @@ class PlannedMController extends Controller
       $cooklng=0;
      foreach($pm as $p){
       foreach($p->user as $pmuser){
-       foreach($p->dishes as $pdishes){
             //USER LATLNG
             $userlat=$request['cityLat'];
             $userlng=$request['cityLng'];
             //COOK LATLNG
-            $cooklat=$pdishes->cook['latitude'];
-            $cooklng=$pdishes->cook['longitude'];
-          }
-           
-   }
-  }
-
-
-
-      $delcharge=40.00;
+            $cooklat=$p->dishes->cook['latitude'];
+            $cooklng=$p->dishes->cook['longitude'];
+            // dd($userlat, $userlng, $cooklat, $cooklng);
+              }
+        }
+    
       if($request['mode']=="Delivery"){
+      $delcharge=40.00;
+      $distance=0;
       //CALCULATION OF DISTANCE
       $theta = $cooklng - $userlng;
       $dist = sin(deg2rad($cooklat)) * sin(deg2rad($userlat)) +  cos(deg2rad($cooklat)) * cos(deg2rad($userlat)) * cos(deg2rad($theta));
@@ -240,36 +266,28 @@ class PlannedMController extends Controller
         // dd($delcharge);
       }
      else if ($distance<=5.00){
+      $distance=$distance;
       $delcharge=40.00;
       }
+       dd($distance, $delcharge);
     }
 
     else{
       $delcharge-40;
       $distance=0;
     }
- 
-      if($request['mode']=="Delivery"){
-        $address=$request['d_address'];
-        $lat=$request['cityLat'];
-        $long=$request['cityLng'];
-       // dd($lat, $long, $address);     
-      }
-      else if($request['mode']=="Pickup"){
-        $address=$request['p_address'];
-         $lat=$request['cityLatp'];
-        $long=$request['cityLngp'];
-      }
+
+     
        
-      $pm=UserOrder::where('uo_id', $pm_id)
+      $pm=UserOrder::where('uo_id', $uo_id)
                         ->update(['sidenote'=>$request['spec'],
-                                  'mode_delivery'=>$request['mode'],
+                                  'delivery_fee'=>$delcharge,
                                   'address'=>$address,
+                                   'contact_no'=>$request['contactnum'],
+                                    'mode_delivery'=>$request['mode'],
+                                      'distance'=>$distance,
                                   'longitude'=>$long,
-                                  'latitude'=>$lat,
-                                  'contact_no'=>$request['contactnum'],
-                                  'distance'=>$distance,
-                                  'delivery_fee'=>$delcharge
+                                  'latitude'=>$lat
                                  ]);
 
     
