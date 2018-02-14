@@ -101,7 +101,7 @@ class CookController extends Controller
 
         $pendingem = UserOrder::whereHas('dishes', function($query) use($cid) {
                 $query->where('authorCook_id', $cid);
-                $query->where('dish_type', 'Express'); 
+                $query->where('om_id', 1); 
         })->where('order_status', 'Pending')->get();
         // dd($pendingem);
         // foreach ($pendingem as $pend) {
@@ -109,7 +109,7 @@ class CookController extends Controller
         // }
         $pendingpm = UserOrder::whereHas('dishes', function($query) use($cid) {
                 $query->where('authorCook_id', $cid);
-                $query->where('dish_type', 'Planned'); 
+                $query->where('om_id', 2); 
         })->where('order_status', 'Pending')->get();
         // dd($pendingem);
         // $pendingpm = Orders::with(['dishes.cook' => function($query) use($cid) {
@@ -171,7 +171,7 @@ class CookController extends Controller
 
     public function showExOrders()
     {
-        $orders = UserOrder::all();
+        $orders = UserOrder::where('om_id',1)->get();
         return view('cook.eorders', compact('orders'));
     }
 
