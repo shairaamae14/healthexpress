@@ -56,6 +56,11 @@
   color:black !important;
 }
 
+ .name{
+ overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 
 
 
@@ -92,8 +97,19 @@
     <div class="container" style="width: 100%;">
       <div class="row">
         <div class="col-md-12">
-            <div class="text-center"> <h2 class="StepTitle">Payment Method</h2> </div>
-      <div class="col-md-6 col-md-offset-3"> 
+           <h1 class="text-center" style="color:white; background-color: #4caf50; margin-top: -10px"><b>Payment Method</b></h1>
+        
+           <div class="col-md-12" style="border:1px solid #4caf50">
+         @foreach($userorder as $order)
+         <label><b style="color: #4caf50">Name:</b> {{$order->user['fname']}}&nbsp;{{$order->user['lname']}}</label><br>
+         <label><b style="color: #4caf50">Delivery Address:</b> {{$order->address}}</label><br>
+         <label><b style="color: #4caf50">Contact Number:</b> {{$order->contact_no}}</label><br>
+         <label><b style="color: #4caf50">Total Delivery Fee:</b> Php {{$totaldelfee}}.00</label><br>
+         <label><b style="color: #4caf50">Total:</b> Php {{$alltotal}}.00</label>
+
+          @endforeach
+          </div><br><br><br><br>
+      <div class="col-md-6 col-md-offset-3" style="padding-top: 20px"> 
           <div class="profile-tabs" id="tabpayment">
             <div class="nav-align-center">
               <ul class="nav nav-pills nav-pills-success" role="tablist">
@@ -180,91 +196,79 @@
   </div><!--section!-->
 </div><!--main raised!-->
 
-
-
-
-
-
 <div class="main main-raised"  style="width: 25%; float: right;">
-  <div class="section" style="padding-bottom: 2px">
-    <div class="container" style="width: 100%">
-      <p style="color: black; float:left; margin-top: -60px;font-size: 21px; font-family: 'Lobster', cursive;">
-        <i class="material-icons" style="font-size:21px">shopping_cart</i> &nbsp;Order Summary &nbsp; 
-        <span class="badge" style="font-family: verdana; background-color:#30BB6D" id="totalqty">
-          {{Cart::count()}}
-        </span>
-      </p>
-
-        <!-- <span id="current">hello</span><br>
-        <input type="number" min="1" value="1" style="width: 45px; height:20px;" id="qs"> -->
-
-        <div class="row" style="padding-right:8px; padding-left: 8px">
-          @if(count(Cart::content()))
-          @foreach(Cart::content() as $item)
-
-          <dl class="dl-horizontal">
-            <div id="cartdiv" style="padding-left: 5px">  
-              <dd style="margin-left:-5px">
-                <label style="float: left; margin-left:0px; margin-right: 0px; font-size: 15px; color:black">
-                  <b>&nbsp;{{$item->qty}} x {{$item->name}}</b>
-                </label>
-
-              </dd>
-
-              <dt style="margin-left:-2px">
-                <label style="font-size: 12px; color: gray; float:left"> Price: <b id="price">{{$item->price}}</b></label>
-              </dt>
-
-              <dd style="margin-right: 2px">
-                <label style="font-size: 12px; color: gray; float:right">Total Amount:<b id="itemamount">{{$item->subtotal}}</b></label>
-              </dd>
-
-
-
-
+    <div class="section" style="padding-bottom: 2px">
+        <div class="container" style="width: 100%">
+                <p style="color: black; float:left; margin-top: -60px;font-size: 21px; font-family: 'Lobster', cursive;">
+                <i class="material-icons" style="font-size:21px">shopping_cart</i> &nbsp;Your Cart &nbsp; 
+                <span class="badge" style="font-family: verdana; background-color:#30BB6D" id="totalqty">
+              {{Cart::count()}}
+              </span>
+              </p>
+               <div class="row" style="padding-right:8px; padding-left: 8px;">
+                 @if(count(Cart::content()))
+                   @foreach(Cart::content() as $item) 
+                   <div class="col-md-12">
+                       <label style="font-size: 12px"><b>Cook:{{$item->cookname}}</b></label>
+                   </div>
+                   <div class="col-sm-6">
+                    <label class="name" style="float: left; font-size: 15px; color:black"><b class="name">{{$item->name}}</b><br></label>
+                   </div>
+                   <div class="col-md-6">
+                   <label  name="quantity" style="color:black; margin-right:20px"><b> x {{$item->qty}} </b></label>
+                   </div>
+                   <div class="col-md-12">
+                   @if($item->sidenote)
+                    <label style="font-size: 12px"><b>Side note:{{$item->sidenote}}</b></label>
+                  @else
+                    <label></label>
+                  @endif
+                  </div>
+                   <div class="col-md-12" style="border-bottom: 1px solid #e5e5e5">
+                       <label style="font-size: 12px; color: gray; float:left"> Price: <b id="price">{{$item->price}}.00</b></label>
+                       <label style="font-size: 12px; color: gray; float:right">Total Amount:<b id="itemamount">Php {{$item->subtotal}}.00</b></label>
+                   </div>
+                   @endforeach
+                     @else
+                      <center>
+                        <label style="font-size: 30px">Your cart is empty</label>
+                      </center>
+                   @endif
+                 </div><br>
+                  <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+                         <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots">
+                         <b>Subtotal:</b>&nbsp;Php
+                         <label style="color:black" id="subtotal">{{Cart::subtotal()}}</label>
+                         </p>
+                         <br>
+                   </div>
+                 @if(count(Cart::content()))
+                 <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+                       <form method="post" action="{{route('express.summary')}}">
+                         <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                          @foreach(Cart::content() as $item)
+                                          <input name="amount" value="{{Cart::subtotal()}}" type="hidden">
+                                          @endforeach
+                                          @if(count(Cart::content()))
+                                          @foreach(Cart::content() as $item)
+                                          <input type="hidden" name="dish[]" value="{{$item->id}}">
+                                          <input type="hidden" name="cook_id[]" value="{{$item->cook_id}}">
+                                          <input type="hidden" name="total[]" value="{{$item->subtotal}}">
+                                          <input type="hidden" name="qty[]" value="{{$item->qty}}">
+                                          <input type="hidden" name="order_date" value="{{\Carbon\Carbon::now('Asia/Manila')}}">
+                                          <input type="hidden" name="payment_mode" value="COD">
+                                          <input type="hidden" name="delivery_fee" id="del_fee1" value="">
+                                          @endforeach
+                                          @endif
+                        
+                   </div>
+                @endif
             </div>
-          </dl>   
-
-          @endforeach
-
-
-          @else
-          <center><label style="font-size: 30px">Your cart is empty</label>
-
-            @endif
-            <div id="amounts">
-              <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-                <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots">
-                  <b>Subtotal:</b>&nbsp;Php
-                  <label style="color:black">{{Cart::subtotal()}}</label>
-                </p>
-                <br>
-
-              </div>
-
-               <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-                <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots">
-                  <b>Delivery Fee:</b>&nbsp;Php
-                  <label style="color:black">40.00</label>
-                </p>
-                <br>
-
-              </div>
-
-               <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-                <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots">
-                  <b>Total:</b>&nbsp;Php
-                  <label style="color:black" id="subtotal">{{Cart::subtotal()}}</label>
-                </p>
-
-              </div>
-
         </div>
-      </div>
     </div>
   </div>
-</div>
-
+       
+       
 
 @endsection
 

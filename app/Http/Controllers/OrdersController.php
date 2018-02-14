@@ -16,6 +16,7 @@ use Braintree_Transaction;
 use Braintree_CreditCard;
 use Braintree_Customer;
 use Cart;
+use Illuminate\Support\Facades\Input;
 class OrdersController extends Controller
 {
     /**
@@ -26,6 +27,87 @@ class OrdersController extends Controller
 
      
     public function checkout(Request $request){
+        $user=Auth::user();
+        $lat=0;
+        $long=0;
+        $distance=0;
+        $delcharge=0;
+        $address;
+        $contactnum;
+      $cooklat=Input::get('cooklat');
+      $cooklng=Input::get('cooklng');
+      $dish_id=Input::get('dish');
+      $sidenote=Input::get('sidenote');
+      $name=Input::get('name');
+      $totalqty=Input::get('qty');
+      $om_id=1;
+      $mode_delivery="Delivery";
+      $order_status="Pending";
+
+         if($request['address']=="default"){
+          $lat=$request['cLat'];
+          $long=$request['cLng'];
+          $address=$request['userlocation'];
+          $contactnum=$request['contact_no'];
+         // dd($lat, $long);
+        }
+        else if($request['address']=="new"){
+          $lat=$request['cityLat'];
+          $long=$request['cityLng'];
+          $address=$request['location'];
+          $contactnum=$request['contact_num'];
+          // dd($lat, $long, $address, $contactnum);
+        }
+
+        for($i=0; $i<count($cooklat); $i++){
+            $cooklat[$i]=$request['cooklat'][$i];
+            $cooklng[$i]=$request['cooklng'][$i];     
+     //calculate   
+            $distance=array();
+            $theta=array();
+            $dist=array();
+            $distacos=array();
+            $miles=array();
+            $distance=array();
+            $delcharge=array();
+            $theta[$i] = $cooklng[$i] - $long;
+            $dist[$i]= sin(deg2rad($cooklat[$i])) * sin(deg2rad($lat)) +  cos(deg2rad($cooklat[$i])) * cos(deg2rad($lat)) * cos(deg2rad($theta[$i]));
+            $distacos[$i] = acos($dist[$i]);
+            $distrad[$i] = rad2deg($distacos[$i]);
+            $miles[$i] = $distrad[$i] * 60 * 1.1515;
+             $distance[$i]=$miles[$i] * 1.609344;
+             $distance[$i]=round($distance[$i],2);
+             if($distance[$i]>5.00){
+             $delcharge[$i]=40.00+(2.50*($distance[$i]-5));
+                // dd($delcharge);
+            }
+            else if ($distance[$i]<=5.00){
+             $delcharge[$i]=40.00;
+             }
+              
+
+            //MAG STORE KO HERE
+              $user_order = UserOrder::create(['user_id'=>$user->id,
+                                               'totalQty'=>$request['qty'][$i],
+                                               'order_status'=>$order_status,
+                                               'sidenote'=>$request['sidenote'][$i],
+                                               'om_id'=>$om_id,
+                                               'dish_id'=>$request['dish'][$i],
+                                               'delivery_fee'=>$delcharge[$i],
+                                               'title'=>$request['name'][$i],
+                                               'address'=>$address,
+                                               'contact_no'=>$contactnum,
+                                               'mode_delivery'=>$mode_delivery,
+                                               'distance'=>$distance[$i],
+                                               'longitude'=>$long,
+                                               'latitude'=>$lat        
+                                            ]);
+
+         }
+        
+     
+
+
         $option = $request->option;
         $user = Auth::user();
         if(!$user->braintree_id) {
@@ -45,11 +127,25 @@ class OrdersController extends Controller
         else {
             $service = $option;
         }
-        return view('user.paymentmethod', compact('option', 'clientToken'));
+
+        $userorder=UserOrder::join('users', 'users.id', '=', 'user_orders.user_id')->where('om_id', 1)
+                            ->where('order_status', "Pending")
+                            ->groupBy('user_id')
+                            ->get();
+        $userorder1=UserOrder::where('om_id', 1)->where('user_id', $user->id)->where('order_status', "Pending")->get();
+                    $totaldelfee=0;
+                    $subtotal=0;
+                      foreach($userorder1 as $or){
+                  $totaldelfee+=$or->delivery_fee;
+                }
+              $subtotal=Cart::subtotal();
+              $alltotal=$subtotal+$totaldelfee;
+        return view('user.paymentmethod', compact('option', 'clientToken', 'userorder', 'totaldelfee', 'alltotal'));
     }   
     
     public function index()
     {
+         
         return view('user.paymentmethod');
         
     }

@@ -9,7 +9,7 @@ class UserOrder extends Model
     protected $primaryKey = 'uo_id';
     protected $fillable = ['user_id', 'order_id', 'payment_id', 'order_date', 'totalQty', 'totalAmount', 
                             'order_status', 'delivery_fee', 'sidenote', 'title', 'planner_start', 
-                            'planner_end','start', 'end', 'allDay', 'address', 'contact_no', 'mode_delivery', 'distance', 'om_id', 'dish_id'];
+                            'planner_end','start', 'end', 'allDay', 'address', 'contact_no', 'mode_delivery', 'distance', 'om_id', 'dish_id', 'longitude', 'latitude'];
 
     public function user()
     {
