@@ -222,8 +222,7 @@ class PlannedMController extends Controller
         if($request['mode']=="Delivery"){
         $address=$request['d_address'];
         $lat=$request['cityLat'];
-        $long=$request['cityLng'];
-       // dd($lat, $long, $address);     
+        $long=$request['cityLng'];  
       }
       else if($request['mode']=="Pickup"){
         $address=$request['p_address'];
@@ -231,25 +230,19 @@ class PlannedMController extends Controller
         $long=$request['cityLngp'];
       }
     //TO GET LATLONG OF THE USER AND COOK
-    $pm= UserOrder::where('uo_id', $uo_id)
-                      ->where('mode_delivery', "Delivery")
-                      ->get();
       $userlat=0;
       $userlng=0;
       $cooklat=0;
       $cooklng=0;
-     foreach($pm as $p){
-      foreach($p->user as $pmuser){
-            //USER LATLNG
-            $userlat=$request['cityLat'];
-            $userlng=$request['cityLng'];
-            //COOK LATLNG
-            $cooklat=$p->dishes->cook['latitude'];
-            $cooklng=$p->dishes->cook['longitude'];
-            // dd($userlat, $userlng, $cooklat, $cooklng);
-              }
-        }
-    
+        //USER LATLNG
+       $userlat=$request['cityLat'];
+       $userlng=$request['cityLng'];
+       //COOK LATLNG
+      $cooklat=$request['cityLatp'];
+        $cooklng=$request['cityLngp'];
+             
+      // dd($cooklat, $cooklong);
+       
       if($request['mode']=="Delivery"){
       $delcharge=40.00;
       $distance=0;
@@ -266,14 +259,11 @@ class PlannedMController extends Controller
         // dd($delcharge);
       }
      else if ($distance<=5.00){
-      $distance=$distance;
       $delcharge=40.00;
       }
-       dd($distance, $delcharge);
     }
-
     else{
-      $delcharge-40;
+      $delcharge=40;
       $distance=0;
     }
 
