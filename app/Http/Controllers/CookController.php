@@ -191,33 +191,33 @@ class CookController extends Controller
     }
 
     public function fetch(Request $request){
-        $fetch = PlannedMeals::join('dishes','planned_meals.dish_id', '=', 'dishes.did')
+        $fetch = UserOrder::join('dishes','user_orders.dish_id', '=', 'dishes.did')
                             ->join('cooks', 'dishes.authorCook_id' , '=', 'cooks.id')
-                            ->join('users', 'planned_meals.user_id', '=', 'users.id')
+                            ->join('users', 'user_orders.user_id', '=', 'users.id')
                             ->join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
                             ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
-                            ->join('order_mode', 'planned_meals.om_id', '=', 'order_mode.id')
-                            ->where('order_status', 'ordered')
+                            ->join('order_mode', 'user_orders.om_id', '=', 'order_mode.id')
+                            ->where('order_status', 'Pending')
+                            ->where('om_id',2)
                             ->distinct()
-                            ->get(['fname','lname','om_name','user_id','note', 'plan_id']);
+                            ->get(['fname','lname','om_name','user_id','sidenote']);
                             // dd($fetch);
 
 
         return view('cook.planned', compact('fetch'));
     }
 
-    public function showPlanOrders($id, $planid){
+    public function showPlanOrders($id){
 
-        $meals = PlannedMeals::join('dishes','planned_meals.dish_id', '=', 'dishes.did')
+        $meals = UserOrder::join('dishes','user_orders.dish_id', '=', 'dishes.did')
                             ->join('cooks', 'dishes.authorCook_id' , '=', 'cooks.id')
-                            ->join('users', 'planned_meals.user_id', '=', 'users.id')
+                            ->join('users', 'user_orders.user_id', '=', 'users.id')
                             ->join('dish_besteaten','dishes.did', '=', 'dish_besteaten.dish_id')
                             ->join('besteaten_at', 'dish_besteaten.be_id' , '=', 'besteaten_at.be_id')
-                            ->join('plans', 'planned_meals.plan_id', '=', 'plans.id')
-                            ->join('order_mode', 'planned_meals.om_id', '=', 'order_mode.id')
+                            ->join('order_mode', 'user_orders.om_id', '=', 'order_mode.id')
                             ->where('user_id', $id)
-                            ->where('plan_id', $planid)
-                            ->where('order_status', 'ordered')
+                            ->where('om_id', 2)
+                            ->where('order_status', 'Pending')
                             ->get();
 
 

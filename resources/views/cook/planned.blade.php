@@ -65,7 +65,7 @@
                                 <td>{{$order->fname}} {{$order->lname}}</td>
                                 <td>{{ Carbon\Carbon::parse($order->start)->format('F d Y H:m:s') }}</td>
                                 <td>{{$order->om_name}}</td>
-                                <td><button class="btn btn-default btn-flat"><a href="{{route('cook.planorder',['id' => $order->user_id, 'planid'=>$order->plan_id])}}">View Details</a></button></td>
+                                <td><button class="btn btn-default btn-flat"><a href="{{route('cook.planorder',['id' => $order->user_id])}}">View Details</a></button></td>
                                 
                             </tr>
                             @endforeach
