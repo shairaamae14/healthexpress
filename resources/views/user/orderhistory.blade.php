@@ -102,12 +102,18 @@
 <div class="main main-raised">
   <div class="section">
     <div class="container">
-      <div class="row">
-        <a href="{{route('order.pastorders')}}">
-        <button type="submit" class="btn btn-success btn-flat btn-sm" style="margin-top: -10px">
-        View Order history
+     <div class="row">
+        <a href="{{route('pmorder.orderhistory')}}">
+        <button type="submit" class="btn btn-success btn-flat btn-sm" style="margin-top: -10px; float:left">
+        View Planned Meal Status
         </button>
         </a>
+        <a href="{{route('order.pastorders')}}">
+        <button type="submit" class="btn btn-success btn-flat btn-sm" style="margin-top: -10px; float:right">
+        View Order history
+        </button>
+        </a><br>
+        <h1 class="text-left" style="color:#66bb6a">Express Order Status</h1>
         <!-- Tabs on Plain Card -->
         <div class="card card-nav-tabs card-plain">
           <div class="header header-success">
@@ -177,7 +183,7 @@
                   <tbody>
                     <tr>
                       <td class="text-center">1</td>
-                      <td><img src="{{url('./dish_imgs/'.$cook->dish_img)}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
+                      <td><img src="{{url('./dish_imgs/'.$cook->dishes['dish_img'])}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
                         {{$cook->dish_name}}
                       </td>
                       <td>Php {{$cook->totalAmount}}</td>
@@ -212,7 +218,7 @@
                   <tbody>
                     <tr>
                       <td class="text-center">{{$del->totalQty}}</td>
-                      <td><img src="{{url('./dish_imgs/'.$del->dish_img)}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
+                      <td><img src="{{url('./dish_imgs/'.$del->dishes['dish_img'])}}" style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
                         {{$del->dish_name}}<br>
                         {{$del->first_name}}&nbsp;{{$del->last_name}}
                       </td>
@@ -220,14 +226,15 @@
                       <td>{{$del->order_date}}</td>
                       <td class="text-right"><span class="badge" style="color:white; background-color:#66bb6a; float:right">{{$del->order_status}}</span></td>
                       <td class="td-actions text-right">
-                       <a href="{{route('dish.orderReview', ['pmid'=> $del->did])}}" rel="tooltip" title="Did you receive your order?" class="btn btn-success btn-flat btn-sm" style="margin-top:-1px; margin-left:10px">
-                              Order Received
-                        <!-- <form method="post" action="{{route('order.statuschange', ['id'=>$del->uo_id])}}">
+                       <!-- <a href="{{route('dish.orderReview', ['id'=> $del->did])}}" rel="tooltip" title="Did you receive your order?" class="btn btn-success btn-flat btn-sm" style="margin-top:-1px; margin-left:10px"> -->
+                              <!-- Order Received -->
+                        <form method="post" action="{{route('dish.orderReview')}}">
                           <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                          <button type="submit" rel="tooltip" title="Did you receive your order?" class="btn btn-success btn-simple btn-md" style="margin-top: -10px">
+                          <input type="hidden" name="dish_id" value="{{$del->dishes['did']}}">
+                          <button type="submit" rel="tooltip" title="Did you receive your order?" class="btn btn-success btn-flat btn-sm" style="margin-top:-1px; margin-left:10px">
                           Order Received
                           </button>
-                        </form> -->
+                        </form>
                       </td>
                     </tr>
                   </tbody>
@@ -257,7 +264,7 @@
                   <tbody>
                     <tr>
                       <td class="text-center">{{$com->totalQty}}</td>
-                      <td><img src="{{url('./dish_imgs/'.$com->dish_img)}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
+                      <td><img src="{{url('./dish_imgs/'.$com->dishes['dish_img'])}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
                         {{$com->dish_name}}<br>
                         {{$com->first_name}}&nbsp;{{$com->last_name}}
                       </td>

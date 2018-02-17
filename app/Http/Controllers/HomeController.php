@@ -21,6 +21,7 @@ use App\ToleranceValues;
 use Session;
 use App\CookRating;
 use App\DishAverage;
+use App\CookAverage;
 use Illuminate\Session\Store;
 
 
@@ -234,18 +235,15 @@ public function showDetails($id){
 
              $nutritional = NutritionFacts::where('ding_id', $id)->get();
              $ratings = Ratings::join('user_orders', 'user_orders.uo_id', '=', 'dish_ratings.uorder_id')
-                        ->join('orders', 'orders.id', '=', 'user_orders.order_id')
-                        ->join('dishes', 'dishes.did', '=', 'orders.dish_id')
-                        ->where('dish_id', $id)
+                                ->join('users', 'users.id', '=', 'user_orders.user_id')
+                                ->join('dishes', 'dishes.did', '=', 'user_orders.dish_id')
+                                ->where('did', $id)
                         ->paginate(5);
 
+
+
             // $rate=Ratings::where('dish_id', $id)->get();
-            $avgrate=DishAverage::join('dish_ratings', 'dish_ratings.id', '=', 'dishrating_avg.dr_id')
-                        ->join('user_orders', 'user_orders.uo_id', '=', 'dish_ratings.uorder_id')
-                        ->join('orders', 'orders.id', '=', 'user_orders.order_id')
-                        ->join('dishes', 'dishes.did', '=', 'orders.dish_id')
-                        ->where('did', $id)
-                        ->get();
+            $avgrate=DishAverage::where('dish_id', $id)->get();
 
          return view('user.details', compact('dishes', 'nutritional', 'dish_ingredients', 'ratings', 'avgrate'));
     }
@@ -256,36 +254,18 @@ public function showDetails($id){
             $dishes=Dish::where('authorCook_id', $id)->paginate(12);
               // $dishes = Dish::paginate(12);
 
-              $ratings = CookRating::where('cook_id', $id)->join('users' , 'users.id', '=' , 'cook_ratings.user_id')->paginate(4);
 
-            $rate=CookRating::where('cook_id', $id)->get();
-            $avg=0;
-            $average=0;
-            $tempwhole=0;
-            $r=count($rate);
-            for($i=0; $i<$r; $i++){
-              $avg+=$rate[$i]->rating/$r;
-            }
+              $ratings = CookRating::join('user_orders', 'user_orders.uo_id', '=', 'cook_ratings.uorder_id')
+                        ->join('users', 'users.id', '=', 'user_orders.user_id')
+                        ->join('dishes', 'dishes.did', '=', 'user_orders.dish_id')
+                        ->join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
+                        ->where('authorCook_id', $id)
+                        ->paginate(5);
+   
+            $avgrate=CookAverage::where('cook_id', $id)->get();
+                 // dd($avgrate);
 
-               $average=round($avg, 1);
-               $tempavg=$average;
-               $tempwhole=floor($tempavg);
-               $tempdec=$tempavg-$tempwhole;
-               // dd($tempdec);
-                if($tempdec==0.0){
-                $average=$average;
-                // dd($average);
-               }
-               else if($tempdec<=0.5 || $tempdec>=0.5){
-                $tempdec=0.5;
-                $average=$tempwhole + $tempdec;
-                // dd($average, "hello");
-               }
-
-           // dd($average);
-            // dd($cookid);
-
-        return view('user.showcook', compact('cook', 'dishes', 'average', 'ratings'));
+        return view('user.showcook', compact('cook', 'dishes', 'avgrate', 'ratings'));
     }
 
 

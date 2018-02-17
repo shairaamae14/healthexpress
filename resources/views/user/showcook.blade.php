@@ -1,5 +1,4 @@
-
-   @extends('user-layouts.master')
+ @extends('user-layouts.master')
 <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 <!-- <link href="css/bootstrap.css" rel="stylesheet" /> -->
 <link href="{{asset('css/rotating-card.css')}}" rel="stylesheet" />
@@ -116,6 +115,11 @@ h1 { font-size: 1.5em; margin: 10px; }
 .rating > input:checked ~ label:hover,
 .rating > label:hover ~ input:checked ~ label, /* lighten current selection */
 .rating > input:checked ~ label:hover ~ label { color: orange;  } 
+.name{
+ overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
 </style>
 
 
@@ -147,12 +151,15 @@ h1 { font-size: 1.5em; margin: 10px; }
                         <div class="avg">
                         @foreach($cook as $ck)
                         <h2 style="margin-top:-5px; color:#30BB6D">
-                          <b>{{$ck->first_name}} {{$ck->last_name}}</b>
+                          <b>{{$ck->first_name}} {{$ck->last_name}}</b><br>
+                          <label>{{$ck->location}}</label>
                           </h2>
                             <label class="avgbox" id="avgbox"></label>
                             <label class="avgbox2" id="avgbox2"></label><br>
-                            <input type="hidden" class="avg" value="{{$ck->average['average']}}">
-                          @endforeach
+                        @foreach($avgrate as $avg)
+                            <input type="hidden" class="avg" value="{{$avg->average}}">
+                        @endforeach
+                        @endforeach
                           </div>
                     </div>
                 </div>
@@ -170,6 +177,7 @@ h1 { font-size: 1.5em; margin: 10px; }
         <div class="col-md-12 rate" id="ratebox">
            <div class="well well-sm">
             <div class="text-left">
+              <img src="{{url('./user_imgs/'.$rate->profpic)}}" class="img-circle" style="width:50px; height:50px"/>
                <label style="color:#4caf50"><b>&nbsp;&nbsp;{{$rate->fname}}&nbsp;{{$rate->lname}}</b></label>
                 <label style="margin-left:10px">{{$rate->comment}}</label>
                  <label class="ratingbox" id="ratingbox" style="float:right"></label>
@@ -192,80 +200,58 @@ h1 { font-size: 1.5em; margin: 10px; }
 <div class="row" style="margin:15px;">
   <h4 class="text-left" style="color:white; background-color: #4caf50; padding:5px">
   <b>Dishes</b></h4>
-@if($dishes)
-  @foreach($dishes as $dish)
-<div class="col-md-4 col-sm-4">
-  <div class="card-container manual-flip">
-      <div class="card">
-          <div class="front rate" style="height:320px">
-            <div class="cover">
-              <img src="{{asset('dish_imgs/'.$dish->dish_img)}}""/>
-            </div>
-          <!--   <div class="user">
-              <img class="img-circle" src="{{asset('dish_imgs/'.$dish->dish_img)}}"/>
-            </div> -->
-            <div class="content" style="height:50px">
-              <h4 class="name">{{$dish->dish_name}}</h4>
-              @if($dish->average['average'])
-               <small><center>
-               <label class="ratingbox" id="ratingbox"></label>
-               <label class="ratingbox2" id="ratingbox2"></label><br>
-               <center></small>
-               <input type="hidden" class="ratings" id="rate_{{$dish->average['average']}}" value="{{$dish->average['average']}}">
-             @else
-              <center><small>
-               <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
-               <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
-               <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
-               <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
-               <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
-              </small><br>
-             @endif
-               <label style="color:#30BB6D">Php&nbsp;{{$dish->sellingPrice}}</label><br>
-                 <button type="button" class="btn btn-flat btn-sm btn-success" data-toggle="modal" style="margin-right:10px;  background-color:#30BB6D; margin-left: 10px"><i class="material-icons">add_circle</i>&nbsp;Add to cart
-               </button>
-               </center>
-              <div class="footer" style="padding:3px">
-                  <button class="btn btn-simple" onclick="rotateCard(this)">
-                      <i class="fa fa-mail-forward"></i> Flip Card
-                  </button>
-              </div>
-           </div>
-         </div> <!-- end front panel -->
-        <div class="back" style="height:310px">
-            <div class="header">
-                <h5 class="motto">"{{$dish->dish_desc}}"</h5>
-            </div>
-            <div class="content">
-             <center>
-            <span class="badge" style="font-family: verdana; border-radius:0px; border:2px solid #30BB6D; background-color:#30BB6D; font-size: 10px"> No. of servings:</span>&nbsp;
-            <span class="badge" style="font-family: verdana; border-radius:2px; border:2px solid #30BB6D; color:#30BB6D; background-color:transparent; font-size: 12px">{{$dish->no_of_servings}} serving/s
-            </span><br><br>
-            <a href="{{route('home.details', ['id' => $dish->did])}}" class="btn btn-flat btn-sm btn-success" data-toggle="modal" style="margin-right:10px;  background-color:#30BB6D; margin-left: 10px">View Details</a>
-            </div>
-            <div class="footer"><center>
-                <button class="btn btn-sm btn-simple" rel="tooltip" title="Flip Card" onclick="rotateCard(this)" style="float:center">
-                    <i class="fa fa-reply"></i> Back
-                </button>
-                </center>
-            </div>
-        </div> <!-- end back panel -->
-    </div> <!-- end card -->
-</div> <!-- end card-container -->
-</div> <!-- end col sm 3 -->     
-@endforeach
-    @endif 
+ @if($dishes)
+                      @foreach($dishes as $dish)
+                    <div class="col-md-4 col-sm-4">
+                      <div class="card-container manual-flip">
+                          <div class="card">
+                              <div class="front rate" style="height:290px">
+                                <div class="cover">
+                                  <img src="{{asset('dish_imgs/'.$dish->dish_img)}}""/>
+                                    </div>
+                                  <!--   <div class="user">
+                                  <img class="img-circle" src="{{asset('dish_imgs/'.$dish->dish_img)}}"/>
+                                </div> -->
+                                <div class="content" style="height:50px">
+                                  <a class="linkname" href="{{route('home.details', ['id' => $dish->did])}}"><h4 class="name">{{$dish->dish_name}}</h4></a>
+                                  @if($dish->average['average'])
+                                   <small><center>
+                                   <label class="ratingbox" id="ratingbox"></label>
+                                   <label class="ratingbox2" id="ratingbox2"></label><br>
+                                   <center></small>
+                                   <input type="hidden" class="ratings" id="rate_{{$dish->average['average']}}" value="{{$dish->average['average']}}">
+                                 @else
+                                  <center><small>
+                                   <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                                   <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                                   <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                                   <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                                   <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                                  </small><br>
+                                 @endif
+                                   <label style="color:#30BB6D">Php&nbsp;{{$dish->sellingPrice}}</label><br>
+                                    
+                                   </center>
+                                  <div class="footer" style="padding:3px">
+                                      <button type="button" class="btn btn-flat btn-sm btn-success" data-target="#modal-default{{$dish->did}}" data-toggle="modal" style="margin-right:10px;  background-color:#30BB6D; margin-left: 10px"><i class="material-icons">add_circle</i>&nbsp;Add to cart
+                                   </button>
+                                  </div>
+                               </div>
+                             </div> 
+                        </div> <!-- end card -->
+                    </div> <!-- end card-container -->
+                    </div> <!-- end col sm 3 -->     
+                    @endforeach
+                   @endif 
 </div>
-
-              
-   </div>
-</div> 
   <div class="text-center">
   {{$dishes->links('vendor.pagination.custom')}}
   </div>
+              
+   </div>
+</div> 
   </div><!--section!-->
 </div><!--main-raised!-->
-
 
 
 
@@ -276,118 +262,97 @@ h1 { font-size: 1.5em; margin: 10px; }
                 <i class="material-icons" style="font-size:21px">shopping_cart</i> &nbsp;Your Cart &nbsp; 
                 <span class="badge" style="font-family: verdana; background-color:#30BB6D" id="totalqty">
               {{Cart::count()}}
-                </span>
-                </p>
-
- <div class="row" style="padding-right:8px; padding-left: 8px">
-      @if(count(Cart::content()))
-      @foreach(Cart::content() as $item) 
-        <dl class="dl-horizontal">
-            <div id="cartdiv" style="padding-left: 5px">  
-              <dt style="margin-left:-65px">
-                 <label  name="quantity" style="color:black; margin-right:20px"><b> {{$item->qty}} x</b></label>
-                    <a class="cart_quantity_up" href='{{url("cart/update?dish_id=$item->id&increment=1")}}'>
-                    <i class="material-icons"  style="color:#30BB6D">add_circle</i></a>
-                    <a class="cart_quantity_down" href='{{url("cart/update?dish_id=$item->id&decrease=1")}}'>
-                    <i class="material-icons"  style="color:#30BB6D" id="dec">remove_circle</i></a>
-               </dt>
-
-              <dd style="margin-left: 2px">
-                <label style="float: left; margin-left:0px; margin-right: 0px; font-size: 15px; color:black">
-                <b>&nbsp;&nbsp;{{$item->name}}</b>
-                <br>
-                <label style="font-size: 12px"><b>Side note:{{$item->sidenote}}</label>
-               <br>
-                </label>
-                <a href='{{url("/cart/dish/remove?dish_id=$item->id&remove=true")}}' style="float:right">
-                  <i class="fa fa-trash-o" aria-hidden="true" style="color:black; font-size: 20px"></i>
-                </a>
-              <!--   <a href="#" data-toggle="modal" data-target="#myModal1" style="float:right">
-                    <i class="material-icons" style="color:black;">note_add</i>
-                </a> -->
-              
-               
-              </dd>
-
-
-              <dt style="margin-left:-2px">
-                <label style="font-size: 12px; color: gray; float:left"> Price: <b id="price">{{$item->price}} </b></label>
-                <h1>{{($item->options->has('note') ? $item->options->note : '') }}</h1>
-              </dt>
-
-              <dd style="margin-right: 2px">
-                <label style="font-size: 12px; color: gray; float:right">Total Amount:<b id="itemamount">{{$item->subtotal}}</b></label>
-              </dd>
-
-          </div>
-      </dl>   
-
-      @endforeach
-      @else
-            <center>
-            <label style="font-size: 30px">Your cart is empty</label>
-            </center>
-      @endif
-      
-          <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-                 <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots">
-                 <b>Subtotal:</b>&nbsp;Php
-                 <label style="color:black" id="subtotal">{{Cart::subtotal()}}</label>
-                 </p>
-                 <br>
-          </div>
-        
-      @if(count(Cart::content()))
-        
-        <!--   <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-              <p style="float:right; margin-right:2px; font-size: 17px; color:black;font-family: 'Lato', sans-serif" id="tots">
-              <b>Total:</b>&nbsp;Php
-              <label style="color:black" id="alltotal">{{Cart::subtotal()}}</label>
+              </span>
               </p>
-          </div> -->
-
-        
-        <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-        <form method="POST" action="{{url('cart/checkout')}}">
-           <input type="hidden" name="_token" value="{{ csrf_token() }}">
-               <button class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:right; margin-top: 2px; border:none" id="chkt">
-                        Proceed
-                      </button>
-          </form>
-            <form method="POST" action="{{url('cart/clear')}}">
-               <input type="hidden" name="_token" value="{{ csrf_token() }}">
-              <button type="submit" class="btn btn-danger btn-simple" style="float:left; margin-top: -10px; border:none; font-size:15px"  disabled>Clear Cart
-              </button>
-              </form>
-        </div>
-       
-
-      @else
-
-         <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-         
-             <form method="POST" action="{{url('cart/checkout')}}">
-                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
-             <button type="submit" class="btn btn-flat btn-success btn edit" style="float:right; margin-top: 2px; border:none" id="chkt" disabled>
-                        Checkout
-                      </button>
-             </form>
-
-              <form method="POST" action="{{url('cart/clear')}}">
-               <input type="hidden" name="_token" value="{{ csrf_token() }}">
-              <button type="submit" class="btn btn-danger btn-simple" style="float:left; margin-top: -10px; border:none; font-size:15px"  disabled>Clear Cart
-              </button>
-              </form>
-         </div>
-
+ <div class="row" style="padding-right:8px; padding-left: 8px">
+   @if(count(Cart::content()))
+     @foreach(Cart::content() as $item) 
+     <div class="col-md-12">
+         <label style="font-size: 12px"><b>Cook:{{$item->cookname}}</b></label>
+     </div>
+     <div class="col-sm-6">
+      <label class="name" style="float: left; font-size: 15px; color:black"><b class="name">{{$item->name}}</b><br></label>
+     </div>
+     <div class="col-md-6">
+     <label  name="quantity" style="color:black; margin-right:20px"><b> x {{$item->qty}} </b></label>
+       <a class="cart_quantity_up" href='{{url("detcart/update?dish_id=$item->id&increment=1")}}'>
+       <i class="material-icons"  style="color:#30BB6D;">add_circle</i></a>
+       <a class="cart_quantity_down" href='{{url("detcart/update?dish_id=$item->id&decrease=1")}}'>
+       <i class="material-icons"  style="color:#30BB6D" id="dec">remove_circle</i></a>
+       <a href='{{url("/detcart/dish/remove?dish_id=$item->id&remove=true")}}' style="float:right">
+       <i class="fa fa-trash-o" aria-hidden="true" style="color:black; font-size: 20px"></i>
+       </a>
+     </div>
+     <div class="col-md-12">
+     @if($item->sidenote)
+      <label style="font-size: 12px"><b>Side note:{{$item->sidenote}}</b></label>
+    @else
+      <label></label>
+    @endif
+    </div>
+     <div class="col-md-12">
+         <label style="font-size: 12px; color: gray; float:left"> Price: <b id="price">{{$item->price}}.00</b></label>
+          <label style="font-size: 12px; color: gray; float:right">Total Amount:<b id="itemamount">Php {{$item->subtotal}}.00</b></label>
+     </div>
+     @endforeach
+       @else
+        <center>
+          <label style="font-size: 30px">Your cart is empty</label>
+        </center>
    @endif
-
-
- </div>
    </div>
+    <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+           <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots">
+           <b>Subtotal:</b>&nbsp;Php
+           <label style="color:black" id="subtotal">{{Cart::subtotal()}}</label>
+           </p>
+           <br>
+     </div>
+   @if(count(Cart::content()))
+             <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+                   <form method="post" action="{{route('express.summary')}}">
+                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                      @foreach(Cart::content() as $item)
+                                      <input name="amount" value="{{Cart::subtotal()}}" type="hidden">
+                                      @endforeach
+                                      @if(count(Cart::content()))
+                                      @foreach(Cart::content() as $item)
+                                      <input type="hidden" name="dish[]" value="{{$item->id}}">
+                                      <input type="hidden" name="cook_id[]" value="{{$item->cook_id}}">
+                                      <input type="hidden" name="total[]" value="{{$item->subtotal}}">
+                                      <input type="hidden" name="qty[]" value="{{$item->qty}}">
+                                      <input type="hidden" name="order_date" value="{{\Carbon\Carbon::now('Asia/Manila')}}">
+                                      <input type="hidden" name="payment_mode" value="COD">
+                                      <input type="hidden" name="delivery_fee" id="del_fee1" value="">
+                                      @endforeach
+                                      @endif
+        <button type="submit" class="btn btn-flat btn-primary btn-md"  style="background-color:#30BB6D; float:right; padding-bottom:2px; margin-top:15px; border:none" id="chkt"> Proceed </butoon>
+        </form>
+        <form method="POST" action="{{url('detcart/clear')}}">
+          <input type="hidden" name="_token" value="{{ csrf_token() }}">
+          <input type="hidden" name="dish_id" value="$item->id">
+          <button type="submit" class="btn btn-flat btn-danger" style="float:right; margin-top: 2px; border:none; margin-right:20px" id="clearcrt"> Clear Cart </button>
+          </button>
+         </form>
       </div>
-         </div>
-         
+    @else
+      <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+        <form method="POST" action="#">
+           <input type="hidden" name="_token" value="{{ csrf_token() }}">
+           <button type="submit" class="btn btn-flat btn-success btn edit" style="float:right; margin-top: 3px;  border:none" id="chkt" disabled>Checkout</button>
+        </form>
+        <form method="POST" action="{{url('detcart/clear')}}">
+           <input type="hidden" name="_token" value="{{ csrf_token() }}">
+           <button type="submit" class="btn btn-flat btn-danger" style="float:right; margin-top: -11px; border:none;" id="clearcrt" disabled> Clear Cart </button>
+          </button>
+        </form>
+     </div>
+  @endif
+  </div>
+ </div>
+    </div>
+       </div>
+       
 
     
 

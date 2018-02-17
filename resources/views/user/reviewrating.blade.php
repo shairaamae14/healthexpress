@@ -255,8 +255,17 @@ h1 { font-size: 1.5em; margin: 10px; }
                   </div>
                   </center>
                 <button type="submit" class="btn btn-flat btn-success">Proceed</button>
+                </form>
                 @foreach($dishes as $d)
-                <a href="{{route('user.cookReview', ['id'=> $d->did])}}" class="btn btn-danger btn-simple "><b>Skip</b>
+               <!--  <a href="{{route('user.cookReview', ['id'=> $d->did])}}" class="btn btn-danger btn-simple btn-flat"><b>Skip</b> -->
+                  <form method="post" action="{{route('user.cookReview')}}" ">
+                          <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                          <input type="hidden" name="dish_id" value="{{$d->did}}">
+                          <input type="hidden" name="cook_id" value="{{$d->authorCook_id}}">
+                          <button type="submit" class="btn btn-danger btn-simple" style="margin-top:-1px; margin-left:10px">
+                          Skip
+                          </button>
+                        </form>
                 @endforeach
                 </form>
                 </div>

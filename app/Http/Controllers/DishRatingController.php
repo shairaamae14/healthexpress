@@ -10,7 +10,7 @@ use App\CookRating;
 use App\PlannedMeals;
 use App\DishAverage;
 use App\CookAverage;
-
+use Illuminate\Support\Facades\Redirect;
 use Carbon\Carbon;
 
 class DishRatingController extends Controller
@@ -36,73 +36,26 @@ class DishRatingController extends Controller
 
     public function storeRating(Request $request){
           $userid = Auth::id();
-            $id= $request['dish_id'];
-            $dishes = Ratings::create(['user_id' => $userid,
-                                    'dish_id' => $request['dish_id'],
-                                    'comment' => $request['review'],
-                                    'rating'  => $request['rating']
+           $id= $request['dish_id'];
+           $date=Carbon::now();
+           $ndate=explode(" ",$date);
+           $userorder=UserOrder::where('dish_id', $id)
+                                  ->where('user_id', $userid)
+                                  ->get();
+          //IF NAKA ORDER NA SYA
+             if(!$userorder->isEmpty()){
+              foreach($userorder as $uo){
+                 $new = Ratings::create(['comment' => $request['review'],
+                                    'rating'  => $request['rating'],
+                                    'date_rated'=>$ndate[0],
+                                    'uorder_id'=>$uo->uo_id,
+                                    'dish_id'=>$id
                                   ]);
-               $ratings = Ratings::where('dish_id', $id)->join('users' , 'users.id', '=' , 'dish_ratings.user_id')->get();
-
-            $rate=Ratings::where('dish_id', $id)->get();
-            $avg=0;
-            $average=0;
-            $tempwhole=0;
-            $r=count($rate);
-            for($i=0; $i<$r; $i++){
-              $avg+=$rate[$i]->rating/$r;
-            }
-
-               $average=round($avg, 1);
-               $tempavg=$average;
-               $tempwhole=floor($tempavg);
-               $tempdec=$tempavg-$tempwhole;
-               // dd($tempdec);
-                if($tempdec==0.0){
-                $average=$average;
-                // dd($average);
                }
-               else if($tempdec<=0.5 || $tempdec>=0.5){
-                $tempdec=0.5;
-                $average=$tempwhole + $tempdec;
-                // dd($average, "hello");
-                 
-               }
-                
-               //                      // dd($average, $id);
-
-             $averagedish = DishAverage::where('dish_id', $id)->get();
-            if($averagedish->isEmpty()) {
-            $avg= DishAverage::create(['dish_id'=>$id,
-                                      'average'=>$average
-                                     ]);
-              
-            }
-
-             // foreach($averagedish as $avgrate){
-              $avgrate= DishAverage::where('dish_id', $id)
-                                    ->update(['dish_id'=>$id,
-                                              'average'=>$average
-                                     ]);
-                                    // dd($average);
-          // }
-
-            
-
-         return redirect()->route('home.details', compact('id', 'ratings', 'avgrate'));
-    }
-
-        public function storeRating2(Request $request){
-            $userid = Auth::id();
-            $id= $request['dish_id'];
-            $dishes = Ratings::create(['user_id' => $userid,
-                                    'dish_id' => $request['dish_id'],
-                                    'comment' => $request['review'],
-                                    'rating'  => $request['rating']
-                                  ]);
-               $ratings = Ratings::where('dish_id', $id)->join('users' , 'users.id', '=' , 'dish_ratings.user_id')->get();
-
-              $rate=Ratings::where('dish_id', $id)->get();
+            //GET ALL THE RATINGS OF THE DISH
+             $rate=Ratings::where('dish_id', $id)
+                        ->get();
+              //CALCULATE AVERAGE
               $avg=0;
               $average=0;
               $tempwhole=0;
@@ -123,17 +76,99 @@ class DishRatingController extends Controller
                else if($tempdec<=0.5 || $tempdec>=0.5){
                 $tempdec=0.5;
                 $average=$tempwhole + $tempdec;
-                // dd($average, "hello");
-               }
-             $averagedish = DishAverage::where('dish_id', $id)->get();
-            if($averagedish->isEmpty()) {
-            $avg= DishAverage::create(['dish_id'=>$id,
-                                      'average'=>$average]);
-          }
+                  // dd($average);
+               }                     
+
+              $averagedish = DishAverage::where('dish_id', $id)->get();
+              // dd($averagedish);
+              //if wala pay average ang dish
+              if($averagedish->isEmpty()) {
+                // dd("hello");
+                $avg= DishAverage::create(['average'=>$average,
+                                      'dr_id'=>0,
+                                      'dish_id'=>$id
+                                      ]);
+              }
+              //else if naa na ang ish sa dish average
+              else{
               $avgrate= DishAverage::where('dish_id', $id)
-                                    ->update(['dish_id'=>$id,
-                                              'average'=>$average]);
-                     
+                                    ->update(['average'=>$average]);
+                                  }
+
+             }
+         //ELSE IF WA PA SYA KA ORDER
+            else{
+                return Redirect::back()->withErrors(["Sorry! you're not allowed to rate this this dish. You must order first"]);
+              }
+         return redirect()->route('home.details', compact('id', 'ratings', 'avgrate'))->with('success', 'Thank you for rating this dish!');;
+    }
+
+        public function storeRating2(Request $request){
+           $userid = Auth::id();
+           $id= $request['dish_id'];
+           $date=Carbon::now();
+           $ndate=explode(" ",$date);
+           $userorder=UserOrder::where('dish_id', $id)
+                                  ->where('user_id', $userid)
+                                  ->get();
+          //IF NAKA ORDER NA SYA
+             if(!$userorder->isEmpty()){
+              foreach($userorder as $uo){
+                 $new = Ratings::create(['comment' => $request['review'],
+                                    'rating'  => $request['rating'],
+                                    'date_rated'=>$ndate[0],
+                                    'uorder_id'=>$uo->uo_id,
+                                    'dish_id'=>$id
+                                  ]);
+               }
+         //GET ALL THE RATINGS OF THE DISH
+            $rate=Ratings::where('dish_id', $id)
+                        ->get();
+        //CALCULATE AVERAGE
+              $avg=0;
+              $average=0;
+              $tempwhole=0;
+              $r=count($rate);
+              for($i=0; $i<$r; $i++){
+                $avg+=$rate[$i]->rating/$r;
+              }
+
+               $average=round($avg, 1);
+               $tempavg=$average;
+               $tempwhole=floor($tempavg);
+               $tempdec=$tempavg-$tempwhole;
+               // dd($tempdec);
+                if($tempdec==0.0){
+                $average=$average;
+                // dd($average);
+               }
+               else if($tempdec<=0.5 || $tempdec>=0.5){
+                $tempdec=0.5;
+                $average=$tempwhole + $tempdec;
+                  // dd($average);
+               }                     
+
+              $averagedish = DishAverage::where('dish_id', $id)->get();
+              // dd($averagedish);
+              //if wala pay average ang dish
+              if($averagedish->isEmpty()) {
+                // dd("hello");
+                $avg= DishAverage::create(['average'=>$average,
+                                      'dr_id'=>0,
+                                      'dish_id'=>$id
+                                      ]);
+              }
+              //else if naa na ang ish sa dish average
+              else{
+              $avgrate= DishAverage::where('dish_id', $id)
+                                    ->update(['average'=>$average]);
+                                  }
+
+             }
+         //ELSE IF WA PA SYA KA ORDER
+            else{
+                return Redirect::back()->withErrors(["Sorry! you're not allowed to rate this this dish. You must order first"]);
+              }
             
 
          $cook = Dish::join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
@@ -143,16 +178,27 @@ class DishRatingController extends Controller
     }
 
       public function storeRating3(Request $request){
-         $userid = Auth::id();
-            $id= $request['dish_id'];
-            $dishes = Ratings::create(['user_id' => $userid,
-                                    'dish_id' => $request['dish_id'],
-                                    'comment' => $request['review'],
-                                    'rating'  => $request['rating']
+                  $userid = Auth::id();
+           $id= $request['dish_id'];
+           $date=Carbon::now();
+           $ndate=explode(" ",$date);
+           $userorder=UserOrder::where('dish_id', $id)
+                                  ->where('user_id', $userid)
+                                  ->get();
+          //IF NAKA ORDER NA SYA
+             if(!$userorder->isEmpty()){
+              foreach($userorder as $uo){
+                 $new = Ratings::create(['comment' => $request['review'],
+                                    'rating'  => $request['rating'],
+                                    'date_rated'=>$ndate[0],
+                                    'uorder_id'=>$uo->uo_id,
+                                    'dish_id'=>$id
                                   ]);
-               $ratings = Ratings::where('dish_id', $id)->join('users' , 'users.id', '=' , 'dish_ratings.user_id')->get();
-
-              $rate=Ratings::where('dish_id', $id)->get();
+               }
+         //GET ALL THE RATINGS OF THE DISH
+            $rate=Ratings::where('dish_id', $id)
+                        ->get();
+        //CALCULATE AVERAGE
               $avg=0;
               $average=0;
               $tempwhole=0;
@@ -173,16 +219,30 @@ class DishRatingController extends Controller
                else if($tempdec<=0.5 || $tempdec>=0.5){
                 $tempdec=0.5;
                 $average=$tempwhole + $tempdec;
-                // dd($average, "hello");
-               }
-             $averagedish = DishAverage::where('dish_id', $id)->get();
-            if($averagedish->isEmpty()) {
-            $avg= DishAverage::create(['dish_id'=>$id,
-                                      'average'=>$average]);
-          }
+                  // dd($average);
+               }                     
+
+              $averagedish = DishAverage::where('dish_id', $id)->get();
+              // dd($averagedish);
+              //if wala pay average ang dish
+              if($averagedish->isEmpty()) {
+                // dd("hello");
+                $avg= DishAverage::create(['average'=>$average,
+                                      'dr_id'=>0,
+                                      'dish_id'=>$id
+                                      ]);
+              }
+              //else if naa na ang ish sa dish average
+              else{
               $avgrate= DishAverage::where('dish_id', $id)
-                                    ->update(['dish_id'=>$id,
-                                              'average'=>$average]);
+                                    ->update(['average'=>$average]);
+                                  }
+
+             }
+         //ELSE IF WA PA SYA KA ORDER
+            else{
+                return Redirect::back()->withErrors(["Sorry! you're not allowed to rate this this dish. You must order first"]);
+              }
                      
             
          $cook = Dish::join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
@@ -192,19 +252,28 @@ class DishRatingController extends Controller
     }
 
 
-   public function storeCookR(request $request){
+   public function storeCookR(Request $request){
       $userid = Auth::id();
-       $date=Carbon::now();
-        // dd($request['review']);
-            // $id= $request['cook_id'];
-            // dd($request['review'], $request['cook_id'], $request['rating'], $id);
-            $dishes = CookRating::create(['user_id' => $userid,
-                                    'cook_id' => $request['cook_id'],
-                                    'comment' => $request['review'],
+      $date=Carbon::now();
+      $ndate=explode(" ",$date);
+            $id= $request['cook_id'];
+            $did=$request['dish_id'];
+            // dd($id, $did);
+        $userorder=UserOrder::where('dish_id', $did)
+                            ->where('user_id', $userid)
+                                  ->get();
+      // dd($userorder);
+        foreach($userorder as $uo){
+            $dishes = CookRating::create(['comment' => $request['review'],
                                     'rating'  => $request['rating'],
-                                    'date_rate' =>$date
+                                    'date_rate' =>$ndate[0],
+                                    'uorder_id'=>$uo->uo_id,
+                                    'dish_id'=>$uo->dish_id,
+                                    'cook_id'=>$id
                                   ]);
+        }
             $rate=CookRating::where('cook_id', $request['cook_id'])->get();
+            // dd($rate);
               $avg=0;
               $average=0;
               $tempwhole=0;
@@ -228,26 +297,30 @@ class DishRatingController extends Controller
                 // dd($average, "hello");
                }
              $averagedish = CookAverage::where('cook_id', $request['cook_id'])->get();
+             // dd($averagedish);
             if($averagedish->isEmpty()) {
-            $avg= CookAverage::create(['cook_id'=>$request['cook_id'],
-                                      'average'=>$average]);
-          }
+            $avg= CookAverage::create(['average'=>$average,
+                                      'cook_id'=>$request['cook_id']
+                                      ]);
+          } 
+          else{
               $avgrate= CookAverage::where('cook_id', $request['cook_id'])
-                                    ->update(['cook_id'=>$request['cook_id'],
-                                              'average'=>$average]);
-                     
+                                    ->update(['average'=>$average]);
+          }       
             
-            $delivering= UserOrder::all();
+            $delivering= UserOrder::where('dish_id', $did)->where('user_id', $userid)->get();
+            // dd($delivering);
             return view('user.userconfirm', compact('delivering'));
    }
     public function storeCookR2(request $request){
       $userid = Auth::id();
-       $date=Carbon::now();
+        $date=Carbon::now();
+           $ndate=explode(" ",$date);
           $dishes = CookRating::create(['user_id' => $userid,
                                     'cook_id' => $request['cook_id'],
                                     'comment' => $request['review'],
                                     'rating'  => $request['rating'],
-                                    'date_rate' =>$date
+                                    'date_rate' =>$ndate
                                   ]);
             $rate=CookRating::where('cook_id', $request['cook_id'])->get();
               $avg=0;
@@ -285,23 +358,22 @@ class DishRatingController extends Controller
             return view('user.pmuserconfirm', compact('delivering'));
    }
       
-   public function showRate($id){
+   public function showRate(Request $request){
+    $id=$request['dish_id'];
     $dishes = Dish::where('did', $id)->get();
-    // $cook = Dish::join('cooks', 'cooks.id', '=', ' dishes.authorCook_id')->where('did', $dishes->did)->get();
-    // dd($dishes);
     return view('user.reviewrating', compact('dishes'));
    }
 
   public function showRatepm($id){
     $dishes = Dish::where('did', $id)->get();
-    // $cook = Dish::join('cooks', 'cooks.id', '=', ' dishes.authorCook_id')->where('did', $dishes->did)->get();
-    // dd($dishes);
     return view('user.pmrevrating', compact('dishes'));
    }
 
-   public function showCookRate($id){
-    $cook = Dish::join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
-                         ->where('did', $id)->get();
+   public function showCookRate(Request $request){
+    $userid=Auth::id();
+    $id=$request['dish_id'];
+    $cook=$request['cook_id'];
+    $cook = Dish::where('did', $id)->get();
       return view('user.cookrevrating', compact('cook'));
    }
 
@@ -312,8 +384,11 @@ class DishRatingController extends Controller
       return view('user.pmcookrevrating', compact('cook', 'pm'));
    }
 
-   public function showConfirm(){
-       $delivering= UserOrder::all();
+   public function showConfirm(Request $request){
+    $userid=Auth::id();
+    $did=$request['dish_id'];
+      $delivering= UserOrder::where('dish_id', $did)->where('user_id', $userid)->get();
+      // dd($delivering);
     return view('user.userconfirm', compact('delivering'));
    }
 

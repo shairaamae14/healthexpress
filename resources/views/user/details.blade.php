@@ -122,9 +122,21 @@ h1 { font-size: 1.5em; margin: 10px; }
 </div>
 
 <div class="main main-raised"  style="width: 65%; float: left">
- <a href="./home" class="btn-simple btn btn-succes">
+ <a href="{{route('user.index')}}" class="btn-simple btn btn-succes">
           <i class="material-icons">arrow_back</i>Go back to home</a>
-  
+@if(session('success'))
+          <div class="alert alert-success">
+            <div class="container">
+                <div class="alert-icon">
+                    <i class="material-icons">check</i>
+                </div>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true"><i class="material-icons">clear</i></span>
+                </button>
+                <b>Success!</b> {{session('success')}}
+            </div>
+        </div>
+ @endif
  @if($errors->any())
   <div class="alert alert-danger">
      <div class="container-fluid">
@@ -155,13 +167,11 @@ h1 { font-size: 1.5em; margin: 10px; }
                           <span class="badge" style="font-family: verdana; border-radius:0px; background-color:#30BB6D; margin-top:-10px;">Php {{$dets->sellingPrice}}</span>
                           </h2>
                            @if(count($avgrate))
-                          <span class="badge" style="font-family: verdana; background-color:#30BB6D; margin-top:-10px;">Breakfast(static) &nbsp;</span><br>
                             <label class="avgbox" id="avgbox"></label>
                             <label class="avgbox2" id="avgbox2"></label><br>
-                           
                             @foreach($avgrate as $avg)
                             <input type="hidden" class="avg" value="{{$avg->average}}"/>
-                            <label>{{$avg->average}} out of 5 stars</label>
+                           <!--  <label>{{$avg->average}} out of 5 stars</label><br><br> -->
                           @endforeach
                           @else
                           <center><small>
@@ -172,6 +182,7 @@ h1 { font-size: 1.5em; margin: 10px; }
                            <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
                           </small></center>
                           @endif
+                          <span class="badge" style="font-family: verdana; background-color:#30BB6D; margin-top:10px;">Breakfast(static) &nbsp;</span><br>
                           <p>{{$dets->dish_desc}}</p>
                         </div>
                     </div>
@@ -195,10 +206,10 @@ h1 { font-size: 1.5em; margin: 10px; }
   <div class="col-sm-12"><center>
          <h4 class="text-left" style="color:white; background-color: #4caf50; padding:5px"><b>Details</b></h4>
         @foreach($dishes as $dets)
-        <span class="badge" style="font-family: verdana; border-radius:0px; border:2px solid #30BB6D; background-color:#30BB6D; font-size: 15px"> Cook:</span>
+        <span class="badge" style="font-family: verdana; border-radius:0px; background-color:#4caf50;; font-size: 15px"> Cook:</span>
         <a href="{{route('cook.details',  ['id' => $dets->authorCook_id])}}" style="text-decoration: none; color:#30BB6D; ">
         <span class="badge" style="font-family: verdana; color:black; border-radius:2px; background-color:transparent; font-size: 15px">{{$dets->first_name}} {{$dets->last_name}}</span></a>&nbsp;
-         <span class="badge" style="font-family: verdana; border-radius:0px; border:2px solid #30BB6D; background-color:#30BB6D; font-size: 15px"> Serving:</span>
+         <span class="badge" style="font-family: verdana; border-radius:0px; background-color:#4caf50; font-size: 15px"> Serving:</span>
         <span class="badge" style="font-family: verdana; color:black; border-radius:2px;background-color:transparent; font-size: 15px">{{$dets->no_of_servings}} serving/s</span><br>
        @endforeach
     <!-- </div> -->
@@ -318,10 +329,11 @@ h1 { font-size: 1.5em; margin: 10px; }
   @else
        <center><h2 style="color:gray"> No ratings and reviews for this dish </h2></center>
   @endif
-      </div>
-        <div class="text-center">
+  <div class="text-center">
             {{$ratings->links()}}
             </div>
+      </div>
+        
 
   </div><!--section!-->
 </div><!--main-raised!-->
@@ -381,25 +393,25 @@ h1 { font-size: 1.5em; margin: 10px; }
            <br>
      </div>
    @if(count(Cart::content()))
-   <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-         <form method="post" action="#">
-           <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                            @foreach(Cart::content() as $item)
-                            <input name="amount" value="{{Cart::subtotal()}}" type="hidden">
-                            @endforeach
-                            @if(count(Cart::content()))
-                            @foreach(Cart::content() as $item)
-                            <input type="hidden" name="dish[]" value="{{$item->id}}">
-                            <input type="hidden" name="cook_id[]" value="{{$item->cook_id}}">
-                            <input type="hidden" name="total[]" value="{{$item->subtotal}}">
-                            <input type="hidden" name="qty[]" value="{{$item->qty}}">
-                            <input type="hidden" name="order_date" value="{{\Carbon\Carbon::now('Asia/Manila')}}">
-                            <input type="hidden" name="payment_mode" value="COD">
-                            <input type="hidden" name="delivery_fee" id="del_fee1" value="">
-                            @endforeach
-                            @endif
-             <button type="submit" class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:right; margin-top: 2px; border:none" id="chkt"> Proceed </a>
-        <!-- </form> -->
+             <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
+                   <form method="post" action="{{route('express.summary')}}">
+                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                      @foreach(Cart::content() as $item)
+                                      <input name="amount" value="{{Cart::subtotal()}}" type="hidden">
+                                      @endforeach
+                                      @if(count(Cart::content()))
+                                      @foreach(Cart::content() as $item)
+                                      <input type="hidden" name="dish[]" value="{{$item->id}}">
+                                      <input type="hidden" name="cook_id[]" value="{{$item->cook_id}}">
+                                      <input type="hidden" name="total[]" value="{{$item->subtotal}}">
+                                      <input type="hidden" name="qty[]" value="{{$item->qty}}">
+                                      <input type="hidden" name="order_date" value="{{\Carbon\Carbon::now('Asia/Manila')}}">
+                                      <input type="hidden" name="payment_mode" value="COD">
+                                      <input type="hidden" name="delivery_fee" id="del_fee1" value="">
+                                      @endforeach
+                                      @endif
+        <button type="submit" class="btn btn-flat btn-primary edit"  style="background-color:#30BB6D; float:right; margin-top: 2px; border:none" id="chkt"> Proceed </butoon>
+        </form>
         <form method="POST" action="{{url('detcart/clear')}}">
           <input type="hidden" name="_token" value="{{ csrf_token() }}">
           <input type="hidden" name="dish_id" value="$item->id">
@@ -461,11 +473,6 @@ h1 { font-size: 1.5em; margin: 10px; }
         <!-- /.modal -->
 @endforeach
 <!--  End Modal -->
-
-
-
-    
-
 @endsection
 @section('addtl_scripts')
 <!--   Core JS Files   -->
@@ -581,8 +588,6 @@ $(function(){
 
 
   </script>
-
-
 
 @endsection
 

@@ -166,9 +166,10 @@
       <div class="row">
         <center>
         <h1 class="card-title text-center" style="font-size:50px;">Thank you for rating us! Til' next time! </h1>
-        <label class="text-center">Please confirm that you have received your order. Enjoy your meal!</label>
+        <label class="text-center">Please confirm that you have received your order. Enjoy your meal!</label><br>
         @foreach($delivering as $del)
         <form method="post" action="{{route('order.statuschange', ['id'=>$del->uo_id])}}">
+        <!-- <input type="text" name="uo_id" value="{{$del->uo_id}}"> -->
           @endforeach
           {{csrf_field()}}
           <button type="submit" class="btn btn-flat btn-success">Confirm received order</button>

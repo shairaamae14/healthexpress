@@ -7,9 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class DishAverage extends Model
 {
    protected $table = 'dishrating_avg';
-        protected $fillable = ['dish_id', 'average'];
+        protected $fillable = ['average', 'dish_id'];
 
-    public function dishes(){
-    	return $this->belongsTo('App\Dish', 'dish_id', 'did');
-    }
+
 }

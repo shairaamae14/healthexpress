@@ -8,7 +8,7 @@ class CookRating extends Model
 {
 
        protected $table = 'cook_ratings';
-        protected $fillable = ['uo_id', 'comment', 'rating', 'date_rate'];
+        protected $fillable = ['comment', 'rating', 'date_rate', 'uorder_id', 'dish_id', 'cook_id'];
 
 
 

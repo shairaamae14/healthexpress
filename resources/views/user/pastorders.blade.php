@@ -129,7 +129,7 @@ div.tab button.active {
     <div class="section">
       <div class="container">
         <div class="row">
-           <a href="{{route('order.orderhistory')}}" class="btn-simple btn btn-succes"><i class="material-icons">arrow_back</i>Go back to order status</a>
+           <a href="{{route('order.orderhistory')}}" class="btn-simple btn btn-succes"><i class="material-icons">arrow_back</i>Go back to express order status</a>
             <h1 class="text-center" style="color:white; background-color: #4caf50"><b>Order History</b></h1>
               @if(count($done))
                     <table class="table">
@@ -146,7 +146,7 @@ div.tab button.active {
                          @foreach($done as $d)
                       <tbody>
                         <tr>
-                          <td><img src="{{url('./dish_imgs/'.$d->dish_img)}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
+                          <td><img src="{{url('./dish_imgs/'.$d->dishes['dish_img'])}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
                             {{$d->dish_name}}<br>
                             {{$d->first_name}}&nbsp;{{$d->last_name}}</td>
                              <td class="text-center">{{$d->totalQty}}</td>
