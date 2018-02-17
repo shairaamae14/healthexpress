@@ -86,7 +86,9 @@ hr{
 div#calendar .fc-center h2 {
   color: black;
 }
-
+td.fc-day.fc-past {
+    background-color: #EEEEEE;
+}
 /*Resize the wrap to see the search bar change!*/
 
 </style>
@@ -121,14 +123,15 @@ div#calendar .fc-center h2 {
                 <p class="card-text text-center">Suggested dishes based your health information</p>
               </div>
               <center>
-
+                {{-- <input type="hidden" name="daterange" value="{{$daterange}}"> --}}
 
                 
               <form method="post" action="#">
               {{csrf_field()}}
                 <div id='wrap'>
                   <div id='external-events'>
-                      
+                      <input type="hidden" name="start" value="{{$start}}">
+                      <input type="hidden" name="end" value="{{$end}}">
                       <!-- Breakfast -->
                       <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
                       <label class="card-title text-center" style="color:#4caf50;">Breakfast</label>
@@ -292,6 +295,7 @@ div#calendar .fc-center h2 {
 $(document).ready(function() {
 
     $('#external-events .fc-event').each(function() {
+
       // make the event draggable using jQuery UI
       $(this).draggable({
         zIndex: 999,
@@ -315,10 +319,16 @@ $(document).ready(function() {
             center: 'title',
             right: 'month,agendaWeek,agendaDay'
           },  
+          showNonCurrentDates:false,
           editable: true,
           droppable: true, // this allows things to be dropped onto the calendar
           dragRevertDuration: 0,
           eventLimit: 3,
+          
+          validRange: {
+            start: '{{$start}}',
+            end:'{{$end}}'
+          },
           
           drop: function() {
             // is the "remove after drop" checkbox checked?
@@ -377,6 +387,7 @@ $(document).ready(function() {
               dataType: 'json',
               success: function(){
                 $('#calendar').fullCalendar('updateEvent',event);
+                {{-- window.location.href="{{route('user.plan.newindex')}}"; --}}
                 location.reload();
                 Pace.restart();
               },
@@ -433,6 +444,13 @@ $(document).ready(function() {
               }
             });
           },
+          eventConstraint: {
+            businessHours: {
+              start: moment().format('HH:mm'),
+              end: '24:00'
+            }
+          }
+
 
         });
       }
