@@ -16,6 +16,7 @@ use Braintree_Transaction;
 use Braintree_CreditCard;
 use Braintree_Customer;
 use Cart;
+use Session;
 use Illuminate\Support\Facades\Input;
 class OrdersController extends Controller
 {
@@ -32,19 +33,21 @@ class OrdersController extends Controller
         $long=0;
         $distance=0;
         $delcharge=0;
+        $totaldelfee=0;
         $address;
         $contactnum;
-      $cooklat=Input::get('cooklat');
-      $cooklng=Input::get('cooklng');
-      $dish_id=Input::get('dish');
-      $sidenote=Input::get('sidenote');
-      $name=Input::get('name');
-      $totalqty=Input::get('qty');
-      $om_id=1;
-      $mode_delivery="Delivery";
-      $order_status="Pending";
 
-         if($request['address']=="default"){
+        $cooklat=Input::get('cooklat');
+        $cooklng=Input::get('cooklng');
+        $dish_id=Input::get('dish');
+        $sidenote=Input::get('sidenote');
+        $name=Input::get('name');
+        $totalqty=Input::get('qty');
+        $om_id=1;
+        $mode_delivery="Delivery";
+        $order_status="Pending";
+
+        if($request['address']=="default"){
           $lat=$request['cLat'];
           $long=$request['cLng'];
           $address=$request['userlocation'];
@@ -58,51 +61,41 @@ class OrdersController extends Controller
           $contactnum=$request['contact_num'];
           // dd($lat, $long, $address, $contactnum);
         }
+        // dd($address,$contactnum);
 
         for($i=0; $i<count($cooklat); $i++){
-            $cooklat[$i]=$request['cooklat'][$i];
-            $cooklng[$i]=$request['cooklng'][$i];     
-     //calculate   
+            $cooklatt[$i]=$request['cooklat'][$i];
+            $cooklngg[$i]=$request['cooklng'][$i];     
+     //calculate  
+     
             $distance=array();
             $theta=array();
             $dist=array();
             $distacos=array();
             $miles=array();
-            $distance=array();
+            $distance=[];
             $delcharge=array();
             $theta[$i] = $cooklng[$i] - $long;
-            $dist[$i]= sin(deg2rad($cooklat[$i])) * sin(deg2rad($lat)) +  cos(deg2rad($cooklat[$i])) * cos(deg2rad($lat)) * cos(deg2rad($theta[$i]));
+            $dist[$i]= sin(deg2rad($cooklatt[$i])) * sin(deg2rad($lat)) +  cos(deg2rad($cooklatt[$i])) * cos(deg2rad($lat)) * cos(deg2rad($theta[$i]));
             $distacos[$i] = acos($dist[$i]);
             $distrad[$i] = rad2deg($distacos[$i]);
             $miles[$i] = $distrad[$i] * 60 * 1.1515;
              $distance[$i]=$miles[$i] * 1.609344;
              $distance[$i]=round($distance[$i],2);
-             if($distance[$i]>5.00){
-             $delcharge[$i]=40.00+(2.50*($distance[$i]-5));
-                // dd($delcharge);
-            }
-            else if ($distance[$i]<=5.00){
-             $delcharge[$i]=40.00;
-             }
-              
-
-            //MAG STORE KO HERE
-              $user_order = UserOrder::create(['user_id'=>$user->id,
-                                               'totalQty'=>$request['qty'][$i],
-                                               'order_status'=>$order_status,
-                                               'sidenote'=>$request['sidenote'][$i],
-                                               'om_id'=>$om_id,
-                                               'dish_id'=>$request['dish'][$i],
-                                               'delivery_fee'=>$delcharge[$i],
-                                               'title'=>$request['name'][$i],
-                                               'address'=>$address,
-                                               'contact_no'=>$contactnum,
-                                               'mode_delivery'=>$mode_delivery,
-                                               'distance'=>$distance[$i],
-                                               'longitude'=>$long,
-                                               'latitude'=>$lat        
-                                            ]);
-
+                   if($distance[$i]>5.00){
+                   $delcharge[$i]=40.00+(2.50*($distance[$i]-5));
+                      // dd($delcharge);
+                   $totaldelfee+=$delcharge[$i];
+                  }
+                  else if ($distance[$i]<=5.00){
+                   $delcharge[$i]=40.00;
+                   $totaldelfee+=$delcharge[$i];
+                   }
+                  
+                  // dd($totaldelfee);
+              //    $distance[$i] = collect();
+              // Session::push('distance', $distance); 
+              // dd($distance[0]);
          }
         
      
@@ -128,19 +121,20 @@ class OrdersController extends Controller
             $service = $option;
         }
 
-        $userorder=UserOrder::join('users', 'users.id', '=', 'user_orders.user_id')->where('om_id', 1)
-                            ->where('order_status', "Pending")
+        $userorder=UserOrder::join('users', 'users.id', '=', 'user_orders.user_id')
+                            ->where('om_id', 1)
+                            ->where('order_status', 'Pending')
+                            ->where('user_id', $user->id)
                             ->groupBy('user_id')
                             ->get();
-        $userorder1=UserOrder::where('om_id', 1)->where('user_id', $user->id)->where('order_status', "Pending")->get();
-                    $totaldelfee=0;
-                    $subtotal=0;
-                      foreach($userorder1 as $or){
-                  $totaldelfee+=$or->delivery_fee;
-                }
+        $userorder1=UserOrder::where('om_id', 1)->where('user_id', $user->id)->where('order_status', 'Pending')->get();
+                    // $totaldelfee=0;
+                    // $subtotal=0;
+                // dd($totaldelfee);
+
               $subtotal=Cart::subtotal();
               $alltotal=$subtotal+$totaldelfee;
-        return view('user.paymentmethod', compact('option', 'clientToken', 'userorder', 'totaldelfee', 'alltotal'));
+        return view('user.paymentmethod', compact('option', 'clientToken', 'userorder', 'totaldelfee', 'alltotal','lat','long','mode_delivery','address','contactnum', 'distance'));
     }   
     
     public function index()
@@ -208,10 +202,23 @@ class OrdersController extends Controller
             $transaction = Braintree_Transaction::find($result->transaction->id);
             if(in_array($transaction->status, $transactionStatuses)) {
                 for ($index = 0; $index < count($request->dish); $index++) {
-                    $user_order = UserOrder::create(['user_id' => $user->id, 'payment_id' => 1, 
-                            'order_date' => \Carbon\Carbon::now(),'totalQty' => $request['qty'][$index], 
-                            'totalAmount' => $request['total'][$index], 'order_status' => $status,
-                            'sidenote' => $sidenote, 'om_id' => 1, 'dish_id' => $request['dish'][$index]]);
+                    $user_order = UserOrder::create(['user_id' => $user->id, 
+                'payment_id' => 1, 
+                'order_date' => \Carbon\Carbon::now(),
+                'totalQty' => $request['qty'][$index], 
+                 'totalAmount' => $request['total'][$index], 
+                 'order_status' => $status,
+                  'sidenote' => $request['sidenote'][$index], 
+                  'om_id' => 1, 
+                  'dish_id' => $request['dish'][$index],
+                  'address' =>$request['address'], 
+                  'contact_no' => $request['contact'],
+                  'mode_delivery' => $request['mode_delivery'], 
+                  'delivery_fee' => $request['delivery_fee'],
+                  'distance' => $request['distance'][$index],
+                  'latitude' =>$request['lat'],
+                  'longitude' =>$request['long']
+                ]);
                 }   
                 Cart::destroy();
             }
@@ -227,10 +234,23 @@ class OrdersController extends Controller
             $transaction = Braintree_Transaction::find($result->transaction->id);
             if(in_array($transaction->status, $transactionStatuses)) {
                 for ($index = 0; $index < count($request->dish); $index++) {
-                    $user_order = UserOrder::create(['user_id' => $user->id, 'payment_id' => 1, 
-                            'order_date' => \Carbon\Carbon::now(),'totalQty' => $request['qty'][$index], 
-                            'totalAmount' => $request['total'][$index], 'order_status' => $status,
-                            'sidenote' => $sidenote, 'om_id' => 1, 'dish_id' => $request['dish'][$index]]);
+                    $user_order = UserOrder::create(['user_id' => $user->id, 
+                'payment_id' => 1, 
+                'order_date' => \Carbon\Carbon::now(),
+                'totalQty' => $request['qty'][$index], 
+                 'totalAmount' => $request['total'][$index], 
+                 'order_status' => $status,
+                  'sidenote' => $request['sidenote'][$index], 
+                  'om_id' => 1, 
+                  'dish_id' => $request['dish'][$index],
+                  'address' =>$request['address'], 
+                  'contact_no' => $request['contact'],
+                  'mode_delivery' => $request['mode_delivery'], 
+                  'delivery_fee' => $request['delivery_fee'],
+                  'distance' => $request['distance'][$index],
+                  'latitude' =>$request['lat'],
+                  'longitude' =>$request['long']
+                ]);
                 }   
                 Cart::destroy();
             }
@@ -284,14 +304,27 @@ class OrdersController extends Controller
         $orders = collect();
         $user_order = collect();
         $status = 'Pending';
-        $sidenote = $request->sidenote;
+        $dish = $request['dish'];
+        // dd($dish);
         if($request['payment_mode'] == 'COD') {
-            for ($index = 0; $index < count($request->dish); $index++) {
-              $user_order = UserOrder::create(['user_id' => $user->id, 'payment_id' => 1, 
-                'order_date' => \Carbon\Carbon::now(),'totalQty' => $request['qty'][$index], 
-                 'totalAmount' => $request['total'][$index], 'order_status' => $status,
-                  'sidenote' => $sidenote, 'om_id' => 1, 'dish_id' => $request['dish'][$index]]);
-               
+            for ($index = 0; $index < count($dish); $index++) {
+              $user_order = UserOrder::create(['user_id' => $user->id, 
+                'payment_id' => 1, 
+                'order_date' => \Carbon\Carbon::now(),
+                'totalQty' => $request['qty'][$index], 
+                 'totalAmount' => $request['total'][$index], 
+                 'order_status' => $status,
+                  'sidenote' => $request['sidenote'][$index], 
+                  'om_id' => 1, 
+                  'dish_id' => $request['dish'][$index],
+                  'address' =>$request['address'], 
+                  'contact_no' => $request['contact'],
+                  'mode_delivery' => $request['mode_delivery'], 
+                  'delivery_fee' => $request['delivery_fee'],
+                  'distance' => $request['distance'][$index],
+                  'latitude' =>$request['lat'],
+                  'longitude' =>$request['long']
+                ]);
             }
         }
         Cart::destroy();
