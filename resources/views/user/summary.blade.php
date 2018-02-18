@@ -156,7 +156,7 @@ input[type="text"], input[type="number"], #mode {
               </div>
            <div class="footer">
           <button type="button" onclick="window.location.href='{{route('user.plan.index')}}'" class="btn btn-flat btn-danger">Go Back</button>
-           <button type="button" class="btn btn-flat btn-success add-dish" value="./payment" onclick="window.location.href='{{route('user.payment')}}'">Payment Method</button>
+           <button type="button" class="btn btn-flat btn-success add-dish" value="./payment" onclick="window.location.href='{{route('user.payment')}}'">Proceed to paymment</button>
           </div>
 
           </div><!--content!-->
@@ -203,6 +203,8 @@ input[type="text"], input[type="number"], #mode {
                       <input type="hidden" id="cityLng{{$order->uo_id}}" name="cityLng" class="cityLng"/>
                       <input type="hidden" id="dish_id" value="{{$order->pm_id}}">
                       <center><div id="map{{$order->uo_id}}" class="map" style="height:200px"></div>
+                      <input type="hidden" name="cooklat" value="{{$order->dishes->cook['latitude']}}">
+                      <input type="hidden" name="cooklng" value="{{$order->dishes->cook['longitude']}}">
                     </div>
                     <div id="pick" class="pick" hidden>
                       <label style="float:center; font-size:15px; color:black">
@@ -526,12 +528,17 @@ $(document).ready(function(){
   $('.set').click(function(){
     $('.details').attr('hidden', 'hidden');
     $('.askq').removeAttr('hidden');
-    // document.getElementById('setdetails')..style.visibility = 'hidden';
+    // document.getElementById('setdetails')..style.visibility = 'hidden';b
+    // $('.askq').append('<button type="button" class="btn btn-success btn-flat showask">SET</button>')
     $(this).attr('disabled', 'disabled');
     $('.lblset').removeAttr('hidden');
     $('.showdet').removeAttr('hidden');
       
   });
+
+  // $('.showask').click(function(){
+  //   ('.details').removeAttr('hidden');
+  // });
   $('.mode').change(function(e){
     ChangeDrop(this);
     var id=$('.dish_id').val();

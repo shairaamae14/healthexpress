@@ -216,67 +216,15 @@ h1 { font-size: 1.5em; margin: 10px; }
       <div class="container">
         <div class="row">
               <center>
-               <div class="col-sm-12">
-               <h2 class="card-title tex-center" style="color:#30bb6d">How's the cook?</h2>
-               <form action="{{route('dish.cook.addRating')}}" method="post">
-              {{csrf_field()}}
-              @foreach($cook as $d)
-                <input type="hidden" name="cook_id" value="{{$d->authorCook_id}}">
-                <input type="hidden" name="dish_id" value="{{$d->did}}">
-                <!-- <input type="text" name="uorder_id" value="{{$d->uo_id}}"> -->
-               
-                  <fieldset class="rating" style="margin-left:450px">
-                    <input type="radio" id="star5" name="rating" value="5" />
-                    <label class = "full" for="star5" title="Excellent - 5 stars"></label>
-                    <input type="radio" id="star4half" name="rating" value="4.5" />
-                    <label class="half" for="star4half" title="Super Delicious - 4.5 stars"></label>
-                    <input type="radio" id="star4" name="rating" value="4" />
-                    <label class = "full" for="star4" title="Very Delicious - 4 stars"></label>
-                    <input type="radio" id="star3half" name="rating" value="3.5" />
-                    <label class="half" for="star3half" title="Delicious - 3.5 stars"></label>
-                    <input type="radio" id="star3" name="rating" value="3" />
-                    <label class = "full" for="star3" title="Satisfied - 3 stars"></label>
-                    <input type="radio" id="star2half" name="rating" value="2.5" />
-                    <label class="half" for="star2half" title="Good- 2.5 stars"></label>
-                    <input type="radio" id="star2" name="rating" value="2" />
-                    <label class = "full" for="star2" title="Fair - 2 stars"></label>
-                    <input type="radio" id="star1half" name="rating" value="1.5" />
-                    <label class="half" for="star1half" title="Bad - 1.5 stars"></label>
-                    <input type="radio" id="star1" name="rating" value="1" />
-                    <label class = "full" for="star1" title="Very Bad- 1 star"></label>
-                    <input type="radio" id="starhalf" name="rating" value="0.5" />
-                    <label class="half" for="starhalf" title="Poor - 0.5 stars"></label>
-                  </fieldset>
-                  <!--ENDOFSTAR!-->
-                  <br><br>
-                  <center>
-                  <div class="col-sm-12">
-                  <h2 class="card-title text-center" style="color:#30bb6d">Leave a comment</h2>
-                  <label> Tell us what you think!</label>
-                  <textarea class="form-control animated"  id="new-review" name="review" placeholder="How's the dish?" rows="1" style="margin-left: 5px; width:50%"></textarea>
-                  </div>
-                <button type="submit" class="btn btn-flat btn-success">Proceed</button>
-           
-              <!--   <a href="{{route('user.confirmorder', ['id'=>$d->did])}}" class="btn btn-danger btn-simple "><b>Skip</b></a>
-                </center> -->
-                 @endforeach
-                </form>
-                 @foreach($cook as $d)
-               <!--  <a href="{{route('user.cookReview', ['id'=> $d->did])}}" class="btn btn-danger btn-simple btn-flat"><b>Skip</b> -->
-                  <form  method="post" action="{{route('user.confirmorder')}}">
-                          <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                          <input type="hidden" name="dish_id" value="{{$d->did}}">
-                          <input type="hidden" name="cook_id" value="{{$d->authorCook_id}}">
-                          <button type="submit" class="btn btn-danger btn-simple" style="margin-top:-1px; margin-left:10px">
-                          Skip
-                          </button>
-                        </form>
-                @endforeach
-                </div>
-               
-
-
-               
+             <h1 class="card-title text-center" style="font-size:50px;">Thank you for rating us! Til' next time! </h1>
+        <label class="text-center">Please confirm that you have received your order. Enjoy your meal!</label><br>
+        @foreach($delivering as $del)
+        <form method="post" action="{{route('pmorder.statuschange', ['id'=>$del->uo_id])}}">
+        <!-- <input type="text" name="uo_id" value="{{$del->uo_id}}"> -->
+          @endforeach
+          {{csrf_field()}}
+          <button type="submit" class="btn btn-flat btn-success">Confirm received order</button>
+        </form>
 
          </div><!--row!-->
        </div><!--container!-->

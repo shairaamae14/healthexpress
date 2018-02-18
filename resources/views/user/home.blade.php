@@ -242,7 +242,7 @@
                   </div>
                    <div class="col-md-12">
                        <label style="font-size: 12px; color: gray; float:left"> Price: <b id="price">{{$item->price}}.00</b></label>
-                        <label style="font-size: 12px; color: gray; float:right">Total Amount:<b id="itemamount">Php {{$item->subtotal}}.00</b></label>
+                        <label style="font-size: 12px; color: gray; float:right">Total Amount:<b id="itemamount">Php {{$item->subtotal}}</b></label>
                    </div>
                    @endforeach
                      @else

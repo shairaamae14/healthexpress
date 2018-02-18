@@ -159,22 +159,6 @@ h1 { font-size: 1.5em; margin: 10px; }
   content: "\f005";
 }
 
-.rating2 > .half2:before { 
-  content: "\f089";
-  position: absolute;
-}
-
-.rating2 > label { 
-  color: #ddd; 
- float: right; 
-}
-
-/***** CSS Magic to Highlight Stars on Hover *****/
-
-.rating2 > input:checked ~ label, /* show gold star when clicked */
-.rating2:not(:checked) > label:hover, /* hover current star */
-.rating2:not(:checked) > label:hover ~ label { color: orange;  } /* hover previous stars in list */
-
 .rating2 > input:checked + label:hover, /* hover current star when changing rating */
 .rating2 > input:checked ~ label:hover,
 .rating2 > label:hover ~ input:checked ~ label, /* lighten current selection */
@@ -218,13 +202,12 @@ h1 { font-size: 1.5em; margin: 10px; }
               <center>
                <div class="col-sm-12">
                <h2 class="card-title tex-center" style="color:#30bb6d">How's the cook?</h2>
-               <form action="{{route('dish.cook.addRating')}}" method="post">
+               <form action="{{route('dish.cook.addRating2')}}" method="post">
               {{csrf_field()}}
               @foreach($cook as $d)
                 <input type="hidden" name="cook_id" value="{{$d->authorCook_id}}">
                 <input type="hidden" name="dish_id" value="{{$d->did}}">
-                <!-- <input type="text" name="uorder_id" value="{{$d->uo_id}}"> -->
-               
+             @endforeach
                   <fieldset class="rating" style="margin-left:450px">
                     <input type="radio" id="star5" name="rating" value="5" />
                     <label class = "full" for="star5" title="Excellent - 5 stars"></label>
@@ -256,14 +239,10 @@ h1 { font-size: 1.5em; margin: 10px; }
                   <textarea class="form-control animated"  id="new-review" name="review" placeholder="How's the dish?" rows="1" style="margin-left: 5px; width:50%"></textarea>
                   </div>
                 <button type="submit" class="btn btn-flat btn-success">Proceed</button>
-           
-              <!--   <a href="{{route('user.confirmorder', ['id'=>$d->did])}}" class="btn btn-danger btn-simple "><b>Skip</b></a>
-                </center> -->
-                 @endforeach
                 </form>
-                 @foreach($cook as $d)
+             @foreach($cook as $d)
                <!--  <a href="{{route('user.cookReview', ['id'=> $d->did])}}" class="btn btn-danger btn-simple btn-flat"><b>Skip</b> -->
-                  <form  method="post" action="{{route('user.confirmorder')}}">
+                  <form  method="post" action="{{route('user.confirmpmorder')}}">
                           <input type="hidden" name="_token" value="{{ csrf_token() }}">
                           <input type="hidden" name="dish_id" value="{{$d->did}}">
                           <input type="hidden" name="cook_id" value="{{$d->authorCook_id}}">
@@ -272,6 +251,8 @@ h1 { font-size: 1.5em; margin: 10px; }
                           </button>
                         </form>
                 @endforeach
+       
+                </center>
                 </div>
                
 

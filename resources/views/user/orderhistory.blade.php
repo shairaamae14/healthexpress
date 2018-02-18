@@ -142,6 +142,7 @@
                       <th>Order</th>
                       <th>Total Amount</th>
                       <th class="text-center">Date Ordered</th>
+                      <th class="text-center">Delivery Address</th>
                       <th class="text-center">Status</th>
                     </tr>
                   </thead>
@@ -150,10 +151,11 @@
                     <tr>
                       <td class="text-center">{{$pend->totalQty}}</td>
                       <td><img src="{{url('./dish_imgs/'.$pend->dishes['dish_img'])}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
-                        {{$pend->dish_name}}
+                        {{$pend->dishes['dish_name']}}
                       </td>
                       <td>Php {{$pend->totalAmount}}</td>
                       <td class="text-center">{{$pend->order_date}}</td>
+                      <td class="text-center">{{$pend->address}}</td>
                       <td class="text-center"><span class="badge" style="color:white; background-color:#66bb6a;">{{$pend->order_status}}</span></td>
                     </tr>
                   </tbody>
@@ -176,6 +178,7 @@
                       <th>Order</th>
                       <th>Total Amount</th>
                       <th class="text-center">Date Ordered</th>
+                       <th class="text-center">Delivery Address</th>
                       <th class="text-center">Status</th>
                     </tr>
                   </thead>
@@ -184,10 +187,11 @@
                     <tr>
                       <td class="text-center">1</td>
                       <td><img src="{{url('./dish_imgs/'.$cook->dishes['dish_img'])}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
-                        {{$cook->dish_name}}
+                        {{$cook->dishes['dish_name']}}
                       </td>
                       <td>Php {{$cook->totalAmount}}</td>
                       <td class="text-center">{{$cook->order_date}}</td>
+                      <td class="text-center">{{$cook->address}}</td>
                       <td class="text-center"><span class="badge" style="color:white; background-color:#66bb6a;">{{$cook->order_status}}</span></td>
                     </tr>
                   </tbody>
@@ -210,6 +214,7 @@
                       <th>Order</th>
                       <th class="text-right">Amount</th>
                       <th class="text-right">Date Ordered</th>
+                      <th class="text-center">Delivery Address</th>
                       <th class="text-right">Status</th>
                       <th class="text-center">Action</th>
                     </tr>
@@ -219,11 +224,11 @@
                     <tr>
                       <td class="text-center">{{$del->totalQty}}</td>
                       <td><img src="{{url('./dish_imgs/'.$del->dishes['dish_img'])}}" style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
-                        {{$del->dish_name}}<br>
-                        {{$del->first_name}}&nbsp;{{$del->last_name}}
+                        {{$del->dishes['dish_name']}}<br>
                       </td>
-                      <td>Php {{$del->totalAmount}}</td>
-                      <td>{{$del->order_date}}</td>
+                      <td class="text-center">Php {{$del->totalAmount}}</td>
+                      <td class="text-center">{{$del->order_date}}</td>
+                      <td class="text-center">{{$del->address}}</td>
                       <td class="text-right"><span class="badge" style="color:white; background-color:#66bb6a; float:right">{{$del->order_status}}</span></td>
                       <td class="td-actions text-right">
                        <!-- <a href="{{route('dish.orderReview', ['id'=> $del->did])}}" rel="tooltip" title="Did you receive your order?" class="btn btn-success btn-flat btn-sm" style="margin-top:-1px; margin-left:10px"> -->
@@ -255,8 +260,9 @@
                     <tr>
                       <th class="text-center">Quantity</th>
                       <th>Order</th>
-                      <th>Total Amount</th>
+                      <th class="text-center">Total Amount</th>
                       <th class="text-center">Date Ordered</th>
+                      <th class="text-center">Delivery Address</th>
                       <th class="text-center">Status</th>
                     </tr>
                   </thead>
@@ -265,11 +271,11 @@
                     <tr>
                       <td class="text-center">{{$com->totalQty}}</td>
                       <td><img src="{{url('./dish_imgs/'.$com->dishes['dish_img'])}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
-                        {{$com->dish_name}}<br>
-                        {{$com->first_name}}&nbsp;{{$com->last_name}}
+                        {{$com->dishes['dish_name']}}<br>
                       </td>
-                      <td>Php {{$com->totalAmount}}</td>
+                      <td class="text-center">Php {{$com->totalAmount}}</td>
                       <td class="text-center">{{$com->order_date}}</td>
+                      <td class="text-center">{{$com->address}}</td>
                       <td class="text-center"><span class="badge" style="color:white; background-color:#66bb6a;">{{$com->order_status}}</span>
                       </td>
                     </tr>

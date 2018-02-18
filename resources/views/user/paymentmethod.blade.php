@@ -79,7 +79,7 @@
                    <br>
                     <h1 class="title text-left" style="font-size: 80px; font-family: 'Lobster', cursive;">Express Order</h1>
 
-                     <a href="./plannedmeals"><button id="ordermode" style="background-color:transparent;  border:2px solid white; font-size: 40px; margin-top:-20px; margin-left:10px; font-family: 'Lobster', cursive; color:white; width: 300px">Planned Meal
+                     <a href="{{route('user.plan.home')}}"><button id="ordermode" style="background-color:transparent;  border:2px solid white; font-size: 40px; margin-top:-20px; margin-left:10px; font-family: 'Lobster', cursive; color:white; width: 300px">Planned Meal
                      </button>
                      </a>
 
@@ -96,20 +96,8 @@
   <div class="section">
     <div class="container" style="width: 100%;">
       <div class="row">
-        <div class="col-md-12">
-           <h1 class="text-center" style="color:white; background-color: #4caf50; margin-top: -10px"><b>Payment Method</b></h1>
-        
-           <div class="col-md-12" style="border:1px solid #4caf50">
-         @foreach($userorder as $order)
-         <label><b style="color: #4caf50">Name:</b> {{$order->user['fname']}}&nbsp;{{$order->user['lname']}}</label><br>
-         <label><b style="color: #4caf50">Delivery Address:</b> {{$order->address}}</label><br>
-         <label><b style="color: #4caf50">Contact Number:</b> {{$order->contact_no}}</label><br>
-         <label><b style="color: #4caf50">Total Delivery Fee:</b> Php {{$totaldelfee}}.00</label><br>
-         <label><b style="color: #4caf50">Total:</b> Php {{$alltotal}}.00</label>
-
-          @endforeach
-          </div><br><br><br><br>
-      <div class="col-md-6 col-md-offset-3" style="padding-top: 20px"> 
+     <h1 class="text-center" style="color:#30bb6d">PAYMENT METHOD</h1><br>
+        <div class="col-md-6 col-md-offset-3" style="padding-top: 20px"> 
           <div class="profile-tabs" id="tabpayment">
             <div class="nav-align-center">
               <ul class="nav nav-pills nav-pills-success" role="tablist">
@@ -133,12 +121,19 @@
                       {{csrf_field()}}
                       @if(count(Cart::content()))
                       @foreach(Cart::content() as $item)
-                      <input type="hidden" name="dish[]" value="{{$item->id}}">
-                      <input type="hidden" name="total[]" value="{{$item->subtotal}}">
-                      <input type="hidden" name="qty[]" value="{{$item->qty}}">
-                      <input type="hidden" name="order_date" value="{{\Carbon\Carbon::now('Asia/Manila')}}">
-                      <input type="hidden" name="payment_mode" value="COD">
-                      <input type="hidden" name="delivery_fee" id="del_fee" value="">
+                            <input type="hidden" name="dish[]" value="{{$item->id}}">
+                            <input type="hidden" name="total[]" value="{{$item->subtotal}}">
+                            <input type="hidden" name="qty[]" value="{{$item->qty}}">
+                            <input type="hidden" name="order_date" value="{{\Carbon\Carbon::now('Asia/Manila')}}">
+                            <input type="hidden" name="payment_mode" value="COD">
+                            <input type="hidden" name="address" value="{{$address}}">
+                            <input type="hidden" name="contact" value="{{$contactnum}}">
+                            <input type="hidden" name="mode_delivery" value="{{$mode_delivery}}">
+                            <input type="hidden" name="delivery_fee" value="{{$totaldelfee}}">
+                            <input type="hidden" name="sidenote[]" value="{{$item->sidenote}}">
+                            <input type="hidden" name="lat" value="{{$lat}}">
+                            <input type="hidden" name="long" value="{{$long}}">
+                      
                       @endforeach
                       @endif
 
@@ -166,12 +161,20 @@
                             @endforeach
                             @if(count(Cart::content()))
                             @foreach(Cart::content() as $item)
+                            {{-- @foreach($userorder as $order) --}}
                             <input type="hidden" name="dish[]" value="{{$item->id}}">
                             <input type="hidden" name="total[]" value="{{$item->subtotal}}">
                             <input type="hidden" name="qty[]" value="{{$item->qty}}">
                             <input type="hidden" name="order_date" value="{{\Carbon\Carbon::now('Asia/Manila')}}">
                             <input type="hidden" name="payment_mode" value="COD">
-                            <input type="hidden" name="delivery_fee" id="del_fee1" value="">
+                            <input type="hidden" name="address" value="{{$address}}">
+                            <input type="hidden" name="contact" value="{{$contactnum}}">
+                            <input type="hidden" name="mode_delivery" value="{{$mode_delivery}}">
+                            <input type="hidden" name="delivery_fee" value="{{$totaldelfee}}">
+                            <input type="hidden" name="sidenote[]" value="{{$item->sidenote}}">
+                            <input type="hidden" name="lat" value="{{$lat}}">
+                            <input type="hidden" name="long" value="{{$long}}">
+                            {{-- <input type="hidden" name="delivery_fee" id="del_fee1" value=""> --}}
                             @endforeach
                             @endif
                         <div id="dropin-container"></div>
@@ -211,11 +214,11 @@
                    <div class="col-md-12">
                        <label style="font-size: 12px"><b>Cook:{{$item->cookname}}</b></label>
                    </div>
+                     <!-- <div class="col-md-6">
+                   <label  name="quantity" style="color:black; margin-right:20px"><b>{{$item->qty}} x </b></label>
+                   </div> -->
                    <div class="col-sm-6">
-                    <label class="name" style="float: left; font-size: 15px; color:black"><b class="name">{{$item->name}}</b><br></label>
-                   </div>
-                   <div class="col-md-6">
-                   <label  name="quantity" style="color:black; margin-right:20px"><b> x {{$item->qty}} </b></label>
+                    <label class="name" style="float: left; font-size: 15px; color:black"><b class="name">{{$item->qty}} x {{$item->name}}</b><br></label>
                    </div>
                    <div class="col-md-12">
                    @if($item->sidenote)
@@ -238,8 +241,16 @@
                   <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
                          <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots">
                          <b>Subtotal:</b>&nbsp;Php
-                         <label style="color:black" id="subtotal">{{Cart::subtotal()}}</label>
-                         </p>
+                         <label style="color:black" id="subtotal" value="{{Cart::subtotal()}}">{{Cart::subtotal()}}</label>
+                         </p><br>
+                         <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots">
+                         <b>Total Delivery Fee:</b>&nbsp;Php
+                         <label style="color:black" id="delfee">{{$totaldelfee}}</label>
+                         </p><br>
+                         <!-- <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots">
+                         <b>Total:</b>&nbsp;Php
+                         <label style="color:black" id="total"></label>
+                         </p> -->
                          <br>
                    </div>
                  @if(count(Cart::content()))
@@ -258,6 +269,7 @@
                                           <input type="hidden" name="order_date" value="{{\Carbon\Carbon::now('Asia/Manila')}}">
                                           <input type="hidden" name="payment_mode" value="COD">
                                           <input type="hidden" name="delivery_fee" id="del_fee1" value="">
+                                          <input type="hidden" name="address" value="{{$address}}">
                                           @endforeach
                                           @endif
                         
@@ -355,12 +367,14 @@
 <script>
 $(document).ready(function(){
  var subtotal = document.getElementById('subtotal').textContent;
- var total=parseInt(subtotal) + 40;
- var fee = 40;
- var delivery = fee.toFixed(2);
- document.getElementById('subtotal').textContent=total.toFixed(2);
- $('#del_fee').val(fee);
- $('#del_fee1').val(fee);
+ alert(subtotal);
+ var delfee=document.getElementById('delfee').textContent;
+var delivery = delfee.toFixed(2);
+ var total=parseInt(subtotal) + delivery;
+ // var total=total.toFixed(2);
+ document.getElementById('total').textContent=total.toFixed(2);
+ // $('#del_fee').val(fee);
+ // $('#del_fee1').val(fee);
 })
 </script>
 @endsection

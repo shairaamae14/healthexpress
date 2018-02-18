@@ -215,16 +215,14 @@ h1 { font-size: 1.5em; margin: 10px; }
     <div class="section">
       <div class="container">
         <div class="row">
-              <center>
+               <center>
                <div class="col-sm-12">
-               <h2 class="card-title tex-center" style="color:#30bb6d">How's the cook?</h2>
-               <form action="{{route('dish.cook.addRating')}}" method="post">
+               <h2 class="card-title tex-center" style="color:#30bb6d">Rate Dish</h2>
+               <form action="{{route('dish.addRating3')}}" method="post">
               {{csrf_field()}}
-              @foreach($cook as $d)
-                <input type="hidden" name="cook_id" value="{{$d->authorCook_id}}">
+              @foreach($dishes as $d)
                 <input type="hidden" name="dish_id" value="{{$d->did}}">
-                <!-- <input type="text" name="uorder_id" value="{{$d->uo_id}}"> -->
-               
+                @endforeach
                   <fieldset class="rating" style="margin-left:450px">
                     <input type="radio" id="star5" name="rating" value="5" />
                     <label class = "full" for="star5" title="Excellent - 5 stars"></label>
@@ -255,15 +253,12 @@ h1 { font-size: 1.5em; margin: 10px; }
                   <label> Tell us what you think!</label>
                   <textarea class="form-control animated"  id="new-review" name="review" placeholder="How's the dish?" rows="1" style="margin-left: 5px; width:50%"></textarea>
                   </div>
+                  </center>
                 <button type="submit" class="btn btn-flat btn-success">Proceed</button>
-           
-              <!--   <a href="{{route('user.confirmorder', ['id'=>$d->did])}}" class="btn btn-danger btn-simple "><b>Skip</b></a>
-                </center> -->
-                 @endforeach
                 </form>
-                 @foreach($cook as $d)
+                   @foreach($dishes as $d)
                <!--  <a href="{{route('user.cookReview', ['id'=> $d->did])}}" class="btn btn-danger btn-simple btn-flat"><b>Skip</b> -->
-                  <form  method="post" action="{{route('user.confirmorder')}}">
+                  <form method="post" action="{{route('user.cookReview2')}}" ">
                           <input type="hidden" name="_token" value="{{ csrf_token() }}">
                           <input type="hidden" name="dish_id" value="{{$d->did}}">
                           <input type="hidden" name="cook_id" value="{{$d->authorCook_id}}">
@@ -272,9 +267,9 @@ h1 { font-size: 1.5em; margin: 10px; }
                           </button>
                         </form>
                 @endforeach
+                </form>
                 </div>
-               
-
+             
 
                
 

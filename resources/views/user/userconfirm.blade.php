@@ -1,4 +1,4 @@
-@extends('user-layouts.master')
+    @extends('user-layouts.master')
 <style>
   @import url('http://fonts.googleapis.com/css?family=Lobster');
   @import url('http://fonts.googleapis.com/css?family=Anton');

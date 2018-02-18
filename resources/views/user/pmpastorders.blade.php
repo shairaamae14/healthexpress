@@ -129,17 +129,18 @@ div.tab button.active {
     <div class="section">
       <div class="container">
         <div class="row">
-           <a href="{{route('order.orderhistory')}}" class="btn-simple btn btn-succes"><i class="material-icons">arrow_back</i>Go back to express order status</a>
-            <h1 class="text-center" style="color:white; background-color: #4caf50"><b>Order History</b></h1>
+         <a href="{{route('pmorder.orderhistory')}}" class="btn-simple btn btn-succes"><i class="material-icons">arrow_back</i>Go back to planned meal order status</a>
+          <h1 class="text-center" style="color:white; background-color: #4caf50"><b>Order History</b></h1>
               @if(count($done))
                     <table class="table">
                       <thead>
                         <tr>
                          <th>Order</th>
                           <th class="text-center">Quantity</th>
-                         <th>Total Amount</th>
-                         <th class="text-center">Date Ordered</th>
-                         <th class="text-center">Delivery Address</th>
+                          <th class="text-center">Total Amount</th>
+                          <th class="text-center">Date Ordered</th>
+                          <th class="text-center">Mode of Delivery</th>
+                          <th class="text-center">Delivery/Pickup Address
                           <th class="text-center">Status</th>
 
                         </tr>
@@ -151,10 +152,11 @@ div.tab button.active {
                             {{$d->dishes['dish_name']}}<br>
                             {{$d->first_name}}&nbsp;{{$d->last_name}}</td>
                              <td class="text-center">{{$d->totalQty}}</td>
-                            <td>Php {{$d->totalAmount}}</td>
-                            <td>{{$d->order_date}}</td>
+                            <td class="text-center">Php {{$d->totalAmount}}</td>
+                            <td class="text-center">{{$d->order_date}}</td>
+                            <td class="text-center">{{$d->mode_delivery}}</td>
                             <td class="text-center">{{$d->address}}</td>
-                            <td class="text-right"><span class="badge" style="color:white; background-color:#66bb6a; float:right">{{$d->order_status}}</span>
+                            <td class="text-center"><span class="badge" style="color:white; background-color:#66bb6a; float:right">{{$d->order_status}}</span>
                             </td>
                           </tr>
 
