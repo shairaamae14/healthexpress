@@ -142,9 +142,12 @@ div#calendar .fc-center h2 {
                       {{csrf_field()}}
                       @if($items)
                         @foreach($items as $item)
-                          <input type="hidden" name="dish[]" value="{{$item->dish_id}}">
-                          <input type="hidden" name="price[]" value="{{$item->sellingPrice}}">
-                          {{-- <input type="hidden" name="qty[]" value="{{$item->qty}}"> --}}
+                          <input type="hidden" name="uo_id[]" value="{{$item->uo_id}}">
+                          {{-- <input type="hidden" name="user_id" value="{{$item->user_id}}"> --}}
+                          {{-- <input type="hidden" name="total[]" value="{{$total}}">
+                          <input type="hidden" name="allcost[]" value="{{$allcost}}">
+                          <input type="hidden" name="delfee[]" value="{{$delfee}}">
+                          <input type="hidden" name="price[]" value="{{$item->sellingPrice}}"> --}}
                           <input type="hidden" name="payment_mode" value="COD">
                           <input type="hidden" name="delivery_fee" id="del_fee" value="">
                         @endforeach
@@ -167,10 +170,12 @@ div#calendar .fc-center h2 {
                             @endforeach
                             @if(count($items))
                               @foreach($items as $item)
-                                <input type="hidden" name="dish[]" value="{{$item->dish_id}}">
-                                <input type="hidden" name="price[]" value="{{$item->sellingPrice}}">
-                                {{-- <input type="hidden" name="qty[]" value="{{$item->qty}}"> --}}
-                                <input type="hidden" name="order_date" value="{{\Carbon\Carbon::now('Asia/Manila')}}">
+                                <input type="hidden" name="uo_id[]" value="{{$item->uo_id}}">
+                                {{-- <input type="hidden" name="user_id" value="{{$item->user_id}}"> --}}
+                                {{-- <input type="hidden" name="total[]" value="{{$total}}">
+                                <input type="hidden" name="allcost[]" value="{{$allcost}}">
+                                <input type="hidden" name="delfee[]" value="{{$delfee}}">
+                                <input type="hidden" name="price[]" value="{{$item->sellingPrice}}"> --}}
                                 <input type="hidden" name="payment_mode" value="COD">
                                 <input type="hidden" name="delivery_fee" id="del_fee1" value="">
                               @endforeach

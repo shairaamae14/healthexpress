@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\UserPmOrder;
-use App\PlannedMeals;
+use App\UserOrder;
 use Auth;
+use App\User;
 use App\PaymentMethod;
 use Braintree_ClientToken;
 use Braintree_Transaction;
@@ -44,12 +44,16 @@ class PmOrdersController extends Controller
             $service = $option;
         }
 
-      $items = PlannedMeals::join('dishes', 'planned_meals.dish_id', '=', 'dishes.did')
+        $items = UserOrder::join('dishes', 'user_orders.dish_id', '=', 'dishes.did')
                             ->where('user_id', $id)
-                            ->where('order_status', 'not')
+                            ->where('order_status', 'Initial')
                             ->get();
 
-      return view('user.pmealpayment', compact('items', 'clientToken', 'option'));
+        $total = $request->total;
+        $allcost = $request->allcost;
+        $delfee = $request->delfee;
+
+      return view('user.pmealpayment', compact('items', 'clientToken', 'option', 'total', 'allcost', 'delfee'));
     }
 
     /**
@@ -70,56 +74,42 @@ class PmOrdersController extends Controller
      */
     public function store(Request $request)
     {
-        $user = Auth::id();
-//        dd($request);
-//        $mode = OrderMode::create(['om_name' => 'Express Meal']);
-        
-        
-         $nonceFromTheClient = $request['payment_method_nonce'];
-         $transact = Braintree_Transaction::sale([
-                    'amount' => $request['total'],
-                    'paymentMethodNonce' => $nonceFromTheClient,
-                    'options' => [
-                      'submitForSettlement' => True
-                    ]
-          ]);
-         
-         
-        $transact = Braintree_Transaction::submitForSettlement('the_transaction_id');
-        if ($transact->success) {
-            $settledTransaction = $transact->transaction;
-        } else {
-            $errors = $transact->errors;
-        }
-
-        $totalAmount=0;
-        $amount = Input::get('price');
-
-        for($i=0; $i<count($amount); $i++){
-            $totalAmount+=$amount[$i];
-        }
-
-
+        $user = Auth::user();
+        $orders = collect();
+        $user_order = collect();
         $status = 'Pending';
+        $dish = $request['uo_id'];
+        // dd($dish);
         if($request['payment_mode'] == 'COD') {
-            for ($index = 0; $index < count($request->dish); $index++) {
-                $details = UserPmOrder::create(['user_id' => $user,
-                'dish_id' => $request['dish'][$index],
-                'payment_id' => 1,
-                'totalAmount' => $totalAmount,
-                'order_status' => $status
-            ]); 
+            for ($index = 0; $index < count($dish); $index++) {
+              $user_order = UserOrder::where('user_id', $user->id)->where('uo_id',$request['uo_id'][$index])
+                    ->update([
+                        'payment_id' => 1, 
+                        'order_date' => \Carbon\Carbon::now(), 
+                        'order_status' => $status
+                ]);
             }
         }
-        // Cart::destroy();
         return redirect()->route('order.orderhistory');
     }
 
     public function payment(Request $request){
         $customer = Auth::user();
         $user = User::find($customer->id);
+        $status = 'Pending';
+        $sidenote = $request->sidenote;
+        $total_amount = $request['amount'];
         $nonce = $request['payment_method_nonce'];
         
+        $transactionStatuses = [
+            Braintree_Transaction::AUTHORIZED,
+            Braintree_Transaction::AUTHORIZING,
+            Braintree_Transaction::SETTLED,
+            Braintree_Transaction::SETTLING,
+            Braintree_Transaction::SETTLEMENT_CONFIRMED,
+            Braintree_Transaction::SETTLEMENT_PENDING,
+            Braintree_Transaction::SUBMITTED_FOR_SETTLEMENT,
+        ];
         if(!$customer->braintree_id) {
             $cust = Braintree_Customer::create([
                     'paymentMethodNonce' => $nonce,
@@ -141,14 +131,6 @@ class PmOrdersController extends Controller
             $user->card_last_four = $cust->customer->creditCards[0]->last4;
             $user->save();
             
-            $total_amount=0;
-            $amount = Input::get('price');
-
-            for($i=0; $i<count($amount); $i++){
-                $total_amount+=$amount[$i];
-            }
-
-
             $result = Braintree_Transaction::sale([
                 'amount' => $total_amount,
                 'customerId' => $user->braintree_id,
@@ -156,8 +138,18 @@ class PmOrdersController extends Controller
                     'submitForSettlement' => true
                 ]
             ]);
-            
-            $this->orderStatus($result->transaction->id);
+            $transaction = Braintree_Transaction::find($result->transaction->id);
+            if(in_array($transaction->status, $transactionStatuses)) {
+                for ($index = 0; $index < count($request->uo_id); $index++) {
+                    $user_order = UserOrder::where('user_id', $user->id)->where('uo_id',$request['uo_id'][$index])
+                    ->update([
+                        'payment_id' => 1,   
+                        'order_date' => \Carbon\Carbon::now(), 
+                        'order_status' => $status
+                ]);
+                }   
+                Cart::destroy();
+            }
         }
         else {
             $result = Braintree_Transaction::sale([
@@ -167,7 +159,19 @@ class PmOrdersController extends Controller
                     'submitForSettlement' => true
                 ]
             ]);
+            $transaction = Braintree_Transaction::find($result->transaction->id);
+            if(in_array($transaction->status, $transactionStatuses)) {
+                for ($index = 0; $index < count($request->uo_id); $index++) {
+                    $user_order = UserOrder::where('user_id', $user->id)->where('uo_id',$request['uo_id'][$index])
+                    ->update([
+                        'payment_id' => 1,   
+                        'order_date' => \Carbon\Carbon::now(), 
+                        'order_status' => $status
+                ]);
+                }   
+            }
         }
+        return redirect()->route('order.orderhistory');
     }
 
     /**
