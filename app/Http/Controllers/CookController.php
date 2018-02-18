@@ -227,21 +227,32 @@ class CookController extends Controller
 
      public function cookviewrating(){
         $cid  = Auth::id();
-        $cookrev = CookRating::join('user_orders', 'user_orders.uo_id', '=', 'cook_ratings.uorder_id')
-                        ->join('dishes', 'dishes.did', '=', 'user_orders.dish_id')
-                         ->join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
-                        ->where('authorCook_id', $cid)
-                        ->paginate(5);
-   
-            $avgrate=CookAverage::join('cook_ratings', 'cook_ratings.id', '=', 'cookrating_avg.cr_id')
-                        ->join('user_orders', 'user_orders.uo_id', '=', 'cook_ratings.uorder_id')
+
+              $ratings = CookRating::join('user_orders', 'user_orders.uo_id', '=', 'cook_ratings.uorder_id')
+                        ->join('users', 'users.id', '=', 'user_orders.user_id')
                         ->join('dishes', 'dishes.did', '=', 'user_orders.dish_id')
                         ->join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
                         ->where('authorCook_id', $cid)
-                        ->get();
-    // dd($cookrev);        
+                        ->paginate(5);
+   
+            $avgrate=CookAverage::where('cook_id', $cid)->get();
+                 // dd($avgrate);
 
-    return view('cook.cookreviews', compact('cookrev'));
+    //     $cookrev = CookRating::join('user_orders', 'user_orders.uo_id', '=', 'cook_ratings.uorder_id')
+    //                     ->join('dishes', 'dishes.did', '=', 'user_orders.dish_id')
+    //                      ->join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
+    //                     ->where('authorCook_id', $cid)
+    //                     ->paginate(5);
+   
+    //         $avgrate=CookAverage::join('cook_ratings', 'cook_ratings.id', '=', 'cookrating_avg.cr_id')
+    //                     ->join('user_orders', 'user_orders.uo_id', '=', 'cook_ratings.uorder_id')
+    //                     ->join('dishes', 'dishes.did', '=', 'user_orders.dish_id')
+    //                     ->join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
+    //                     ->where('authorCook_id', $cid)
+    //                     ->get();
+    // // dd($cookrev);        
+
+    return view('cook.cookreviews', compact('ratings', 'avgrate'));
    }
 
 }

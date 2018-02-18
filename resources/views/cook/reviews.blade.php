@@ -1,6 +1,7 @@
 @extends('cook-layouts.cook-master')
 <style>
-#rate{
+
+{
   color:orange;
 }
 </style>
@@ -26,7 +27,7 @@
         <div class="col-md-12">
         @foreach($avg as $a)
          <span class="badge" style="font-family: verdana; border-radius:5px; background-color:#30BB6D; font-size: 15px">{{$a->dish_name}}</span><br><br>
-         <span class="badge" style="font-family: verdana; border-radius:2px; border:2px solid #30BB6D; color:#30BB6D; background-color:transparent; font-size: 15px">{{$a->average['average']}} out of 5 stars</span><br><br>
+         <span class="badge" style="font-family: verdana; border-radius:2px; color:black; background-color:transparent; font-size: 15px">{{$a->average}} out of 5 stars</span><br><br>
         @endforeach
            <ul class="timeline">
            @if(count($rate))
@@ -37,9 +38,10 @@
                   </span>
             </li>
             <li>
-              <i class="fa fa-star bg-orange"></i>
+              <img src="{{url('./user_imgs/'.$r->profpic    )}}" class="img-circle" style="width:50px; height:50px"/>
                <div class="timeline-item">
                 <h3 class="timeline-header">
+                    <label style="font-size: 12px">{{$r->date_rated}}<br>
                    <div class="avg">
                     <label class="avgbox" id="avgbox"></label>
                     <label class="avgbox2" id="avgbox2"></label><br>
@@ -60,6 +62,9 @@
             </li>
             @endforeach
             </ul>
+              <div class="text-center">
+            {{$rate->links()}}
+            </div>
             </div>
             </div>
              @else

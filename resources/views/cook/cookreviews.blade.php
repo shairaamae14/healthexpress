@@ -24,17 +24,16 @@
       <!-- row -->
       <div class="row">
         <div class="col-md-12">
-         @foreach($cookrev as $cookavg)
-        <span class="badge" style="font-family: verdana; border-radius:2px; border:2px solid #30BB6D; color:#30BB6D; background-color:transparent; font-size: 15px"> {{$cookavg->average['average']}} out of 5 stars</span><br><br>
+         @foreach($avgrate as $cookavg)
+        <span class="badge" style="font-family: verdana; border-radius:2px; border:2px solid #30BB6D; color:black; background-color:transparent; font-size: 15px"> {{$cookavg->average}} out of 5 stars</span><br><br>
          @endforeach
          <br>
            <ul class="timeline">
-           @if(count($cookrev))
-           @foreach($cookrev as $cr)
-           @foreach($cr->rating as $crr)
+           @if(count($ratings))
+           @foreach($ratings as $cr)
             <li class="time-label">
                   <span class="bg-green">
-                  {{$crr->user['fname']}}&nbsp;{{$crr->user['lname']}}
+                  {{$cr->fname}}&nbsp;{{$cr->lname}}
                   </span>
             </li>
             <li>
@@ -44,14 +43,14 @@
                    <div class="avg">
                     <label class="avgbox" id="avgbox"></label>
                     <label class="avgbox2" id="avgbox2"></label><br>
-                    <input type="hidden" class="avg" value="{{$crr['rating']}}"/>
-                    <label>{{$crr['rating']}} out of 5 stars</label>
+                    <input type="hidden" class="avg" value="{{$cr->rating}}"/>
+                    <label>{{$cr->rating}} out of 5 stars</label>
                    </div>
                 </h3>
       
                 <div class="timeline-body" style="margin-left:10px">
-                @if($crr['comment'])
-                  {{$crr['comment']}}
+                @if($cr->comment)
+                  {{$cr->comment}}
                 @else
                   <label style="color:gray"> No comment</label>
                 @endif
@@ -59,7 +58,6 @@
           
               </div>
             </li>
-            @endforeach
             @endforeach
             </ul>
             </div>

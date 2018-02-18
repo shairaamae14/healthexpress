@@ -637,9 +637,10 @@ class DishController extends Controller
      public function viewrating($id){
     // dd($id);
     $rate=Ratings::join('user_orders', 'user_orders.uo_id', '=', 'dish_ratings.uorder_id')
+                  ->join('users', 'users.id', '=', 'user_orders.user_id')
                   ->join('dishes', 'dishes.did', '=', 'dish_ratings.dish_id')
                   ->where('dishes.did', $id)->paginate(6);
-    $avg=Dish::where('did', $id)->get();
+    $avg=DishAverage::where('dish_id', $id)->get();
    
     return view('cook.reviews', compact('rate', 'avg'));
    }
