@@ -11,6 +11,7 @@ use Braintree_ClientToken;
 use Braintree_Transaction;
 use Braintree_CreditCard;
 use Braintree_Customer;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Input;
 
 class PmOrdersController extends Controller
@@ -90,7 +91,7 @@ class PmOrdersController extends Controller
                 ]);
             }
         }
-        return redirect()->route('order.orderhistory');
+      return redirect()->route('pmorder.showallorders');
     }
 
     public function payment(Request $request){
@@ -174,48 +175,62 @@ class PmOrdersController extends Controller
         return redirect()->route('order.orderhistory');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+
+ public function showPm(){
+    $user = Auth::user();
+  // dd($user)
+        $orders = UserOrder::where('user_id', $user->id)->where('om_id', 2)->orderBy('order_date', 'desc')->get();
+        $pending = UserOrder::where('user_id', $user->id)
+                            ->where('om_id', 2)
+                            ->where('order_status', 'Pending')
+                            ->where('mode_delivery', "Delivery")
+                            ->orderBy('order_date', 'desc')->get();
+        $cooking = UserOrder::where('user_id', $user->id)
+                            ->where('om_id', 2)
+                            ->where('mode_delivery', "Delivery")
+                            ->where('order_status', 'Cooking')
+                            ->orderBy('order_date', 'desc')->get();
+       $delivering = UserOrder::where('user_id', $user->id)
+                              ->where('om_id', 2)
+                              ->where('mode_delivery', "Delivery")
+                              ->where('order_status', 'Delivering')
+                              ->orderBy('order_date', 'desc')->get();
+        $datetoday = Carbon::now('Asia/Manila')->format('Y-m-d');
+        $completed = UserOrder::where('user_id', $user->id)->where('order_status', 'Completed')
+                            ->where('order_date', $datetoday)->where('om_id', 2)->orderBy('order_date', 'desc')->get();
+        $pickup= UserOrder::where('user_id', $user->id)
+                              ->where('om_id', 2)
+                              ->where('mode_delivery', "Pickup")
+                              ->where('order_status', '!=', 'Completed')
+                              ->where('order_date', $datetoday)
+                              ->orderBy('order_date', 'desc')->get(); 
+        foreach($pickup as $p){
+            if($p->order_date!=$datetoday){
+                 $com= UserOrder::where('uo_id', $p->uo_id)
+                ->update(['order_status'=>"Completed"]);
+            }
+        }
+      return view('user.pmorderhistory', compact('pending', 'cooking', 'delivering', 'completed', 'pickup'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+      public function pmchangeToReceived($id){
+          $status='Completed';      
+             $completed= UserOrder::where('uo_id', $id)
+                ->update(['order_status'=>$status]);
+                // dd($id);
+          return redirect()->route('pmorder.orderhistory');
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+    public function pmpastOrders(){
+               $uid = Auth::id();
+           $done= UserOrder::where('user_id', $uid)
+                ->groupBy('uo_id')
+                ->orderBy('order_date', 'desc')
+                ->where('om_id', 2)
+                ->where('order_status', '=', 'Completed')
+                ->get();
+                
+                 return view('user.pmpastorders', compact('done'));
+               
     }
 }

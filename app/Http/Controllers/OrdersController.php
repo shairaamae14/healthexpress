@@ -344,14 +344,14 @@ class OrdersController extends Controller
         $orders = UserOrder::where('user_id', $user->id)->orderBy('order_date', 'desc')->get();
 
         $pending = UserOrder::where('user_id', $user->id)->where('order_status', 'Pending')
-                            ->orderBy('order_date', 'desc')->get();
+                       ->where('om_id', 1)->orderBy('order_date', 'desc')->get();
         $cooking = UserOrder::where('user_id', $user->id)->where('order_status', 'Cooking')
-                            ->orderBy('order_date', 'desc')->get();
+                            ->where('om_id', 1)->orderBy('order_date', 'desc')->get();
         $delivering = UserOrder::where('user_id', $user->id)->where('order_status', 'Delivering')
-                            ->orderBy('order_date', 'desc')->get();
+                           ->where('om_id', 1)->orderBy('order_date', 'desc')->get();
         $datetoday = Carbon::now('Asia/Manila')->format('Y-m-d');
         $completed = UserOrder::where('user_id', $user->id)->where('order_status', 'Completed')
-                            ->where('order_date', $datetoday)->orderBy('order_date', 'desc')->get();
+                            ->where('om_id', 1)->where('order_date', $datetoday)->orderBy('order_date', 'desc')->get();
                 // $pending= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
                 // ->join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
                 // ->where('user_id', $id)
@@ -410,6 +410,7 @@ class OrdersController extends Controller
            $done= UserOrder::where('user_id', $uid)
                 ->groupBy('uo_id')
                 ->orderBy('order_date', 'desc')
+                ->where('om_id', 1)
                 ->where('order_status', '=', 'Completed')
                 ->get();
                  return view('user.pastorders', compact('done'));

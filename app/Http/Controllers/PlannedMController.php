@@ -394,6 +394,16 @@ class PlannedMController extends Controller
 
         return $query->toJson();
     }
+      public function fetchPlanOrders(Request $request){
+
+        $id=Auth::id();
+        $events = array();
+        $query = UserOrder::where('user_id', $id)
+                            ->where('order_status', 'Pending')
+                            ->select('uo_id', 'title', 'dish_id', 'start', 'end', 'allDay')->get();
+
+        return $query->toJson();
+    }
 
     public function deletePlan(Request $request){
       $id = $request['id'];
@@ -425,27 +435,28 @@ class PlannedMController extends Controller
                             ->where('user_id', $id)
                             ->where('order_status', 'Initial')
                             ->get();
-      $initialdishes = UserOrder::join('dishes','dishes.did','=','user_orders.dish_id')
-                            ->where('user_id', $id)
-                            ->where('om_id', 2)
-                            ->get();
+      // $initialdishes = UserOrder::join('dishes','dishes.did','=','user_orders.dish_id')
+      //                       ->where('user_id', $id)
+      //                       ->where('om_id', 2)
+      //                       ->get();
                             // dd($initialdishes);
                             // dd($data);
       $start = $data[0]->planner_start;
       $end = $data[0]->end;
-       $allMealCost=0.00;
-       $totalDelFee=0.00;
-       $allcost=0.00;
-        for($i=0; $i<count($initialdishes); $i++){
-          $allMealCost+=$initialdishes[$i]->dishes['sellingPrice'];
-          $totalDelFee+=$initialdishes[$i]->delivery_fee;
+       $allMealCost=0;
+       $totalDelFee=0;
+       $allcost=0;
+        for($i=0; $i<count($data); $i++){
+          $allMealCost+=$data[$i]->totalAmount;
+          $totalDelFee+=$data[$i]->delivery_fee;
           $allcost=$allMealCost+$totalDelFee;
-
-          $allMealCost=round($allMealCost,2);
-          $totalDelFee=round($totalDelFee,2);
-          $allcost=round($allcost, 2);
-
         }
+         // $allMealCost=round($allMealCost,2);
+         //  $totalDelFee=round($totalDelFee,2);
+         //  $allcost=round($allcost, 2);
+         $allMealCost= number_format($allMealCost,2);
+         $totalDelFee= number_format($totalDelFee,2);
+         $allcost= number_format($allcost,2);
         // dd($totalDelFee);
       
       return view('user.summary', compact('data', 'allMealCost', 'totalDelFee', 'allcost', 'start','end'));
@@ -465,6 +476,9 @@ class PlannedMController extends Controller
         $address=$request['p_address'];
          $lat=$request['cityLatp'];
         $long=$request['cityLngp'];
+        $delcharge=0;
+        $distance=0;
+
       }
     //TO GET LATLONG OF THE USER AND COOK
       $userlat=0;
@@ -481,7 +495,7 @@ class PlannedMController extends Controller
       // dd($cooklat, $cooklong);
        
       if($request['mode']=="Delivery"){
-      $delcharge=40.00;
+      $delcharge=0;
       $distance=0;
       //CALCULATION OF DISTANCE
       $theta = $cooklng - $userlng;
@@ -500,11 +514,11 @@ class PlannedMController extends Controller
       }
     }
     else{
-      $delcharge=40;
+      $delcharge=0;
       $distance=0;
     }
 
-     
+        // dd($delcharge);
        
       $pm=UserOrder::where('uo_id', $uo_id)
                         ->update(['sidenote'=>$request['spec'],
@@ -542,6 +556,41 @@ class PlannedMController extends Controller
                             ]);
       return redirect()->route('user.plan.index');
     }
+
+
+    public function showAllorders(){
+       $id = Auth::id();
+      $data = UserOrder::join('dishes','dishes.did','=','user_orders.dish_id')
+                            ->where('user_id', $id)
+                            ->where('order_status', 'Pending')
+                            ->where('om_id', 2)
+                            ->get();
+      // $initialdishes = UserOrder::join('dishes','dishes.did','=','user_orders.dish_id')
+      //                       ->where('user_id', $id)
+      //                       ->where('om_id', 2)
+      //                       ->get();
+                            // dd($initialdishes);
+                            // dd($data);
+      $start = $data[0]->planner_start;
+      $end = $data[0]->end;
+       $allMealCost=0;
+       $totalDelFee=0;
+       $allcost=0;
+        for($i=0; $i<count($data); $i++){
+          $allMealCost+=$data[$i]->totalAmount;
+          $totalDelFee+=$data[$i]->delivery_fee;
+          $allcost=$allMealCost+$totalDelFee;
+        }
+         $allMealCost=round($allMealCost,2);
+          $totalDelFee=round($totalDelFee,2);
+          $allcost=round($allcost, 2);
+         $allMealCost= number_format($allMealCost,2);
+         $totalDelFee= number_format($totalDelFee,2);
+         $allcost= number_format($allcost,2);
+       return view('user.pmallorders',compact('data', 'allMealCost', 'totalDelFee', 'allcost', 'start','end'));
+       // return view('user.pmallorders', compact('start', 'end', 'data'));
+    }
+
 
 
 // function distance($lat1, $lon1, $lat2, $lon2, $unit) {
