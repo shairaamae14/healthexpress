@@ -138,12 +138,20 @@ input[type="text"], input[type="number"], #mode {
       <div class="container">
         <div class="row">
           <div class="content"> 
+           @if($errors->any())
+                <div class="alert alert-danger">
+                   <div class="container-fluid">
+                       <div class="alert-icon">
+                       <i class="material-icons">error_outline</i>
+                       </div>
+                       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                       <span aria-hidden="true"><i class="material-icons">clear</i></span>
+                      </button>
+                     <b>Error Alert:</b>&nbsp; {{$errors->first()}}
+                  </div>
+                </div>
+                @endif
             <center>
-         <!--    <input type="text" id="location" name="location" class="form-control">
-                                                                      <input type="hidden" id="city" name="city" />
-                                                                      <input type="hidden" id="cityLat" name="cityLat" />
-                                                                      <input type="hidden" id="cityLng" name="cityLng" /> -->
-                                                                      <!-- <div id="map"></div> -->
                <h1 class="text-center" style="color:white; background-color: #4caf50">SUMMARY OF DISHES</h1>
               <label>Please select a dish to change the order details.</label><br>
               <label style="font-size: 20px;"><b style="font-size: 20px; color:#4caf50">Total Meal Cost</b>: Php {{$allMealCost}}</label>
@@ -170,23 +178,24 @@ input[type="text"], input[type="number"], #mode {
 <br>
 <!--modal!-->
 @foreach($data as $order)
-  <div id="fullCalModal{{$order->uo_id}}" class="modal fade pull-left mdl" style="align-content: center">
-    <div class="modal-dialog" style="float:center; margin-right: 1500px;">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span class="sr-only">close</span></button>
-          <h4 class="text-center" style="color:white; background-color: #4caf50">{{$order->title}}</h4>
-        </div>
-        <form action="{{route('user.setDetails')}}" method="post">
+@if($order->mode_delivery=="")
+<div class="modal fade" id="fullCalModal{{$order->uo_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document" style="float:center; margin-right: 1500px;">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+         <h4 class="text-center" style="color:white; background-color: #4caf50">{{$order->title}}</h4>
+      </div>
+      <form action="{{route('user.setDetails')}}" method="post">
         {{csrf_field()}}
           <input type="hidden" name="uo_id" id="pm_id" value="{{$order->uo_id}}">
-          <div id="modalBody" class="modal-body col-md-12 modall"> 
-
-
-            <div class="col-md-12 details">
-
+      <div class="modal-body" style="padding-top: 5px">
+        <div class="col-md-12 details" hidden>
+              <center>
+              <button type="button" class="btn btn-flat btn-success btn-md see" id="setdetails" style="margin-bottom:10px;">SEE DETAILS</button>
+              </center>
               <label style="float:center; font-size:15px; color:black">
-                  <b>&nbsp;Mode of Delivery:</b></label>
+                  <b>&nbsp;Mode of Delivery:</b></label><br>
                   <select name="mode" class="mode form-control" id="mode" style="width:450px">
                     <option value="Delivery">Delivery</option>
                     <option value="Pickup">Pick up</option>
@@ -227,13 +236,15 @@ input[type="text"], input[type="number"], #mode {
                   <input type='text' name="spec" class='form-control has-success' style='width:250px;' value="{{$order->sidenote}}">
             </div>
             <div class="col-md-12">
-              <center><button type="button" class="btn btn-flat btn-success btn-md set" id="setdetails" style="margin-bottom:50px;">SEE DISH DETAILS</button></center>
-              <div class="askq" hidden>
-
-                  <div class="col-md-12"><center>
-                <img src="{{url('./dish_imgs/'.$order->dishes['dish_img'])}}" style="width:150px; height:150px; border:2px solid #F0F0F0; border-radius: 10px"><br>
-              </div><br><center>
+              <div class="askq">
               <div class="col-md-12">
+                <center>
+               <button type="button" class="btn btn-flat btn-success btn-md set" id="setdetails" style="margin-bottom:10px;margin-top: 5px">SET DETAILS</button>
+               <br>
+                <img src="{{url('./dish_imgs/'.$order->dishes['dish_img'])}}" style="width:150px; height:150px; border:2px solid #F0F0F0; border-radius: 10px"><br>
+                </div><br>
+               <center>
+               <div class="col-md-12">
                 <label style="float:center; font-size:15px; color:black">
                   <b style="color: #4caf50">&nbsp; Meal For:</b>
                     &nbsp;{{$order->dishes->besteaten[0]['name']}}
@@ -248,11 +259,7 @@ input[type="text"], input[type="number"], #mode {
                 </label><br>
                   <label style="float:center; font-size:15px; color:black">
                     <b style="color: #4caf50">&nbsp; Price:</b>
-                @if($order->dishes['sellingPrice'])
-                  &nbsp;{{$order->dishes['sellingPrice']}}
-                @else
-                  &nbsp;None
-                @endif    
+                  &nbsp;{{$order->dishes['sellingPrice']}}   
                 </label><br>
                    <label style="float:center; font-size:15px; color:black">
                   <b style="color: #4caf50">&nbsp; Cook:</b>
@@ -266,8 +273,10 @@ input[type="text"], input[type="number"], #mode {
                      &nbsp;To be set
                   @endif
                 </label><br>
+                <!--if delivery!-->
+                @if($order->mode_delivery=="Delivery")
                 <label style="float:center; font-size:15px; color:black;">
-                  <b style="color: #4caf50">&nbsp; Address:</b>
+                  <b style="color: #4caf50">&nbsp; Delivery Address:</b>
                   @if($order->address)
                     &nbsp;{{$order->address}}
                   @else
@@ -275,13 +284,27 @@ input[type="text"], input[type="number"], #mode {
                   @endif
                 </label><br>
                  <label style="float:center; font-size:15px; color:black;">
-                  <b style="color: #4caf50">&nbsp; Delivery Charge:</b>
-                  @if($order->del_charge)
-                    Php&nbsp;{{$order->del_charge}}
+                  <b style="color: #4caf50">&nbsp; Delivery Fee:</b>
+                  @if($order->delivery_fee)
+                    Php&nbsp;{{$order->delivery_fee}}
                   @else
-                    Php&nbsp;40.00
+                    Php&nbsp;to be set
+                  @endif
+                  </label></br>
+                @endif
+                <!--end!-->
+                <!--If pick up!-->
+                @if($order->mode_deliver=="Pickup")
+                   <label style="float:center; font-size:15px; color:black;">
+                  <b style="color: #4caf50">&nbsp; Pickup Address:</b>
+                  @if($order->address)
+                    &nbsp;{{$order->address}}
+                  @else
+                    &nbsp;To be set
                   @endif
                 </label><br>
+                @endif
+               <!--end!-->
                 <label style="float:center; font-size:15px; color:black">
                     <b style="color: #4caf50">&nbsp;Sidenote:</b>
                 @if($order->sidenote)
@@ -293,16 +316,199 @@ input[type="text"], input[type="number"], #mode {
              </div>
                 </div>
               </div>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+      <div class="modal-footer">
+               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
               <button type="submit" class="btn btn-success btnsave">Save Changes</button>
             </div>
           </form>
-        </div>
-      </div>
     </div>
- 
+  </div>
+</div>
+
+@else
+
+<div class="modal fade" id="fullCalModal{{$order->uo_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+         <h4 class="text-center" style="color:white; background-color: #4caf50">{{$order->title}}</h4>
+      </div>
+      <form action="{{route('user.setDetails')}}" method="post">
+        {{csrf_field()}}
+          <input type="hidden" name="uo_id" id="pm_id" value="{{$order->uo_id}}">
+      <div class="modal-body" style="padding-top: 5px">
+        <div class="col-md-12 details" hidden>
+              <center>
+              <button type="button" class="btn btn-flat btn-success btn-md see" id="setdetails" style="margin-bottom:10px;">SEE DETAILS</button>
+              </center>
+              <label style="float:center; font-size:15px; color:black">
+                  <b>&nbsp;Mode of Delivery:</b></label><br>
+                  @if($order->mode_delivery=="Delivery")
+                  <select name="mode" class="mode form-control" id="mode" style="width:450px">
+                    <option value="Delivery" selected>Delivery</option>
+                    <option value="Pickup">Pick up</option>
+                  </select>
+                  @else
+                  <select name="mode" class="mode form-control" id="mode" style="width:450px">
+                    <option value="Delivery">Delivery</option>
+                    <option value="Pickup" selected>Pick up</option>
+                  </select>
+                @endif
+                 <div class="address" id="address">  
+                @if($order->mode_delivery=="Delivery")
+                    <div id="del" class="del">
+                      <label style="float:center; font-size:15px; color:black">
+                      <b>&nbsp;Delivery Address:</b></label>
+                      <br>
+                      <input type="checkbox" class="defaultadd" id="defaultadd">&nbsp;Use default address
+                      <input type="text" name="d_address" class="form-control has-success loc" id="location{{$order->uo_id}}" style="width:450px" value="{{$order->address}}">
+                      <input type="hidden" id="city" name="city" />
+                      <input type="hidden" id="cityLat{{$order->uo_id}}" name="cityLat" class="cityLat"/>
+                      <input type="hidden" id="cityLng{{$order->uo_id}}" name="cityLng" class="cityLng"/>
+                      <input type="hidden" id="dish_id" value="{{$order->pm_id}}">
+                      <center><div id="map{{$order->uo_id}}" class="map" style="height:200px"></div>
+                      <input type="hidden" name="cooklat" value="{{$order->dishes->cook['latitude']}}">
+                      <input type="hidden" name="cooklng" value="{{$order->dishes->cook['longitude']}}">
+                    </div>
+                     <div id="pick" class="pick" hidden>
+                      <label style="float:center; font-size:15px; color:black">
+                      <b>&nbsp;Pick-Up Address:</b></label>&nbsp;<br>
+                      <label style="color: #4caf50; font-size: 20px"><b>{{$order->dishes->cook['location']}}</b></label>
+                      <input type="hidden" id="city" name="city" />
+                      <input type="hidden" id="cityLat" name="cityLatp" value="{{$order->dishes->cook['latitude']}}"/>
+                      <input type="hidden" id="cityLng" name="cityLngp" value="{{$order->dishes->cook['longitude']}}" />
+                      <input type="hidden" name="p_address" value="{{$order->dishes->cook['location']}}">
+                    </div>
+                    @else
+                       <div id="del" class="del" hidden>
+                      <label style="float:center; font-size:15px; color:black">
+                      <b>&nbsp;Delivery Address:</b></label>
+                      <br>
+                      <input type="checkbox" class="defaultadd" id="defaultadd">&nbsp;Use default address
+                      <input type="text" name="d_address" class="form-control has-success loc" id="location{{$order->uo_id}}" style="width:450px" value="{{$order->address}}">
+                      <input type="hidden" id="city" name="city" />
+                      <input type="hidden" id="cityLat{{$order->uo_id}}" name="cityLat" class="cityLat"/>
+                      <input type="hidden" id="cityLng{{$order->uo_id}}" name="cityLng" class="cityLng"/>
+                      <input type="hidden" id="dish_id" value="{{$order->pm_id}}">
+                      <center><div id="map{{$order->uo_id}}" class="map" style="height:200px"></div>
+                      <input type="hidden" name="cooklat" value="{{$order->dishes->cook['latitude']}}">
+                      <input type="hidden" name="cooklng" value="{{$order->dishes->cook['longitude']}}">
+                    </div>
+                    <div id="pick" class="pick">
+                      <label style="float:center; font-size:15px; color:black">
+                      <b>&nbsp;Pick-Up Address:</b></label>&nbsp;<br>
+                      <label style="color: #4caf50; font-size: 20px"><b>{{$order->dishes->cook['location']}}</b></label>
+                      <input type="hidden" id="city" name="city" />
+                      <input type="hidden" id="cityLat" name="cityLatp" value="{{$order->dishes->cook['latitude']}}"/>
+                      <input type="hidden" id="cityLng" name="cityLngp" value="{{$order->dishes->cook['longitude']}}" />
+                      <input type="hidden" name="p_address" value="{{$order->dishes->cook['location']}}">
+                    </div>
+
+                    @endif
+                    <br>
+                    <label style="float:center; font-size:15px; color:black">
+                    <b>&nbsp;Contact number:</b><br>
+                    <input type="checkbox" class="defaultnum" id="defaultnum">&nbsp;Use default contact number
+                    <input type="text" name="contactnum" class="form-control has-success numfield" placeholder="Enter your contact number" value="{{$order->contact_no}}">
+                    </label><br>
+                  </div>
+                  <label style="float:center; font-size:15px; color:black">
+                  <b>&nbsp;Do you have any specifications?</b></label>
+                  <input type='text' name="spec" class='form-control has-success' style='width:250px;' value="{{$order->sidenote}}">
+            </div>
+            <div class="col-md-12">
+              <div class="askq">
+              <div class="col-md-12">
+                <center>
+               <button type="button" class="btn btn-flat btn-success btn-md set" id="setdetails" style="margin-bottom:10px;margin-top: 5px">SET DETAILS</button>
+               <br>
+                <img src="{{url('./dish_imgs/'.$order->dishes['dish_img'])}}" style="width:150px; height:150px; border:2px solid #F0F0F0; border-radius: 10px"><br>
+                </div><br>
+               <center>
+               <div class="col-md-12">
+                <label style="float:center; font-size:15px; color:black">
+                  <b style="color: #4caf50">&nbsp; Meal For:</b>
+                    &nbsp;{{$order->dishes->besteaten[0]['name']}}
+                </label><br>
+                <label style="float:center; font-size:15px; color:black">
+                  <b style="color: #4caf50">&nbsp; Date:</b>
+                    &nbsp;{{ Carbon\Carbon::parse($order->start)->format('Y-M-d H:m:s') }}
+                </label><br>
+                <label style="float:center; font-size:15px; color:black">
+                  <b style="color: #4caf50">&nbsp; Status:</b>
+                    &nbsp;{{$order->p_status}}
+                </label><br>
+                  <label style="float:center; font-size:15px; color:black">
+                    <b style="color: #4caf50">&nbsp; Price:</b>
+                  &nbsp;{{$order->dishes['sellingPrice']}}   
+                </label><br>
+                   <label style="float:center; font-size:15px; color:black">
+                  <b style="color: #4caf50">&nbsp; Cook:</b>
+                    &nbsp;{{$order->dishes->cook['first_name']}}&nbsp;{{$order->dishes->cook['last_name']}}
+                </label><br>
+                <label style="float:center; font-size:15px; color:black">
+                  <b style="color: #4caf50">&nbsp; Mode of Delivery:</b>
+                  @if($order->mode_delivery)
+                    &nbsp;{{$order->mode_delivery}}
+                  @else
+                     &nbsp;To be set
+                  @endif
+                </label><br>
+                <!--if delivery!-->
+                @if($order->mode_delivery=="Delivery")
+                <label style="float:center; font-size:15px; color:black;">
+                  <b style="color: #4caf50">&nbsp; Delivery Address:</b>
+                  @if($order->address)
+                    &nbsp;{{$order->address}}
+                  @else
+                    &nbsp;To be set
+                  @endif
+                </label><br>
+                 <label style="float:center; font-size:15px; color:black;">
+                  <b style="color: #4caf50">&nbsp; Delivery Fee:</b>
+                  @if($order->delivery_fee)
+                    Php&nbsp;{{$order->delivery_fee}}
+                  @else
+                    Php&nbsp;to be set
+                  @endif
+                  </label></br>
+                @endif
+                <!--end!-->
+                <!--If pick up!-->
+                @if($order->mode_delivery=="Pickup")
+                   <label style="float:center; font-size:15px; color:black;">
+                  <b style="color: #4caf50">&nbsp; Pickup Address:</b>
+                  @if($order->dishes->cook['location'])
+                    &nbsp;{{$order->dishes->cook['location']}}
+                  @else
+                    &nbsp;To be set
+                  @endif
+                </label><br>
+                @endif
+               <!--end!-->
+                <label style="float:center; font-size:15px; color:black">
+                    <b style="color: #4caf50">&nbsp;Sidenote:</b>
+                @if($order->sidenote)
+                    &nbsp;{{$order->sidenote}}
+                @else
+                    &nbsp;None
+                @endif    
+                </label><br>
+             </div>
+                </div>
+              </div>
+      </div>
+      <div class="modal-footer">
+               <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-success btnsave">Save Changes</button>
+            </div>
+          </form>
+    </div>
+  </div>
+</div>
+@endif
 @endforeach
 <script src='https://code.jquery.com/jquery-1.11.2.min.js'></script>
 <script src='https://code.jquery.com/ui/1.11.2/jquery-ui.min.js'></script>
@@ -500,6 +706,8 @@ $(document).ready(function() {
   <script src="{{asset('customer/assets/js/bootstrap.min.js')}}" type="text/javascript"></script>
   <script src="{{asset('customer/assets/js/material.min.js')}}"></script>
 
+<!--   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script> -->
+
   <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
   <script src="{{asset('customer/assets/js/nouislider.min.js')}}" type="text/javascript"></script>
 
@@ -525,20 +733,31 @@ $(document).ready(function() {
 
 <script>
 $(document).ready(function(){
-  $('.set').click(function(){
-    $('.details').attr('hidden', 'hidden');
-    $('.askq').removeAttr('hidden');
-    // document.getElementById('setdetails')..style.visibility = 'hidden';b
-    // $('.askq').append('<button type="button" class="btn btn-success btn-flat showask">SET</button>')
-    $(this).attr('disabled', 'disabled');
-    $('.lblset').removeAttr('hidden');
-    $('.showdet').removeAttr('hidden');
-      
-  });
+    var vl=$('.mode option:selected').val();
+if(vl=="Pickup"){
+      $('.del').attr('hidden', 'hidden');
+      $('.pick').removeAttr('hidden');
+    }
 
+
+$('.modal').on('hidden.bs.modal', function () {
+    $('.askq').removeAttr('hidden');
+    $('.details').attr('hidden', 'hidden');
+});
+  $('.modal').each(function(){
+      $('.set').click(function(){
+         $('.details').removeAttr('hidden');
+         $('.askq').attr('hidden', 'hidden');
+      });
+      $('.see').click(function(){
+        $('.details').attr('hidden', 'hidden');
+         $('.askq').removeAttr('hidden');
+      });
+});
   // $('.showask').click(function(){
   //   ('.details').removeAttr('hidden');
   // });
+
   $('.mode').change(function(e){
     ChangeDrop(this);
     var id=$('.dish_id').val();
@@ -606,7 +825,6 @@ function ChangeDrop(mode){
       });
    });
 </script> 
-
 
 
 

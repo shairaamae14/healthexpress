@@ -13,6 +13,7 @@ use Braintree_CreditCard;
 use Braintree_Customer;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Redirect;
 
 class PmOrdersController extends Controller
 {
@@ -54,7 +55,19 @@ class PmOrdersController extends Controller
         $allcost = $request->allcost;
         $delfee = $request->delfee;
 
-      return view('user.pmealpayment', compact('items', 'clientToken', 'option', 'total', 'allcost', 'delfee'));
+        $uo=UserOrder::where('user_id', $id)->where('om_id', 2)->where('order_status', 'Initial')
+                      ->where('mode_delivery', '')->get();
+          if($uo->isEmpty()){
+            return view('user.pmealpayment', compact('items', 'clientToken', 'option', 'total', 'allcost', 'delfee'));
+            // dd("hello");
+          }
+          else {
+              return Redirect::back()->withErrors(['You must set all details for dishes!']);
+          } 
+            // dd("hi");
+        
+     
+     
     }
 
     /**
