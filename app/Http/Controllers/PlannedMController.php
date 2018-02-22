@@ -179,9 +179,6 @@ class PlannedMController extends Controller
 
           //all dishes
           $betype = UserOrder::join('dishes','user_orders.dish_id', '=', 'dishes.did')
-                              ->join('cooks', 'dishes.authorCook_id' , '=', 'cooks.id')
-                              ->join('users', 'user_orders.user_id', '=', 'users.id')
-                              ->join('order_mode', 'user_orders.om_id', '=', 'order_mode.id')
                               ->get();
 
           //get all besteaten
@@ -357,7 +354,7 @@ class PlannedMController extends Controller
             $count--;
           }
 
-          //show nutritional facts of dishes
+          //show details and nutritional facts of dishes
           $dishes = UserOrder::join('dishes', 'user_orders.dish_id', '=', 'dishes.did')
                                   ->join('cooks', 'dishes.authorCook_id' , '=', 'cooks.id')
                                   ->join('dish_besteaten', 'dishes.did', '=', 'dish_besteaten.dish_id')
@@ -368,9 +365,6 @@ class PlannedMController extends Controller
 
           //all dishes
           $betype = UserOrder::join('dishes','user_orders.dish_id', '=', 'dishes.did')
-                              ->join('cooks', 'dishes.authorCook_id' , '=', 'cooks.id')
-                              ->join('users', 'user_orders.user_id', '=', 'users.id')
-                              ->join('order_mode', 'user_orders.om_id', '=', 'order_mode.id')
                               ->get();
 
           //get all besteaten
