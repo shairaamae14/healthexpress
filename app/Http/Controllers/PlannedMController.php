@@ -184,7 +184,7 @@ class PlannedMController extends Controller
           //get all besteaten
           $besteaten= BestEaten::all();
           
-          return view('user.pmeals', compact('breakfast', 'lunch', 'dinner', 'besteaten', 'dishes', 'betype', 'start', 'end', 'start_end'))->with(['plans' => Plan::get(), 'cal'=> response()->json($dinner)]);
+          return view('user.pmeals', compact('breakfast', 'lunch', 'dinner', 'besteaten', 'dishes', 'betype', 'start', 'end', 'cook_id'))->with(['plans' => Plan::get(), 'cal'=> response()->json($dinner)]);
         }
 
 
@@ -371,13 +371,143 @@ class PlannedMController extends Controller
           $besteaten= BestEaten::all();
           
 
-          return view('user.pmeals', compact('breakfast', 'lunch', 'dinner', 'besteaten', 'dishes', 'betype', 'start', 'end'))->with(['plans' => Plan::get(), 'cal'=> response()->json($dinner)]);
+          return view('user.pmeals', compact('breakfast', 'lunch', 'dinner', 'besteaten', 'dishes', 'betype', 'start', 'end', 'cookid'))->with(['plans' => Plan::get(), 'cal'=> response()->json($dinner)]);
 
         }
         
             
     }
 
+    public function changeDish(Request $request){
+      $id = Auth::id();
+      $cid = $request['cookid'];
+        
+         $user = Auth::user()->load('conditions.restrictions','allergies.tol_values');
+          $ranges = [];
+          $planner = [];
+          $dishes = collect();
+          $comparisons = ['calories', 'protein', 'total_fat', 'carbohydrate', 'fibre', 'sodium','sat_fat', 'cholesterol'];
+
+        $qstart = UserOrder::distinct()->select('planner_start')->where('user_id',$id)->where('order_status','Initial')->first();
+          $qend = UserOrder::distinct()->select('planner_end')->where('user_id',$id)->where('order_status','Initial')->first();
+          $start = $qstart->planner_start;
+          $end = $qend->planner_end;
+
+            $cook = Cook::where('id','!=',$cid)->inRandomOrder()->select('id')->take(1)->first();
+            $cookid = $cook->id;     
+
+          if(!$user->allergies->count() && !$user->conditions->count())
+          {
+            $dishes = \App\Dish::whereHas('nfacts', function($query) use ($user) {
+              $query->where('calories', '<=', $user->dcr);
+            })->get();
+
+          }
+          else if($user->allergies->count() && !$user->conditions->count()) {
+
+            foreach($user->allergies as $allergy) {
+              $dishes = \App\Dish::whereHas('ingredients', function($query) use($allergy){
+                $protein = $allergy->tol_values->threshold_value /100;
+                  switch ($allergy->tol_values->level) {
+                    case 'High':
+                        break;
+                    case 'Medium':
+                        $proteinMin = $allergy->min / 100;
+                        $proteinMax = $allergy->max / 100;
+                        $query->where('Shrt_Desc', 'LIKE', '%'.$allergy->allergen_name.'%')
+                            ->where('Protein_g', '<', $proteinMin)->orWhere('Protein_g', '<=', $proteinMax);
+                        break;
+                    case 'Low':
+                        $query->where('Shrt_Desc', 'LIKE', '%'.$allergy->allergen_name.'%')->where('Protein_g', '<', $protein);
+                        break;
+                    default:
+                        break;
+                    }
+              })->get();
+
+              $dishes = \App\Dish::whereDoesntHave('ingredients', function($query) use($allergy){
+                $query->where('Shrt_Desc', 'LIKE', '%'.$allergy->allergen_name.'%');
+              })->get();
+            }
+          }
+          else if(!$user->allergies->count() && $user->conditions->count()) {
+            $list = \App\Dish::whereHas('nfacts')->get();
+            for ($index=0; $index < $list->count() ;$index++) { 
+              foreach($user->conditions as $condition) {
+                foreach($comparisons as $comparison) {
+                  if($condition->restrictions[0][$comparison] < $list[$index]->nfacts[$comparison])
+                    $dishes[$index] = $list[$index];
+                }
+              }
+            }
+          }
+          else{
+            foreach ($user->allergies as $allergy) {
+              $dishes = \App\Dish::whereHas('ingredients', function($query) use($allergy){
+                $protein = $allergy->tol_values->threshold_value /100;
+                switch ($allergy->tol_values->level) {
+                  case 'High':
+                      break;
+                  case 'Medium':
+                      $proteinMin = $allergy->min / 100;
+                      $proteinMax = $allergy->max / 100;
+                      $query->where('Shrt_Desc', 'LIKE', '%'.$allergy->allergen_name.'%')
+                            ->where('Protein_g', '<', $proteinMin)->orWhere('Protein_g', '<=', $proteinMax)->groupBy('authorCook_id');
+                      break;
+                  case 'Low':
+                      $query->where('Shrt_Desc', 'LIKE', '%'.$allergy->allergen_name.'%')->where('Protein_g', '<', $protein)->groupBy('authorCook_id');
+                      break;
+                  default:
+                      break;
+                  }
+              })->get();
+              $list = \App\Dish::whereDoesntHave('ingredients', function($query) use($allergy){
+                $query->where('Shrt_Desc', 'LIKE', '%'.$allergy->allergen_name.'%')->groupBy('authorCook_id');
+              })->whereHas('nfacts')->get();
+               
+              for ($i=0; $i < $list->count(); $i++) {  
+                foreach ($user->conditions as $condition) { 
+                  foreach ($comparisons as $comparison) {
+                    if ($condition->restrictions[0][$comparison] < $list[$i]->nfacts[$comparison]) {             
+                      $dishes[$i] = $list[$i];
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+
+          foreach ($dishes as $dish) {
+            $breakfast = $dish->whereHas('besteaten', function($query) {
+              $query->where('name', 'Breakfast');
+            })->where('dishes.authorCook_id', $cookid)->where('dish_type', 'Planned')->take(5)->get();
+            $lunch = $dish->whereHas('besteaten', function($query) {
+              $query->where('name', 'Lunch');
+            })->where('dishes.authorCook_id', $cookid)->where('dish_type', 'Planned')->take(5)->get();
+            $dinner = $dish->whereHas('besteaten', function($query) {
+              $query->where('name', 'Dinner');
+            })->where('dishes.authorCook_id', $cookid)->where('dish_type', 'Planned')->take(5)->get();
+          }
+
+          //show details and nutritional facts of dishes
+          $dishes = UserOrder::join('dishes', 'user_orders.dish_id', '=', 'dishes.did')
+                                  ->join('cooks', 'dishes.authorCook_id' , '=', 'cooks.id')
+                                  ->join('dish_besteaten', 'dishes.did', '=', 'dish_besteaten.dish_id')
+                                  ->join('besteaten_at', 'dish_besteaten.be_id', '=', 'besteaten_at.be_id')
+                                  ->join('nutritional_facts', 'dishes.did', '=', 'nutritional_facts.ding_id')
+                                  ->where('user_id',$id)
+                                  ->get();
+
+          //all dishes
+          $betype = UserOrder::join('dishes','user_orders.dish_id', '=', 'dishes.did')
+                              ->get();
+
+          //get all besteaten
+          $besteaten= BestEaten::all();
+          
+          return view('user.pmeals', compact('breakfast', 'lunch', 'dinner', 'besteaten', 'dishes', 'betype', 'start', 'end', 'cookid'))->with(['plans' => Plan::get(), 'cal'=> response()->json($dinner)]);
+    }
 
     public function index1(){
       $id = Auth::id();

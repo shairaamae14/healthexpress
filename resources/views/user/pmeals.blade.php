@@ -89,6 +89,18 @@ div#calendar .fc-center h2 {
 td.fc-day.fc-past {
     background-color: #EEEEEE;
 }
+/*.ui-draggable-handle{
+  padding:5px;
+  margin:3px;
+  background-color:#4cae4cc4;
+  border:0;
+}
+.fc-event.fc-draggable{
+  padding:5px;
+  margin:1px;
+  background-color:#4cae4cc4;
+  border:0;
+}*/
 /*Resize the wrap to see the search bar change!*/
 
 </style>
@@ -116,6 +128,7 @@ td.fc-day.fc-past {
         <div class="row">
           <div class="content"> 
             <div class="card" style="width:30rem; margin-left:-50px; padding:10px">
+              <button type="button" class="btn btn-flat" onclick="changedish()" style="width:280px;background-color:#f74141b3">Change Set of Dishes</button>
               <div class="card-block">
                 <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
                 <h4 class="card-title text-center" style="color:#4caf50;">Suggested Dishes</h4>
@@ -128,6 +141,7 @@ td.fc-day.fc-past {
                 
               <form method="post" action="#">
               {{csrf_field()}}
+              <input type="hidden" name="cookid" value="{{$cookid}}">
                 <div id='wrap'>
                   <div id='external-events'>
                       <input type="hidden" name="start" value="{{$start}}">
@@ -539,6 +553,9 @@ $(document).ready(function() {
      
       // $('.timepicker').timepicker();
    });
+  function changedish(){
+    window.location.href="{{route('user.changedish')}}";
+  }
 </script>
   <script>
     $(document).ready(function(e){
