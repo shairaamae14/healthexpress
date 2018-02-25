@@ -39,19 +39,23 @@ class DishRatingController extends Controller
            $id= $request['dish_id'];
            $date=Carbon::now();
            $ndate=explode(" ",$date);
+           $uo;
            $userorder=UserOrder::where('dish_id', $id)
                                   ->where('user_id', $userid)
                                   ->get();
-          //IF NAKA ORDER NA SYA
+          // IF NAKA ORDER NA SYA
+          foreach($userorder as $uo){
+            $uo=$uo->uo_id;
+          }
              if(!$userorder->isEmpty()){
-              foreach($userorder as $uo){
+             
                  $new = Ratings::create(['comment' => $request['review'],
                                     'rating'  => $request['rating'],
                                     'date_rated'=>$ndate[0],
-                                    'uorder_id'=>$uo->uo_id,
+                                    'uorder_id'=>$uo,
                                     'dish_id'=>$id
                                   ]);
-               }
+            
             //GET ALL THE RATINGS OF THE DISH
              $rate=Ratings::where('dish_id', $id)
                         ->get();
@@ -108,19 +112,23 @@ class DishRatingController extends Controller
            $id= $request['dish_id'];
            $date=Carbon::now();
            $ndate=explode(" ",$date);
+           $uo;
            $userorder=UserOrder::where('dish_id', $id)
                                   ->where('user_id', $userid)
                                   ->get();
+        foreach($userorder as $uo){
+            $uo=$uo->uo_id;
+          }
           //IF NAKA ORDER NA SYA
              if(!$userorder->isEmpty()){
-              foreach($userorder as $uo){
+              
                  $new = Ratings::create(['comment' => $request['review'],
                                     'rating'  => $request['rating'],
                                     'date_rated'=>$ndate[0],
-                                    'uorder_id'=>$uo->uo_id,
+                                    'uorder_id'=>$uo,
                                     'dish_id'=>$id
                                   ]);
-               }
+               
          //GET ALL THE RATINGS OF THE DISH
             $rate=Ratings::where('dish_id', $id)
                         ->get();
@@ -182,19 +190,19 @@ class DishRatingController extends Controller
            $id= $request['dish_id'];
            $date=Carbon::now();
            $ndate=explode(" ",$date);
+           $uo;
            $userorder=UserOrder::where('dish_id', $id)
                                   ->where('user_id', $userid)
                                   ->get();
            foreach($userorder as $uo){
-            $uo_id=$uo->uo_id;
+            $uo=$uo->uo_id;
            }
           //IF NAKA ORDER NA SYA
              if(!$userorder->isEmpty()){
-    
                  $new = Ratings::create(['comment' => $request['review'],
                                     'rating'  => $request['rating'],
                                     'date_rated'=>$ndate[0],
-                                    'uorder_id'=>$uo_id,
+                                    'uorder_id'=>$uo,
                                     'dish_id'=>$id
                                   ]);
                
@@ -262,19 +270,21 @@ class DishRatingController extends Controller
             $id= $request['cook_id'];
             $did=$request['dish_id'];
             // dd($id, $did);
+        $uo;
         $userorder=UserOrder::where('dish_id', $did)
                             ->where('user_id', $userid)
                                   ->get();
-      // dd($userorder);
         foreach($userorder as $uo){
+          $uo=$uo->dish_id;
+            }
             $dishes = CookRating::create(['comment' => $request['review'],
                                     'rating'  => $request['rating'],
                                     'date_rate' =>$ndate[0],
                                     'uorder_id'=>$uo->uo_id,
-                                    'dish_id'=>$uo->dish_id,
+                                    'dish_id'=>$uo,
                                     'cook_id'=>$id
                                   ]);
-        }
+      
             $rate=CookRating::where('cook_id', $request['cook_id'])->get();
             // dd($rate);
               $avg=0;
@@ -321,20 +331,22 @@ class DishRatingController extends Controller
       $ndate=explode(" ",$date);
             $id= $request['cook_id'];
             $did=$request['dish_id'];
-            // dd($id, $did);
+          $uo;
         $userorder=UserOrder::where('dish_id', $did)
                             ->where('user_id', $userid)
                                   ->get();
       // dd($userorder);
         foreach($userorder as $uo){
+          $uo=$uo->dish_id;
+             }
             $dishes = CookRating::create(['comment' => $request['review'],
                                     'rating'  => $request['rating'],
                                     'date_rate' =>$ndate[0],
                                     'uorder_id'=>$uo->uo_id,
-                                    'dish_id'=>$uo->dish_id,
+                                    'dish_id'=>$uo,
                                     'cook_id'=>$id
                                   ]);
-        }
+     
             $rate=CookRating::where('cook_id', $request['cook_id'])->get();
             // dd($rate);
               $avg=0;
