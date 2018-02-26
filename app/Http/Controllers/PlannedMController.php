@@ -168,6 +168,8 @@ class PlannedMController extends Controller
             })->where('dishes.authorCook_id', $cookid)->where('dish_type', 'Planned')->take(5)->get();
           }
 
+          // dd($breakfast);
+
           //show details and nutritional facts of dishes
           $dishes = UserOrder::join('dishes', 'user_orders.dish_id', '=', 'dishes.did')
                                   ->join('cooks', 'dishes.authorCook_id' , '=', 'cooks.id')
@@ -184,7 +186,7 @@ class PlannedMController extends Controller
           //get all besteaten
           $besteaten= BestEaten::all();
           
-          return view('user.pmeals', compact('breakfast', 'lunch', 'dinner', 'besteaten', 'dishes', 'betype', 'start', 'end', 'cook_id'))->with(['plans' => Plan::get(), 'cal'=> response()->json($dinner)]);
+          return view('user.pmeals', compact('breakfast', 'lunch', 'dinner', 'besteaten', 'dishes', 'betype', 'start', 'end', 'cookid'))->with(['plans' => Plan::get(), 'cal'=> response()->json($dinner)]);
         }
 
 
@@ -489,6 +491,7 @@ class PlannedMController extends Controller
               $query->where('name', 'Dinner');
             })->where('dishes.authorCook_id', $cookid)->where('dish_type', 'Planned')->take(5)->get();
           }
+
 
           //show details and nutritional facts of dishes
           $dishes = UserOrder::join('dishes', 'user_orders.dish_id', '=', 'dishes.did')
