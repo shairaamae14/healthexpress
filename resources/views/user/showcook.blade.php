@@ -233,8 +233,8 @@ h1 { font-size: 1.5em; margin: 10px; }
                                     
                                    </center>
                                   <div class="footer" style="padding:3px">
-                                      <button type="button" class="btn btn-flat btn-sm btn-success" data-target="#modal-default{{$dish->did}}" data-toggle="modal" style="margin-right:10px;  background-color:#30BB6D; margin-left: 10px"><i class="material-icons">add_circle</i>&nbsp;Add to cart
-                                   </button>
+                                     <!--  <button type="button" class="btn btn-flat btn-sm btn-success" data-target="#modal-default{{$dish->did}}" data-toggle="modal" style="margin-right:10px;  background-color:#30BB6D; margin-left: 10px"><i class="material-icons">add_circle</i>&nbsp;Add to cart
+                                   </button> -->
                                   </div>
                                </div>
                              </div> 
