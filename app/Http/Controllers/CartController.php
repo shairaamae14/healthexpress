@@ -8,6 +8,7 @@ use Cart;
 use App\Dish;
 use Auth;
 use App\User;
+use App\OrderMode;
 class CartController extends Controller
 {
 public function cart() {
@@ -147,6 +148,7 @@ public function setDetails(Request $request){
   $user = Auth::id();
   $dish=Input::get('dish');
   $cook_id=Input::get('cook_id');
+  $mode = OrderMode::find(1);
   // $dishes=collect($dish);
     // dd(count($dish));
   $dishes=array();
@@ -158,7 +160,7 @@ public function setDetails(Request $request){
 // dd($dishes[0][0]['dish_name']);
   // dd($dishes[0]);
   $customer= User::where('id', $user)->get();
-  return view('user.eorderdetails', compact('customer', 'dishes'));
+  return view('user.eorderdetails', compact('customer', 'dishes', 'mode'));
 }
  // }
 
