@@ -98,6 +98,7 @@
       <div class="row">
      <h1 class="text-center" style="color:#30bb6d">PAYMENT METHOD</h1><br>
         <div class="col-md-6 col-md-offset-3" style="padding-top: 20px"> 
+          @if($mode->om_name == "Express Meal")
           <div class="profile-tabs" id="tabpayment">
             <div class="nav-align-center">
               <ul class="nav nav-pills nav-pills-success" role="tablist">
@@ -117,7 +118,7 @@
                 <div class="tab-pane active" id="cod">
                   <div class="row">
 
-                    <form method="POST" action="{{route('order.place')}}">
+                    <form method="POST" action="{{route('order.place', ['mode' => $mode])}}">
                       {{csrf_field()}}
                       @if(count(Cart::content()))
                       @foreach(Cart::content() as $item)
@@ -154,14 +155,13 @@
                             You can read more about it here. 
                       </div>
                       
-                        <form method="POST" id="payment-form" action="{{ route('order.payment') }}">
+                        <form method="POST" id="payment-form" action="{{ route('order.payment',['mode' => $mode]) }}">
                             {{csrf_field()}}
                             @foreach(Cart::content() as $item)
                             <input name="amount" value="{{Cart::subtotal()}}" type="hidden">
                             @endforeach
                             @if(count(Cart::content()))
                             @foreach(Cart::content() as $item)
-                            {{-- @foreach($userorder as $order) --}}
                             <input type="hidden" name="dish[]" value="{{$item->id}}">
                             <input type="hidden" name="total[]" value="{{$item->subtotal}}">
                             <input type="hidden" name="qty[]" value="{{$item->qty}}">
@@ -191,6 +191,19 @@
             </div>
           </div>
           <!-- End Profile Tabs -->
+          @else
+          <form method="POST" id="payment-form" action="{{ route('order.payment', ['mode' => $mode]) }}">
+            {{csrf_field()}}
+          <div id="dropin-container"></div>
+                  <input type="hidden" name="total" value="{{$total}}">
+                  <input type="hidden" name="allcost" value="{{$allcost}}">
+                  <input type="hidden" name="delfee" value="{{$delfee}}">
+                  <input type="hidden" name="mode" value="{{$mode->id}}">
+                  <input type="hidden" name="items[]" value="{{$items}}">
+          <input id="nonce" name="payment_method_nonce" type="hidden" />
+          <button id="submit-button" class="btn btn-success">Finish and Pay</button>
+          </form>
+          @endif
         </div>     
         </div>
         
@@ -198,7 +211,7 @@
     </div><!--container!-->
   </div><!--section!-->
 </div><!--main raised!-->
-
+@if($mode->om_name == "Express Meal")
 <div class="main main-raised"  style="width: 25%; float: right;">
     <div class="section" style="padding-bottom: 2px">
         <div class="container" style="width: 100%">
@@ -258,7 +271,7 @@
                        <form method="post" action="{{route('express.summary')}}">
                          <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                           @foreach(Cart::content() as $item)
-                                          <input name="amount" value="{{Cart::subtotal()}}" type="hidden">
+                                          <input name="Amount" value="{{Cart::subtotal()}}" type="hidden">
                                           @endforeach
                                           @if(count(Cart::content()))
                                           @foreach(Cart::content() as $item)
@@ -278,6 +291,7 @@
             </div>
         </div>
     </div>
+@endif
   </div>
        
        
@@ -306,8 +320,6 @@
 <script src="https://js.braintreegateway.com/web/dropin/1.8.0/js/dropin.min.js"></script>
 <script src="https://js.braintreegateway.com/web/3.28.0/js/client.min.js"></script>
 <script src="https://js.braintreegateway.com/web/3.28.0/js/paypal-checkout.min.js"></script>
-<script type="text/javascript" src="{{asset('js/jquery-2.0.0.min.js')}}"></script>
-<script type="text/javascript" src="{{asset('js/jquery.smartWizard.js')}}"></script>
 <script src="{{asset('js/pace.min.js')}}"></script>
 <script>
     var form = document.querySelector('#payment-form');
@@ -327,7 +339,6 @@
                 console.log('Request Payment Method Error', err);
                 return;
             }
-            
             document.querySelector('#nonce').value = payload.nonce;
             form.submit();
         });
