@@ -11,13 +11,16 @@ use Auth;
 use App\User;
 use App\OrderMode;
 use App\PaymentMethod;
+use App\Cook;
 use Braintree_ClientToken;
 use Braintree_Transaction;
 use Braintree_CreditCard;
 use Braintree_Customer;
 use Cart;
 use Session;
+use App\Notifications\OrderedMeal;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Redirect;
 class OrdersController extends Controller
 {
     /**
@@ -27,7 +30,7 @@ class OrdersController extends Controller
      */
 
      
-    public function checkout(Request $request){
+    public function checkout(Request $request, $mode){
         $user=Auth::user();
         $lat=0;
         $long=0;
@@ -36,8 +39,20 @@ class OrdersController extends Controller
         $totaldelfee=0;
         $address;
         $contactnum;
+        $mode = OrderMode::find($mode);
+        if(!$user->braintree_id) {
+           $clientToken = Braintree_ClientToken::generate(); 
+        }
+        else {
+            $clientToken = Braintree_ClientToken::generate([
+                'customerId' => $user->braintree_id
+            ]); 
+        }
+          
 
-        $cooklat=Input::get('cooklat');
+        if($mode->om_name == "Express Meal")
+        {
+           $cooklat=Input::get('cooklat');
         $cooklng=Input::get('cooklng');
         $dish_id=Input::get('dish');
         $sidenote=Input::get('sidenote');
@@ -98,43 +113,40 @@ class OrdersController extends Controller
               // dd($distance[0]);
          }
         
-     
-
-
-        $option = $request->option;
-        $user = Auth::user();
-        if(!$user->braintree_id) {
-           $clientToken = Braintree_ClientToken::generate(); 
-        }
-        else {
-            $clientToken = Braintree_ClientToken::generate([
-                'customerId' => $user->braintree_id
-            ]); 
-        }
-        
-        if($option == 'Delivery') {
-            $service = $option;
-       
-
-        }
-        else {
-            $service = $option;
-        }
-
-        $userorder=UserOrder::join('users', 'users.id', '=', 'user_orders.user_id')
+      $userorder=UserOrder::join('users', 'users.id', '=', 'user_orders.user_id')
                             ->where('om_id', 1)
                             ->where('order_status', 'Pending')
                             ->where('user_id', $user->id)
                             ->groupBy('user_id')
                             ->get();
         $userorder1=UserOrder::where('om_id', 1)->where('user_id', $user->id)->where('order_status', 'Pending')->get();
-                    // $totaldelfee=0;
-                    // $subtotal=0;
-                // dd($totaldelfee);
-
-              $subtotal=Cart::subtotal();
+        $subtotal=Cart::subtotal();
               $alltotal=$subtotal+$totaldelfee;
-        return view('user.paymentmethod', compact('option', 'clientToken', 'userorder', 'totaldelfee', 'alltotal','lat','long','mode_delivery','address','contactnum', 'distance'));
+        
+         return view('user.paymentmethod', compact('option', 'clientToken', 'userorder', 'totaldelfee', 'alltotal','lat','long','mode_delivery','address','contactnum', 'distance', 'mode'));   
+        }
+      
+
+        if($mode->om_name == "Planned Meal"){
+        $items = UserOrder::join('dishes', 'user_orders.dish_id', '=', 'dishes.did')
+                            ->where('user_id', $user->id)
+                            ->where('order_status', 'Initial')
+                            ->get();
+        $total = $request->total;
+        $allcost = $request->allcost;
+        $delfee = $request->delfee;
+        $uo=UserOrder::where('user_id', $user->id)->where('om_id', $mode->id)->where('order_status', 'Initial')
+                      ->where('mode_delivery', '')->get();
+          if($uo->isEmpty()){
+            return view('user.paymentmethod', compact('items', 'clientToken', 'option', 'total', 'allcost', 'delfee', 'mode'));
+            // dd("hello");
+          }
+          else {
+              return Redirect::back()->withErrors(['You must set all details for dishes!']);
+          } 
+       }        
+      
+     
     }   
     
     public function index()
@@ -160,8 +172,14 @@ class OrdersController extends Controller
         $status = 'Pending';
         $sidenote = $request->sidenote;
         $total_amount = $request['amount'];
+        // $allcost = str_replace("," , "" , $request->allcost);
+        $allcost = 1000;
         $nonce = $request['payment_method_nonce'];
-        
+        $mode = OrderMode::find($request->mode);
+        $items = UserOrder::join('dishes', 'user_orders.dish_id', '=', 'dishes.did')
+                            ->where('user_id', $user->id)
+                            ->where('order_status', 'Initial')
+                            ->get();
         $transactionStatuses = [
             Braintree_Transaction::AUTHORIZED,
             Braintree_Transaction::AUTHORIZING,
@@ -191,71 +209,119 @@ class OrdersController extends Controller
             $user->card_brand = $cust->customer->creditCards[0]->cardType;
             $user->card_last_four = $cust->customer->creditCards[0]->last4;
             $user->save();
-            
-            $result = Braintree_Transaction::sale([
+            if($mode->om_name == 'Express Meal') {
+              $result = Braintree_Transaction::sale([
                 'amount' => $total_amount,
                 'customerId' => $user->braintree_id,
                 'options' => [
                     'submitForSettlement' => true
                 ]
             ]);
+            }
+          else {
+           $result = Braintree_Transaction::sale([
+                'amount' => $allcost,
+                'customerId' => $user->braintree_id,
+                'options' => [
+                    'submitForSettlement' => true
+                ]
+            ]); 
+          }
+            
             $transaction = Braintree_Transaction::find($result->transaction->id);
             if(in_array($transaction->status, $transactionStatuses)) {
-                for ($index = 0; $index < count($request->dish); $index++) {
-                    $user_order = UserOrder::create(['user_id' => $user->id, 
-                'payment_id' => 1, 
-                'order_date' => \Carbon\Carbon::now(),
-                'totalQty' => $request['qty'][$index], 
-                 'totalAmount' => $request['total'][$index], 
-                 'order_status' => $status,
-                  'sidenote' => $request['sidenote'][$index], 
-                  'om_id' => 1, 
-                  'dish_id' => $request['dish'][$index],
-                  'address' =>$request['address'], 
-                  'contact_no' => $request['contact'],
-                  'mode_delivery' => $request['mode_delivery'], 
-                  'delivery_fee' => $request['delivery_fee'],
-                  'distance' => $request['distance'][$index],
-                  'latitude' =>$request['lat'],
-                  'longitude' =>$request['long']
-                ]);
-                }   
-                Cart::destroy();
+               switch($mode->om_name) {
+                case 'Express Meal' :
+                   for ($index = 0; $index < count($request->dish); $index++) {
+                       $user_order = UserOrder::create(['user_id' => $user->id, 
+                          'payment_id' => 1, 
+                          'order_date' => \Carbon\Carbon::now("Asia/Manila"),
+                          'totalQty' => $request['qty'][$index], 
+                           'totalAmount' => $request['total'][$index], 
+                           'order_status' => $status,
+                            'sidenote' => $request['sidenote'][$index], 
+                            'om_id' => 1, 
+                            'dish_id' => $request['dish'][$index],
+                            'address' =>$request['address'], 
+                            'contact_no' => $request['contact'],
+                            'mode_delivery' => $request['mode_delivery'], 
+                            'delivery_fee' => $request['delivery_fee'],
+                            'distance' => $request['distance'][$index],
+                            'latitude' =>$request['lat'],
+                            'longitude' =>$request['long']
+                          ]);
+                          }   
+                        Cart::destroy();
+                         return redirect()->route('order.orderhistory');
+                        break;
+                case 'Planned Meal' :
+                        foreach($items as $item) {
+                                $user_order = UserOrder::where('uo_id', $item->uo_id)->update(['order_date' => \Carbon\Carbon::now("Asia/Manila"), 
+                                  'order_status' => 'Pending']);
+                              }
+
+                              return redirect()->route('pmorder.showallorders');
+                        break;
+               }
+  
             }
         }
         else {
-            $result = Braintree_Transaction::sale([
-                'amount' => $request->amount,
-                'customerId' => $customer->braintree_id,
+            if($mode->om_name == 'Express Meal') {
+              $result = Braintree_Transaction::sale([
+                'amount' => $total_amount,
+                'customerId' => $user->braintree_id,
                 'options' => [
                     'submitForSettlement' => true
                 ]
             ]);
+            }
+          else {
+           $result = Braintree_Transaction::sale([
+                'amount' => $allcost,
+                'customerId' => $user->braintree_id,
+                'options' => [
+                    'submitForSettlement' => true
+                ]
+            ]); 
+          }
             $transaction = Braintree_Transaction::find($result->transaction->id);
             if(in_array($transaction->status, $transactionStatuses)) {
-                for ($index = 0; $index < count($request->dish); $index++) {
-                    $user_order = UserOrder::create(['user_id' => $user->id, 
-                'payment_id' => 1, 
-                'order_date' => \Carbon\Carbon::now(),
-                'totalQty' => $request['qty'][$index], 
-                 'totalAmount' => $request['total'][$index], 
-                 'order_status' => $status,
-                  'sidenote' => $request['sidenote'][$index], 
-                  'om_id' => 1, 
-                  'dish_id' => $request['dish'][$index],
-                  'address' =>$request['address'], 
-                  'contact_no' => $request['contact'],
-                  'mode_delivery' => $request['mode_delivery'], 
-                  'delivery_fee' => $request['delivery_fee'],
-                  'distance' => $request['distance'][$index],
-                  'latitude' =>$request['lat'],
-                  'longitude' =>$request['long']
-                ]);
-                }   
-                Cart::destroy();
+                switch($mode->om_name) {
+                case 'Express Meal' :
+                   for ($index = 0; $index < count($request->dish); $index++) {
+                       $user_order = UserOrder::create(['user_id' => $user->id, 
+                          'payment_id' => 1, 
+                          'order_date' => \Carbon\Carbon::now("Asia/Manila"),
+                          'totalQty' => $request['qty'][$index], 
+                           'totalAmount' => $request['total'][$index], 
+                           'order_status' => $status,
+                            'sidenote' => $request['sidenote'][$index], 
+                            'om_id' => 1, 
+                            'dish_id' => $request['dish'][$index],
+                            'address' =>$request['address'], 
+                            'contact_no' => $request['contact'],
+                            'mode_delivery' => $request['mode_delivery'], 
+                            'delivery_fee' => $request['delivery_fee'],
+                            'distance' => $request['distance'][$index],
+                            'latitude' =>$request['lat'],
+                            'longitude' =>$request['long']
+                          ]);
+                          }   
+                        Cart::destroy();
+                        return redirect()->route('order.orderhistory');
+                        break;
+                case 'Planned Meal' :
+                        foreach($items as $item) {
+                                $user_order = UserOrder::where('uo_id', $item->uo_id)->update(['order_date' => \Carbon\Carbon::now("Asia/Manila"), 
+                                  'order_status' => 'Pending']);
+                              }
+                              return redirect()->route('pmorder.showallorders');
+                        break;
+               }
             }
         }
-        return redirect()->route('order.orderhistory');
+        
     }
     
     public function orderStatus($id, Request $request,$user) {
@@ -308,7 +374,9 @@ class OrdersController extends Controller
         // dd($dish);
         if($request['payment_mode'] == 'COD') {
             for ($index = 0; $index < count($dish); $index++) {
-              $user_order = UserOrder::create(['user_id' => $user->id, 
+               $dishes[$index] = Dish::findOrFail($request['dish'][$index]);
+              
+              $user_order[$index] = UserOrder::create(['user_id' => $user->id, 
                 'payment_id' => 1, 
                 'order_date' => \Carbon\Carbon::now(),
                 'totalQty' => $request['qty'][$index], 
@@ -325,7 +393,9 @@ class OrdersController extends Controller
                   'latitude' =>$request['lat'],
                   'longitude' =>$request['long']
                 ]);
+              $dishes[$index]->cook->notify(new OrderedMeal($user_order[$index]));
             }
+
         }
         Cart::destroy();
         return redirect()->route('order.orderhistory');

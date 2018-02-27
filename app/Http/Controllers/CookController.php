@@ -255,4 +255,8 @@ class CookController extends Controller
     return view('cook.cookreviews', compact('ratings', 'avgrate'));
    }
 
+   public function showProfile($cook) 
+   {
+    return view('cook.cook-profile');
+   }
 }

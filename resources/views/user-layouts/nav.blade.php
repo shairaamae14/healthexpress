@@ -16,12 +16,15 @@
           </button>
 
           <a href="./home">
-        <div class="logo-container" style="font-size: 20px">
-        <div class="logo" style="width: 185px; height:90px; border-radius: 0px; border:none">
-        <a class="navbar-brand" href="/home"><img src="{{asset('img/healthlogo.png')}}" style="width:130px; height:60px; font-size: 20px; padding-bottom: 10px"></img></a>
-        <b style="color:white; font-size:20px">HEALTH</b>EXPRESS
+        <div class="logo-container">
+
+        <a class="navbar-brand" href="/home"><img src="{{asset('img/healthlogo.png')}}" width="80" height="40"></img></a>
+
+        <div class="pull-left" style="margin-top:20px; color:white;">
+            <b style="color:white; font-size:20px;" class="navbar-left">HEALTHEXPRESS</b>
         </div>
         </div>
+
         </a>
         </div>
 

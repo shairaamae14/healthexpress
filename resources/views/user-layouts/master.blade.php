@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="http://fonts.googleapis.com/icon?family=Material+Icons" />
   <link rel="icon" type="image/png" href="{{asset('img/favicon-16x16.png')}}" sizes="16x16" />
 
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" />
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />  
   <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css"> -->
 
@@ -23,11 +23,10 @@
     <link href="{{asset('customer/assets/css/bootstrap.min.css')}}" rel="stylesheet" />
     <link href="{{asset('customer/assets/css/material-kit.css')}}" rel="stylesheet"/>
     <link href="{{asset('customer/assets/css/demo.css')}}" rel="stylesheet" />
-       <link href="{{asset('css/card.css')}}" rel="stylesheet" />
-       <link rel="stylesheet" type="text/css" href="{{asset('css/pace-theme-minimal.css')}}">
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-  <link rel="stylesheet" href="{{asset('css/dropify.min.css')}}">
-    <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+    <link href="{{asset('css/card.css')}}" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="{{asset('css/pace-theme-minimal.css')}}">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="{{asset('css/dropify.min.css')}}">
 
 @yield('heading')
   <style>

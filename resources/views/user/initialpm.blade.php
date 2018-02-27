@@ -105,7 +105,7 @@ hr{
         <div class="row">
           <div class="content">
             <center>
-            <h1 style="color:white; background-color: #4caf50"><b>WHAT'S YOUR PLAN?</b></h1>
+            <h1><b>Plan ahead your meals!</b> </h1>
             <div>
               <form role="form" method="get" action="{{route('user.plan.index')}}">
                 {{csrf_field()}}
@@ -127,27 +127,27 @@ hr{
                         <div class="col-md-4">
                 <div class="info">
                   <div class="icon icon-primary">
-                    <i class="material-icons">chat</i>
+                    <i class="material-icons">date_range</i>
                   </div>
-                  <h4 class="info-title">First Feature</h4>
-                  <p>Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.</p>
-                </div>
-                        </div>
-                        <div class="col-md-4">
-                <div class="info">
-                  <div class="icon icon-success">
-                    <i class="material-icons">verified_user</i>
-                  </div>
-                  <h4 class="info-title">Second Feature</h4>
-                  <p>Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.</p>
+                  <h4 class="info-title">Select Date Range</h4>
+                  <p>Choose the date ranges when you want your meal to be planned.</p>
                 </div>
                         </div>
                         <div class="col-md-4">
                 <div class="info">
                   <div class="icon icon-danger">
-                    <i class="material-icons">fingerprint</i>
+                    <i class="material-icons">touch_app</i>
                   </div>
-                  <h4 class="info-title">Third Feature</h4>
+                  <h4 class="info-title">Select Meals</h4>
+                  <p>Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.</p>
+                </div>
+                        </div>
+                        <div class="col-md-4">
+                <div class="info">
+                  <div class="icon icon-warning">
+                    <i class="material-icons">payment</i>
+                  </div>
+                  <h4 class="info-title">Pay</h4>
                   <p>Divide details about your product or agency work into parts. Write a few lines about each one. A paragraph describing a feature will be enough.</p>
                 </div>
                         </div>
@@ -180,17 +180,17 @@ hr{
         e.preventDefault();
          
       })
+      $('input[name="daterange"]').daterangepicker({
+        minDate: '{{$today}}'
+      }, function(start, end, label) {
+        console.log("New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')");
+      });
 
       $('#config-demo').on('change', function(e) {
         e.preventDefault();
         $('.savebtn').removeAttr('disabled');  
       });
-      $('input[name="daterange"]').daterangepicker({
-                "startDate": "01/24/2018",
-                "endDate": "01/30/2018"
-            }, function(start, end, label) {
-              console.log("New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')");
-            });
+
 
       $('#btnplan').on('click', function(){
         $('#content').hide();

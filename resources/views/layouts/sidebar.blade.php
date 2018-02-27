@@ -1,16 +1,47 @@
+<style type="text/css">
+  .avatar-circle {
+  width: 100px;
+  height: 100px;
+  background-color: green;
+  text-align: center;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+}
+.initials {
+  position: relative;
+  top: 25px; /* 25% of parent */
+  font-size: 50px; /* 50% of parent */
+  line-height: 50px; /* 50% of parent */
+  color: #fff;
+  font-family: "Courier New", monospace;
+  font-weight: bold;
+}
+</style>
 <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
       <!-- Sidebar user panel -->
       <div class="user-panel">
         <div class="pull-left image">
-          <img src="{{asset('adminlte/dist/img/user2-160x160.jpg')}}" class="img-circle" alt="User Image">
+          <div class="user-image">
+            <label style="font-size: 40px; color:black;position: center;">{{Auth::user()->first_name[0].Auth::user()->last_name[0]}}</label>
+          </div>
+          <!-- <img src="{{asset('adminlte/dist/img/user2-160x160.jpg')}}" class="img-circle" alt="User Image"> -->
         </div>
         <div class="pull-left info">
-          <p>{{ Auth::user()->name }}</p>
-          <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+          <p>{{ Auth::user()->first_name." ".Auth::user()->last_name  }}</p>
+          <li class="dropdown open">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-circle text-success"></i> Online <span class="caret"></span></a>
+          </li>
+          <ul class="dropdown-menu">
+            <li role="presentation"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-circle text-success"></i> Online </a></li>
+            <li role="presentation"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-circle text-default"></i> Offline </a></li>
+          </ul>
+          
         </div>
       </div>
+
       <!-- search form -->
      <!--  <form action="#" method="get" class="sidebar-form">
         <div class="input-group">

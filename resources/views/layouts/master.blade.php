@@ -12,12 +12,13 @@
 
   <!--     Fonts and icons     -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" />
+  <link rel="icon" type="image/png" href="{{asset('img/favicon-16x16.png')}}" sizes="16x16" />
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" />
 
   <!-- CSS Files -->
     <link href="{{asset('customer/assets/css/bootstrap.min.css')}}" rel="stylesheet" />
-    <link href="{{asset('customer/assets/css/material-kit.css')}}"" rel="stylesheet"/>
+    <link href="{{asset('customer/assets/css/material-kit.css')}}" rel="stylesheet"/>
 
 </head>
 <style>
