@@ -103,7 +103,7 @@
         <div class="col-md-12" style="margin-top:5px">
           <h1 class="text-center" style="color:white; background-color: #4caf50; margin-top: -10px"><b>Order details</b></h1>
           <label><b>NOTE:</b>&nbsp;Every cook has different delivery charge. </label>
-           <form method="POST" action="{{route('order.checkout')}}">
+           <form method="POST" action="{{route('order.checkout', ['mode' => $mode])}}">
           <input type="radio" name="address" value="default" checked><b>Use default address & contact number</b>
           <div class="col-md-12" style="border:1px solid #4caf50;  margin-bottom: 20px">
           @foreach($customer as $c)
