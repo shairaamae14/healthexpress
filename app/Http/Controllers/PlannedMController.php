@@ -498,6 +498,8 @@ class PlannedMController extends Controller
             }
           }
 
+          dd($request->duration);
+
 
           foreach ($dishes as $dish) {
             $breakfast = $dish->whereHas('besteaten', function($query) {
@@ -661,7 +663,7 @@ class PlannedMController extends Controller
                                         'start' => $request['start'],
                                         'end' => $request['end'],
                                         'allDay' => 'false',
-                                        'cook_id' => $request['cookid']
+                                        'cook_id' => $request['cook']
         ]);
         return response()->json(['data'=>$events]);     
     }

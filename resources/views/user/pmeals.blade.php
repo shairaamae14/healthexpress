@@ -141,7 +141,8 @@ td.fc-day.fc-past {
                 
               <form method="post" action="#">
               {{csrf_field()}}
-              <input type="hidden" name="cookid" value="{{$cookid}}">
+              <input type="hidden" name="cookid" id="cookid" value="{{$cookid}}">
+              <input type="hidden" name="duration" id="duration" value="{{$duration}}">
                 <div id='wrap'>
                   <div id='external-events'>
                       <input type="hidden" name="start" value="{{$start}}">
@@ -152,7 +153,7 @@ td.fc-day.fc-past {
                       <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
                       <div class="card" style="margin-bottom: 10px">
                         @foreach($breakfast as $bfast)
-                          <div class='fc-event'  data-event='{"timeStart": "06:00:00", "did": {{$bfast->did}}, "title": "{{$bfast->dish_name}}", "be":{{$bfast->be_id}} }'>{{$bfast->dish_name}}</div>
+                          <div class='fc-event'  data-event='{"did": {{$bfast->did}}, "title": "{{$bfast->dish_name}}", "be":1, "cook":{{$cookid}} }'>{{$bfast->dish_name}}</div>
                         @endforeach
                       </div>
                       <!-- Lunch -->
@@ -161,7 +162,7 @@ td.fc-day.fc-past {
                       <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
                       <div class="card" style="margin-bottom: 10px">
                         @foreach($lunch as $lnch)
-                          <div class='fc-event' data-toggle="modal" data-target="#dishDetails" data-event='{"did": {{$lnch->did}}, "title": "{{$lnch->dish_name}}", "be":{{$lnch->be_id}} }'>{{$lnch->dish_name}}</div>
+                          <div class='fc-event' data-toggle="modal" data-event='{"did": {{$lnch->did}}, "title": "{{$lnch->dish_name}}", "be":2, "cook":{{$cookid}} }'>{{$lnch->dish_name}}</div>
                         @endforeach
                       </div>
                       <!-- Dinner -->
@@ -170,7 +171,7 @@ td.fc-day.fc-past {
                       <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
                       <div class="card" style="margin-bottom: 10px">
                         @foreach($dinner as $dnr)
-                          <div class='fc-event' data-event='{"did": {{$dnr->did}}, "be":{{$dnr->be_id}}, "title": "{{$dnr->dish_name}}" }'>{{$dnr->dish_name}}</div>
+                          <div class='fc-event' data-event='{"did": {{$dnr->did}}, "be":3, "title": "{{$dnr->dish_name}}", "cook":{{$cookid}} }'>{{$dnr->dish_name}}</div>
                         @endforeach
                       </div>
 
@@ -377,7 +378,8 @@ $(document).ready(function() {
           },
           eventReceive: function(event){
             var title = event.title;
-            console.log(event);
+            var cook = event.cook;
+            console.log(event.cook);
             var dish = event.did;
             var be = event.be;
             var om = 2;
@@ -396,13 +398,14 @@ $(document).ready(function() {
 
             $.ajax({
               url: "{{ route('user.storeplans') }}",
-              data: {'title':title,'start':start,'end':end,'dish_id':dish,'be_id':be,'om_id':om},
+              data: {'title':title,'start':start,'end':end,'dish_id':dish,'be_id':be,'om_id':om, 'cook':cook},
               method: "GET",
               dataType: 'json',
               success: function(){
                 $('#calendar').fullCalendar('updateEvent',event);
-                {{-- window.location.href="{{route('user.plan.newindex')}}"; --}}
-                location.reload();
+                window.location.href="{{route('user.plan.newindex')}}";
+                
+                // location.reload();
                 Pace.restart();
               },
               error: function(e){
@@ -553,8 +556,16 @@ $(document).ready(function() {
      
       // $('.timepicker').timepicker();
    });
-  function changedish(){
-    window.location.href="{{route('user.changedish')}}";
+  function changedish(id){
+
+    $.ajax({
+      url: "{{route('user.changedish')}}",
+      method: "get",
+      data: {'id':id},
+      succes: function(){
+        location.reload();
+      }
+    });
   }
 </script>
   <script>
