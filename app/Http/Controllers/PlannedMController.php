@@ -250,6 +250,7 @@ class PlannedMController extends Controller
 
       $id = Auth::id();
       $duration = $request->duration;
+      // dd($duration);
         
          $user = Auth::user()->load('conditions.restrictions','allergies.tol_values');
           $ranges = [];
@@ -651,7 +652,9 @@ class PlannedMController extends Controller
 
     public function storePlans(Request $request){
         $id = Auth::id();
-        // dd($request->cookid);
+        $amount = Dish::where('did', $request['dish_id'])->select('sellingPrice')->first();
+        // dd($amount);
+        $totalAmount = $amount->sellingPrice;
          $events = UserOrder::create([
                                         'title' => $request['title'],
                                         'user_id' => $id,
@@ -663,6 +666,8 @@ class PlannedMController extends Controller
                                         'start' => $request['start'],
                                         'end' => $request['end'],
                                         'allDay' => 'false',
+                                        'totalQty' => 1,
+                                        'totalAmount' => $totalAmount,
                                         'cook_id' => $request['cook']
         ]);
         return response()->json(['data'=>$events]);     
