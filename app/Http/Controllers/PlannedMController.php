@@ -18,6 +18,7 @@ use Braintree_Customer;
 use Calendar;
 use mysql_fetch_array;
 use Carbon;
+use Session;
 
 use Illuminate\Support\Facades\Auth;
 
@@ -47,217 +48,10 @@ class PlannedMController extends Controller
           $dishes = collect();
           $comparisons = ['calories', 'protein', 'total_fat', 'carbohydrate', 'fibre', 'sodium','sat_fat', 'cholesterol'];
 
-          $duration = $request->daterange;
+          // dd($request->daterange);
 
-        // $user_orders = UserOrder::where('user_id',$id)->where('order_status','Initial')->get();
-        // if(count($user_orders) != 0){
-
-          
-        // }
-
-
-
-        // else{
-
-          $cook = Cook::inRandomOrder()->select('id')->take(1)->first();
-          $cookid = $cook->id;
-
-          if(!$user->allergies->count() && !$user->conditions->count())
-          {
-            $dishes = \App\Dish::whereHas('nfacts', function($query) use ($user) {
-              $query->where('calories', '<=', $user->dcr);
-            })->get();
-
-          }
-          else if($user->allergies->count() && !$user->conditions->count()) {
-
-            foreach($user->allergies as $allergy) {
-              $dishes = \App\Dish::whereHas('ingredients', function($query) use($allergy){
-                $protein = $allergy->tol_values->threshold_value /100;
-                  switch ($allergy->tol_values->level) {
-                    case 'High':
-                        break;
-                    case 'Medium':
-                        $proteinMin = $allergy->min / 100;
-                        $proteinMax = $allergy->max / 100;
-                        $query->where('Shrt_Desc', 'LIKE', '%'.$allergy->allergen_name.'%')
-                            ->where('Protein_g', '<', $proteinMin)->orWhere('Protein_g', '<=', $proteinMax);
-                        break;
-                    case 'Low':
-                        $query->where('Shrt_Desc', 'LIKE', '%'.$allergy->allergen_name.'%')->where('Protein_g', '<', $protein);
-                        break;
-                    default:
-                        break;
-                    }
-              })->get();
-
-              $dishes = \App\Dish::whereDoesntHave('ingredients', function($query) use($allergy){
-                $query->where('Shrt_Desc', 'LIKE', '%'.$allergy->allergen_name.'%');
-              })->get();
-            }
-          }
-          else if(!$user->allergies->count() && $user->conditions->count()) {
-            $list = \App\Dish::whereHas('nfacts')->get();
-            for ($index=0; $index < $list->count() ;$index++) { 
-              foreach($user->conditions as $condition) {
-                foreach($comparisons as $comparison) {
-                  if($condition->restrictions[0][$comparison] < $list[$index]->nfacts[$comparison])
-                    $dishes[$index] = $list[$index];
-                }
-              }
-            }
-          }
-          else{
-            foreach ($user->allergies as $allergy) {
-              $dishes = \App\Dish::whereHas('ingredients', function($query) use($allergy){
-                $protein = $allergy->tol_values->threshold_value /100;
-                switch ($allergy->tol_values->level) {
-                  case 'High':
-                      break;
-                  case 'Medium':
-                      $proteinMin = $allergy->min / 100;
-                      $proteinMax = $allergy->max / 100;
-                      $query->where('Shrt_Desc', 'LIKE', '%'.$allergy->allergen_name.'%')
-                            ->where('Protein_g', '<', $proteinMin)->orWhere('Protein_g', '<=', $proteinMax)->groupBy('authorCook_id');
-                      break;
-                  case 'Low':
-                      $query->where('Shrt_Desc', 'LIKE', '%'.$allergy->allergen_name.'%')->where('Protein_g', '<', $protein)->groupBy('authorCook_id');
-                      break;
-                  default:
-                      break;
-                  }
-              })->get();
-              $list = \App\Dish::whereDoesntHave('ingredients', function($query) use($allergy){
-                $query->where('Shrt_Desc', 'LIKE', '%'.$allergy->allergen_name.'%')->groupBy('authorCook_id');
-              })->whereHas('nfacts')->get();
-               
-              for ($i=0; $i < $list->count(); $i++) {  
-                foreach ($user->conditions as $condition) { 
-                  foreach ($comparisons as $comparison) {
-                    if ($condition->restrictions[0][$comparison] < $list[$i]->nfacts[$comparison]) {             
-                      $dishes[$i] = $list[$i];
-                    }
-                  }
-                }
-              }
-            }
-          }
-
-
-          foreach ($dishes as $dish) {
-            $breakfast = $dish->whereHas('besteaten', function($query) {
-              $query->where('name', 'Breakfast');
-            })->where('dishes.authorCook_id', $cookid)->where('dish_type', 'Planned')->take(5)->get();
-            $lunch = $dish->whereHas('besteaten', function($query) {
-              $query->where('name', 'Lunch');
-            })->where('dishes.authorCook_id', $cookid)->where('dish_type', 'Planned')->take(5)->get();
-            $dinner = $dish->whereHas('besteaten', function($query) {
-              $query->where('name', 'Dinner');
-            })->where('dishes.authorCook_id', $cookid)->where('dish_type', 'Planned')->take(5)->get();
-          }
-
-          $dates = explode("-", str_replace(' ', '', $request->daterange));
-          $date1 = \Carbon\Carbon::createFromFormat('Y-m-d', date('Y-m-d',strtotime($dates[0])));
-          $date2 = \Carbon\Carbon::createFromFormat('Y-m-d', date('Y-m-d',strtotime($dates[1])));
-          $from = \Carbon\Carbon::createFromDate($date1->year, $date1->month, $date1->day);
-          $to =  \Carbon\Carbon::createFromDate($date2->year, $date2->month, $date2->day);
-          $start = date('Y-m-d',strtotime($dates[0]));
-          $end = date('Y-m-d',strtotime($dates[1]));
-       
-          for ($date=$from; $date->lte($to); $date->addDay()) { 
-            $ranges[] = $date->format('Y-m-d\TH:m:s');
-            $planner[] = $date->format('Y-m-d H:m:s');
-          }
-
-          $count = count($planner) - 1;
-
-          while ($count >= 0) {
-            $bfast = UserOrder::create([
-                                        'user_id' => $user->id,
-                                        'totalQty' => 1,
-                                        'totalAmount' => $breakfast->shuffle()[0]->sellingPrice,
-                                        'order_status' =>'Initial',
-                                        'om_id' => 2,
-                                        'dish_id' => $breakfast->shuffle()[0]->did,
-                                        'title' => $breakfast->shuffle()[0]->dish_name,
-                                        'planner_start' => reset($planner),
-                                        'planner_end' => end($planner),
-                                        'start' => $ranges[$count],
-                                        'end' => $ranges[$count] ,
-                                        'allDay' => 'false',
-                                        'cook_id' => $cookid
-                                        ]);
-            $lun = UserOrder::create([
-                                        'user_id' => $user->id,
-                                        'totalQty' => 1,
-                                        'totalAmount' => $lunch->shuffle()[0]->sellingPrice,
-                                        'order_status' => 'Initial',
-                                        'om_id' => 2,
-                                        'dish_id' => $lunch->shuffle()[0]->did,
-                                        'title' => $lunch->shuffle()[0]->dish_name,
-                                        'planner_start' => reset($planner),
-                                        'planner_end' => end($planner),
-                                        'start' => $ranges[$count],
-                                        'end' => $ranges[$count] ,
-                                        'allDay' => 'false',
-                                        'cook_id' => $cookid
-                                        ]);
-
-            $din = UserOrder::create([
-                                        'user_id' => $user->id,
-                                        'totalQty' => 1,
-                                        'totalAmount' => $dinner->shuffle()[0]->sellingPrice,
-                                        'order_status' => 'Initial',
-                                        'om_id' => 2,
-                                        'dish_id' => $dinner->shuffle()[0]->did,
-                                        'title' => $dinner->shuffle()[0]->dish_name,
-                                        'planner_start' => reset($planner),
-                                        'planner_end' => end($planner),
-                                        'start' => $ranges[$count],
-                                        'end' => $ranges[$count] ,
-                                        'allDay' => 'false',
-                                        'cook_id' => $cookid
-                                        ]);
-
-            $count--;
-          }
-
-          //show details and nutritional facts of dishes
-          $dishes = UserOrder::join('dishes', 'user_orders.dish_id', '=', 'dishes.did')
-                                  ->join('cooks', 'dishes.authorCook_id' , '=', 'cooks.id')
-                                  ->join('dish_besteaten', 'dishes.did', '=', 'dish_besteaten.dish_id')
-                                  ->join('besteaten_at', 'dish_besteaten.be_id', '=', 'besteaten_at.be_id')
-                                  ->join('nutritional_facts', 'dishes.did', '=', 'nutritional_facts.ding_id')
-                                  ->where('user_id',$id)
-                                  ->get();
-
-          //all dishes
-          $betype = UserOrder::join('dishes','user_orders.dish_id', '=', 'dishes.did')
-                              ->get();
-
-          //get all besteaten
-          $besteaten= BestEaten::all();
-          
-
-          return view('user.pmeals', compact('breakfast', 'lunch', 'dinner', 'besteaten', 'dishes', 'betype', 'start', 'end', 'cookid','duration'))->with(['plans' => Plan::get(), 'cal'=> response()->json($dinner)]);
-
-        // }
-        
-            
-    }
-
-    public function index2(Request $request){
-
-      $id = Auth::id();
-      $duration = $request->duration;
-      // dd($duration);
-        
-         $user = Auth::user()->load('conditions.restrictions','allergies.tol_values');
-          $ranges = [];
-          $planner = [];
-          $dishes = collect();
-          $comparisons = ['calories', 'protein', 'total_fat', 'carbohydrate', 'fibre', 'sodium','sat_fat', 'cholesterol'];
-
+        $user_orders = UserOrder::where('user_id',$id)->where('order_status','Initial')->get();
+        if(count($user_orders) != 0){
 
           $qstart = UserOrder::distinct()->select('planner_start')->where('user_id',$id)->where('order_status','Initial')->first();
           $qend = UserOrder::distinct()->select('planner_end')->where('user_id',$id)->where('order_status','Initial')->first();
@@ -371,16 +165,13 @@ class PlannedMController extends Controller
             })->where('dishes.authorCook_id', $cookid)->where('dish_type', 'Planned')->take(5)->get();
           }
 
-          // dd($breakfast, $lunch, $dinner);
-
-
           //show details and nutritional facts of dishes
           $dishes = UserOrder::join('dishes', 'user_orders.dish_id', '=', 'dishes.did')
                                   ->join('cooks', 'dishes.authorCook_id' , '=', 'cooks.id')
                                   ->join('dish_besteaten', 'dishes.did', '=', 'dish_besteaten.dish_id')
                                   ->join('besteaten_at', 'dish_besteaten.be_id', '=', 'besteaten_at.be_id')
                                   ->join('nutritional_facts', 'dishes.did', '=', 'nutritional_facts.ding_id')
-                                  ->where('user_id',$id)
+                                  ->where('user_id', $id)
                                   ->get();
 
           //all dishes
@@ -389,31 +180,14 @@ class PlannedMController extends Controller
 
           //get all besteaten
           $besteaten= BestEaten::all();
+          Session::put('start', $start);
+          Session::put('end', $end);
           
           return view('user.pmeals', compact('breakfast', 'lunch', 'dinner', 'besteaten', 'dishes', 'betype', 'start', 'end', 'cookid','duration'))->with(['plans' => Plan::get(), 'cal'=> response()->json($dinner)]);
+          
+        }
 
-
-
-    }
-
-    public function changeDish(Request $request){
-      $id = Auth::id();
-      $cid = $request['cookid'];
-      // $duration 
-        
-         $user = Auth::user()->load('conditions.restrictions','allergies.tol_values');
-          $ranges = [];
-          $planner = [];
-          $dishes = collect();
-          $comparisons = ['calories', 'protein', 'total_fat', 'carbohydrate', 'fibre', 'sodium','sat_fat', 'cholesterol'];
-
-        // $qstart = UserOrder::distinct()->select('planner_start')->where('user_id',$id)->where('order_status','Initial')->first();
-        //   $qend = UserOrder::distinct()->select('planner_end')->where('user_id',$id)->where('order_status','Initial')->first();
-        //   $start = $qstart->planner_start;
-        //   $end = $qend->planner_end;
-
-            $cook = Cook::where('id','!=',$cid)->inRandomOrder()->select('id')->take(1)->first();
-            $cookid = $cook->id;     
+        else{
 
           $cook = Cook::inRandomOrder()->select('id')->take(1)->first();
           $cookid = $cook->id;
@@ -499,7 +273,222 @@ class PlannedMController extends Controller
             }
           }
 
-          dd($request->duration);
+
+          foreach ($dishes as $dish) {
+            $breakfast = $dish->whereHas('besteaten', function($query) {
+              $query->where('name', 'Breakfast');
+            })->where('dishes.authorCook_id', $cookid)->where('dish_type', 'Planned')->take(5)->get();
+            $lunch = $dish->whereHas('besteaten', function($query) {
+              $query->where('name', 'Lunch');
+            })->where('dishes.authorCook_id', $cookid)->where('dish_type', 'Planned')->take(5)->get();
+            $dinner = $dish->whereHas('besteaten', function($query) {
+              $query->where('name', 'Dinner');
+            })->where('dishes.authorCook_id', $cookid)->where('dish_type', 'Planned')->take(5)->get();
+          }
+
+          $dates = explode("-", str_replace(' ', '', $request->daterange));
+          $date1 = \Carbon\Carbon::createFromFormat('Y-m-d', date('Y-m-d',strtotime($dates[0])));
+          $date2 = \Carbon\Carbon::createFromFormat('Y-m-d', date('Y-m-d',strtotime($dates[1])));
+
+          $from = \Carbon\Carbon::createFromDate($date1->year, $date1->month, $date1->day);
+          $to =  \Carbon\Carbon::createFromDate($date2->year, $date2->month, $date2->day);
+          $start = date('Y-m-d',strtotime($dates[0]));
+          $end = date('Y-m-d',strtotime($dates[1]));
+       
+          for ($date=$from; $date->lte($to); $date->addDay()) { 
+            $ranges[] = $date->format('Y-m-d\TH:m:s');
+            $planner[] = $date->format('Y-m-d H:m:s');
+          }
+
+          $count = count($planner) - 1;
+
+          while ($count >= 0) {
+            $bfast = UserOrder::create([
+                                        'user_id' => $user->id,
+                                        'totalQty' => 1,
+                                        'totalAmount' => $breakfast->shuffle()[0]->sellingPrice,
+                                        'order_status' =>'Initial',
+                                        'om_id' => 2,
+                                        'dish_id' => $breakfast->shuffle()[0]->did,
+                                        'title' => $breakfast->shuffle()[0]->dish_name,
+                                        'planner_start' => reset($planner),
+                                        'planner_end' => end($planner),
+                                        'start' => $ranges[$count],
+                                        'end' => $ranges[$count] ,
+                                        'allDay' => 'false',
+                                        'cook_id' => $cookid
+                                        ]);
+            $lun = UserOrder::create([
+                                        'user_id' => $user->id,
+                                        'totalQty' => 1,
+                                        'totalAmount' => $lunch->shuffle()[0]->sellingPrice,
+                                        'order_status' => 'Initial',
+                                        'om_id' => 2,
+                                        'dish_id' => $lunch->shuffle()[0]->did,
+                                        'title' => $lunch->shuffle()[0]->dish_name,
+                                        'planner_start' => reset($planner),
+                                        'planner_end' => end($planner),
+                                        'start' => $ranges[$count],
+                                        'end' => $ranges[$count] ,
+                                        'allDay' => 'false',
+                                        'cook_id' => $cookid
+                                        ]);
+
+            $din = UserOrder::create([
+                                        'user_id' => $user->id,
+                                        'totalQty' => 1,
+                                        'totalAmount' => $dinner->shuffle()[0]->sellingPrice,
+                                        'order_status' => 'Initial',
+                                        'om_id' => 2,
+                                        'dish_id' => $dinner->shuffle()[0]->did,
+                                        'title' => $dinner->shuffle()[0]->dish_name,
+                                        'planner_start' => reset($planner),
+                                        'planner_end' => end($planner),
+                                        'start' => $ranges[$count],
+                                        'end' => $ranges[$count] ,
+                                        'allDay' => 'false',
+                                        'cook_id' => $cookid
+                                        ]);
+
+            $count--;
+          }
+          // dd($dates[0],$dates[1]);
+
+          //show details and nutritional facts of dishes
+          $dishes = UserOrder::join('dishes', 'user_orders.dish_id', '=', 'dishes.did')
+                                  ->join('cooks', 'dishes.authorCook_id' , '=', 'cooks.id')
+                                  ->join('dish_besteaten', 'dishes.did', '=', 'dish_besteaten.dish_id')
+                                  ->join('besteaten_at', 'dish_besteaten.be_id', '=', 'besteaten_at.be_id')
+                                  ->join('nutritional_facts', 'dishes.did', '=', 'nutritional_facts.ding_id')
+                                  ->where('user_id',$id)
+                                  ->get();
+
+          //all dishes
+          $betype = UserOrder::join('dishes','user_orders.dish_id', '=', 'dishes.did')
+                              ->get();
+
+          //get all besteaten
+          $besteaten= BestEaten::all();
+          Session::put('start', $start);
+          Session::put('end', $end);
+          
+
+          return view('user.pmeals', compact('breakfast', 'lunch', 'dinner', 'besteaten', 'dishes', 'betype', 'start', 'end', 'cookid','duration'))->with(['plans' => Plan::get(), 'cal'=> response()->json($dinner)]);
+
+        }
+        
+            
+    }
+
+    public function changeDish(Request $request){
+      $id = Auth::id();
+      $cid = $request['id'];
+
+          $user = Auth::user()->load('conditions.restrictions','allergies.tol_values');
+          $ranges = [];
+          $planner = [];
+          $dishes = collect();
+          $comparisons = ['calories', 'protein', 'total_fat', 'carbohydrate', 'fibre', 'sodium','sat_fat', 'cholesterol'];
+
+          // $qstart = UserOrder::distinct()->select('planner_start')->where('user_id',$id)->where('order_status','Initial')->first();
+          // $qend = UserOrder::distinct()->select('planner_end')->where('user_id',$id)->where('order_status','Initial')->first();
+
+          // $start = $qstart->planner_start;
+
+          // $end = $qend->planner_end;
+          // dd($start);
+          $start = Session::get('start');
+          $end = Session::get('end');
+
+          dd($start);
+
+          $cook = Cook::where('id','!=',$cid)->inRandomOrder()->select('id')->take(1)->first();
+          $cookid = $cook->id;     
+
+          $delete = UserOrder::where('user_id', $id)->where('order_status', 'Initial')->delete();
+
+          if(!$user->allergies->count() && !$user->conditions->count())
+          {
+            $dishes = \App\Dish::whereHas('nfacts', function($query) use ($user) {
+              $query->where('calories', '<=', $user->dcr);
+            })->get();
+
+          }
+          else if($user->allergies->count() && !$user->conditions->count()) {
+
+            foreach($user->allergies as $allergy) {
+              $dishes = \App\Dish::whereHas('ingredients', function($query) use($allergy){
+                $protein = $allergy->tol_values->threshold_value /100;
+                  switch ($allergy->tol_values->level) {
+                    case 'High':
+                        break;
+                    case 'Medium':
+                        $proteinMin = $allergy->min / 100;
+                        $proteinMax = $allergy->max / 100;
+                        $query->where('Shrt_Desc', 'LIKE', '%'.$allergy->allergen_name.'%')
+                            ->where('Protein_g', '<', $proteinMin)->orWhere('Protein_g', '<=', $proteinMax);
+                        break;
+                    case 'Low':
+                        $query->where('Shrt_Desc', 'LIKE', '%'.$allergy->allergen_name.'%')->where('Protein_g', '<', $protein);
+                        break;
+                    default:
+                        break;
+                    }
+              })->get();
+
+              $dishes = \App\Dish::whereDoesntHave('ingredients', function($query) use($allergy){
+                $query->where('Shrt_Desc', 'LIKE', '%'.$allergy->allergen_name.'%');
+              })->get();
+            }
+          }
+          else if(!$user->allergies->count() && $user->conditions->count()) {
+            $list = \App\Dish::whereHas('nfacts')->get();
+            for ($index=0; $index < $list->count() ;$index++) { 
+              foreach($user->conditions as $condition) {
+                foreach($comparisons as $comparison) {
+                  if($condition->restrictions[0][$comparison] < $list[$index]->nfacts[$comparison])
+                    $dishes[$index] = $list[$index];
+                }
+              }
+            }
+          }
+          else{
+            foreach ($user->allergies as $allergy) {
+              $dishes = \App\Dish::whereHas('ingredients', function($query) use($allergy){
+                $protein = $allergy->tol_values->threshold_value /100;
+                switch ($allergy->tol_values->level) {
+                  case 'High':
+                      break;
+                  case 'Medium':
+                      $proteinMin = $allergy->min / 100;
+                      $proteinMax = $allergy->max / 100;
+                      $query->where('Shrt_Desc', 'LIKE', '%'.$allergy->allergen_name.'%')
+                            ->where('Protein_g', '<', $proteinMin)->orWhere('Protein_g', '<=', $proteinMax)->groupBy('authorCook_id');
+                      break;
+                  case 'Low':
+                      $query->where('Shrt_Desc', 'LIKE', '%'.$allergy->allergen_name.'%')->where('Protein_g', '<', $protein)->groupBy('authorCook_id');
+                      break;
+                  default:
+                      break;
+                  }
+              })->get();
+              $list = \App\Dish::whereDoesntHave('ingredients', function($query) use($allergy){
+                $query->where('Shrt_Desc', 'LIKE', '%'.$allergy->allergen_name.'%')->groupBy('authorCook_id');
+              })->whereHas('nfacts')->get();
+               
+              for ($i=0; $i < $list->count(); $i++) {  
+                foreach ($user->conditions as $condition) { 
+                  foreach ($comparisons as $comparison) {
+                    if ($condition->restrictions[0][$comparison] < $list[$i]->nfacts[$comparison]) {             
+                      $dishes[$i] = $list[$i];
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          // dd($request->duration);  
 
 
           foreach ($dishes as $dish) {
@@ -514,13 +503,13 @@ class PlannedMController extends Controller
             })->where('dishes.authorCook_id', $cookid)->where('dish_type', 'Planned')->take(5)->get();
           }
 
-          $dates = explode("-", str_replace(' ', '', $request->duration));
-          $date1 = \Carbon\Carbon::createFromFormat('Y-m-d', date('Y-m-d',strtotime($dates[0])));
-          $date2 = \Carbon\Carbon::createFromFormat('Y-m-d', date('Y-m-d',strtotime($dates[1])));
+          // $dates = explode("-", str_replace(' ', '', $request->duration));
+          $date1 = \Carbon\Carbon::createFromFormat('Y-m-d', date('Y-m-d',strtotime($start)));
+          $date2 = \Carbon\Carbon::createFromFormat('Y-m-d', date('Y-m-d',strtotime($end)));
           $from = \Carbon\Carbon::createFromDate($date1->year, $date1->month, $date1->day);
           $to =  \Carbon\Carbon::createFromDate($date2->year, $date2->month, $date2->day);
-          $start = date('Y-m-d',strtotime($dates[0]));
-          $end = date('Y-m-d',strtotime($dates[1]));
+          // $start = date('Y-m-d',strtotime($dates[0]));
+          // $end = date('Y-m-d',strtotime($dates[1]));
        
           for ($date=$from; $date->lte($to); $date->addDay()) { 
             $ranges[] = $date->format('Y-m-d\TH:m:s');
@@ -597,21 +586,13 @@ class PlannedMController extends Controller
           $besteaten= BestEaten::all();
           
 
-          return view('user.pmeals', compact('breakfast', 'lunch', 'dinner', 'besteaten', 'dishes', 'betype', 'start', 'end', 'cookid','duration'))->with(['plans' => Plan::get(), 'cal'=> response()->json($dinner)]);
+          return response()->json(['status'=>'success']);
     }
 
     public function index1(){
       $id = Auth::id();
       $plans = UserOrder::where('user_id', $id)->where('order_status', 'LIKE', 'Initial')->get();
       $paidplans = UserOrder::where('user_id', $id)->where('order_status', 'LIKE', 'Pending')->get();
-
-      // dd(count($plans),count($paidplans));
-      // $latest =  UserOrder::where('user_id', $id)->where('order_status', 'LIKE', 'Initial')->latest('created_at')->first();
-      // if($latest)
-      // {
-      //    $start = $latest->planner_start;
-      //     $end = $latest->planner_end;
-      // }
      
       $iteration = FALSE;
       if(count($plans)>0){
@@ -621,20 +602,11 @@ class PlannedMController extends Controller
           {
             $iteration = TRUE;
             if($iteration == TRUE)
-              return redirect()->route('user.plan.newindex');
+              return redirect()->route('user.plan.index');
           }          
         }
       }
       else if(count($paidplans)>0){
-        // foreach($paidplans as $plan){
-        //   $result = explode("T",$plan->end);
-        //   if(strtotime($result[0]) > strtotime(date("Y-m-d")))
-        //   {
-        //     $iteration = TRUE;
-        //     if($iteration == TRUE)
-        //       return redirect()->route('pmorder.showallorders');
-        //   }          
-        // }
         return redirect()->route('pmorder.showallorders');
       }
       else
@@ -645,10 +617,6 @@ class PlannedMController extends Controller
     public function store(Request $request){       
       return redirect()->route('user.plan.show');
     }
-
-    // public function showCalendar(){
-    //     return view('user.planCalendar');
-    // }
 
     public function storePlans(Request $request){
         $id = Auth::id();
@@ -722,18 +690,6 @@ class PlannedMController extends Controller
         return response()->json(['status'=>'failed']);
     }
 
-    // public function addNote(Request $request){
-    //   $id = $request['eventid'];
-    //   $note = $request['note'];
-
-    //   $update = PlannedMeals::where('pm_id', $id)
-    //                         ->update(['note'=>$note]);
-    //   if($update)
-    //     return response()->json(['status'=>'success']);
-    //   else
-    //     return response()->json(['status'=>'failed']);
-
-    // }
 
     public function summary(){
       $id = Auth::id();
@@ -741,12 +697,7 @@ class PlannedMController extends Controller
                             ->where('user_id', $id)
                             ->where('order_status', 'Initial')
                             ->get();
-      // $initialdishes = UserOrder::join('dishes','dishes.did','=','user_orders.dish_id')
-      //                       ->where('user_id', $id)
-      //                       ->where('om_id', 2)
-      //                       ->get();
-                            // dd($initialdishes);
-                            // dd($data);
+
       $start = $data[0]->planner_start;
       $end = $data[0]->end;
        $allMealCost=0;
@@ -757,13 +708,9 @@ class PlannedMController extends Controller
           $totalDelFee+=$data[$i]->delivery_fee;
           $allcost=$allMealCost+$totalDelFee;
         }
-         // $allMealCost=round($allMealCost,2);
-         //  $totalDelFee=round($totalDelFee,2);
-         //  $allcost=round($allcost, 2);
          $allMealCost= number_format($allMealCost,2);
          $totalDelFee= number_format($totalDelFee,2);
          $allcost= number_format($allcost,2);
-        // dd($totalDelFee);
       
       return view('user.summary', compact('data', 'allMealCost', 'totalDelFee', 'allcost', 'start','end'));
     }
