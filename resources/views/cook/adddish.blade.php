@@ -178,7 +178,7 @@ fieldset{
         </div>
         </div>
         <div class="form-group col-md-4">
-            <input type="number" class="form-control quantity" id="quantity" name="quantity" placeholder="Quantity" ng-model="choice.name" min="0" autofocus >
+            <input type="number" step="0.1" class="form-control quantity" id="quantity" name="quantity" placeholder="Quantity" ng-model="choice.name" min="0" autofocus >
             <label style="color:red" id="err"></label>
         </div>
         <div class="form-group col-md-3">

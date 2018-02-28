@@ -150,7 +150,6 @@ input[type="text"], input[type="number"], #mode {
               <div id='calendar'></div>   
        
               <div class="footer">
-      <!--        <button type="button" onclick="window.location.href='{{route('user.plan.index')}}'" class="btn btn-flat btn-danger">Go Back</button> -->
             <button type="button" class="btn btn-flat btn-success add-dish" value="./payment" onclick="window.location.href='{{route('pmorder.orderhistory')}}'">Proceed to Orders status</button>
             </div>
                  </center>
@@ -162,9 +161,11 @@ input[type="text"], input[type="number"], #mode {
 </div>
 
 @foreach($data as $order)
+
+{{-- @foreach($timediff as $time) --}}
 <div id="fullCalModal{{$order->uo_id}}" class="modal fade" role="dialog">
   <div class="modal-dialog">
-
+    {{$order->a}}
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
@@ -256,28 +257,18 @@ input[type="text"], input[type="number"], #mode {
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        
+          @if($order->newAttribute == 1)
+            <button type="button" class="btn btn-warning" onclick="cancel({{$order->uo_id}})">Cancel Order</button>
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          @else
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          @endif
       </div>
     </div>
-
   </div>
 </div>
- <!--  <div id="fullCalModal{{$order->uo_id}}" class="modal fade pull-left mdl" style="align-content: center">
-    <div class="modal-dialog" style="float:center; margin-right: 1500px;">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span class="sr-only">close</span></button>
-           </div>
-            <div id="modalBody" class="modal-body col-md-12 modall"> 
-                <h1>HELLO</h1>
-
-        
-            
-        </div>
-      </div>
-    </div>
- </div> -->
-          
+{{-- @endforeach --}}
 @endforeach
 <script src='https://code.jquery.com/jquery-1.11.2.min.js'></script>
 <script src='https://code.jquery.com/ui/1.11.2/jquery-ui.min.js'></script>
@@ -317,9 +308,7 @@ $(document).ready(function() {
         });
       }
     });
-  
-
-
+    
   function getFreshEvents(){
     $.ajax({
       url: "{{route('user.fetch')}}",
@@ -349,10 +338,30 @@ $(document).ready(function() {
         }
         return false;
   }
+
+
+
+
+
+
+
 });   
     
 </script> 
-
+<script>
+function cancel(id){
+      $.ajax({
+        url: "{{route('user.cancelorder')}}",
+        type: 'get', // Send post data
+        data: {'id':id},
+        async: false,
+        success: function(){
+          location.reload();
+          // alert('hi');
+        }
+      });
+     }
+</script>
 
             
 
@@ -395,6 +404,8 @@ $(document).ready(function() {
         forceParse: 0,
         showMeridian: 1
       });
+
+     
    });
 </script> 
 

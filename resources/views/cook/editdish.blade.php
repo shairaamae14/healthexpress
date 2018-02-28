@@ -138,7 +138,7 @@ fieldset{
           <input type="hidden" id="ing_id" multiple name="ing_id[]" value=""/>
         </div>
         <div class="form-group col-md-4">
-            <input type="number" class="form-control" id="quantity" name="quantity" placeholder="Quantity" ng-model="choice.name" min="0" autofocus >
+            <input type="number" step="0.1" class="form-control" id="quantity" name="quantity" placeholder="Quantity" ng-model="choice.name" min="0" autofocus >
         </div>
         <div class="form-group col-md-3">
             <select class="form-control" id="preparation" name="preparation" style="width:100px;" autofocus>
@@ -229,6 +229,7 @@ fieldset{
                     <div class="form-group label-floating has-success">
                         <label class="control-label">Quantity</label>
                         <input type="text" class="form-control" id="quantityN{{$di->ding_id}}" name="quantityN" value="{{$di->quantity}}" />
+                        <label style="color:red" id="err"></label>
                     </div>
                 </div>
                 <div class="col-sm-6">
@@ -501,6 +502,13 @@ $(document).ready(function () {
           }).get();
         
 
+        if(quan == null || quan == 0 || quan == ''){
+            document.getElementById('err').innerHTML+="This field is required";
+        }
+        else{
+
+            $('.actions > ul > li:eq(1)').removeAttr("class");
+            $('#err').empty();
         var div = document.getElementById("part");
 
              div.innerHTML += 
@@ -525,6 +533,7 @@ $(document).ready(function () {
         $('#um option').prop('selected', function() {
             return this.defaultSelected;
         });
+    }
 
         // return false;
 
