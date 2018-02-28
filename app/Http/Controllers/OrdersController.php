@@ -28,6 +28,108 @@ class OrdersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+public function show(Request $request)
+    {
+      // dd('hello');
+        $datetoday = Carbon::now('Asia/Manila')->format('Y-m-d');
+        $user = Auth::user();
+
+      if($request->input('chooseStatus')=='All'){
+            $orders= UserOrder::where('user_id', $user->id)->where('order_status', '!=', 'Completed')
+                            ->where('om_id', 1)->orderBy('order_date', 'desc')->get();
+                $page_title="All Orders";
+      }
+      else if($request->input('chooseStatus') == 'Completed'){
+        $orders=UserOrder::where('user_id', $user->id)->where('order_status', 'Completed')
+                            ->where('om_id', 1)->where('order_date', $datetoday)->orderBy('order_date', 'desc')->get();
+                              $page_title="Completed";
+      }
+      else if(!$request->input('chooseStatus')){
+          $orders= UserOrder::where('user_id', $user->id)->where('order_status', '!=', 'Completed')
+                            ->where('om_id', 1)->orderBy('order_date', 'desc')->get();
+                             $page_title="All Orders";
+      }
+      else{
+       $orders= UserOrder::where('user_id', $user->id)->where('order_status', $request->input('chooseStatus'))->where('om_id', 1)->orderBy('order_date', 'desc')->get();
+          $page_title=$request->input('chooseStatus');
+      }
+
+      
+              // dd(($request['chooseStatus']));
+      // $datetoday = Carbon::now('Asia/Manila')->format('Y-m-d');
+      //   $user = Auth::user();
+      //   if($request->input('chooseStatus') == 'Completed')
+      //   $page_title = "Completed Orders";
+      //   else if($request->input('chooseStatus') == 'Pending')
+      //   $page_title = "Pending Orders";
+      //   else if($request->input('chooseStatus') == 'Cooking')
+      //   $page_title = "Cooking Orders";
+      //   else if($request->input('chooseStatus') == 'Delivering')
+      //   $page_title = "Delivering Orders";
+      //   else
+      //   $page_title = "All Express Orders";
+      //   if(!$request->input('chooseStatus'))
+      //   {
+
+      //      $orders = UserOrder::where('user_id', $user->id)->where('om_id', 1)->groupBy('user_id', 'order_date')->orderBy('user_orders.order_date', 'desc')->get(); 
+      //   }
+      //   else
+      //   {
+      // // dd($request);
+          
+      //       if($request->input('chooseStatus') == 'All')
+      //       {
+      //       $orders = UserOrder::where('user_id', $user->id)->where('om_id', 1)->groupBy('user_id', 'order_date')->orderBy('user_orders.order_date', 'desc')->get(); 
+      //       }
+      //       else if($request->input('chooseStatus')) {
+      //       $orders = UserOrder::where('user_id', $user->id)->where('order_status', $request->input('chooseStatus'))->where('om_id', 1)->groupBy('order_date')->orderBy('user_orders.order_date', 'desc')->get(); 
+      //       }
+      //   }
+       // $orders=UserOrder::where('user_id', $user->id)->where('om_id', 1)->orderBy('order_date', 'desc')->get();
+        // $pending = UserOrder::where('user_id', $user->id)->where('order_status', 'Pending')
+        //                ->where('om_id', 1)->orderBy('order_date', 'desc')->get();
+        // $cooking = UserOrder::where('user_id', $user->id)->where('order_status', 'Cooking')
+        //                     ->where('om_id', 1)->orderBy('order_date', 'desc')->get();
+        // $delivering = UserOrder::where('user_id', $user->id)->where('order_status', 'Delivering')
+        //                    ->where('om_id', 1)->orderBy('order_date', 'desc')->get();
+        // $datetoday = Carbon::now('Asia/Manila')->format('Y-m-d');
+        // $completed = UserOrder::where('user_id', $user->id)->where('order_status', 'Completed')
+        //                     ->where('om_id', 1)->where('order_date', $datetoday)->orderBy('order_date', 'desc')->get();
+                // $pending= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
+                // ->join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
+                // ->where('user_id', $id)
+                // ->groupBy('dish_id')
+                // ->orderBy('order_date', 'desc')
+                //  ->where('order_status', '=', 'Pending')
+                // ->get();
+
+                // $cooking= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
+                // ->join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
+                // ->where('user_id', $id)
+                // ->groupBy('dish_id')
+                // ->orderBy('order_date', 'desc')
+                // ->where('order_status', '=', 'Cooking')
+                // ->get();
+
+                // $delivering= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
+                // ->where('user_id', $id)
+                //  ->groupBy('dish_id')
+                //  ->orderBy('order_date', 'desc')
+                //  ->where('order_status', '=', 'Delivering')
+                // ->get();
+
+                // $datetoday=Carbon::now('Asia/Manila')->format('Y-m-d');
+                // $completed= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
+                // ->where('user_id', $id)
+                // ->groupBy('dish_id')
+                // ->orderBy('order_date', 'desc')
+                // ->where('order_status', '=', 'Completed')
+                //  ->where('order_date', '=', $datetoday)
+                // ->get();
+               
+             return view('user.orderhistory', compact('orders','pending', 'cooking', 'delivering', 'completed', 'done', 'page_title'));
+         
+    }
 
      
     public function checkout(Request $request, $mode){
@@ -407,56 +509,6 @@ class OrdersController extends Controller
      * @param  \App\Orders  $orders
      * @return \Illuminate\Http\Response
      */ 
-    public function show(Orders $orders)
-    {
-        $user = Auth::user();
-
-        $orders = UserOrder::where('user_id', $user->id)->orderBy('order_date', 'desc')->get();
-
-        $pending = UserOrder::where('user_id', $user->id)->where('order_status', 'Pending')
-                       ->where('om_id', 1)->orderBy('order_date', 'desc')->get();
-        $cooking = UserOrder::where('user_id', $user->id)->where('order_status', 'Cooking')
-                            ->where('om_id', 1)->orderBy('order_date', 'desc')->get();
-        $delivering = UserOrder::where('user_id', $user->id)->where('order_status', 'Delivering')
-                           ->where('om_id', 1)->orderBy('order_date', 'desc')->get();
-        $datetoday = Carbon::now('Asia/Manila')->format('Y-m-d');
-        $completed = UserOrder::where('user_id', $user->id)->where('order_status', 'Completed')
-                            ->where('om_id', 1)->where('order_date', $datetoday)->orderBy('order_date', 'desc')->get();
-                // $pending= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
-                // ->join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
-                // ->where('user_id', $id)
-                // ->groupBy('dish_id')
-                // ->orderBy('order_date', 'desc')
-                //  ->where('order_status', '=', 'Pending')
-                // ->get();
-
-                // $cooking= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
-                // ->join('cooks', 'cooks.id', '=', 'dishes.authorCook_id')
-                // ->where('user_id', $id)
-                // ->groupBy('dish_id')
-                // ->orderBy('order_date', 'desc')
-                // ->where('order_status', '=', 'Cooking')
-                // ->get();
-
-                // $delivering= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
-                // ->where('user_id', $id)
-                //  ->groupBy('dish_id')
-                //  ->orderBy('order_date', 'desc')
-                //  ->where('order_status', '=', 'Delivering')
-                // ->get();
-
-                // $datetoday=Carbon::now('Asia/Manila')->format('Y-m-d');
-                // $completed= UserOrder::join('dishes' , 'dishes.did', '=' , 'user_orders.dish_id')
-                // ->where('user_id', $id)
-                // ->groupBy('dish_id')
-                // ->orderBy('order_date', 'desc')
-                // ->where('order_status', '=', 'Completed')
-                //  ->where('order_date', '=', $datetoday)
-                // ->get();
-               
-               return view('user.orderhistory', compact('orders','pending', 'cooking', 'delivering', 'completed', 'done'));
-         
-    }
 
 
     public function changeToReceived($id){
@@ -466,12 +518,12 @@ class OrdersController extends Controller
           return redirect()->route('order.orderhistory');
     }
 
-    public function changeToDone($id){
-        $datetoday=Carbon::now('Asia/Manila')->format('Y-m-d');
-          $status=''; 
+    // public function changeToDone($id){
+    //     $datetoday=Carbon::now('Asia/Manila')->format('Y-m-d');
+    //       $status=''; 
 
-        return redirect()->route('order.pastorders');
-    }
+    //     return redirect()->route('order.pastorders');
+    // }
 
 
 
@@ -493,9 +545,10 @@ class OrdersController extends Controller
      * @param  \App\Orders  $orders
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Orders $orders)
+     public function destroy($id)
     {
-        // if ma cancel ang order pwede ra sguro diri
+     $cancel=UserOrder::where('uo_id', $id)->delete();
+     return redirect()->route('order.orderhistory')->with('success', 'Your Order has been cancelled!');
     }
 
 

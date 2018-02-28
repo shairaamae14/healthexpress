@@ -1,4 +1,11 @@
 @extends('user-layouts.master')
+@section('heading')
+  <link rel="stylesheet" href="{{asset('adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css')}}">
+  <!-- <link href="{{asset('css/bootstrap2.css')}}" rel="stylesheet" /> -->
+<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+<link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" href="{{asset('adminlte/bower_components/Ionicons/css/ionicons.min.css')}}">
+@endsection
 <style>
   @import url('http://fonts.googleapis.com/css?family=Lobster');
   @import url('http://fonts.googleapis.com/css?family=Anton');
@@ -79,6 +86,9 @@
   height:80px;
   float:left;
   }
+  .heading{
+    color:black;
+  }
 </style>
 @section('content')
 <div class="wrapper">
@@ -103,6 +113,19 @@
   <div class="section">
     <div class="container">
      <div class="row">
+      @if(session('success'))
+               <div class="alert alert-success">
+                 <div class="container">
+                    <div class="alert-icon">
+                        <i class="material-icons">check</i>
+                    </div>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true"><i class="material-icons">clear</i></span>
+                    </button>
+                    <b>Success!</b> {{session('success')}}
+                </div>
+            </div>
+        @endif
         <a href="{{route('pmorder.orderhistory')}}">
         <button type="submit" class="btn btn-success btn-flat btn-sm" style="margin-top: -10px; float:left">
         View Planned Meal Status
@@ -113,187 +136,86 @@
         View Order history
         </button>
         </a><br>
-        <h1 class="text-left" style="color:#66bb6a">Express Order Status</h1>
+        <h1 class="text-left">Express Order Status</h1>
         <!-- Tabs on Plain Card -->
-        <div class="card card-nav-tabs card-plain">
-          <div class="header header-success">
-            <!-- colors: "header-primary", "header-info", "header-success", "header-warning", "header-danger" -->
-            <div class="nav-tabs-navigation">
-              <div class="nav-tabs-wrapper">
-                <center>
-                <ul class="nav nav-tabs" data-tabs="tabs">
-                  <li><a href="#pending" data-toggle="tab" style="font-size: 15px">pending</a></li>
-                  <li><a href="#cooking" data-toggle="tab" style="font-size: 15px">On process</a></li>
-                  <li><a href="#delivering" data-toggle="tab" style="font-size: 15px">To Receive</a></li>
-                  <li><a href="#completed" data-toggle="tab" style="font-size: 15px">Completed</a></li>
-                </ul>
-              </div>
-            </div>
-          </div>
-          <div class="content">
-            <div class="tab-content text-center">
-              <!--TO PAY/PENDING!-->
-              <div class="tab-pane active" id="pending">
-                @if(count($pending))
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th class="text-center">Quantity</th>
-                      <th>Order</th>
-                      <th>Total Amount</th>
-                      <th class="text-center">Date Ordered</th>
-                      <th class="text-center">Delivery Address</th>
-                      <th class="text-center">Status</th>
-                    </tr>
-                  </thead>
-                  @foreach($pending as $pend)
-                  <tbody>
-                    <tr>
-                      <td class="text-center">{{$pend->totalQty}}</td>
-                      <td><img src="{{url('./dish_imgs/'.$pend->dishes['dish_img'])}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
-                        {{$pend->dishes['dish_name']}}
-                      </td>
-                      <td>Php {{$pend->totalAmount}}</td>
-                      <td class="text-center">{{$pend->order_date}}</td>
-                      <td class="text-center">{{$pend->address}}</td>
-                      <td class="text-center"><span class="badge" style="color:white; background-color:#66bb6a;">{{$pend->order_status}}</span></td>
-                    </tr>
-                  </tbody>
-                  @endforeach
-                </table>
-                @else
-                <center>
-                  <label style="font-size: 35px; margin-top: 20px">You have no orders on pending</label>
-                </center>
-                @endif   
-              </div>
-              <!--END!-->
-              <!--COOKING/ON PROCESS!-->
-              <div class="tab-pane" id="cooking">
-                @if(count($cooking))
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th class="text-center">Quantity</th>
-                      <th>Order</th>
-                      <th>Total Amount</th>
-                      <th class="text-center">Date Ordered</th>
-                       <th class="text-center">Delivery Address</th>
-                      <th class="text-center">Status</th>
-                    </tr>
-                  </thead>
-                  @foreach($cooking as $cook)
-                  <tbody>
-                    <tr>
-                      <td class="text-center">1</td>
-                      <td><img src="{{url('./dish_imgs/'.$cook->dishes['dish_img'])}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
-                        {{$cook->dishes['dish_name']}}
-                      </td>
-                      <td>Php {{$cook->totalAmount}}</td>
-                      <td class="text-center">{{$cook->order_date}}</td>
-                      <td class="text-center">{{$cook->address}}</td>
-                      <td class="text-center"><span class="badge" style="color:white; background-color:#66bb6a;">{{$cook->order_status}}</span></td>
-                    </tr>
-                  </tbody>
-                  @endforeach
-                </table>
-                @else
-                <center>
-                  <label style="font-size: 35px; margin-top: 20px">You have no orders on processed</label>
-                </center>
-                @endif    
-              </div>
-              <!--END!-->
-              <!--COOKING/ON PROCESS!-->
-              <div class="tab-pane" id="delivering">
-                @if(count($delivering))
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th class="text-center">Quantity</th>
-                      <th>Order</th>
-                      <th class="text-right">Amount</th>
-                      <th class="text-right">Date Ordered</th>
-                      <th class="text-center">Delivery Address</th>
-                      <th class="text-right">Status</th>
-                      <th class="text-center">Action</th>
-                    </tr>
-                  </thead>
-                  @foreach($delivering as $del)
-                  <tbody>
-                    <tr>
-                      <td class="text-center">{{$del->totalQty}}</td>
-                      <td><img src="{{url('./dish_imgs/'.$del->dishes['dish_img'])}}" style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
-                        {{$del->dishes['dish_name']}}<br>
-                      </td>
-                      <td class="text-center">Php {{$del->totalAmount}}</td>
-                      <td class="text-center">{{$del->order_date}}</td>
-                      <td class="text-center">{{$del->address}}</td>
-                      <td class="text-right"><span class="badge" style="color:white; background-color:#66bb6a; float:right">{{$del->order_status}}</span></td>
-                      <td class="td-actions text-right">
-                       <!-- <a href="{{route('dish.orderReview', ['id'=> $del->did])}}" rel="tooltip" title="Did you receive your order?" class="btn btn-success btn-flat btn-sm" style="margin-top:-1px; margin-left:10px"> -->
-                              <!-- Order Received -->
-                        <form method="post" action="{{route('dish.orderReview')}}">
-                          <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                          <input type="hidden" name="dish_id" value="{{$del->dishes['did']}}">
-                          <button type="submit" rel="tooltip" title="Did you receive your order?" class="btn btn-success btn-flat btn-sm" style="margin-top:-1px; margin-left:10px">
-                          Order Received
-                          </button>
-                        </form>
-                      </td>
-                    </tr>
-                  </tbody>
-                  @endforeach
-                </table>
-                @else
-                <center>
-                  <label style="font-size: 35px; margin-top: 20px">You have no orders to be received</label>
-                </center>
-                @endif   
-              </div>
-              <!--END!-->
-              <!--COMPLETED!-->
-              <div class="tab-pane" id="completed">
-                @if(count($completed))
-                <table class="table">
-                  <thead>
-                    <tr>
-                      <th class="text-center">Quantity</th>
-                      <th>Order</th>
-                      <th class="text-center">Total Amount</th>
-                      <th class="text-center">Date Ordered</th>
-                      <th class="text-center">Delivery Address</th>
-                      <th class="text-center">Status</th>
-                    </tr>
-                  </thead>
-                  @foreach($completed as $com)
-                  <tbody>
-                    <tr>
-                      <td class="text-center">{{$com->totalQty}}</td>
-                      <td><img src="{{url('./dish_imgs/'.$com->dishes['dish_img'])}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
-                        {{$com->dishes['dish_name']}}<br>
-                      </td>
-                      <td class="text-center">Php {{$com->totalAmount}}</td>
-                      <td class="text-center">{{$com->order_date}}</td>
-                      <td class="text-center">{{$com->address}}</td>
-                      <td class="text-center"><span class="badge" style="color:white; background-color:#66bb6a;">{{$com->order_status}}</span>
-                      </td>
-                    </tr>
-                  </tbody>
-                  @endforeach
-                </table>
-                @else
-                <center>
-                  <label style="font-size: 35px; margin-top: 20px">No order has been completed</label>
-                </center>
-                @endif   
-              </div>
-              <!--END!-->
-            </div>
-          </div>
-        </div>
-        <!-- End Tabs on plain Card -->   
-        ` 
+                <div class="form-inline">
+                <form id ="sortorder" action ="{{route('user.order.sortOrder')}}" method ="post">
+                    {{csrf_field()}}
+                    <!-- <input type="radio" name="chooseStatus" value="Pending">
+                    <label style="font:color:black">PENDING</label>
+                    <input type="radio" name="chooseStatus" value="Cooking">
+                    <label style="font:color:black">Cooking</label>
+                    <input type="radio" name="chooseStatus" value="Delivering">
+                    <label style="font:color:black">Delivering</label>
+                    <input type="radio" name="chooseStatus" value="Completed">
+                    <label style="font:color:black">Completed</label> -->
+                    <select id="chooseStatus" class="form-control" name="chooseStatus">
+                        <option value="none" class="w" selected disabled hidden>Sort Orders</option>
+                        <option value="All" class="w" value = "All">All</option>
+                        <option class="w" value = "Pending">Pending</option>
+                        <option class="w" value = "Cooking">Cooking</option>
+                        <option class="w" value = "Delivering">Delivering</option>
+                        <option  class="w" value = "Completed">Completed</option>
+                    </select>
+                     </form>
+                </div>
+           
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                      
+                        <thead>
+                            <tr>
+                                 <th class="text-center">Quantity</th>
+                                <th>Order</th>
+                                <th>Amount</th>
+                                <th class="text-center">Date Ordered</th>
+                                <th class="text-center">Delivery Address</th>
+                                <th class="text-center">Status</th>
+                                <th class="disabled-sorting text-center">Action</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if($orders)
+                            @foreach($orders as $order)
+                            <tr>
+                              <td class="text-center">{{$order->totalQty}}</td>
+                                  <td>
+                                  <label style="font-size:10px; margin-bottom:0px">Cook:{{$order->dishes->cook['first_name']}}&nbsp;{{$order->dishes->cook['last_name']}}</label><br>
+                                    <img src="{{url('./dish_imgs/'.$order->dishes['dish_img'])}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
+                                  {{$order->dishes['dish_name']}}<br>
+                                </td>
+                                <td>Php {{$order->totalAmount}}</td>
+                                <td class="text-center">{{$order->order_date}}</td>
+                                <td class="text-center">{{$order->address}}</td>
+                                <td class="text-center"><span class="badge" style="color:white; background-color:#66bb6a;">{{$order->order_status}}</span></td>
+                                <td>
+                                @if($order->order_status=="Pending")
+                                @if($order->created_at->diffInMinutes(Carbon\Carbon::now())<=15)
+                                <a href="{{route('order.cancel',  ['id'=>$order->uo_id])}}" class="btn btn-flat btn-danger btn-sm">Cancel Order</a> 
+                                @else
+                                    <button href="#" class="btn btn-flat btn-danger btn-sm" disabled>Cancel Order</button>
+                                @endif
+                                @endif
+                                @if($order->order_status=="Delivering")
+                                <form method="post" action="{{route('dish.orderReview')}}">
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                <input type="hidden" name="dish_id" value="{{$order->dishes['did']}}">
+                                <input type="hidden" name="uo_id" value="{{$order->uo_id}}">
+                                <button type="submit" rel="tooltip" title="Did you receive your order?" class="btn btn-success btn-flat btn-sm">
+                                Order Received
+                                </button>
+                                 </form>
+                                @endif
+                                </td>
+                                
+                            </tr>
+                            @endforeach
+                            @endif
+                        </tbody>
+                    </table>
+                </div>    
+        
       </div>
       <!--row!-->
     </div>
@@ -314,6 +236,8 @@
 <script src="{{asset('customer/assets/js/bootstrap-datepicker.js')}}" type="text/javascript"></script>
 <!-- Control Center for Material Kit: activating the ripples, parallax effects, scripts from the example pages etc -->
 <script src="{{asset('customer/assets/js/material-kit.js')}}" type="text/javascript"></script>
+<script src="{{asset('adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{asset('adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
 <!-- 
   <link href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.css" rel="stylesheet"/>
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
@@ -321,6 +245,30 @@
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.min.js"></script>
   
   <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.js"></script> -->
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.dataTable').DataTable({ 
+            "lengthChange": false,
+            aoColumnDefs: [
+              {
+                 bSortable: false,
+                 aTargets: [ -1 ]
+              }
+            ]
+        });
+        //  $('input[type=radio]').on('change', function() {
+        //     $(this).closest("form").submit();
+        // });
+          $("#chooseStatus").on('change',function(e)
+         {
+            e.preventDefault();
+            // Pace.restart();
+            $('#sortorder').submit();
+
+         });
+      });
+</script>
 <script>
   $(document).ready(function() {
     $( function() {
