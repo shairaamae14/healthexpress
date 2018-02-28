@@ -589,6 +589,14 @@ class PlannedMController extends Controller
           return response()->json(['status'=>'success']);
     }
 
+    public function index2(){
+      $id = Auth::id();
+
+      $plans = UserOrder::where('user_id',$id)->where('order_status', 'LIKE', 'Initial')->delete();
+
+      return redirect()->route('user.plan.home');
+    }
+
     public function index1(){
       $id = Auth::id();
       $plans = UserOrder::where('user_id', $id)->where('order_status', 'LIKE', 'Initial')->get();

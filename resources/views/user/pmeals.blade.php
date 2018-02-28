@@ -189,7 +189,7 @@ td.fc-day.fc-past {
 
 
               <div class="card-block text-center">
-                <button type="button" onclick="window.location.href='{{route('user.plan.home')}}'" class="btn btn-flat btn-danger">Go Back</button>
+                <button type="button" onclick="window.location.href='{{route('user.plan.clear')}}'" class="btn btn-flat btn-danger">Go Back</button>
                   <button type="button" class="btn btn-flat btn-success add-dish" value="./summary" onclick="window.location.href='{{route('user.pmsummary')}}'">Proceed</button>
                 </div>
 
