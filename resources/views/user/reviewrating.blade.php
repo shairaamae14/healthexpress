@@ -217,11 +217,25 @@ h1 { font-size: 1.5em; margin: 10px; }
         <div class="row">
                <center>
                <div class="col-sm-12">
-               <h2 class="card-title tex-center" style="color:#30bb6d">Rate Dish</h2>
+               @if($errors->any())
+                <div class="alert alert-danger">
+                   <div class="container-fluid">
+                       <div class="alert-icon">
+                       <i class="material-icons">error_outline</i>
+                       </div>
+                       <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                       <span aria-hidden="true"><i class="material-icons">clear</i></span>
+                      </button>
+                     <b>Error Alert:</b>&nbsp; {{$errors->first()}}
+                  </div>
+                </div>
+                @endif
                <form action="{{route('dish.addRating2')}}" method="post">
               {{csrf_field()}}
               @foreach($dishes as $d)
-                <input type="hidden" name="dish_id" value="{{$d->did}}">
+               <h2 class="card-title tex-center" style="color:#30bb6d">Rate {{$d->dishes['dish_name']}}</h2>
+                <input type="hidden" name="dish_id" value="{{$d->dish_id}}">
+                <input type="hidden" name="uo_id" value="{{$d->uo_id}}">
                 @endforeach
                   <fieldset class="rating" style="margin-left:450px">
                     <input type="radio" id="star5" name="rating" value="5" />
@@ -260,8 +274,9 @@ h1 { font-size: 1.5em; margin: 10px; }
                <!--  <a href="{{route('user.cookReview', ['id'=> $d->did])}}" class="btn btn-danger btn-simple btn-flat"><b>Skip</b> -->
                   <form method="post" action="{{route('user.cookReview')}}" ">
                           <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                          <input type="hidden" name="dish_id" value="{{$d->did}}">
-                          <input type="hidden" name="cook_id" value="{{$d->authorCook_id}}">
+                          <input type="hidden" name="dish_id" value="{{$d->dish_id}}">
+                          <input type="hidden" name="cook_id" value="{{$d->dishes['authorCook_id']}}">
+                          <input type="hidden" name="uo_id" value="{{$d->uo_id}}">
                           <button type="submit" class="btn btn-danger btn-simple" style="margin-top:-1px; margin-left:10px">
                           Skip
                           </button>
