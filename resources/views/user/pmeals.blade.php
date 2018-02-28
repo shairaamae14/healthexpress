@@ -128,7 +128,7 @@ td.fc-day.fc-past {
         <div class="row">
           <div class="content"> 
             <div class="card" style="width:30rem; margin-left:-50px; padding:10px">
-              <button type="button" class="btn btn-flat" onclick="changedish()" style="width:280px;background-color:#f74141b3">Change Set of Dishes</button>
+              <button type="button" class="btn btn-flat" onclick="changedish({{$cookid}})" style="width:280px;background-color:#f74141b3">Change Set of Dishes</button>
               <div class="card-block">
                 <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
                 <h4 class="card-title text-center" style="color:#4caf50;">Suggested Dishes</h4>
@@ -142,7 +142,7 @@ td.fc-day.fc-past {
               <form method="post" action="#">
               {{csrf_field()}}
               <input type="hidden" name="cookid" id="cookid" value="{{$cookid}}">
-              <input type="hidden" name="duration" id="duration" value="{{$duration}}">
+              {{-- <input type="hidden" name="duration" id="duration" value="{{$duration}}"> --}}
                 <div id='wrap'>
                   <div id='external-events'>
                       <input type="hidden" name="start" value="{{$start}}">
@@ -403,9 +403,8 @@ $(document).ready(function() {
               dataType: 'json',
               success: function(){
                 $('#calendar').fullCalendar('updateEvent',event);
-                window.location.href="{{route('user.plan.newindex')}}";
                 
-                // location.reload();
+                location.reload();
                 Pace.restart();
               },
               error: function(e){
@@ -557,12 +556,11 @@ $(document).ready(function() {
       // $('.timepicker').timepicker();
    });
   function changedish(id){
-
     $.ajax({
       url: "{{route('user.changedish')}}",
       method: "get",
       data: {'id':id},
-      succes: function(){
+      success: function(){
         location.reload();
       }
     });
