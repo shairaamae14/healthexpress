@@ -126,7 +126,7 @@ input[type="text"], input[type="number"], #mode {
         <div class="col-md-6">
            <br>
             <h1 class="title text-left" style="font-size: 80px; font-family: 'Lobster', cursive;">Planned Meals</h1>
-              <a href="./home">
+              <a href="{{route('user.index')}}">
                 <button id="ordermode" style="background-color:transparent;  border:2px solid white; font-size: 40px; margin-top:-20px; margin-left:10px; font-family: 'Lobster', cursive; color:white; width: 300px">Express Meal</button>
               </a>
         </div>
@@ -259,7 +259,8 @@ input[type="text"], input[type="number"], #mode {
       <div class="modal-footer">
         
           @if($order->newAttribute == 1)
-            <button type="button" class="btn btn-warning" onclick="cancel({{$order->uo_id}})">Cancel Order</button>
+            {{-- <button type="button" class="btn btn-warning" onclick="cancel({{$order->uo_id}})">Cancel Order</button> --}}
+            <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#confirm{{$order->uo_id}}">Cancel Order</button>
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           @else
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -269,6 +270,27 @@ input[type="text"], input[type="number"], #mode {
   </div>
 </div>
 {{-- @endforeach --}}
+
+
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="confirm{{$order->uo_id}}">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Are you sure you want to cancel order?</h4>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" onclick="cancel({{$order->uo_id}})" id="modal-btn-yes">Yes</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="modal-btn-no">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
 @endforeach
 <script src='https://code.jquery.com/jquery-1.11.2.min.js'></script>
 <script src='https://code.jquery.com/ui/1.11.2/jquery-ui.min.js'></script>
