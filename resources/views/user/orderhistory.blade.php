@@ -2,7 +2,7 @@
 @section('heading')
   <link rel="stylesheet" href="{{asset('adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css')}}">
   <!-- <link href="{{asset('css/bootstrap2.css')}}" rel="stylesheet" /> -->
-<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+<script defer src="https://use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
 <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="{{asset('adminlte/bower_components/Ionicons/css/ionicons.min.css')}}">
 @endsection
@@ -138,46 +138,43 @@
         </a><br>
         <h1 class="text-left">Express Order Status</h1>
         <!-- Tabs on Plain Card -->
-                <div class="form-inline">
-                <form id ="sortorder" action ="{{route('user.order.sortOrder')}}" method ="post">
-                    {{csrf_field()}}
-                    <!-- <input type="radio" name="chooseStatus" value="Pending">
-                    <label style="font:color:black">PENDING</label>
-                    <input type="radio" name="chooseStatus" value="Cooking">
-                    <label style="font:color:black">Cooking</label>
-                    <input type="radio" name="chooseStatus" value="Delivering">
-                    <label style="font:color:black">Delivering</label>
-                    <input type="radio" name="chooseStatus" value="Completed">
-                    <label style="font:color:black">Completed</label> -->
-                    <select id="chooseStatus" class="form-control" name="chooseStatus">
-                        <option value="none" class="w" selected disabled hidden>Sort Orders</option>
-                        <option value="All" class="w" value = "All">All</option>
-                        <option class="w" value = "Pending">Pending</option>
-                        <option class="w" value = "Cooking">Cooking</option>
-                        <option class="w" value = "Delivering">Delivering</option>
-                        <option  class="w" value = "Completed">Completed</option>
-                    </select>
-                     </form>
-                </div>
-           
-                <div class="table-responsive">
+             <p style="font-size: 10px; color:gray">{{$note}}</p>
+                <div class="table-responsive">   
                     <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                      
                         <thead>
+                         <tr>
+                          <th style="border:none"><label class="text-center" style="font-size:20px; color:black;"><b>{{$page_title}}</b></label>
+                          </th> 
+                          <th style="border:none"></th><th style="border:none"></th><th style="border:none"></th><th style="border:none"></th><th style="border:none">
+                          </th>
+                          <th class="text-right" style="border:none">
+                               <form id ="sortorder" action ="{{route('user.order.sortOrder')}}" method ="post" style="height:45px; width:100%">
+                                {{csrf_field()}}
+                               <select id="chooseStatus" class="form-control" name="chooseStatus">
+                                <option value="none" class="w" selected disabled hidden>Sort Orders</option>
+                                <option value="All" class="w" value = "All">All</option>
+                                <option class="w" value = "Pending">Pending</option>
+                                <option class="w" value = "Cooking">Cooking</option>
+                                <option class="w" value = "Delivering">Delivering</option>
+                                <option  class="w" value = "Completed">Completed</option>
+                             </select>
+                            </form>
+                          </th>   
+                          </tr>
+
                             <tr>
-                                 <th class="text-center">Quantity</th>
-                                <th>Order</th>
-                                <th>Amount</th>
-                                <th class="text-center">Date Ordered</th>
-                                <th class="text-center">Delivery Address</th>
-                                <th class="text-center">Status</th>
-                                <th class="disabled-sorting text-center">Action</th>
+                                <th class="text-left">Quantity</th>
+                                <th class="text-left">Order</th>
+                                <th class="text-left">Amount</th>
+                                <th class="text-left">Date Ordered</th>
+                                <th class="text-left">Delivery Address</th>
+                                <th class="text-left">Status</th>
+                                <th class="disabled-sorting text-left">Action</th>
                                 
                             </tr>
                         </thead>
                         <tbody>
-                            @if($orders)
-                            @foreach($orders as $order)
+                            @foreach($orders as $order) 
                             <tr>
                               <td class="text-center">{{$order->totalQty}}</td>
                                   <td>
@@ -192,12 +189,17 @@
                                 <td>
                                 @if($order->order_status=="Pending")
                                 @if($order->created_at->diffInMinutes(Carbon\Carbon::now())<=15)
-                                <a href="{{route('order.cancel',  ['id'=>$order->uo_id])}}" class="btn btn-flat btn-danger btn-sm">Cancel Order</a> 
+                                <center>
+                                <button type="button" class="btn btn-flat btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal">Cancel Order</button>
+                                </center>
                                 @else
-                                    <button href="#" class="btn btn-flat btn-danger btn-sm" disabled>Cancel Order</button>
+                                <center>
+                                    <button href="#" class="btn btn-flat btn-danger btn-sm" disabled><i class="fas fa-exclamation-circle"></i>&nbsp; Cancel Order</button>
+                                </center>
                                 @endif
                                 @endif
                                 @if($order->order_status=="Delivering")
+                                <center>
                                 <form method="post" action="{{route('dish.orderReview')}}">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                 <input type="hidden" name="dish_id" value="{{$order->dishes['did']}}">
@@ -206,12 +208,21 @@
                                 Order Received
                                 </button>
                                  </form>
+                                 </center>
+                                @endif
+                                @if($order->order_status=="Cooking")
+                                <center>
+                                  <label  style="font-size:20px;">NO ACTION</label>
+                                </center>
+                                @endif
+                                   @if($order->order_status=="Completed")
+                                <center>
+                                  <label  style="font-size:17px;">NO ACTION</label>
+                                </center>
                                 @endif
                                 </td>
-                                
                             </tr>
                             @endforeach
-                            @endif
                         </tbody>
                     </table>
                 </div>    
@@ -224,6 +235,32 @@
   <!--section!-->
 </div>
 <!--main raised!-->
+
+
+<!-- Button trigger modal -->
+
+
+<!-- Modal -->
+@foreach($orders as $order)
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Cancel Order</h5>
+      </div>
+      <div class="modal-body">
+       Are you sure you want to cancel your order?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary btn-simple" data-dismiss="modal" style="padding:12px 30px 12px 30px; margin-left: 5px;margin-right: 1px;margin-top: 10px;">No</button>
+        <a href="{{route('order.cancel', ['id'=>$order->uo_id])}}" class="btn btn-primary btn-simple">Yes</a>
+         <!-- <a href="{{route('order.cancel',  ['id'=>$order->uo_id])}}" class="btn btn-flat btn-danger btn-sm">Cancel Order</a>  -->
+      </div>
+    </div>
+  </div>
+</div>
+@endforeach
+
 @endsection
 @section('addtl_scripts')
 <!--   Core JS Files   -->
@@ -248,6 +285,8 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
+      // alert($('#page').text());
+      // alert($("#chooseStatus option:selected").val());
         $('.dataTable').DataTable({ 
             "lengthChange": false,
             aoColumnDefs: [
@@ -262,6 +301,7 @@
         // });
           $("#chooseStatus").on('change',function(e)
          {
+
             e.preventDefault();
             // Pace.restart();
             $('#sortorder').submit();
