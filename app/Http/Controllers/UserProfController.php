@@ -37,9 +37,7 @@ public function show($id){
   $userallergens = UserAllergen::join('allergens', 'allergens.allergen_id', '=', 'user_allergens.allergen_id')->where('user_id', $user->id)->get();
   $usermedcons = UserMCondition::join('medical_conditions', 'medical_conditions.medcon_id', '=', 'user_medcondition.medcon_id')->where('user_id', $user->id)->get();
   
-// $age= $user->getAgeAttribute();
-// $age=getAgeAttribute();
-// dd($age);
+
   $healthgoals = HealthGoals::all();
   $selectedGoal = UserHGoals::first()->hg_id;
 
@@ -78,12 +76,12 @@ public function show($id){
 
 
 
-public function rules() {
-  return [
-    'email' => 'required|email|unique:users,email,'.$this->id
+// public function rules() {
+//   return [
+//     'email' => 'required|email|unique:users,email,'.$this->id
 
-  ];
-}
+//   ];
+// }
 
 
 public function storeUserImg(Request $request){
@@ -152,7 +150,7 @@ public function storeAllergen(Request $request){
          return redirect()->route('user.profile', compact('id', 'user'))->with('success', 'You have succesfully added  allergen/s!');
       }
 
-public function storeMedcon(Request $request, $id){
+public function storeMedcon(Request $request){
   $id=Auth::user()->id;
     for($k = 0; $k < count($request['medcon']); $k++) {
   $medcon=UserMCondition::where('user_id', $id)->where('medcon_id', $request['medcon'][$k])->get();
@@ -171,13 +169,14 @@ public function storeMedcon(Request $request, $id){
     
    return redirect()->route('user.profile', compact('id', 'user'))->with('success', 'You have successfully added medical condition/s !');
      
+ 
  }
 
 
 
 public function update(Request $request, $id){
-  $id = Auth::id();
-
+  // $user = Auth::user();
+// dd("hi");
    // $email=Auth::User()->email;
       // dd($request['lifestyle']);
   $user = User::where('id', $id)
@@ -200,7 +199,8 @@ public function update(Request $request, $id){
   ->update(['lifestyle_id' => $request['lifestyle']]);
 
 
-  return redirect()->route('user.profile', compact('id', 'user'))->with('success', 'You have successfully saved changes!');;
+  return redirect()->route('user.profile', compact('id', 'user'));
+  // ->with('success', 'You have successfully saved changes!');
 }
 
 
@@ -216,7 +216,7 @@ public function destroyM(Request $request){
 
   return redirect()->route('user.profile', compact('user', 'id'))->with('success', 'You have successfully deleted medical condition/s!');;
 }
-
+//userallergen update
 public function update2(Request $request, $id){
   $user = Auth::id();
 
@@ -239,22 +239,23 @@ public function update2(Request $request, $id){
     ]);
   }
 
-  return redirect()->route('user.profile', compact('id', 'user'))->with('success', 'You have successfully added medical condition/s !');;
+  return redirect()->route('user.profile', compact('id', 'user'))->with('success', 'You have changed allergens tolerance level!');
 }
 
-    public function destroyA(Request $request){
-    $id=Auth::user()->id;
-    // $uaid=UserAllergen::where('ua_id', $request['ua_id'])->get();
+//delete allergen
+public function destroyA(Request $request){
+$id=Auth::user()->id;
+// $uaid=UserAllergen::where('ua_id', $request['ua_id'])->get();
 
-    $checked = $request['allergen'];
-    foreach ($checked as $uid) {
-          UserAllergen::where("ua_id",$uid)->delete(); //Assuming you have a Todo model. 
-        }
-    // dd('hello');
-
-
-        return redirect()->route('user.profile', compact('user', 'id'))->with('success', 'You have successfully deleted allergen/s!');;
+$checked = $request['allergen'];
+foreach ($checked as $uid) {
+      UserAllergen::where("ua_id",$uid)->delete(); //Assuming you have a Todo model. 
     }
+// dd('hello');
+
+
+    return redirect()->route('user.profile', compact('user', 'id'))->with('success', 'You have successfully deleted allergen/s!');;
+}
 
 
     public function resetPassword()
