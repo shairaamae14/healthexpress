@@ -11,6 +11,7 @@ use App\BestEaten;
 use App\PlannedMeals;
 use App\NutritionFacts;
 use App\UserOrder;
+use App\OrderMode;
 use Braintree_ClientToken;
 use Braintree_Transaction;
 use Braintree_CreditCard;
@@ -805,6 +806,8 @@ class PlannedMController extends Controller
 
     public function summary(){
       $id = Auth::id();
+      $mode = OrderMode::where('om_name', 'Planned Meal')->first();
+
       $data = UserOrder::join('dishes','dishes.did','=','user_orders.dish_id')
                             ->where('user_id', $id)
                             ->where('order_status', 'Initial')
@@ -824,7 +827,7 @@ class PlannedMController extends Controller
          $totalDelFee= number_format($totalDelFee,2);
          $allcost= number_format($allcost,2);
       
-      return view('user.summary', compact('data', 'allMealCost', 'totalDelFee', 'allcost', 'start','end'));
+      return view('user.summary', compact('data', 'allMealCost', 'totalDelFee', 'allcost', 'start','end', 'mode'));
     }
     public function modeOfDelivery(){
       return view('user.modeofdel');
