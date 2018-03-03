@@ -57,7 +57,7 @@ class PlannedMController extends Controller
           $qstart = UserOrder::distinct()->select('planner_start')->where('user_id',$id)->where('order_status','Initial')->first();
           $qend = UserOrder::distinct()->select('planner_end')->where('user_id',$id)->where('order_status','Initial')->first();
           $start = $qstart->planner_start;
-          $end = $qend->planner_end;
+          $end = date('Y-m-d',strtotime($qend->planner_end. '+1 Days'));
 
           // dd($start, $end);
 
@@ -306,7 +306,7 @@ class PlannedMController extends Controller
           $from = \Carbon\Carbon::createFromDate($date1->year, $date1->month, $date1->day);
           $to =  \Carbon\Carbon::createFromDate($date2->year, $date2->month, $date2->day);
           $start = date('Y-m-d',strtotime($dates[0]));
-          $end = date('Y-m-d',strtotime($dates[1]));
+          $end = date('Y-m-d',strtotime($dates[1]. '+1 Days'));
        
           for ($date=$from; $date->lte($to); $date->addDay()) { 
             $ranges[] = $date->format('Y-m-d\TH:m:s');
@@ -703,8 +703,8 @@ class PlannedMController extends Controller
     public function index1(){
       $id = Auth::id();
       $plans = UserOrder::where('user_id', $id)->where('order_status', 'LIKE', 'Initial')->get();
-      $paidplans = UserOrder::where('user_id', $id)->where('order_status', 'LIKE', 'Pending')->get();
-     
+      $paidplans = UserOrder::where('user_id', $id)->where('om_id', 2)->where('order_status', 'LIKE', 'Pending')->get();
+     $today = \Carbon\Carbon::now('Asia/Manila')->format('m/d/Y');
       $iteration = FALSE;
       if(count($plans)>0){
         foreach($plans as $plan){
@@ -720,8 +720,9 @@ class PlannedMController extends Controller
       else if(count($paidplans)>0){
         return redirect()->route('pmorder.showallorders');
       }
-      else
-        return view('user.initialpm');
+      else {
+        return view('user.initialpm', compact('today'));
+      }
 
     }
 
@@ -954,7 +955,7 @@ class PlannedMController extends Controller
         }
         // dd($data);
       $start = $data[0]->planner_start;
-      $end = $data[0]->end;
+      $end = date('Y-m-d',strtotime($data[0]. '+1 Days'));
        $allMealCost=0;
        $totalDelFee=0;
        $allcost=0;
