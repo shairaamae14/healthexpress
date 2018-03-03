@@ -237,7 +237,7 @@ display: inline-block;
         <ul class="list-group" style="width: 99%">
            <li class="list-group-item" style="height: 50px">
                <i class="material-icons" style="float:left">security</i>
-               <a href="{{ route('user.changepass') }}" style="text-decoration:underline;" data-toggle="modal"><label style="float:left; font-size:15px; color:black"> &nbsp;Change Password</label></a>
+               <a href="{{ route('user.changepass') }}" style="text-decoration:underline;" data-toggle="modal"><label style="float:left; font-size:15px; color:black"> &nbsp;Change Password&nbsp;<i class="fa fa-edit"></i></label></a>
             </li>
       </div>
 
@@ -786,7 +786,7 @@ display: inline-block;
   </div>
 </div>
 <!--end!-->
-<!--Delete med condition!-->
+<!--Delete Medical Condition!-->
 <div class="modal fade" id="myModal8{{$user->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -799,7 +799,7 @@ display: inline-block;
           <div class="modal-body">   
           <div class="col-sm-12">
             <div class="form-group label-floating has-success">
-                <label class="control-label">Tolerance Level | Allergens</label>
+                <label class="control-label">Medical Condition</label>
                   
                    @foreach($usermedcons as $m)
                          <input type="hidden" name="m_id" value="{{$m->medcon_id}}">
@@ -1065,7 +1065,7 @@ display: inline-block;
 </script> -->
 <script>
 $(document).ready(function(){
-    // $('.tol').attr('disabled', 'disabled');
+    $('.tol').attr('disabled', 'disabled');
 
     var $checkBox = $('.allergies');
 
