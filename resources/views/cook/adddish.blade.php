@@ -178,7 +178,7 @@ fieldset{
         </div>
         </div>
         <div class="form-group col-md-4">
-            <input type="number" step="0.1" class="form-control quantity" id="quantity" name="quantity" placeholder="Quantity" ng-model="choice.name" min="0" autofocus >
+            <input type="text" class="form-control quantity" id="quantity" name="quantity" placeholder="Quantity" required autofocus >
             <label style="color:red" id="err"></label>
         </div>
         <div class="form-group col-md-3">
@@ -223,6 +223,81 @@ fieldset{
 </div>
 
 
+
+
+{{-- 
+@foreach($list as $ing)
+<div class="modal fade" id="myModal{{$ing->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span class="sr-only">close</span></button>
+                <h4 class="modal-title" id="myModalLabel"><i class="fa fa-edit"></i><b>&nbsp;&nbsp;Change</b></h4>
+            </div>&nbsp;&nbsp;{{-- 
+            <form method="post" action="changes({{$di->ding_id}})" enctype="multipart/form-data">
+                {{csrf_field()}}  --}}
+            {{-- <div class="modal-body">
+                
+                    <h4 class="modal-title" id="myModalLabel">&nbsp;&nbsp;<b>Ingredient Details</b></h4>
+                <div class="col-sm-12">
+                    <div class="form-group label-floating has-success">
+                        <label class="control-label">Quantity</label>
+                        <input type="text" class="form-control" id="quantityN{{$ing->ding_id}}" name="quantityN" value="{{$ing->quantity}}" />
+                        <label style="color:red" id="err"></label>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group label-floating has-success">
+                        <label class="control-label">Preparation</label>
+                        <select class="form-control" id="preparationN{{$ing->ding_id}}" name="preparationN[]" id="preparation" name="preparation" style="width:100px;" autofocus>
+                            @foreach($preps as $prep)
+                                @if($ing->preparation == $prep->p_id)
+                                <option selected value="{{ $prep->p_id }}">{{$prep->p_name}}</option>
+                                @else
+                                <option value="{{ $prep->p_id }}">{{$prep->p_name}}</option> 
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group label-floating has-success">
+                        <label class="control-label">Unit of Measure</label>
+                        <select class="form-control" id="umN{{$ing->ding_id}}" name="umN[]" style="width:150px;">
+                            @foreach($units as $um)
+                                @if($ing->um_id == $um->um_id)
+                                <option selected value="{{ $um->um_id }}">{{$um->um_name}}</option>
+                                @else
+                                <option value="{{ $um->um_id }}">{{$um->um_name}}</option>
+                                @endif
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <input type="hidden" id="dishid" value="{{$ing->ding_id}}"/>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" onclick="changes({{$ing->ding_id}})">Save Changes</button>
+            </div>
+            {{-- </form> --}}
+        {{-- </div>
+        
+    </div>
+</div>
+@endforeach --}}
+
+
+
+
+
+
+
+
+
+
+
+
 <footer class="main-footer">
     <div class="pull-right hidden-xs">
       <b>Version</b> 2.4.0
@@ -242,6 +317,12 @@ fieldset{
 <script src="{{asset('js/jquery.steps.min.js')}}"></script>
 <script src="{{asset('js/jquery.validate.min.js')}}"></script>
 
+{{-- <script>
+    $('#myModal'+id).on('shown.bs.modal', function() {
+        
+    });
+</script>
+ --}}
 <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
 <script type="text/javascript">
 
@@ -280,6 +361,7 @@ form.steps({
     onStepChanged: function (event, currentIndex, priorIndex)
     {
         // Used to skip the "Warning" step if the user is old enough.
+        
         if (currentIndex === 2 && Number($("#age-2").val()) >= 18)
         {
             form.steps("next");
@@ -291,12 +373,20 @@ form.steps({
             form.steps("previous");
         }
 
+        if(currentIndex == 0)
+        {
+            $('.actions > ul > li:eq(1)').removeAttr("class");
+            $('.actions > ul > li:eq(1) > a').attr("href",'#next');
+        }
+
         if(currentIndex == 1)
         {
             // alert("This script works");
             if($('#part').find('tr.ingredappend').length == 0)
             {
-                $('.actions > ul > li:eq(1)').attr("class",'disabled');
+                $('.actions > ul > li:eq(1) > a').removeAttr('href');
+                $('.actions > ul > li:eq(1)').attr('class','disabled');
+                // $('.actions > ul > li:eq(1)').attr('hidden',true);
             }
             
             $('#summary').empty();
@@ -419,8 +509,58 @@ $(document).ready(function () {
 
 });
 
-function remove(id){
+    function remove(id){
+
         $('#remove'+id).remove();
+
+        if($('#part').find('tr.ingredappend').length == 0)
+            {
+                $('.actions > ul > li:eq(1) > a').removeAttr('href');
+                $('.actions > ul > li:eq(1)').attr('class','disabled');
+                // $('.actions > ul > li:eq(1)').attr('hidden',true);
+            }
+    }
+
+
+    // function calc($str) {
+    //     $int = 0;
+    //     $float = 0;
+    //     $parts = explode(' ', $str);
+    //     if (count($parts) >= 1) {
+    //         $int = $parts[0];
+    //     }
+    //     if (count($parts) >= 2) {
+    //         $float_str = $parts[1];
+    //         list($top, $bottom) = explode('/', $float_str);
+    //         $float = $top / $bottom;
+    //     }
+    //     return $int + $float;
+    // }
+
+    function calc(str){
+        var int = 0;
+        var float = 0;
+        // alert(str.indexOf(' ') >= 0);   
+        if (str.indexOf(' ') >= 0){
+            var parts = str.split(' ');
+
+            int = parts[0];
+            float = eval(parts[1]);
+
+            // let's get the position of the radix-point
+            var radixPos = String(float).indexOf('.');
+
+            // now we can use slice, on a String, to get '.15'
+            var value = String(float).slice(radixPos);
+        
+            return int + value;
+        }
+        else{
+            return eval(str);
+        }
+
+        
+
     }
 
     function addChoice()
@@ -429,7 +569,8 @@ function remove(id){
         
 
         var ingid = document.getElementById('ingredients').value;
-        var quan = document.getElementById('quantity').value;
+        var squan = document.getElementById('quantity').value;
+        var quan = calc(squan);
         console.log(quan);
         var prepp = $('#preparation').val();
         var umm = $('#um').val();
@@ -453,6 +594,7 @@ function remove(id){
         else{
             
             $('.actions > ul > li:eq(1)').removeAttr("class");
+            $('.actions > ul > li:eq(1) > a').attr("href",'#next');
             $('#err').empty();
 
             var div = document.getElementById("part");
@@ -461,7 +603,7 @@ function remove(id){
                 '<tr class="ingredappend" id="remove'+ingid+'">'+
                 '<td style="text-align:center;" multiple>'+ingred+'</td>'+
                 '<input type="hidden" id="ingid" name="ingid[]" value="'+ingid+'">'+
-                '<td style="text-align:center;" multiple name="qty[]">'+quan+'</td>'+
+                '<td style="text-align:center;" multiple name="qty[]">'+squan+'</td>'+
                 '<input type="hidden" id="qtyy" name="qtyy[]" value="'+quan+'">'+
                 '<td style="text-align:center;" multiple name="prep[]">'+prep+'</td>'+
                 '<input type="hidden" id="prepp" name="prepp[]" value="'+prepp+'">'+
@@ -469,6 +611,8 @@ function remove(id){
                 '<input type="hidden" id="umm" name="umm[]" value="'+umm+'">'+
                 '<td style="text-align:center;"><button type="button" onclick="remove('+ingid+')" class="remove"><i class="fa fa-times"></i></button></td>'+
                 '</tr>';
+
+            // console.log($("#part").find("td").text());
 
             $('select').select2().select2('val', $('#ingredients option:eq(0)').val());
           
