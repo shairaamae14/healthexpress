@@ -128,7 +128,9 @@ td.fc-day.fc-past {
         <div class="row">
           <div class="content"> 
             <div class="card" style="width:30rem; margin-left:-50px; padding:10px">
+
               <button type="button" class="btn btn-flat" onclick="changedish({{$cookid}})" style="width:280px;background-color:#f74141b3">Change Set of Dishes</button>
+              
               <div class="card-block">
                 <h3 style="border-bottom: 1px solid #4caf50; margin-top: 1px"></h3>
                 <h4 class="card-title text-center" style="color:#4caf50;">Suggested Dishes</h4>
@@ -342,7 +344,7 @@ $(document).ready(function() {
           
           validRange: {
             start: '{{$start}}',
-            end:'{{$end}}'
+            end: '{{$end}}'
           },
           
           drop: function() {
@@ -556,14 +558,7 @@ $(document).ready(function() {
       // $('.timepicker').timepicker();
    });
   function changedish(id){
-    $.ajax({
-      url: "{{route('user.changedish')}}",
-      method: "get",
-      data: {'id':id},
-      success: function(){
-        location.reload();
-      }
-    });
+    window.location.href="/pmeals/change/"+id;
   }
 </script>
   <script>

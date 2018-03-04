@@ -69,8 +69,9 @@
                                 <td>{{$order->fname}} {{$order->lname}}</td>
                                 {{-- <td>{{$order->dishes[0]['dish_name']}}</td> --}}
                                 <td>{{$order->dish_name}}</td>
-                                <td>February 02, 2018 12:30:00 PM</td>
+                                {{-- <td>February 02, 2018 12:30:00 PM</td> --}}
                                 {{-- <td>{{date_format($order->start,'F d Y h:i:s A')}}</td> --}}
+                                <td>{{Carbon\Carbon::parse($order->start)->format('F d Y h:i:s A')}}</td>
                                 <td>{{$order->name}}</td>
                                 @if($order->note != null)
                                     <td>{{$order->note}}</td>
@@ -78,21 +79,17 @@
                                   <td>None</td>
                                 @endif
                                 
-                                {{-- <td>January 02, 2018 12:30:00 PM</td> --}}
-                                {{-- <td><button class="btn btn-default btn-flat"><a href="{{route('cook.planorder',['id' => $order->user_id, 'planid'=>$order->plan_id])}}">View Details</a></button></td> --}}
-                                @if($order->p_status == 'Pending')
+                                @if($order->order_status == 'Pending')
                                 <td><span class="label label-default">Pending</span></td>
                                 <td class="text-right">
-                                    {{-- <button class="btn btn-default btn-flat" data-toggle="modal" data-target="#view_details{{$order->user_id}}">View Details</button> --}}
                                     <button class="btn btn-default btn-flat" data-toggle="tooltip" data-placement="top" title="Change to Cooking" onclick="cooking({{$order->uo_id}})" id="Cooking" value="Cooking">Cooking</button>
                                 </td>
-                                @elseif($order->p_status == 'Cooking')
+                                @elseif($order->order_status == 'Cooking')
                                 <td><span class="label label-warning">Cooking</span></td>
                                 <td class="text-right">
-                                    {{-- <button class="btn btn-default btn-flat" data-toggle="modal" data-target="#view_details{{$order->user_id}}">View Details</button> --}}
                                     <button class="btn btn-default btn-flat" onclick="delivering({{$order->uo_id}})" id="Done" value="Done" data-toggle="tooltip" data-placement="top" title="Change to Delivering">Deliver</button></a>
                                 </td>
-                                @elseif($order->p_status == 'Delivering')
+                                @elseif($order->order_status == 'Delivering')
                                 <td><span class="label label-info">Delivering</span></td>
                                 <td class="text-right">
                                     {{-- <button class="btn btn-default btn-flat" data-toggle="modal" data-target="#view_details{{$order->user_id}}">View Details</button> --}}
@@ -121,58 +118,7 @@
       <strong>Copyright &copy; 2014-2016 <a href="https://adminlte.io">Almsaeed Studio</a>.</strong> All rights
       reserved.
     </footer>
-{{-- @foreach($orders as $order)
-<div class="modal fade" id="view_details{{$order->user_id}}">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span></button>
-                 <h4 class="modal-title">Order Details</h4>
-            </div>
 
-            <div class="modal-body">
-            <h3>{{$order->user->fname." ".$order->user->lname}}'s Order/s</h3>
-
-            <table class="table table-bordered">
-                <thead>
-                    <th>Dish Name</th>
-                    <th>Quantity</th>
-                    <th>Payment Method</th>
-                    <th>Total Amount</th>
-                    <th>Side Note</th>
-                </thead>
-                <tbody>
-                        @foreach($order->dishes as $dish)
-                    <tr>
-                        <td>{{$dish->dish_name}}</td>
-                        <td>{{$order->totalQty}}</td>
-                        <td>{{$order->payment->method_name}}</td>
-                        <td>{{$order->totalAmount}}</td>
-                        <td>
-                            @if($order->sidenote)
-                                <p class="text-description"> {{$order->sidenote}} </p>
-                            @else
-                                 <p class="text-description"> None </p>
-                            @endif
-                        </td>
-                    </tr>
-                        @endforeach
-                </tbody>
-            </table>
-            </div>
-
-            <div class="modal-footer">
-            <button type="button" class="btn btn-default pull-left" data-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-            </div>
-        </div>
-    <!-- /.modal-content -->
-    </div>
-  <!-- /.modal-dialog -->
-</div>
-<!-- /.modal -->
-@endforeach --}}
 @endsection
 @section('addtl_scripts')
 <!-- jQuery 3 -->
@@ -239,6 +185,7 @@
                     data: {'status':status,'id':id},
                     success: function(json) {
                         Pace.restart();
+                        location.reload();
                     },
                     error: function(xhr,error){
                         console.log(xhr);
@@ -257,6 +204,7 @@
                     data: {'status':status,'id':id},
                     success: function(json) {
                         Pace.restart();
+                        location.reload();
                     },
                     error: function(xhr,error){
                         console.log(xhr);
@@ -275,6 +223,7 @@
                     data: {'status':status, 'id':id},
                     success: function(json) {
                         Pace.restart();
+                        location.reload();
                     },
                     error: function(xhr,error){
                         console.log(xhr);
