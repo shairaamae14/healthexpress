@@ -138,7 +138,7 @@ fieldset{
           <input type="hidden" id="ing_id" multiple name="ing_id[]" value=""/>
         </div>
         <div class="form-group col-md-4">
-            <input type="text" class="form-control" id="quantity" name="quantity" placeholder="Quantity" required autofocus >
+            <input type="number" step="0.1" class="form-control" id="quantity" name="quantity" placeholder="Quantity" ng-model="choice.name" min="0" autofocus >
             <label style="color:red" id="err"></label>
         </div>
         <div class="form-group col-md-3">
@@ -483,29 +483,12 @@ $(document).ready(function () {
       }
     }
 
-    function calc(str){
-        var int = 0;
-        var float = 0;  
-        if (str.indexOf(' ') >= 0){
-            var parts = str.split(' ');
-            int = parts[0];
-            float = eval(parts[1]);
-            var radixPos = String(float).indexOf('.');
-            var value = String(float).slice(radixPos);
-        
-            return int + value;
-        }
-        else{
-            return eval(str);
-        }
-    }
 
     function changes(id){
         // alert(id);
 
         // var id = document.getElementById('dishid').value;
-        var squan = document.getElementById('quantityN'+id).value;
-        var quan = calc(squan);
+        var quan = document.getElementById('quantityN'+id).value;
         var prep = $("#preparationN"+id+" option:selected").map(function() {
             return $(this).text();
           }).get();
@@ -517,7 +500,7 @@ $(document).ready(function () {
 
 
 
-        document.getElementById("quanN"+id).innerHTML = squan;
+        document.getElementById("quanN"+id).innerHTML = quan;
         document.getElementById("prepN"+id).innerHTML = prep;
         document.getElementById("unitN"+id).innerHTML = um;
 
@@ -536,8 +519,8 @@ $(document).ready(function () {
     {
         
         var ingid = document.getElementById('ingredients').value;
-        var squan = document.getElementById('quantity').value;
-        var quan = calc(squan);
+        var quan = document.getElementById('quantity').value;
+        // var ingid = document.getElementById('ing_id').value;
         var prepp = $('#preparation').val();
         var umm = $('#um').val();
 
@@ -568,7 +551,7 @@ $(document).ready(function () {
                 '<tr style="text-align:center" class="iRow" id="remove'+ingid+'">'+
                         '<td multiple>'+ingred+'</td>'+
                         '<input type="hidden" id="ingid" name="ingid[]" value="'+ingid+'">'+
-                        '<td multiple multiple name="qty[]">'+squan+'</td>'+
+                        '<td multiple multiple name="qty[]">'+quan+'</td>'+
                         '<input type="hidden" id="qtyy" name="qtyy[]" value="'+quan+'">'+
                         '<td multiple name="prep[]">'+prep+'</td>'+
                         '<input type="hidden" id="prepp" name="prepp[]" value="'+prepp+'">'+
