@@ -215,15 +215,6 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.js" ></script>
 <script type="text/javascript">
   $(document).ready(function() {
-    $.ajax({
-      url: "{{route('status.fetch')}}",
-      method: "get",
-      data:  {'status':'status'},
-      success: function(){
-      // $('.status').find(".dispstats").text("hello");
-      }
-
-    });
     $("#statlist li").click(function(){
       var val=$(this).find("a").text();
       $.ajax({
