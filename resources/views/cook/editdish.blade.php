@@ -139,6 +139,7 @@ fieldset{
         </div>
         <div class="form-group col-md-4">
             <input type="number" step="0.1" class="form-control" id="quantity" name="quantity" placeholder="Quantity" ng-model="choice.name" min="0" autofocus >
+            <label style="color:red" id="err"></label>
         </div>
         <div class="form-group col-md-3">
             <select class="form-control" id="preparation" name="preparation" style="width:100px;" autofocus>
@@ -157,7 +158,7 @@ fieldset{
         <button class="remove" ng-show="$last" ng-click="removeChoice()">-</button>
         <button class="addfields remove" onclick="addChoice(); return false;" ng-click="addNewChoice()">+</button>
         <div class="form-group">
-            <table id="part">
+            <table id="part" style="margin-top:45px; margin-right:30px">
                 <tr>
                   <th style="width:150px">Ingredient Name</th>
                   <th style="width:150px">Quantity</th>
@@ -179,7 +180,7 @@ fieldset{
 
                     <td id="unitN{{$di->ding_id}}">{{$di->um_name}}</td>
                     <input type="hidden" id="umm{{$di->ding_id}}" name="umms[]" value="{{$di->um_id}}">
-                    <td><button type="button" id="remove" onclick="remove({{$di->ding_id}})" class="remove"><i class="fa fa-times"></i></button><button type="button" class="btn btn-flat fa fa-edit" style="background-color:#30BB6D; color:white; border:none; margin-top: 0px; line-height: 100%; float:right" data-toggle="modal" data-target="#myModal{{$di->ding_id}}" {{-- data-id="{{$di->ding_id}}" --}}></button></td>
+                    <td><button type="button" id="remove" onClick="remove()" class="remove"><i class="fa fa-times"></i></button><button type="button" class="btn btn-flat fa fa-edit" style="background-color:#30BB6D; color:white; border:none; margin-top: 0px; line-height: 100%; float:right" data-toggle="modal" data-target="#myModal{{$di->ding_id}}" {{-- data-id="{{$di->ding_id}}" --}}></button></td>
                 </tr>
                 @endforeach
             </table>
@@ -297,6 +298,19 @@ fieldset{
 <script type="text/javascript">
    
     var form = $("#example-advanced-form").show();
+
+    // $("form-group").change(function()
+    // {
+    //     alert("test");
+    // if($(".iRow"))
+    // {
+    //     $('.actions > ul > li:eq(1)').removeAttr("class");
+    //     $('.actions > ul > li:eq(1) > a').attr("href",'#next');
+        
+    // }
+    // });
+
+
  
     form.steps({
         headerTag: "h3",
@@ -335,10 +349,23 @@ fieldset{
             if (currentIndex === 2 && priorIndex === 3)
             {
                 form.steps("previous");
-            }
+            } 
+
+            if(currentIndex == 0)
+            {
+                $('.actions > ul > li:eq(1)').removeAttr("class");
+                $('.actions > ul > li:eq(1) > a').attr("href",'#next');
+            }          
             
             if(currentIndex === 1)
             {
+                if($('#part').find('tr.iRow').length == 0)
+                {
+                    $('.actions > ul > li:eq(1) > a').removeAttr('href');
+                    $('.actions > ul > li:eq(1)').attr('class','disabled');
+                    // $('.actions > ul > li:eq(1)').attr('hidden',true);
+                }
+
                 $('#summary').empty();
             }
 
@@ -427,6 +454,12 @@ $(document).ready(function () {
    
     $('#part').on('click','.remove', function() {
           $(this).closest(".iRow").remove();
+          if($('#part').find('tr.iRow').length == 0)
+            {
+                $('.actions > ul > li:eq(1) > a').removeAttr('href');
+                $('.actions > ul > li:eq(1)').attr('class','disabled');
+                // $('.actions > ul > li:eq(1)').attr('hidden',true);
+            }
       });
     $('#cancel').on('click', function() {
       window.location = '{{url("/cook/dishes")}}';
@@ -434,12 +467,14 @@ $(document).ready(function () {
 
     });
 
-
-    function remove(id){
-        $.get( "{{ url('/cook/remove?id=') }}"+id);
-    }
     function del(id){
         $('#remove'+id).remove();
+        if($('#part').find('tr.iRow').length == 0)
+            {
+                $('.actions > ul > li:eq(1) > a').removeAttr('href');
+                $('.actions > ul > li:eq(1)').attr('class','disabled');
+                // $('.actions > ul > li:eq(1)').attr('hidden',true);
+            }
     }
 
     function setAttributes(el, attrs) {
@@ -508,11 +543,12 @@ $(document).ready(function () {
         else{
 
             $('.actions > ul > li:eq(1)').removeAttr("class");
+            $('.actions > ul > li:eq(1) > a').attr("href",'#next');
             $('#err').empty();
-        var div = document.getElementById("part");
+            var div = document.getElementById("part");
 
              div.innerHTML += 
-                '<tr style="text-align:center" id="remove'+ingid+'">'+
+                '<tr style="text-align:center" class="iRow" id="remove'+ingid+'">'+
                         '<td multiple>'+ingred+'</td>'+
                         '<input type="hidden" id="ingid" name="ingid[]" value="'+ingid+'">'+
                         '<td multiple multiple name="qty[]">'+quan+'</td>'+

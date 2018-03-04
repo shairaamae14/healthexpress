@@ -11,7 +11,6 @@ use App\BestEaten;
 use App\PlannedMeals;
 use App\NutritionFacts;
 use App\UserOrder;
-use App\OrderMode;
 use Braintree_ClientToken;
 use Braintree_Transaction;
 use Braintree_CreditCard;
@@ -68,7 +67,7 @@ class PlannedMController extends Controller
           if($hascook == false){
             $cook = Cook::whereHas('dish', function($query) {
                       $query->where('dish_type', 'Planned');
-                    })->inRandomOrder()->select('id')->take(1)->first();
+                    })->inRandomOrder()->select('id')->where('id','!=',1)->take(1)->first();
 
             $cookid = $cook->id;
           }
@@ -77,6 +76,13 @@ class PlannedMController extends Controller
             $cookid = $cook->cook_id;
           }
           // dd($cookid);
+
+          // $cook = Cook::whereHas('dish', function($query) {
+          //             $query->where('dish_type', 'Planned');
+          //           })->inRandomOrder()->select('id')->where('id','!=',1)->take(1)->first();
+
+          // dd($cook->id);
+
 
           if(!$user->allergies->count() && !$user->conditions->count())
           {
@@ -172,7 +178,7 @@ class PlannedMController extends Controller
             })->where('dishes.authorCook_id', $cookid)->where('dish_type', 'Planned')->take(5)->get();
           }
 
-          dd($dinner);
+          // dd($dinner);
 
           //show details and nutritional facts of dishes
           $dishes = UserOrder::join('dishes', 'user_orders.dish_id', '=', 'dishes.did')
@@ -205,6 +211,7 @@ class PlannedMController extends Controller
                       $query->where('dish_type', 'Planned');
                   })->inRandomOrder()->select('id')->take(1)->first();
           $cookid = $cook->id;
+          // dd($cookid);
 
           if(!$user->allergies->count() && !$user->conditions->count())
           {
@@ -318,12 +325,16 @@ class PlannedMController extends Controller
           // dd(count($planner));
           // dd($breakfast);
 
-          if(!$breakfast || !$lunch || !$dinner){
+          // dd($breakfast);
+          // dd($breakfast);
+
+
+          while(!count($breakfast) || !count($lunch) || !count($dinner)){
             $cook = Cook::whereHas('dish', function($query) {
                       $query->where('dish_type', 'Planned');
-                  })->inRandomOrder()->select('id')->take(1)->first();
+                    })->inRandomOrder()->select('id')->where('id','!=',$cookid)->take(1)->first();
             $cookid = $cook->id;
-
+            // dd($breakfast);
             foreach ($dishes as $dish) {
               $breakfast = $dish->whereHas('besteaten', function($query) {
                 $query->where('name', 'Breakfast');
@@ -335,121 +346,64 @@ class PlannedMController extends Controller
                 $query->where('name', 'Dinner');
               })->where('dishes.authorCook_id', $cookid)->where('dish_type', 'Planned')->take(5)->get();
             }
+          }
+          
+
+
+            
 
             while ($count >= 0) {
-            $bfast = UserOrder::create([
-                                        'user_id' => $user->id,
-                                        'totalQty' => 1,
-                                        'totalAmount' => $breakfast->shuffle()[0]->sellingPrice,
-                                        'order_status' =>'Initial',
-                                        'om_id' => 2,
-                                        'dish_id' => $breakfast->shuffle()[0]->did,
-                                        'title' => $breakfast->shuffle()[0]->dish_name,
-                                        'planner_start' => reset($planner),
-                                        'planner_end' => end($planner),
-                                        'start' => $ranges[$count],
-                                        'end' => $ranges[$count] ,
-                                        'allDay' => 'false',
-                                        'cook_id' => $cookid
-                                        ]);
-            $lun = UserOrder::create([
-                                        'user_id' => $user->id,
-                                        'totalQty' => 1,
-                                        'totalAmount' => $lunch->shuffle()[0]->sellingPrice,
-                                        'order_status' => 'Initial',
-                                        'om_id' => 2,
-                                        'dish_id' => $lunch->shuffle()[0]->did,
-                                        'title' => $lunch->shuffle()[0]->dish_name,
-                                        'planner_start' => reset($planner),
-                                        'planner_end' => end($planner),
-                                        'start' => $ranges[$count],
-                                        'end' => $ranges[$count] ,
-                                        'allDay' => 'false',
-                                        'cook_id' => $cookid
-                                        ]);
+              $bfast = UserOrder::create([
+                                          'user_id' => $user->id,
+                                          'totalQty' => 1,
+                                          'totalAmount' => $breakfast->shuffle()[0]->sellingPrice,
+                                          'order_status' =>'Initial',
+                                          'om_id' => 2,
+                                          'dish_id' => $breakfast->shuffle()[0]->did,
+                                          'title' => $breakfast->shuffle()[0]->dish_name,
+                                          'planner_start' => reset($planner),
+                                          'planner_end' => end($planner),
+                                          'start' => $ranges[$count],
+                                          'end' => $ranges[$count] ,
+                                          'allDay' => 'false',
+                                          'cook_id' => $cookid
+                                          ]);
+              $lun = UserOrder::create([
+                                          'user_id' => $user->id,
+                                          'totalQty' => 1,
+                                          'totalAmount' => $lunch->shuffle()[0]->sellingPrice,
+                                          'order_status' => 'Initial',
+                                          'om_id' => 2,
+                                          'dish_id' => $lunch->shuffle()[0]->did,
+                                          'title' => $lunch->shuffle()[0]->dish_name,
+                                          'planner_start' => reset($planner),
+                                          'planner_end' => end($planner),
+                                          'start' => $ranges[$count],
+                                          'end' => $ranges[$count] ,
+                                          'allDay' => 'false',
+                                          'cook_id' => $cookid
+                                          ]);
 
-            $din = UserOrder::create([
-                                        'user_id' => $user->id,
-                                        'totalQty' => 1,
-                                        'totalAmount' => $dinner->shuffle()[0]->sellingPrice,
-                                        'order_status' => 'Initial',
-                                        'om_id' => 2,
-                                        'dish_id' => $dinner->shuffle()[0]->did,
-                                        'title' => $dinner->shuffle()[0]->dish_name,
-                                        'planner_start' => reset($planner),
-                                        'planner_end' => end($planner),
-                                        'start' => $ranges[$count],
-                                        'end' => $ranges[$count] ,
-                                        'allDay' => 'false',
-                                        'cook_id' => $cookid
-                                        ]);
+              $din = UserOrder::create([
+                                          'user_id' => $user->id,
+                                          'totalQty' => 1,
+                                          'totalAmount' => $dinner->shuffle()[0]->sellingPrice,
+                                          'order_status' => 'Initial',
+                                          'om_id' => 2,
+                                          'dish_id' => $dinner->shuffle()[0]->did,
+                                          'title' => $dinner->shuffle()[0]->dish_name,
+                                          'planner_start' => reset($planner),
+                                          'planner_end' => end($planner),
+                                          'start' => $ranges[$count],
+                                          'end' => $ranges[$count] ,
+                                          'allDay' => 'false',
+                                          'cook_id' => $cookid
+                                          ]);
 
-            $count--;
-          }
-
-
+              $count--;
+            }
 
 
-
-
-
-
-
-
-          }
-          else{
-
-          while ($count >= 0) {
-            $bfast = UserOrder::create([
-                                        'user_id' => $user->id,
-                                        'totalQty' => 1,
-                                        'totalAmount' => $breakfast->shuffle()[0]->sellingPrice,
-                                        'order_status' =>'Initial',
-                                        'om_id' => 2,
-                                        'dish_id' => $breakfast->shuffle()[0]->did,
-                                        'title' => $breakfast->shuffle()[0]->dish_name,
-                                        'planner_start' => reset($planner),
-                                        'planner_end' => end($planner),
-                                        'start' => $ranges[$count],
-                                        'end' => $ranges[$count] ,
-                                        'allDay' => 'false',
-                                        'cook_id' => $cookid
-                                        ]);
-            $lun = UserOrder::create([
-                                        'user_id' => $user->id,
-                                        'totalQty' => 1,
-                                        'totalAmount' => $lunch->shuffle()[0]->sellingPrice,
-                                        'order_status' => 'Initial',
-                                        'om_id' => 2,
-                                        'dish_id' => $lunch->shuffle()[0]->did,
-                                        'title' => $lunch->shuffle()[0]->dish_name,
-                                        'planner_start' => reset($planner),
-                                        'planner_end' => end($planner),
-                                        'start' => $ranges[$count],
-                                        'end' => $ranges[$count] ,
-                                        'allDay' => 'false',
-                                        'cook_id' => $cookid
-                                        ]);
-
-            $din = UserOrder::create([
-                                        'user_id' => $user->id,
-                                        'totalQty' => 1,
-                                        'totalAmount' => $dinner->shuffle()[0]->sellingPrice,
-                                        'order_status' => 'Initial',
-                                        'om_id' => 2,
-                                        'dish_id' => $dinner->shuffle()[0]->did,
-                                        'title' => $dinner->shuffle()[0]->dish_name,
-                                        'planner_start' => reset($planner),
-                                        'planner_end' => end($planner),
-                                        'start' => $ranges[$count],
-                                        'end' => $ranges[$count] ,
-                                        'allDay' => 'false',
-                                        'cook_id' => $cookid
-                                        ]);
-
-            $count--;
-          }
-        }
 
           //show details and nutritional facts of dishes
           $dishes = UserOrder::join('dishes', 'user_orders.dish_id', '=', 'dishes.did')
@@ -476,7 +430,7 @@ class PlannedMController extends Controller
             
     }
 
-    public function changeDish(Request $request){
+    public function changeDish(Request $request,$id){
       $id = Auth::id();
       $cid = $id;
 
@@ -502,7 +456,7 @@ class PlannedMController extends Controller
           // $cook = Cook::where('id','!=',$cid)->inRandomOrder()->select('id')->take(1)->first();
           $cook = Cook::whereHas('dish', function($query) {
                       $query->where('dish_type', 'Planned');
-                    })->inRandomOrder()->select('id')->take(1)->first();
+                    })->inRandomOrder()->select('id')->where('id','!=',$cid)->take(1)->first();
 
           $cookid = $cook->id;     
           // dd($cook);
@@ -619,6 +573,27 @@ class PlannedMController extends Controller
 
           $count = count($planner) - 1;
 
+
+
+          while(!count($breakfast) || !count($lunch) || !count($dinner)){
+            $cook = Cook::whereHas('dish', function($query) {
+                      $query->where('dish_type', 'Planned');
+                    })->inRandomOrder()->select('id')->where('id','!=',$cookid)->take(1)->first();
+            $cookid = $cook->id;
+            // dd($breakfast);
+            foreach ($dishes as $dish) {
+              $breakfast = $dish->whereHas('besteaten', function($query) {
+                $query->where('name', 'Breakfast');
+              })->where('dishes.authorCook_id', $cookid)->where('dish_type', 'Planned')->take(5)->get();
+              $lunch = $dish->whereHas('besteaten', function($query) {
+                $query->where('name', 'Lunch');
+              })->where('dishes.authorCook_id', $cookid)->where('dish_type', 'Planned')->take(5)->get();
+              $dinner = $dish->whereHas('besteaten', function($query) {
+                $query->where('name', 'Dinner');
+              })->where('dishes.authorCook_id', $cookid)->where('dish_type', 'Planned')->take(5)->get();
+            }
+          }
+
           while ($count >= 0) {
             $bfast = UserOrder::create([
                                         'user_id' => $user->id,
@@ -689,8 +664,8 @@ class PlannedMController extends Controller
         
 
           
-          // return view('user.pmeals', compact('breakfast', 'lunch', 'dinner', 'besteaten', 'dishes', 'betype', 'start', 'end', 'cookid'))->with(['plans' => Plan::get(), 'cal'=> response()->json($dinner)]);
-          return response()->json(['status'=>'success']);
+          return view('user.changemeal', compact('breakfast', 'lunch', 'dinner', 'besteaten', 'dishes', 'betype', 'start', 'end', 'cookid'))->with(['plans' => Plan::get(), 'cal'=> response()->json($dinner)]);
+          // return response()->json(['status'=>'success']);
     }
 
     public function index2(){
@@ -704,8 +679,9 @@ class PlannedMController extends Controller
     public function index1(){
       $id = Auth::id();
       $plans = UserOrder::where('user_id', $id)->where('order_status', 'LIKE', 'Initial')->get();
-      $paidplans = UserOrder::where('user_id', $id)->where('om_id', 2)->where('order_status', 'LIKE', 'Pending')->get();
-     $today = \Carbon\Carbon::now('Asia/Manila')->format('m/d/Y');
+      $paidplans = UserOrder::where('user_id', $id)->where('order_status', 'LIKE', 'Pending')->get();
+      $today = \Carbon\Carbon::now('Asia/Manila')->format('m/d/Y');
+     
       $iteration = FALSE;
       if(count($plans)>0){
         foreach($plans as $plan){
@@ -721,9 +697,8 @@ class PlannedMController extends Controller
       else if(count($paidplans)>0){
         return redirect()->route('pmorder.showallorders');
       }
-      else {
-        return view('user.initialpm', compact('today'));
-      }
+      else
+        return view('user.initialpm',compact('today'));
 
     }
 
@@ -807,7 +782,6 @@ class PlannedMController extends Controller
     public function summary(){
       $id = Auth::id();
       $mode = OrderMode::where('om_name', 'Planned Meal')->first();
-
       $data = UserOrder::join('dishes','dishes.did','=','user_orders.dish_id')
                             ->where('user_id', $id)
                             ->where('order_status', 'Initial')
@@ -958,7 +932,7 @@ class PlannedMController extends Controller
         }
         // dd($data);
       $start = $data[0]->planner_start;
-      $end = date('Y-m-d',strtotime($data[0]. '+1 Days'));
+      $end = date('Y-m-d', strtotime($data[0]. '+1 Days'));
        $allMealCost=0;
        $totalDelFee=0;
        $allcost=0;
