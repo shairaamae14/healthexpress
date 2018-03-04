@@ -1,4 +1,7 @@
 @extends('user-layouts.master')
+@section('heading')
+  <link rel="stylesheet" href="{{asset('adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css')}}">
+@endsection
 <style>
   @import url('http://fonts.googleapis.com/css?family=Lobster');
   @import url('http://fonts.googleapis.com/css?family=Anton');
@@ -211,284 +214,97 @@ h1 { font-size: 1.5em; margin: 10px; }
      </div>
    </div>
 
-   <div class="main main-raised">
-    <div class="section">
-      <div class="container">
-        <div class="row">
+<div class="main main-raised">
+  <div class="section">
+    <div class="container">
+      <div class="row">
          <a href="{{route('order.orderhistory')}}">
-        <button type="submit" class="btn btn-success btn-flat btn-sm" style="margin-top: -10px; float:left">
-        View Express Order Status
-        </button>
-        </a>
-        <a href="{{route('pmorder.pastorders')}}">
-        <button type="submit" class="btn btn-success btn-flat btn-sm" style="margin-top: -10px; float:right">
-        View Order history
-        </button>
-        </a><br>
-        <h1 class="text-left" style="color:#66bb6a">Planned Meal Order Status</h1>
+         <button type="submit" class="btn btn-success btn-flat btn-sm" style="margin-top: -10px; float:left">
+         View Express Order Status
+         </button>
+         </a>
+          <a href="{{route('pmorder.pastorders')}}">
+          <button type="submit" class="btn btn-success btn-flat btn-sm" style="margin-top: -10px; float:right">
+          View Order history
+          </button>
+          </a><br>
+        <h1 class="text-left">Planned Meal Order Status</h1>
          <!--     <label>Total Amount:Php 650.00 (static)</label> -->
           <!-- Tabs on Plain Card -->
-          <div class="card card-nav-tabs card-plain">
-            <div class="header header-success">
-              <!-- colors: "header-primary", "header-info", "header-success", "header-warning", "header-danger" -->
-              <div class="nav-tabs-navigation">
-                <div class="nav-tabs-wrapper">
-                  <center>
-                    <ul class="nav nav-tabs" data-tabs="tabs">
-                      <li><a href="#pickup" data-toggle="tab" style="font-size: 15px">To pick up</a></li>
-                      <li><a href="#pending" data-toggle="tab" style="font-size: 15px">Pending</a></li>
-                      <li><a href="#cooking" data-toggle="tab" style="font-size: 15px">On Process</a></li>
-                      <li><a href="#delivering" data-toggle="tab" style="font-size: 15px">To Receive</a></li>
-                      <li><a href="#completed" data-toggle="tab" style="font-size: 15px">Completed</a></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-              <div class="content">
-                <div class="tab-content text-center"> 
-                <!--to pickup!-->
-                  <div class="tab-pane active" id="pickup">
-                  @if(count($pickup))
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <th>Order</th>
-                          <th class="text-center">Start</th>
-                          <th class="text-center">End</th>
-                          <th class="text-center">Mode</th>
-                          <th class="text-center">Pickup Address</th>
-                          <th class="text-right">Status</th>
-
-                        </tr>
-                      </thead>
-                          @foreach($pickup as $pu)
-                      <tbody>
-                        <tr>
-                          <!-- <td class="text-center">1</td> -->
-                          <td><img src="{{url('./dish_imgs/'.$pu->dishes['dish_img'])}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
-                            {{$pu->title}}</td>
-                            <td class="text-center">{{ Carbon\Carbon::parse($pu->start)->format('Y-M-d H:m') }}</td>
-                            <td class="text-center">{{ Carbon\Carbon::parse($pu->end)->format('Y-M-d H:m') }}</td>
-                            <td class="text-center">{{$pu->mode_delivery}}</td>
-                            <td class="text-center">{{$pu->address}}</td>
-                            <td class="text-right"><span class="badge" style="color:white; background-color:#66bb6a; float:right">{{$pu->order_status}}</span></td>
+                <div class="table table-responsive">
+                    <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                        <thead>
+                          <tr>
+                          <th style="border:none"><label class="text-center" style="font-size:20px; color:black;"><b>{{$page_title}}</b></label>
+                          </th> 
+                          <th style="border:none"></th><th style="border:none"></th><th style="border:none"></th><th style="border:none"></th>
+                          <th class="text-right" style="border:none">
+                               <form id ="sortorder" action ="{{route('user.pmorder.sortOrder')}}" method ="post" style="height:45px; width:100%">
+                                {{csrf_field()}}
+                               <select id="chooseStatus" class="form-control" name="chooseStatus">
+                                <option value="none" class="w" selected disabled hidden>Sort Orders</option>
+                                <option value="All" class="w" value = "All">All</option>
+                                <option class="w" value = "Pickup">Pickup</option>
+                                <option class="w" value = "Pending">Pending</option>
+                                <option class="w" value = "Cooking">Cooking</option>
+                                <option class="w" value = "Delivering">Delivering</option>
+                                <option  class="w" value = "Completed">Completed</option>
+                             </select>
+                            </form>
+                          </th>   
                           </tr>
-
-                        </tbody>
+                            <tr>
+                              <th class="text-left">Order</th>
+                              <th class="text-left">Start-End</th>
+                              <th class="text-left">Mode of Delivery</th>
+                              <th class="text-left">Address</th>
+                              <th class="text-left">Status</th>
+                              <th class="text-left">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                         @foreach($orders as $pu)
+                            <tr>
+                            <td><img src="{{url('./dish_imgs/'.$pu->dishes['dish_img'])}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
+                            {{$pu->title}}
+                            </td>
+                            <td class="text-center"  style="font-size: 13px">
+                            {{ Carbon\Carbon::parse($pu->start)->format('Y-M-d H:m') }} to
+                            <br>{{ Carbon\Carbon::parse($pu->end)->format('Y-M-d H:m') }}
+                            </td>
+                             <td class="text-left" style="font-size: 15px">
+                            {{$pu->mode_delivery}}
+                            </td>
+                            <td class="text-left" style="font-size: 15px">
+                            {{$pu->address}}
+                            </td>
+                            <td class="text-center"><span class="badge" style="color:white; background-color:#66bb6a;">{{$pu->order_status}}</span>
+                            </td>
+                            <td class="text-center">
+                              @if($pu->order_status=="Delivering")
+                                <center>
+                                <form method="post" action="{{route('dish.orderReview')}}">
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
+                                <input type="hidden" name="dish_id" value="{{$pu->dish_id}}">
+                                <input type="hidden" name="uo_id" value="{{$pu->uo_id}}">
+                                <button type="submit" rel="tooltip" title="Did you receive your order?" class="btn btn-success btn-flat btn-sm">
+                                Order Received
+                                </button>
+                                 </form>
+                                 </center>
+                            @else
+                              <center>
+                                <label  style="font-size:15px;">NO <br>ACTION</label>
+                              </center>
+                            @endif
+                            </td>
+                            </tr>
                         @endforeach
-                      
-                     
-                      </table>
-                      @else
-                      <center>
-                       <label style="font-size: 35px; margin-top: 20px">No orders to be picked up</label>
-                     </center>
-                   @endif
-                   </div>    
-                   <!--END!-->
-
-                  <!--TO PAY/PENDING!-->
-                  <div class="tab-pane" id="pending">
-
-                  @if(count($pending))
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <th>Order</th>
-                          <th class="text-center">Start</th>
-                          <th class="text-center">End</th>
-                          <th class="text-center">Mode</th>
-                          <th class="text-center">Delivery Address</th>
-                          <th class="text-center">Delivery Fee</th>
-                          <th class="text-right">Status</th>
-
-
-                        </tr>
-                      </thead>
-                          @foreach($pending as $mode => $pen)
-                            <!-- {{$mode}} -->
-                          @endforeach
-                          @foreach($pending as $p)
-                      <tbody>
-                        <tr>
-                          <!-- <td class="text-center">1</td> -->
-                          <td><img src="{{url('./dish_imgs/'.$p->dishes['dish_img'])}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
-                            {{$p->title}}</td>
-                            <td class="text-center">{{ Carbon\Carbon::parse($p->start)->format('Y-M-d H:m') }}</td>
-                            <td class="text-center">{{ Carbon\Carbon::parse($p->end)->format('Y-M-d H:m') }}</td>
-                              <td class="text-center">{{$p->mode_delivery}}</td>
-                            <td class="text-center">{{$p->address}}</td>
-                            <td class="text-center">{{$p->delivery_fee}}</td>
-                            <td class="text-right"><span class="badge" style="color:white; background-color:#66bb6a; float:right">{{$p->order_status}}</span></td>
-                          </tr>
-
                         </tbody>
-                        @endforeach
-                      
-                     
-                      </table>
-                      @else
-                      <center>
-                       <label style="font-size: 35px; margin-top: 20px">No orders has been placed</label>
-                     </center>
-                   @endif
-                   </div>    
-                   <!--END!-->
-
-
-
-                   <!--COOKING/ON PROCESS!-->
-                   <div class="tab-pane" id="cooking">
-                   @if(count($cooking))
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <th>Order</th>
-                          <th class="text-center">Start</th>
-                          <th class="text-center">End</th>
-                          <th class="text-center">Mode</th>
-                          <th class="text-center">Delivery Address</th>
-                          <th class="text-center">Delivery Fee</th>
-                          <th class="text-right">Status</th>
-
-                        </tr>
-                      </thead>
-                         @foreach($cooking as $c)
-                      <tbody>
-                        <tr>
-                          <!-- <td class="text-center">1</td> -->
-                          <td><img src="{{url('./dish_imgs/'.$c->dishes['dish_img'])}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
-                            {{$c->title}}</td>
-                            <td class="text-center">{{ Carbon\Carbon::parse($c->start)->format('Y-M-d H:m') }}</td>
-                            <td class="text-center">{{ Carbon\Carbon::parse($c->end)->format('Y-M-d H:m') }}</td>
-                              <td class="text-center">{{$c->mode_delivery}}</td>
-                            <td class="text-center">{{$c->address}}</td>
-                            <td class="text-center">{{$c->delivery_fee}}</td>
-                            <td class="text-right"><span class="badge" style="color:white; background-color:#66bb6a; float:right">{{$c->order_status}}</span></td>
-                          </tr>
-
-                        </tbody>
-                        @endforeach
-                      
-                     
-                      </table>
-                      @else
-                      <center>
-                       <label style="font-size: 35px; margin-top: 20px">You have no orders on processed</label>
-                     </center>
-                   @endif
-                   </div>    
-                   <!--END!-->
-
-                   <!--COOKING/ON PROCESS!-->
-                   <div class="tab-pane" id="delivering">
-                   @if(count($delivering))
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <th>Order</th>
-                          <th class="text-center">Start</th>
-                          <th class="text-center">End</th>
-                          <th class="text-center">Mode</th>
-                          <th class="text-center">Delivery Address</th>
-                          <th class="text-center">Delivery Fee</th>
-                          <th class="text-right">Status</th>
-
-
-
-                        </tr>
-                      </thead>
-                         @foreach($delivering as $d)
-                      <tbody>
-                        <tr>
-                          <!-- <td class="text-center">1</td> -->
-                          <td><img src="{{url('./dish_imgs/'.$d->dishes['dish_img'])}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
-                            {{$d->title}}</td>
-                            <td class="text-center">{{ Carbon\Carbon::parse($d->start)->format('Y-M-d H:m') }}</td>
-                            <td class="text-center">{{ Carbon\Carbon::parse($d->end)->format('Y-M-d H:m') }}</td>
-                            <td class="text-center">{{$p->mode_delivery}}</td>
-                            <td class="text-center">{{$p->address}}</td>
-                            <td class="text-center">{{$p->delivery_fee}}</td>
-                            <td class="text-right"><span class="badge" style="color:white; background-color:#66bb6a; float:right">{{$d->order_status}}</span></td>
-                            <td class="td-actions text-right">
-                           <!--   <a href="{{route('dish.pmorderReview', ['id'=> $d->did])}}" rel="tooltip" title="Did you receive your order?" class="btn btn-success btn-flat btn-sm" style="margin-top:-1px; margin-left:10px">
-                              Order Received
-                              </button>
-                              </form> -->
-                            <!-- Order Received -->
-                                <form method="post" action="{{route('dish.pmorderReview')}}">
-                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                     <input type="hidden" name="dish_id" value="{{$d->dish_id}}">
-                                      <button type="submit" rel="tooltip" title="Did you receive your order?" class="btn btn-success btn-flat btn-sm" style="margin-top:-1px; margin-left:10px">
-                          Order Received
-                          </button>
-                        </form>
-                           </td>
-                          </tr>
-                        </tbody>
-                        @endforeach
-                      </table>
-                      @else
-                      <center>
-                       <label style="font-size: 35px; margin-top: 20px">You have no orders to be received</label>
-                     </center>
-                   @endif
-                   </div>    
-                   <!--END!-->
-
-
-
-
-
-                   <!--COMPLETED!-->
-                   <div class="tab-pane" id="completed">
-                   @if(count($completed))
-                    <table class="table">
-                      <thead>
-                        <tr>
-                          <th>Order</th>
-                          <th class="text-center">Start</th>
-                          <th class="text-center">End</th>
-                          <th class="text-center">Mode</th>
-                          <th class="text-center">Delivery/Pickup Address</th>
-                          <th class="text-center">Delivery Fee</th>
-                          <th class="text-right">Status</th>
-
-                        </tr>
-                      </thead>
-                         @foreach($completed as $com)
-                      <tbody>
-                        <tr>
-                          <!-- <td class="text-center">1</td> -->
-                          <td><img src="{{url('./dish_imgs/'.$com->dishes['dish_img'])}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
-                            {{$com->title}}</td>
-                            <td class="text-center">{{ Carbon\Carbon::parse($com->start)->format('Y-M-d H:m') }}</td>
-                            <td class="text-center">{{ Carbon\Carbon::parse($com->end)->format('Y-M-d H:m') }}</td>
-                            <td class="text-center">{{$com->mode_delivery}}</td>
-                            <td class="text-center">{{$com->address}}</td>
-                            <td class="text-center">{{$com->delivery_fee}}</td>
-                            <td class="text-right"><span class="badge" style="color:white; background-color:#66bb6a; float:right">{{$com->order_status}}</span></td>
-                          </tr>
-
-                        </tbody>
-                        @endforeach
-                      
-                     
-                      </table>
-                      @else
-                      <center>
-                       <label style="font-size: 35px; margin-top: 20px">You have no orders completed</label>
-                     </center>
-                   @endif
-                   </div>    
-                   <!--END!-->
-
-
-
-                 </div>
-               </div>
-             </div>
-             <!-- End Tabs on plain Card -->   
+                    </table>
+                </div>              
+                 
+              
 
 
              ` </div><!--row!-->
@@ -515,7 +331,8 @@ h1 { font-size: 1.5em; margin: 10px; }
 
 <!-- Control Center for Material Kit: activating the ripples, parallax effects, scripts from the example pages etc -->
 <script src="{{asset('customer/assets/js/material-kit.js')}}" type="text/javascript"></script>
-
+<script src="{{asset('adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{asset('adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
 <!-- 
 <link href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.css" rel="stylesheet"/>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
@@ -523,20 +340,33 @@ h1 { font-size: 1.5em; margin: 10px; }
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.min.js"></script>
 
 <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.js"></script> -->
-
-
-
-
-
-
-
-
-
-
-
-    <script>
-
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.dataTable').DataTable({ 
+            "lengthChange": false,
+            aoColumnDefs: [
+              {
+                 bSortable: false,
+                 aTargets: [ -1 ]
+              }
+            ]
+        });
+      });
+</script>
+<script>
       $(document).ready(function() {
+           $("#chooseStatus").on('change',function(e)
+          {
+            e.preventDefault();
+            // Pace.restart();
+            $('#sortorder').submit();
+         });
+          $(".mode").click(function(e)
+          {
+            e.preventDefault();
+            // Pace.restart();
+            $('#chooseMode').submit();
+         });
         $( function() {
           $( "#slider-range" ).slider({
             range: true,
@@ -549,11 +379,7 @@ h1 { font-size: 1.5em; margin: 10px; }
           });
           $( "#amount" ).val( "$" + $( "#slider-range" ).slider( "values", 0 ) +
             " - $" + $( "#slider-range" ).slider( "values", 1 ) );
-        } );
-
-
-
-
+        });
 
         document.getElementById("defaultOpen").click();
 
@@ -594,21 +420,6 @@ h1 { font-size: 1.5em; margin: 10px; }
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 
 
-
-
-
-//          $.ajax({
-//              method: "post",
-//              data: { '_token': CSRF_TOKEN,
-//                  
-//              },
-//            success: function() {
-//                
-//            },
-//            error: function() {
-//                alert('An error occured');
-//            }
-//          });
 });
 
 
