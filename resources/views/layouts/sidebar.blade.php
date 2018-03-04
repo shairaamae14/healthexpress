@@ -18,6 +18,7 @@
   font-weight: bold;
 }
 </style>
+
 <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
@@ -29,19 +30,24 @@
           </div>
           <!-- <img src="{{asset('adminlte/dist/img/user2-160x160.jpg')}}" class="img-circle" alt="User Image"> -->
         </div>
-        <div class="pull-left info">
+        <div class="pull-left info" id="stat">
           <p>{{ Auth::user()->first_name." ".Auth::user()->last_name  }}</p>
-          <li class="dropdown open">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-circle text-success"></i> Online <span class="caret"></span></a>
-          </li>
-          <ul class="dropdown-menu">
-            <li role="presentation"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-circle text-success"></i> Online </a></li>
-            <li role="presentation"><a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-circle text-default"></i> Offline </a></li>
+          <li class="dropdown status">
+          @if(Auth::user()->cook_status == 'Accepting')
+            <a href="#" class="dropdown-toggle dispstats" data-toggle="dropdown">
+            <i class="fa fa-circle text-success"></i>&nbsp;Accept Orders <span class="caret"></span></a>
+         @else(Auth::user()->cook_status =="NotAccepting")
+           <a href="#" class="dropdown-toggle dispstats" data-toggle="dropdown">
+            <i class="fa fa-circle text-default"></i>&nbsp;Not Accepting <span class="caret"></span></a>
+         @endif
+          <ul class="dropdown-menu statlist" id="statlist">
+            <li role="presentation" id="stat1" value="Accept"><a href="#" id="cStat" class="dropdown-toggle" data-toggle="dropdown" value="Accept"><i class="fa fa-circle text-success"></i> Accept Orders </a></li>
+            <li role="presentation" id="stat2" value="NotAccept"><a href="#"  id="cStat" class="dropdown-toggle" data-toggle="dropdown" value="NotAccept"><i class="fa fa-circle text-default"></i> Not Accepting </a></li>
           </ul>
-          
+            </li>
         </div>
+        <br><br><br>   <br><br>
       </div>
-
       <!-- search form -->
      <!--  <form action="#" method="get" class="sidebar-form">
         <div class="input-group">
@@ -205,3 +211,37 @@
     </section>
     <!-- /.sidebar -->
   </aside>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js" ></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.js" ></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+    $.ajax({
+      url: "{{route('status.fetch')}}",
+      method: "get",
+      data:  {'status':'status'},
+      success: function(){
+      // $('.status').find(".dispstats").text("hello");
+      }
+
+    });
+    $("#statlist li").click(function(){
+      var val=$(this).find("a").text();
+      $.ajax({
+      url: "{{route('status.change')}}",
+      method: "get",
+      data: {'data':val},
+      success: function(){
+        // location.reload();
+        if(val==" Accept Orders "){
+         $('.status').find(".dispstats").html("<i class='fa fa-circle text-success'></i>"+val+"<span class='caret'></span></a>");
+        }
+        else if(val==" Not Accepting "){
+            $('.status').find(".dispstats").html("<i class='fa fa-circle text-default'></i>"+val+"<span class='caret'></span></a>");
+        }
+       
+      }
+    });
+    });
+  });
+</script>
+    

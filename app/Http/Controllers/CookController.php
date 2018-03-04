@@ -183,11 +183,29 @@ class CookController extends Controller
 
     public function changeAvailabilityStat(Request $request) {
         $cid  = Auth::id();
-        $status = $request['availability'];
+        $status = $request['data'];
+        if($status=="Accept Orders"){
+            $status="Accepting";
+        }
+        else{
+             $status="NotAccepting";
+        }
+
         // $status = $request->input('status');
         $cook = Cook::where('id',  $cid)->update(['cook_status' => $status]);
 
         return response()->json(['data'=>$cook]);
+    }
+    public function fetchCookStats(){
+        $cid  = Auth::id();
+        $cook=Cook::where('id', $cid)->get("cook_status");
+        if($cook=="Accepting"){
+            $status="Accept Orders";
+        }
+        else{
+            $status="Not Accepting";
+        }
+          return $status;
     }
 
     public function fetch(Request $request){
