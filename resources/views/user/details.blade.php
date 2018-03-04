@@ -7,7 +7,133 @@
 @import url('https://fonts.googleapis.com/css?family=Ubuntu+Condensed');
 @import url('https://fonts.googleapis.com/css?family=Archivo+Black');
 @import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css);
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+.wrap {
+  box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+}
 
+a:focus,
+a:hover,
+a:active {
+  outline: 0;
+  text-decoration: none;
+}
+
+.panel {
+  border-width: 0 0 1px 0;
+  border-style: solid;
+  border-color: #fff;
+  background: none;
+  box-shadow: none;
+  margin-bottom: -20px !important;
+  border-bottom: 1px solid #eeeeee !important;
+ /* margin-bottom: 0px !important;*/
+}
+.panel:last-child {
+  border-bottom: none;
+}
+
+.panel-group > .panel:first-child .panel-heading {
+  border-radius: 4px 4px 0 0;
+}
+
+.panel-group .panel {
+  border-radius: 0;
+}
+
+.panel-group .panel + .panel {
+  margin-top: 0;
+}
+
+.panel-heading {
+  background-color: #ffffff !important;
+  border-radius: 0;
+  border: none;
+  color: #fff;
+  padding:0px;
+  padding-bottom: 5px;
+  height: 7%;
+}
+
+.panel-title a {
+  display: block;
+  color: #fff;
+  padding: 15px;
+  position: relative;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.panel-body {
+  background: #fff;
+}
+
+.panel:last-child .panel-body {
+  border-radius: 0 0 4px 4px;
+}
+
+.panel:last-child .panel-heading {
+  border-radius: 0 0 4px 4px;
+  transition: border-radius 0.3s linear 0.2s;
+}
+
+.panel:last-child .panel-heading.active {
+  border-radius: 0;
+  transition: border-radius linear 0s;
+}
+/* #bs-collapse icon scale option */
+
+.panel-heading a:before {
+  content: '\e146';
+  position: absolute;
+  font-family: 'Material Icons';
+  right: 5px;
+  top: 10px;
+  font-size: 24px;
+  transition: all 0.5s;
+  transform: scale(1);
+}
+
+.panel-heading.active a:before {
+  content: ' ';
+  transition: all 0.5s;
+  transform: scale(0);
+}
+
+#bs-collapse .panel-heading a:after {
+  content: ' ';
+  font-size: 18px !important;
+  position: absolute;
+  font-family: 'Material Icons';
+  right: 5px;
+  top: 10px;
+  transform: scale(0);
+  transition: all 0.5s;
+}
+
+#bs-collapse .panel-heading.active a:after {
+  content: '\e909';
+  transform: scale(1);
+  transition: all 0.5s;
+}
+/* #accordion rotate icon option */
+
+#accordion .panel-heading a:before {
+  content: '\e316';
+  font-size: 18px;
+  position: absolute;
+  font-family: 'Material Icons';
+  right: 5px;
+  top: 10px;
+  transform: rotate(180deg);
+  transition: all 0.5s;
+}
+
+#accordion .panel-heading.active a:before {
+  transform: rotate(0deg);
+  transition: all 0.5s;
+}
 
 .avaliar{
     margin-top:5px;
@@ -182,7 +308,7 @@ h1 { font-size: 1.5em; margin: 10px; }
                            <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
                           </small></center>
                           @endif
-                          <span class="badge" style="font-family: verdana; background-color:#30BB6D; margin-top:10px;">Breakfast(static) &nbsp;</span><br>
+                          <span class="badge" style="font-family: verdana; background-color:#30BB6D; margin-top:10px;">{{$dets->name}}&nbsp;</span><br>
                           <p>{{$dets->dish_desc}}</p>
                         </div>
                     </div>
@@ -202,123 +328,174 @@ h1 { font-size: 1.5em; margin: 10px; }
 </div><!--end!-->
 @endforeach
 
-<div class="row" style="margin:10px">
-  <div class="col-sm-12"><center>
-         <h4 class="text-left" style="color:white; background-color: #4caf50; padding:5px"><b>Details</b></h4>
-        @foreach($dishes as $dets)
-        <span class="badge" style="font-family: verdana; border-radius:0px; background-color:#4caf50;; font-size: 15px"> Cook:</span>
-        <a href="{{route('cook.details',  ['id' => $dets->authorCook_id])}}" style="text-decoration: none; color:#30BB6D; ">
-        <span class="badge" style="font-family: verdana; color:black; border-radius:2px; background-color:transparent; font-size: 15px">{{$dets->first_name}} {{$dets->last_name}}</span></a>&nbsp;
-         <span class="badge" style="font-family: verdana; border-radius:0px; background-color:#4caf50; font-size: 15px"> Serving:</span>
-        <span class="badge" style="font-family: verdana; color:black; border-radius:2px;background-color:transparent; font-size: 15px">{{$dets->no_of_servings}} serving/s</span><br>
-       @endforeach
-    <!-- </div> -->
-  </div>
-  <br><center>
-<div class="col-sm-12">
-     <h4 class="text-left" style="color:white; background-color: #4caf50; padding:5px"><b>Nutritional Facts</b></h4>
-    <center>
-    <b>Amount Per Serving</b>
-    <table>
-      @foreach($nutritional as $nutrition)
-      <tr style="border-bottom:2px solid black">
-        <td><b style="margin-right: 50px">Calories</b></td>
-        <td>{{ $nutrition->calories }}g</td>
-      </tr>
-      <tr>
-        <td><b style="margin-right: 50px">Total Fat</b></td>
-        <td>{{ $nutrition->total_fat }}g</td>
-      </tr>
-      <tr>
-        <td><b style="margin-right: 50px">Cholesterol</b></td>
-        <td>{{ $nutrition->cholesterol }}g</td>
-      </tr>
-      <tr>
-        <td><b style="margin-right: 50px">Sodium</b></td>
-        <td>{{ $nutrition->sodium }}g</td>
-      </tr>
-      <tr style="border-bottom:2px solid black">
-        <td><b style="margin-right: 50px">Total Carbohydrate</b></td>
-        <td>{{ $nutrition->carbohydrate }}g</td>
-      </tr>
-      <tr>
-        <td><b style="margin-right: 50px">Protein</b></td>
-        <td>{{ $nutrition->protein }}g</td>
-      </tr>
-      @endforeach
-  </table>
+<div class="row" style="margin-top: 20px; margin:10px">
+  <div class="panel-group wrap" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel">
+        <div class="panel-heading" role="tab" id="headingOne">
+          <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+        <label style="font-size: 14px;color:black; font-family: Arial Regular"> DETAILS </label>
+        </a>
+      </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+          <div class="panel-body">
+                @foreach($dishes as $dets)
+                <label style="font-size:18px; color:black;"> Cook:</label>
+                <a href="{{route('cook.details',  ['id' => $dets->authorCook_id])}}" style="text-decoration: none; color:#30BB6D; "> 
+                <label style="font-size:15px; color:gray;">
+                {{$dets->first_name}} {{$dets->last_name}}
+                </label></a>&nbsp;
+                <label style="font-size:18px; color:black;"> Cook's Location:</label>
+                <label style="font-size:15px; color:gray;">{{$dets->cook['location']}}</label><br>
+                <label style="font-size:18px; color:black;"> Serving:</label>
+                <label style="font-size:15px; color:gray;">{{$dets->no_of_servings}} serving/s</label><br>
+
+               @endforeach
+          </div>
+        </div>
+      </div>
+      </div>
+
+    <div class="panel-group wrap" id="accordion" role="tablist" aria-multiselectable="true">
+      <div class="panel">
+        <div class="panel-heading" role="tab" id="headingTwo">
+          <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+            <label style="font-size: 14px;color:black; font-family: Arial Regular">
+         NUTRRITIONAL FACTS
+        </a>
+      </h4>
+        </div>
+        <div id="collapseTwo" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingTwo">
+          <div class="panel-body">
+               <center>
+            <div class="col-md-12">
+              Amount Per Serving
+              <table width="50%">
+                @foreach($nutritional as $nutrition)
+                <tr style="border-bottom:2px solid black">
+                  <td><b style="margin-right: 50px">Calories</b></td>
+                  <td>{{ $nutrition->calories }}g</td>
+                </tr>
+                <tr>
+                  <td><b style="margin-right: 50px">Total Fat</b></td>
+                  <td>{{ $nutrition->total_fat }}g</td>
+                </tr>
+                <tr>
+                  <td><b style="margin-right: 50px">Cholesterol</b></td>
+                  <td>{{ $nutrition->cholesterol }}g</td>
+                </tr>
+                <tr>
+                  <td><b style="margin-right: 50px">Sodium</b></td>
+                  <td>{{ $nutrition->sodium }}g</td>
+                </tr>
+                <tr style="border-bottom:2px solid black">
+                  <td><b style="margin-right: 50px">Total Carbohydrate</b></td>
+                  <td>{{ $nutrition->carbohydrate }}g</td>
+                </tr>
+                <tr>
+                  <td><b style="margin-right: 50px">Protein</b></td>
+                  <td>{{ $nutrition->protein }}g</td>
+                </tr>
+                @endforeach
+            </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-</div>
-<div class="row" style="margin: 10px">
-  <div class="col-md-12">
-      <h4 class="text-left" style="color:white; background-color: #4caf50; padding:5px"><b>Reviews</b></h4>
-     <div class="well well-sm">
-          <div class="text-right">
-              <a class="btn btn-success btn-green" href="#reviews-anchor" id="open-review-box">Leave a Review</a>
+
+    <div class="panel">
+        <div class="panel-heading" role="tab" id="headingThree">
+          <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          <label style="font-size: 14px;color:black; font-family: Arial Regular"> LEAVE REVIEW
+        </a>
+      </h4>
+        </div>
+        <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+          <div class="panel-body">
+          <div class="row" style="margin: 10px;">
+            <div class="col-md-12">
+              <label>NOTE: You can only rate this dish when you have already ordered this dish.</label>
+               <div class="well well-sm">
+                    <!-- <div class="text-right">
+                        <a class="btn btn-success btn-green" href="#reviews-anchor" id="open-review-box">Leave a Review</a>
+                    </div> -->
+                    <div class="row" id="post-review-box">
+                        <div class="col-md-12" style="width:100%">
+                            <form action="{{route('dish.addRating')}}" method="post">
+                            {{csrf_field()}}
+                            @foreach($dishes as $dets)
+                            <input type="hidden" name="dish_id" value="{{$dets->did}}">
+                            @endforeach
+                             <h5 class="card-title text-left">Rate this dish</h5>
+                                    <!--STAR!-->
+                                    <fieldset class="rating">
+                                      <input type="radio" id="star5" name="rating" value="5" />
+                                      <label class = "full" for="star5" title="Excellent - 5 stars"></label>
+                                      <input type="radio" id="star4half" name="rating" value="4.5" />
+                                      <label class="half" for="star4half" title="Super Delicious - 4.5 stars"></label>
+                                      <input type="radio" id="star4" name="rating" value="4" />
+                                      <label class = "full" for="star4" title="Very Delicious - 4 stars"></label>
+                                      <input type="radio" id="star3half" name="rating" value="3.5" />
+                                      <label class="half" for="star3half" title="Delicious - 3.5 stars"></label>
+                                      <input type="radio" id="star3" name="rating" value="3" />
+                                      <label class = "full" for="star3" title="Satisfied - 3 stars"></label>
+                                      <input type="radio" id="star2half" name="rating" value="2.5" />
+                                      <label class="half" for="star2half" title="Good- 2.5 stars"></label>
+                                      <input type="radio" id="star2" name="rating" value="2" />
+                                      <label class = "full" for="star2" title="Fair - 2 stars"></label>
+                                      <input type="radio" id="star1half" name="rating" value="1.5" />
+                                      <label class="half" for="star1half" title="Bad - 1.5 stars"></label>
+                                      <input type="radio" id="star1" name="rating" value="1" />
+                                      <label class = "full" for="star1" title="Very Bad- 1 star"></label>
+                                      <input type="radio" id="starhalf" name="rating" value="0.5" />
+                                      <label class="half" for="starhalf" title="Poor - 0.5 stars"></label>
+                                   </fieldset><br><br>
+                                   <!--ENDOFSTAR!-->
+                                    <h4 class="card-title text-left">Give a review</h4>
+                                <div class="form-group label-floating has-success">
+                                  <textarea class="form-control animated" cols="100" id="new-review" name="review" placeholder="Enter your review here..." rows="5"></textarea>
+                                </div> 
+                                <div class="text-right">
+                                    <div class="stars starrr" data-rating="5">
+                                </div>
+                                   <a class="btn btn-simple btn-success" href="#" id="close-review-box" style="display:none; margin-right: 10px;">Cancel</a>
+                                  <button type="submit" class="btn btn-success btn-lg" type="submit">Save</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div> 
+            </div><!--end of review!-->
           </div>
-          <div class="row" id="post-review-box" style="display:none;">
-              <div class="col-md-12">
-                  <form action="{{route('dish.addRating')}}" method="post">
-                  {{csrf_field()}}
-                  @foreach($dishes as $dets)
-                  <input type="hidden" name="dish_id" value="{{$dets->did}}">
-                  @endforeach
-                   <h5 class="card-title text-left">Rate this dish</h5>
-                          <!--STAR!-->
-                          <fieldset class="rating">
-                            <input type="radio" id="star5" name="rating" value="5" />
-                            <label class = "full" for="star5" title="Excellent - 5 stars"></label>
-                            <input type="radio" id="star4half" name="rating" value="4.5" />
-                            <label class="half" for="star4half" title="Super Delicious - 4.5 stars"></label>
-                            <input type="radio" id="star4" name="rating" value="4" />
-                            <label class = "full" for="star4" title="Very Delicious - 4 stars"></label>
-                            <input type="radio" id="star3half" name="rating" value="3.5" />
-                            <label class="half" for="star3half" title="Delicious - 3.5 stars"></label>
-                            <input type="radio" id="star3" name="rating" value="3" />
-                            <label class = "full" for="star3" title="Satisfied - 3 stars"></label>
-                            <input type="radio" id="star2half" name="rating" value="2.5" />
-                            <label class="half" for="star2half" title="Good- 2.5 stars"></label>
-                            <input type="radio" id="star2" name="rating" value="2" />
-                            <label class = "full" for="star2" title="Fair - 2 stars"></label>
-                            <input type="radio" id="star1half" name="rating" value="1.5" />
-                            <label class="half" for="star1half" title="Bad - 1.5 stars"></label>
-                            <input type="radio" id="star1" name="rating" value="1" />
-                            <label class = "full" for="star1" title="Very Bad- 1 star"></label>
-                            <input type="radio" id="starhalf" name="rating" value="0.5" />
-                            <label class="half" for="starhalf" title="Poor - 0.5 stars"></label>
-                         </fieldset><br><br>
-                         <!--ENDOFSTAR!-->
-                          <h4 class="card-title text-left">Give a review</h4>
-                      <div class="form-group label-floating has-success">
-                        <textarea class="form-control animated" cols="100" id="new-review" name="review" placeholder="Enter your review here..." rows="5"></textarea>
-                      </div> 
-                      <div class="text-right">
-                          <div class="stars starrr" data-rating="5">
-                      </div>
-                         <a class="btn btn-simple btn-success" href="#" id="close-review-box" style="display:none; margin-right: 10px;">Cancel</a>
-                        <button type="submit" class="btn btn-success btn-lg" type="submit">Save</button>
-                      </div>
-                  </form>
-              </div>
           </div>
-      </div> 
-  </div><!--end of review!-->
+        </div>
+      </div>
+      <!-- end of panel -->
 </div>
-<div class="row" style="margin: 10px">
+
+<div class="row" style="margin:4px; margin-top:80px">
   @if(count($ratings))
     @foreach($ratings as $rate)
         <div class="col-md-12 rate" id="ratebox">
            <div class="well well-sm">
             <div class="text-left">
               <img src="{{url('./user_imgs/'.$rate->profpic)}}" class="img-circle" style="width:50px; height:50px"/>
-               <label style="color:#4caf50"><b>&nbsp;&nbsp;{{$rate->fname}}&nbsp;{{$rate->lname}}</b></label>
-               <br><label style="font-size:10px">{{$rate->date_rated}}</label><br>
-                <label style="margin-left:10px">{{$rate->comment}}</label>
-            </div>
+               <label style="color:#4caf50"><b>&nbsp;&nbsp;{{$rate->fname}}&nbsp;{{$rate->lname}}</b><div class="col-md-12" style="margin-left:-12px">
+               <label style="font-size:14px;">{{$rate->date_rated}}</label>
+               </div></label>
+               <label style="margin-left:-80px">{{$rate->comment}}</label>
                <br>
+                
+            </div>
+            <div style="float:right; margin-top: -50px">
                <label class="ratingbox" id="ratingbox"></label>
                <label class="ratingbox2" id="ratingbox2"></label><br>
                <label>{{$rate->rating}} out of 5 stars</label><br>
+          </div>
                <ul>
                  <li>
                  <input type="hidden" class="ratings" id="rate_{{$rate->rating}}"  value="{{$rate->rating}}">
@@ -588,6 +765,17 @@ $(function(){
 
 
   </script>
-
+  <script>
+$(document).ready(function() {
+  $('.collapse.in').prev('.panel-heading').addClass('active');
+  $('#accordion, #bs-collapse')
+    .on('show.bs.collapse', function(a) {
+      $(a.target).prev('.panel-heading').addClass('active');
+    })
+    .on('hide.bs.collapse', function(a) {
+      $(a.target).prev('.panel-heading').removeClass('active');
+    });
+});
+ </script>
 @endsection
 
