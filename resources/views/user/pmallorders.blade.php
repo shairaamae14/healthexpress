@@ -253,6 +253,14 @@ input[type="text"], input[type="number"], #mode {
                     &nbsp;None
                 @endif    
                 </label><br> -->
+                <form method="post" action="{{route('user.pmchangetime')}}">
+                  {{csrf_field()}}
+                  <input type="hidden" name="uo_id" value="{{$order->uo_id}}">
+                  
+                @if($order->newAttribute == 1)
+                <b>&nbsp;Change time:</b>
+                  <input id="appt-time" type="time" name="appt-time" step="2" value="{{ Carbon\Carbon::parse($order->start)->format('H:m:s') }}">
+                @endif
              </div>
 
       </div>
@@ -261,12 +269,16 @@ input[type="text"], input[type="number"], #mode {
           @if($order->newAttribute == 1)
             {{-- <button type="button" class="btn btn-warning" onclick="cancel({{$order->uo_id}})">Cancel Order</button> --}}
             <button type="button" class="btn btn-warning" data-dismiss="modal" data-toggle="modal" data-target="#confirm{{$order->uo_id}}">Cancel Order</button>
+            <button type="submit" class="btn btn-success"><a id="eventUrl" style="color:white" target="_blank">Save Changes</a></button>
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           @else
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
           @endif
       </div>
     </div>
+
+  </form>
+
   </div>
 </div>
 {{-- @endforeach --}}

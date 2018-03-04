@@ -888,9 +888,8 @@ class PlannedMController extends Controller
                             ->get();
 
       foreach($data as $dta){
-      
-            $ndata = explode("T",$dta->start);
-            }
+        $ndata = explode("T",$dta->start);
+      }
       $arr = array($ndata[0],$request['appt-time']);
       $new = implode("T",$arr);
 
@@ -963,28 +962,25 @@ class PlannedMController extends Controller
         return response()->json(['status'=>'failed']);
     }
 
-// function distance($lat1, $lon1, $lat2, $lon2, $unit) {
 
-//   $theta = $lon1 - $lon2;
-//   $dist = sin(deg2rad($lat1)) * sin(deg2rad($lat2)) +  cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * cos(deg2rad($theta));
-//   $dist = acos($dist);
-//   $dist = rad2deg($dist);
-//   $miles = $dist * 60 * 1.1515;
-//   $unit = strtoupper($unit);
+    public function updateTime(Request $request){
+      $id = $request['uo_id'];
 
-//   if ($unit == "K") {
-//     return ($miles * 1.609344);
-//   } else if ($unit == "N") {
-//       return ($miles * 0.8684);
-//     } else {
-//         return $miles;
-//       }
-// }
+      $data = UserOrder::where('uo_id', $id)
+                            ->select('start')
+                            ->get();
 
-// echo distance(32.9697, -96.80322, 29.46786, -98.53506, "M") . " Miles<br>";
-// echo distance(32.9697, -96.80322, 29.46786, -98.53506, "K") . " Kilometers<br>";
-// echo distance(32.9697, -96.80322, 29.46786, -98.53506, "N") . " Nautical Miles<br>";
+      foreach($data as $dta){
+        $ndata = explode("T",$dta->start);
+      }
+      $arr = array($ndata[0],$request['appt-time']);
+      $new = implode("T",$arr);
 
+      $update = UserOrder::where('uo_id', $id)
+                              ->update(['start' => $new
+                            ]);
+      return redirect()->route('pmorder.showallorders');
+    }
 
 
 }

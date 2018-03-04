@@ -31,11 +31,6 @@ class CookController extends Controller
      */
     public function index(Request $request)
     {   
-        // $orders = UserOrder::all();
-        // // $dishes = UserOrder::join('dishes','dishes.did','=','user_orders.dish_id')->get();
-        // $oid    = UserOrder::join('orders','orders.id','=','user_orders.order_id')
-        //                     ->join('order_mode', 'user_orders.order_id' , '=', 'order_mode.id')
-        //                     ->get();
 
         $cid  = Auth::id();
         if($request->input('chooseStatus') == 'Completed')
@@ -51,9 +46,6 @@ class CookController extends Controller
         if(!$request->input('chooseStatus'))
         {
            $orders = UserOrder::groupBy('user_id', 'order_date')->orderBy('user_orders.order_date', 'desc')->get(); 
-           // foreach ($orders as $order) {
-           //     dd($order->user->fname);
-           // }
            
         }
         else
@@ -66,94 +58,29 @@ class CookController extends Controller
             $orders = UserOrder::where('user_orders.order_status', $request->input('chooseStatus'))->groupBy('order_date')->orderBy('user_orders.order_date', 'desc')->get(); 
             }
         }
-        // $sales = UserOrder::where('order_status','Completed')->where('authorCook_id', $cid)->get();
-        // $orders = ::all();
 
         $sales = UserOrder::whereHas('dishes', function($query) use($cid) {
                 $query->where('authorCook_id', $cid); 
         })->where('order_status', 'Completed')->sum('totalAmount');
-        // dd($sales);
-        // dd($sales);
-        // $temp = $sales->where()
-      
-        // $pendingem = Orders::with(['dishes.cook' => function($query) use($cid) {
-        //     $query->where('id', $cid);
-        // }])->whereHas('user_orders', function ($query) {
-        //     $query->where('order_status', 'Pending');
-        //     $query->whereBetween('created_at', [\Carbon\Carbon::today()->startOfWeek(), \Carbon\Carbon::today()->endOfWeek()]);
-        // })->where('om_id', 1)->get();
-         // dd($pendingem);
-
-
-
-        // $users = UserOrder::with(['orders.dishes' => function($query) use($cid) {
-        //     $query->where('authorCook_id', $cid);
-        // }])->get();
-
-        // $pendingem = Orders::with(['dishes.cook' => function($query) use($cid) {
-        //     $query->where('id', $cid);
-        // }, 'user_orders.user' => function($query) {
-        //     $query->groupBy('fname');
-        // }])->whereHas('user_orders', function ($query) {
-        //     $query->where('order_status', 'Pending');
-        //     $query->whereBetween('created_at', [\Carbon\Carbon::today()->startOfWeek(), \Carbon\Carbon::today()->endOfWeek()]);
-        // })->where('om_id', 1)->get();
-
         $pendingem = UserOrder::whereHas('dishes', function($query) use($cid) {
                 $query->where('authorCook_id', $cid);
                 $query->where('om_id', 1); 
         })->where('order_status', 'Pending')->get();
-        // dd($pendingem);
-        // foreach ($pendingem as $pend) {
-        //     dd($pend->user->fname);
-        // }
         $pendingpm = UserOrder::whereHas('dishes', function($query) use($cid) {
                 $query->where('authorCook_id', $cid);
                 $query->where('om_id', 2); 
         })->where('order_status', 'Pending')->get();
-        // dd($pendingem);
-        // $pendingpm = Orders::with(['dishes.cook' => function($query) use($cid) {
-        //     $query->where('id', $cid);
-        // }, 'user_orders.user'])->whereHas('user_orders', function ($query) {
-        //     $query->where('order_status', 'Pending');
-        //     $query->whereBetween('created_at', [\Carbon\Carbon::today()->startOfWeek(), \Carbon\Carbon::today()->endOfWeek()]);
-        // })->where('om_id', 2)->get();
-        // dd($pendingem);
-        // dd($orders);
         $temp = UserOrder::all();
-       
-        
 
-        // dd($pendingem);
-
-        
-        // $pendingem = UserOrder::where('authorCook_id',$cid)->where('order_status', 'Pending')
-        //             ->whereBetween('user_orders.created_at', [\Carbon\Carbon::today()->startOfWeek(), \Carbon\Carbon::today()->endOfWeek()] )->get();
-
-        // $pendingpm = UserOrder::where('authorCook_id',$cid)->where('order_status', 'Pending')
-        //                     ->whereBetween('created_at', [\Carbon\Carbon::today()->startOfWeek(), \Carbon\Carbon::today()->endOfWeek()] )->get();
-       
-
-        // dd($pending);
-        // $details = $details->merge($dishes)->merge($orders)->merge($oid);
         return view('dashboard',compact('page_title','orders','dishes','oid','sales','pendingem','pendingpm'));
     }
 
     public function showOrders()
     {
-        // $orders = UserOrder::all();
-        
-        // Dish::join('dish_besteaten','dish_besteaten.dish_id', '=', 'dishes.did')
-        //                     ->join('besteaten_at', 'besteaten_at.be_id' , '=', 'dish_besteaten.be_id')
-        //                     ->get();
         return view('cook.cook',compact('dishes', 'oid'));
 
     }
 
-    // public function showOrderDet(){
-    //     return  view('cook.vieweorder');
-
-    //  }
      public function showDishes()
     
     {
@@ -219,8 +146,6 @@ class CookController extends Controller
                             ->where('om_id',2)
                             ->distinct()
                             ->get(['fname','lname','om_name','user_id','sidenote']);
-                            // dd($fetch);
-
 
         return view('cook.planned', compact('fetch'));
     }
@@ -235,7 +160,7 @@ class CookController extends Controller
                             ->join('order_mode', 'user_orders.om_id', '=', 'order_mode.id')
                             ->where('user_id', $id)
                             ->where('om_id', 2)
-                            ->where('order_status', 'Pending')
+                            ->where('order_status', 'NOT LIKE', 'Initial')
                             ->get();
 
 
