@@ -11,6 +11,7 @@ use App\BestEaten;
 use App\PlannedMeals;
 use App\NutritionFacts;
 use App\UserOrder;
+use App\OrderMode;
 use Braintree_ClientToken;
 use Braintree_Transaction;
 use Braintree_CreditCard;
@@ -679,7 +680,7 @@ class PlannedMController extends Controller
     public function index1(){
       $id = Auth::id();
       $plans = UserOrder::where('user_id', $id)->where('order_status', 'LIKE', 'Initial')->get();
-      $paidplans = UserOrder::where('user_id', $id)->where('order_status', 'LIKE', 'Pending')->get();
+      $paidplans = UserOrder::where('user_id', $id)->where('om_id', 2)->where('order_status', 'LIKE', 'Pending')->get();
       $today = \Carbon\Carbon::now('Asia/Manila')->format('m/d/Y');
      
       $iteration = FALSE;
