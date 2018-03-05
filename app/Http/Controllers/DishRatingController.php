@@ -235,7 +235,7 @@ public function storeCookR(Request $request){
                                     'date_rate' =>$ndate[0],
                                     'uorder_id'=>$uo,
                                     'dish_id'=>$did,
-                                    'cook_id'=>$uo
+                                    'cook_id'=>$id
                                   ]);
       
             $rate=CookRating::where('cook_id', $request['cook_id'])->get();
@@ -252,15 +252,14 @@ public function storeCookR(Request $request){
                $tempavg=$average;
                $tempwhole=floor($tempavg);
                $tempdec=$tempavg-$tempwhole;
-               // dd($tempdec);
                 if($tempdec==0.0){
                 $average=$average;
-                // dd($average);
+              
                }
                else if($tempdec<=0.5 || $tempdec>=0.5){
                 $tempdec=0.5;
                 $average=$tempwhole + $tempdec;
-                // dd($average, "hello");
+              
                }
              $averagedish = CookAverage::where('cook_id', $request['cook_id'])->get();
              // dd($averagedish);
