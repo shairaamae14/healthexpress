@@ -26,7 +26,9 @@
       <div class="row">
         <div class="col-md-12">
         @foreach($avg as $a)
-         <span class="badge" style="font-family: verdana; border-radius:5px; background-color:#30BB6D; font-size: 15px">{{$a->dish_name}}</span><br><br>
+        @foreach($dish as $d)
+         <span class="badge" style="font-family: verdana; border-radius:5px; background-color:#30BB6D; font-size: 15px">{{$d->dish_name}}</span><br><br>
+        @endforeach
          <span class="badge" style="font-family: verdana; border-radius:2px; color:black; background-color:transparent; font-size: 15px">{{$a->average}} out of 5 stars</span><br><br>
         @endforeach
            <ul class="timeline">
@@ -68,7 +70,9 @@
             </div>
             </div>
              @else
-            <center><label style="font-size:50px; color:gray; font-family: arial; margin: 50px;">NO REVIEWS FOR THIS DISH</label>
+            @foreach($dish as $d)
+            <center><label style="font-size:50px; color:gray; font-family: arial; margin: 50px;">No reviews for {{$d->dish_name}}</label>
+            @endforeach
             @endif
             <!-- END timeline item -->
             <!-- timeline item -->
