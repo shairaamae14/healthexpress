@@ -32,43 +32,44 @@ dt{
 
            <div class="box box-solid"> 
             <div class="box-body">
-                @foreach($pmdishes as $dish)
-                    <div class="col-sm-3 rate">
-                        <div class="box box-solid" style="border-radius: 20px;">
-                            <div class="box-header with-border">
-                                <center>
-                                <img src="{{url('./dish_imgs/'.$dish->dish_img)}}" style="width:150px; height:150px; border:2px solid #F0F0F0">
-                               </center>
-                            </div>
-                            <center>
-                         
-                                    <h4 class="openModal box-title" style="margin-top: 5px; font-size: 15px;"><a href="{{route('cook.dishes.show', ['id' => $dish->did])}}" style="color:#30BB6D">{{$dish['dish_name']}}</a></h4><br>
-                         </center>
-                         <center>
-                          {{-- @if($dish->average['average'])
-                          <label class="ratingbox" id="ratingbox"></label>
-                          <label class="ratingbox2" id="ratingbox2"></label><br>
-                          <input type="hidden" class="ratings" id="rate_{{$dish->average['average']}}" value="{{$dish->average['average']}}">
-                         @else --}}
-                           <center><small>
-                           <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
-                           <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
-                           <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
-                           <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
-                           <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
-                          </small></center>
-                         {{-- @endif --}}
-                         <a href="{{route('cook.rating', ['id' => $dish->did])}}">
-                         <p style="font-size: 12px; color:#30BB6D;">See Reviews</p></a>
-                         <a class="btn btn-success" href="{{route('cook.dishes.show', ['id' => $dish->did])}}">View Details</a>
-                        </center>
-                           <br>
-                        </div>
-                    </div>
-            @endforeach
-            </div>
-            <div class="text-center">
-            {{$pmdishes->links()}}
+              <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover dishes-list dataTable">
+                        <thead>
+                            <tr>
+                                <th width="7%"></th>
+                                <th width="40%">Dish Name</th>
+                                <th width="20%">Reviews</th>
+                                <th class="disabled-sorting text-right" width="20%">Action</th>
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                           @foreach($pmdishes as $dish)
+                            <tr>
+                                <td width="7%"><img src="{{url('./dish_imgs/'.$dish->dish_img)}}" style="width:90px; height:90px; border:2px solid #F0F0F0"></td>
+                                <td width="40%"><h4 class="openModal box-title" style="margin-top: 5px; font-size: 15px;"><a href="{{route('cook.dishes.show', ['id' => $dish->did])}}" style="color:#30BB6D">{{$dish['dish_name']}}</a></h4></td>
+                                <td width="20%">
+                                  @if($dish->average['average'])
+                                    <label class="ratingbox" id="ratingbox"></label>
+                                    <label class="ratingbox2" id="ratingbox2"></label><br>
+                                    <input type="hidden" class="ratings" id="rate_{{$dish->average['average']}}" value="{{$dish->average['average']}}">
+                                   @else
+                                     <center><small>
+                                     <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                                     <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                                     <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                                     <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                                     <i class="fa fa-star-o" aria-hidden="true" style="font-size:13px"></i>
+                                    </small></center>
+                                   @endif
+                                </td>
+                                <td width="20%"><a class="btn btn-success" href="{{route('cook.rating', ['id' => $dish->did])}}">See Reviews</a>
+                                <a class="btn btn-success" href="{{route('cook.dishes.show', ['id' => $dish->did])}}">View Details</a></td>
+                            </tr>
+                             @endforeach 
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
@@ -99,21 +100,6 @@ dt{
 </script>
 <!-- Bootstrap 3.3.7 -->
 <script src="{{asset('adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
-<!-- Morris.js charts -->
-<script src="{{asset('adminlte/bower_components/raphael/raphael.min.js')}}"></script>
-<script src="{{asset('adminlte/bower_components/morris.js/morris.min.js')}}"></script>
-<!-- Sparkline -->
-<script src="{{asset('adminlte/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js')}}"></script>
-<!-- jvectormap -->
-<script src="{{asset('adminlte/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js')}}"></script>
-<script src="{{asset('adminlte/plugins/jvectormap/jquery-jvectormap-world-mill-en.js')}}"></script>
-<!-- jQuery Knob Chart -->
-<script src="{{asset('adminlte/bower_components/jquery-knob/dist/jquery.knob.min.js')}}"></script>
-<!-- daterangepicker -->
-<script src="{{asset('adminlte/bower_components/moment/min/moment.min.js')}}"></script>
-<script src="{{asset('adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
-<!-- datepicker -->
-<script src="{{asset('adminlte/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
 <!-- Bootstrap WYSIHTML5 -->
 <script src="{{asset('adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}"></script>
 <!-- Slimscroll -->
@@ -123,11 +109,25 @@ dt{
 <!-- AdminLTE App -->
 <script src="{{asset('adminlte/dist/js/adminlte.min.js')}}"></script>
 
-  
+<script src="{{asset('js/app.js')}}"></script>
+<!-- DataTables -->
+<script src="{{asset('adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{asset('adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
 
 <script type="text/javascript">
-    
-    $(".delete").on('click', function(){
+    $(document).ready(function() {
+       $('.dishes-list').DataTable({ 
+            "pageLength": 5,
+            "lengthChange": false,
+            aoColumnDefs: [
+              {
+                 bSortable: false,
+                 aTargets: [ -1 ,-2, -4]
+              }
+            ]
+        });
+
+        $(".delete").on('click', function(){
      var id =  $(this).val();
       window.location= './dishes/'+id+'/delete';
     });
@@ -136,6 +136,8 @@ dt{
       var id = document.getElementById('viewDetails').value;
       alert("hey");
     }
+     });
+   
   
 </script>
 @endsection

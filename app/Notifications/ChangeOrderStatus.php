@@ -6,29 +6,26 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
-use Illuminate\Notifications\Messages\BroadcastMessage;
-use App\User;
-use App\Dish;
-class OrderedMeal extends Notification
+
+class ChangeOrderStatus extends Notification
 {
     use Queueable;
 
-    public $order;
-    public $user;
-    public $dish;
+    protected $order;
+    protected $user;
+    protected $dish;
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($order)
+    public function __construct($order,)
     {
         $this->order = $order;
 
-        $this->user = User::select('fname','lname')->where('id', $order->user_id)->get();
+         $this->user = User::select('id','fname','lname')->where('id', $order->user_id)->get();
 
         $this->dish = Dish::select('did','dish_name')->where('did', $order->dish_id)->get();
-        
     }
 
     /**
@@ -42,12 +39,6 @@ class OrderedMeal extends Notification
         return ['database', 'broadcast'];
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
     public function toDatabase($notifiable)
     {
         return[
@@ -68,7 +59,6 @@ class OrderedMeal extends Notification
         ]);
         // dd($this->user);
     }
-
 
     /**
      * Get the array representation of the notification.
