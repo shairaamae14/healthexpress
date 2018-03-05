@@ -1,7 +1,13 @@
 @extends('cook-layouts.cook-master')
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js" ></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.js" ></script>
-<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+{{-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js" ></script> --}}
+{{-- <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.js" ></script> --}}
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous"></script>
+{{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" /> --}}
+{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script> --}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.1/css/select2.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <style>
 
@@ -138,7 +144,7 @@ fieldset{
           <input type="hidden" id="ing_id" multiple name="ing_id[]" value=""/>
         </div>
         <div class="form-group col-md-4">
-            <input type="text" class="form-control" id="quantity" name="quantity" placeholder="Quantity" required autofocus >
+            <input type="text" class="form-control" id="quantity" name="quantity" placeholder="Quantity" autofocus >
             <label style="color:red" id="err"></label>
         </div>
         <div class="form-group col-md-3">
@@ -211,6 +217,10 @@ fieldset{
 </form>
 @endforeach
 </div>
+
+
+
+<div id="modals"></div>
 
  <!-- modal -->
 @foreach($dish_ingredients as $di)
@@ -523,7 +533,7 @@ $(document).ready(function () {
 
         document.getElementById("qtyy"+id).value = quan;
         document.getElementById("prepp"+id).value = prepp;
-        document.getElementById("umm"+id).value = umm;k
+        document.getElementById("umm"+id).value = umm;
 
 
 
@@ -563,19 +573,88 @@ $(document).ready(function () {
             $('.actions > ul > li:eq(1) > a').attr("href",'#next');
             $('#err').empty();
             var div = document.getElementById("part");
+            var div2 = document.getElementById('modals');
 
              div.innerHTML += 
                 '<tr style="text-align:center" class="iRow" id="remove'+ingid+'">'+
                         '<td multiple>'+ingred+'</td>'+
                         '<input type="hidden" id="ingid" name="ingid[]" value="'+ingid+'">'+
-                        '<td multiple multiple name="qty[]">'+squan+'</td>'+
-                        '<input type="hidden" id="qtyy" name="qtyy[]" value="'+quan+'">'+
-                        '<td multiple name="prep[]">'+prep+'</td>'+
-                        '<input type="hidden" id="prepp" name="prepp[]" value="'+prepp+'">'+
-                        '<td multiple name="unit[]">'+um+'</td>'+
-                        '<input type="hidden" id="umm" name="umm[]" value="'+umm+'">'+
-                        '<td><button type="button" onclick="del('+ingid+')" class="remove"><i class="fa fa-times"></i></button></td>'+
+                        '<td multiple multiple id="qty'+ingid+'" name="qty[]">'+squan+'</td>'+
+                        '<input type="hidden" id="qtyy'+ingid+'" name="qtyy[]" value="'+quan+'">'+
+                        '<td multiple id="prep'+ingid+'" name="prep[]">'+prep+'</td>'+
+                        '<input type="hidden" id="prepp'+ingid+'" name="prepp[]" value="'+prepp+'">'+
+                        '<td multiple id="um'+ingid+'" name="unit[]">'+um+'</td>'+
+                        '<input type="hidden" id="umm'+ingid+'" name="umm[]" value="'+umm+'">'+
+                        '<td><button type="button" onclick="del('+ingid+')" class="remove"><i class="fa fa-times"></i></button><button type="button" class="btn btn-flat fa fa-edit" style="background-color:#30BB6D; color:white; border:none; margin-top: 0px; line-height: 100%; float:right" data-toggle="modal" data-target="#myModal'+ingid+'" ></button></td>'+
                         '</tr>';
+
+            div2.innerHTML += '<div class="modal fade" id="myModal'+ingid+'" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">'+
+                    '<div class="modal-dialog">'+
+                        '<div class="modal-content">'+
+                            '<div class="modal-header">'+
+                                '<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span class="sr-only">close</span></button>'+
+                                '<h4 class="modal-title" id="myModalLabel"><i class="fa fa-edit"></i><b>&nbsp;&nbsp;Change</b></h4>'+
+                            '</div>&nbsp;&nbsp;'+
+                            '<form method="post" action="changes('+ingid+')" enctype="multipart/form-data">'+
+                                '{{csrf_field()}} '+
+                            '<div class="modal-body">'+
+                            '<h4 class="modal-title" id="myModalLabel">&nbsp;&nbsp;<b>Ingredient Details</b></h4>'+
+                            '<div class="col-sm-12">'+
+                                '<div class="form-group label-floating has-success">'+
+                                    '<label class="control-label">Quantity</label>'+
+                                    '<input type="text" class="form-control" id="quantityN'+ingid+'" name="quantityN" value="'+squan+'" />'+
+                                    '<label style="color:red" id="err"></label>'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="col-sm-6">'+
+                                '<div class="form-group label-floating has-success">'+
+                                    '<label class="control-label">Preparation</label>'+
+                                    '<select class="form-control" id="preparationN'+ingid+'" name="preparationN[]" id="preparation" name="preparation" style="width:100px;" autofocus>'+
+                                        '@foreach($preps as $prep)'+
+                                            '@if('+prepp+' == $prep->p_id)'+
+                                            '<option selected value="{{ $prep->p_id }}">{{$prep->p_name}}</option>'+
+                                            '@else'+
+                                            '<option value="{{ $prep->p_id }}">{{$prep->p_name}}</option>'+ 
+                                            '@endif'+
+                                        '@endforeach'+
+                                    '</select>'+
+                                '</div>'+
+                            '</div>'+
+                            '<div class="col-sm-6">'+
+                                '<div class="form-group label-floating has-success">'+
+                                    '<label class="control-label">Unit of Measure</label>'+
+                                    '<select class="form-control" id="umN'+ingid+'" name="umN[]" style="width:150px;">'+
+                                        '@foreach($units as $um)'+
+                                            '@if('+umm+' == $um->um_id)'+
+                                            '<option selected value="{{ $um->um_id }}">{{$um->um_name}}</option>'+
+                                            '@else'+
+                                            '<option value="{{ $um->um_id }}">{{$um->um_name}}</option>'+
+                                            '@endif'+
+                                        '@endforeach'+
+                                    '</select>'+
+                                '</div>'+
+                            '</div>'+
+
+                            '</div>'+
+                            '<div class="modal-footer">'+
+                                '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'+
+                                '<button type="button" class="btn btn-success" data-dismiss="modal" onclick="changeappend('+ingid+')">Save Changes</button>'+
+                            '</div>'+
+                            '</form>'+
+                        '</div>'+
+                        
+                    '</div>'+
+                '</div>';
+
+
+
+
+
+
+
+
+
+
 
          $('select').select2().select2('val', $('#ingredients option:eq(0)').val());
 
@@ -590,6 +669,33 @@ $(document).ready(function () {
 
         // return false;
 
+    }
+
+    function changeappend(id){
+        var squan = document.getElementById('quantityN'+id).value;
+        var quan = calc(squan);
+        var prep = $("#preparationN"+id+" option:selected").map(function() {
+            return $(this).text();
+          }).get();
+        var prepp = $('#preparationN'+id).val();
+        var um = $("#umN"+id+" option:selected").map(function() {
+            return $(this).text();
+          }).get();
+        var umm = $('#umN'+id).val();
+
+
+
+        document.getElementById("qty"+id).innerHTML = squan;
+        document.getElementById("prep"+id).innerHTML = prep;
+        document.getElementById("um"+id).innerHTML = um;
+
+        document.getElementById("qtyy"+id).value = quan;
+        document.getElementById("prepp"+id).value = prepp;
+        document.getElementById("umm"+id).value = umm;
+
+
+
+        return false;
     }
 
     function summary(){
