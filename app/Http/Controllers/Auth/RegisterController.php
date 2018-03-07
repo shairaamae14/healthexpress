@@ -73,7 +73,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        
+        // dd($data);
         $bday = date('Y-m-d', strtotime($data['bday']));
         $birth = date('Y', strtotime($data['bday']));
         $age = date('Y') - $birth;
@@ -138,7 +138,7 @@ class RegisterController extends Controller
         for($i =0; $i < count($data['allergen']); $i++) {
             $allergen = UserAllergen::create(['user_id' => $user->id,
                                            'allergen_id' => $data['allergen'][$i],
-                                           'tolerance_level' => $data['tolerance'],
+                                           'tolerance_level' => $data['tolerance'][$i],
                                             'status' => 1]);
         }
         }

@@ -1,4 +1,5 @@
 @extends('wiz-layouts.reg-master')
+ <script src="{{asset('js/userform-validation.js')}}" type="text/javascript"></script>
 <style>
     #map {
         height: 40%;
@@ -6,6 +7,13 @@
     
     .help{
         color:#4caf50;
+    }
+    #registerform label.error {
+        color:#D83131;
+        font-size:10px;
+        }
+    #registerform input.error {
+    border:1px solid #D83131;
     }
  
 </style>
@@ -45,7 +53,7 @@
                                                                 </span>
                                                                 <div class="form-group has-success">
                                                                     <label class="control-label">First Name <small>(required)</small></label>
-                                                                    <input name="fname" type="text" class="form-control" value="{{ old('name') }}">
+                                                                    <input name="fname" id="fname" type="text" class="form-control" value="{{ old('name') }}" required>
                                                                     
                                                                     @if ($errors->has('name'))
                                                                         <span class="help-block">
@@ -54,14 +62,14 @@
                                                                     @endif
                                                                 </div>
                                                             </div>
-
+                                                           
                                                             <div class="input-group">
                                                                     <span class="input-group-addon">
                                                                             <i class="material-icons">record_voice_over</i>
                                                                     </span>
                                                                     <div class="form-group has-success">
                                                                       <label class="control-label">Last Name <small>(required)</small></label>
-                                                                      <input name="lname" type="text" class="form-control">
+                                                                      <input name="lname" id="lname" type="text" class="form-control" required>
                                                                     </div>
                                                             </div>
                                                             <div class="input-group">
@@ -70,7 +78,7 @@
                                                                     </span>
                                                                     <div class="form-group has-success">
                                                                       <label class="control-label">Contact Number<small>(required)</small></label>
-                                                                      <input type="text" name="contact_no" class="form-control">
+                                                                      <input type="text" name="contact_no" class="form-control" required>
                                                                     </div>
                                                             </div>
                                                             </div>
@@ -80,7 +88,7 @@
                                                                             <i class="material-icons">place</i>
                                                                     </span>
                                                                     <div class="form-group has-success">
-                                                                      <input type="text" id="location" name="location" class="form-control">
+                                                                      <input type="text" id="location" name="location" class="form-control" required>
                                                                       <input type="hidden" id="city" name="city" />
                                                                       <input type="hidden" id="cityLat" name="cityLat" />
                                                                       <input type="hidden" id="cityLng" name="cityLng" />
@@ -199,31 +207,21 @@
                                                     <div class="col-sm-4 col-sm-offset-1">
                                                         <div class="form-group has-success">
 		                                            <label class="control-label">Allergens<p class="text-muted">If none, just leave blank</p></label>
+                                                       <label class="control-label">Tolerance Level | Allergens</label>
                                                             
                                                             <div id="allergens" class="allergens">
-                                                            @foreach($allergens as $allgen)
-                                                            <div class="checkbox">
-                                                                    <label>
-                                                                            <input type="checkbox" value="{{$allgen->allergen_id}}" name="allergen[]">{{$allgen->allergen_name}}
-                                                                    </label>
-                                                            </div>
-                                                            @endforeach
+                                                                @foreach($allergens as $aller)
+                
+                                                             <select name="tolerance[]" class="tol" id="tol" disabled>
+                                                                   <option value="Low">Low</option>
+                                                                   <option value="Medium">Medium</option>
+                                                                   <option value="High">High</option>
+                                                            </select>
+                                                             <input type="checkbox" class="allergies" id="allergies" name="allergen[]" value="{{$aller->allergen_id}}">
+                                                             {{ $aller->allergen_name}}<br>
+                                                             @endforeach
                                                             </div>  
                                                             
-		                                        </div>
-                                                    </div>
-                                                    
-                                                    <div class="col-sm-5 col-sm-offset-1">
-                                                        
-                                                        <div class="form-group has-success tolerance" style="display:none;" id="tolerance">
-		                                            <label class="control-label">Tolerance Level (Allergens)</label>
-                                                            <select name="tolerance" class="form-control">
-                                                                <option selected disabled hidden>Select an option</option>
-                                                                <option value="Low">Low</option>
-                                                                <option value="Medium">Medium</option>
-                                                                <option value="High">High</option>
-                                                            </select>
-                                                           
 		                                        </div>
                                                     </div>
                                                     
@@ -438,5 +436,23 @@
            
     });
     </script>
+    <script>
+    $(document).ready(function(){
+
+  var $checkBox = $('.allergies');
+     
+
+$checkBox.on('change',function(e){
+    var $select = $(this).prev();
+    if ($(this).is(':checked')){
+        $select.removeAttr('disabled');
+    }else{
+       $select.attr('disabled','disabled');
+    }
+});
+
+});
+
+</script>
 
 @endsection
