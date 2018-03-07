@@ -66,7 +66,7 @@
                             <tr>
                                 <td>{{$order->user->fname}} {{$order->user->lname}}</td>
                                 <td>{{$order->dishes[0]['dish_name']}}</td>
-                                <td>{{$order->order->order_mode->om_name}}</td>
+                                <td>{{$order->order}}</td>
                                 {{-- <td>{{date_format($order->created_at,'F d Y h:i:s A')}}</td> --}}
                                 <td>January 02, 2018 12:30:00 PM</td>
                                 @if($order->order_status == 'Pending')
@@ -134,7 +134,7 @@
                 <tbody>
                         @foreach($order->dishes as $dish)
                     <tr>
-                        <td>{{$dish->dish_name}}</td>
+                        <td>{{$dish['dish_name']}}</td>
                         <td>{{$order->totalQty}}</td>
                         <td>{{$order->payment->method_name}}</td>
                         <td>{{$order->totalAmount}}</td>
