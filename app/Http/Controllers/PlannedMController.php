@@ -58,7 +58,7 @@ class PlannedMController extends Controller
           $qstart = UserOrder::distinct()->select('planner_start')->where('user_id',$id)->where('order_status','Initial')->first();
           $qend = UserOrder::distinct()->select('planner_end')->where('user_id',$id)->where('order_status','Initial')->first();
           $start = $qstart->planner_start;
-          $end = date('Y-m-d',strtotime($qend->planner_end. '+1 Days'));
+          $end = date('Y-m-d',strtotime($qend->planner_end));
 
           // dd($start, $end);
 
@@ -913,13 +913,7 @@ class PlannedMController extends Controller
           $datetime = str_replace('T', ' ', $plan->start);
           // dd($datetime);
           $result = Carbon\Carbon::parse($datetime);
-          // dd($result);
-          // dd(Carbon\Carbon::now());
-          // dd($result->diffInHours(Carbon\Carbon::now(new DateTimeZone('Europe\London'))));
-          // dd(date_diff($result,Carbon\Carbon::now(),"minutes")/60);
-          // dd($result->diff(Carbon\Carbon::now()));
-
-          // dd($result,round((strtotime($result) - strtotime(Carbon\Carbon::now()))/3600));
+          
           if(round((strtotime($result) - strtotime(Carbon\Carbon::now()))/3600)>=2)
           {
             $timediff= 1;
