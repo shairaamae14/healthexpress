@@ -244,27 +244,55 @@
                        <label style="font-size: 12px; color: gray; float:left"> Price: <b id="price">{{$item->price}}.00</b></label>
                        <label style="font-size: 12px; color: gray; float:right">Total Amount:<b id="itemamount">Php {{$item->subtotal}}.00</b></label>
                    </div>
+
                    @endforeach
                      @else
                       <center>
                         <label style="font-size: 30px">Your cart is empty</label>
                       </center>
-                   @endif
-                 </div><br>
+                    @endif
+             
+                 @if($mode_delivery=="Delivery")
+                 <br>
+                 <label style="font-size: 12px; color: gray; float:left"><b>DELIVERY DETAILS</b></label><br>
+                   <div class="col-md-12">
+                    <label style="font-size: 12px; color: gray; float:left"><b>Delivery address:</b>&nbsp;{{$address}}</label><br>
+                  </div>
+                  <div class="col-md-12">
+                    <label style="font-size: 12px; color: gray; float:left"><b>Contact number: </b>&nbsp;{{$contactnum}}</label><br>
+                  </div>
+                 @else($mode_delivery=="Pickup")
+                  <label style="font-size: 12px; color: gray; float:left"><b>PICKUP DETAILS</b></label><br>
+                    <div class="col-md-12">
+                    <label style="font-size: 12px; color: gray;"><b>Cook:</b>&nbsp;@foreach(Cart::content() as $item) {{$item->cookname}}<br>@endforeach</label><br>
+                    </div><br>
+                    <div class="col-md-12">
+                    <label style="font-size: 12px; color: gray; float:left"><b>Contact number: </b>&nbsp;{{$contactnum}}</label><br>
+                    </div>
+                 @endif
+                 <br>
                   <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
                          <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots">
                          <b>Subtotal:</b>&nbsp;Php
                          <label style="color:black" id="subtotal" value="{{Cart::subtotal()}}">{{Cart::subtotal()}}</label>
                          </p><br>
+                      @if($mode_delivery=="Delivery")
                          <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots">
                          <b>Total Delivery Fee:</b>&nbsp;Php
-                         <label style="color:black" id="delfee">{{$totaldelfee}}</label>
+                         <label style="color:black" id="delfee">{{round($totaldelfee, 2)}}</label>
                          </p><br>
-                         <!-- <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots">
-                         <b>Total:</b>&nbsp;Php
-                         <label style="color:black" id="total"></label>
-                         </p> -->
+                         <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots">
+                         <b>Total Cost:</b>&nbsp;Php
+                         <label style="color:black" id="total">{{round(Cart::subtotal() + $totaldelfee, 2)}}</label>
+                         </p>
                          <br>
+                      @else($mode_delivery=="Pickup")
+                       <p style="float:right; margin-right:2px; font-size: 17px; color:black; font-family: 'Lato', sans-serif" id="tots">
+                         <b>Total Cost:</b>&nbsp;Php
+                         <label style="color:black" id="total">{{Cart::subtotal()}}</label>
+                         </p>
+                         <br>
+                      @endif
                    </div>
                  @if(count(Cart::content()))
                  <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">

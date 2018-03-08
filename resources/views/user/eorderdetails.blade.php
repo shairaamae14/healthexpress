@@ -1,5 +1,8 @@
 @extends('user-layouts.master')
+@section('heading')
+<link rel="stylesheet" href="{{asset('adminlte/bower_components/datatables.net-bs/css/dataTables.bootstrap.min.css')}}">
 <link href="{{asset('css/smart_wizard_vertical.css')}}" rel="stylesheet" type="text/css">
+@endsection
 
 
 <style>
@@ -100,11 +103,20 @@
       <div class="row">
        <a href="{{route('user.index')}}" class="btn-simple btn btn-succes">
           <i class="material-icons">arrow_back</i>Go back to home</a>
-        <div class="col-md-12" style="margin-top:5px">
+
+          <div class="col-md-12 div1" style="margin-top:5px">
           <h1 class="text-center" style="color:white; background-color: #4caf50; margin-top: -10px"><b>Order details</b></h1>
-          <label><b>NOTE:</b>&nbsp;Every cook has different delivery charge. </label>
-           <form method="POST" action="{{route('order.checkout', ['mode' => $mode])}}">
+          <form method="POST" action="{{route('order.checkout', ['mode' => $mode])}}">
+          <select class="modeof form-control" name="modeof">
+          <option value="Delivery">Delivery</option>
+          <option value="Pickup">Pickup</option>          
+          </select>
+
+          <div class="del">
+          <label><b>NOTE:</b>&nbsp;Every cook has different delivery charge. </label><br>
+ 
           <input type="radio" name="address" value="default" checked><b>Use default address & contact number</b>
+        
           <div class="col-md-12" style="border:1px solid #4caf50;  margin-bottom: 20px">
           @foreach($customer as $c)
           <label style="color:black"><b>Address:</b>
@@ -115,10 +127,9 @@
           <label style="color:black"><b>Contact Number</b></label>
           <input type="text" name="contact_no" class="form-control" value="{{$c->contact_no}}">
           <p class="small" style="color:gray">You may fill in a new contact number</p>
-
           @endforeach
           </div><br><br><br>
-           <input type="radio" name="address" value="new"><b>New address and contact number</b>
+          <input type="radio" name="address" value="new"><b>New address and contact number</b>
           <div class="col-md-12" style="border:1px solid #4caf50;">
           <label style="color:black"><b>New delivery address:</b></label>
               <input type="text" id="location" name="location" class="form-control" placeholder="Enter a new location">
@@ -129,7 +140,57 @@
           <label style="color:black"><b>Enter your new contact number:</b></label>
           <input type="text" name="contact_num" class="form-control"  style="width:250px">
           </div>
-         </div>
+          </div>
+          <!--ENDOFDEL!-->
+
+          <div class="pick col-md-12" style="border:1px solid #4caf50;  margin-bottom: 20px; padding-top:10px">
+          <label style="font-size:12px"><b>NOTE</b>: Order will be processed after placing these orders. <br> Different locations for every cook.</label><br><br>
+
+          @foreach($customer as $c)
+          <label style="color:black; margin-top: -25px"><b>Contact Number</b></label>
+          <input type="text" name="contact_noP" class="form-control" value="{{$c->contact_no}}" style="width: 150px; margin-top: -40px" required>
+          <p class="small" style="color:gray">You may fill in a new contact number</p>
+          @endforeach
+
+              <div class="table-responsive">   
+                    <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                        <thead>
+                            <tr>
+                                <th class="text-left">Quantity</th>
+                                <th class="text-left">Order</th>
+                                <th class="text-left">Total Amount</th>
+                                <th class="text-left">Sidenote</th>
+                                <th class="text-left">Cook</th>
+                                <th class="text-left">View Pickup Address</th>
+                              
+                                
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(Cart::content() as $order) 
+                              
+                            <tr>
+                                <td class="text-center">{{$order->qty}}</td>
+                                <td>
+                                   {{$order->name}}
+                                </td>
+                                <td>Php {{$order->subtotal}}</td>
+                                <td class="text-center">{{$order->sidenote}}</td>
+                                <td class="text-center">{{$order->cookname}}</td>
+                                <td class="text-center"><button type="button" class="btn btn-flat btn-danger btn-sm" data-toggle="modal" data-target="#exampleModal{{$order->cook_id}}">View Pickup Address</button></td>
+
+                          
+                                 
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>    
+
+          </div>
+          <!--PICK!-->
+        
+
                       {{csrf_field()}}
                       @if(count(Cart::content()))
                       
@@ -146,15 +207,20 @@
                       <input type="hidden" name="delivery_fee" id="del_fee" value="">
                       @endforeach
 
-                      @foreach($dishes as $d)
-                      <input type="hidden" name="cooklat[]" value="{{$d[0]->cook['latitude']}}">
-                      <input type="hidden" name="cooklng[]" value="{{$d[0]->cook['longitude']}}">
+               
+                          @foreach($cooks as $d)
+                      <input type="hidden" name="cookid[]" value="{{$d[0]->id}}">
+                      <input type="hidden" name="cooklat[]" value="{{$d[0]->latitude}}">
+                      <input type="hidden" name="cooklng[]" value="{{$d[0]->longitude}}">
                        @endforeach
                       @endif
+
+
                     
          <button type="submit" class="btn btn-flat btn-success pull-right" style="margin:10px 10px">Submit</button> 
          </form>
       </div>
+  <!--DIV1!-->
     </div>
   </div>
  </div>
@@ -165,6 +231,7 @@
   </div><!--container!-->
  </div><!--section!-->
 </div><!--main raised!-->
+
  <div class="main main-raised"  style="width: 25%; float: right;">
     <div class="section" style="padding-bottom: 2px">
         <div class="container" style="width: 100%">
@@ -213,7 +280,7 @@
                    </div>
                  @if(count(Cart::content()))
                  <div class="modal-footer" style="padding-top:2px; padding-bottom: 2px; margin-top: 3px">
-                       <form method="post" action="{{route('express.summary')}}">
+                       <!-- <form method="post" action="{{route('express.summary')}}"> -->
                          <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                           @foreach(Cart::content() as $item)
                                           <input name="amount" value="{{Cart::subtotal()}}" type="hidden">
@@ -237,9 +304,27 @@
     </div>
   </div>
        
-
-
-
+<!-- Modal -->
+@foreach($cooks as $d)
+<div class="modal fade" id="exampleModal{{$d[0]->id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Pickup Address</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <label>Pickup Address: {{$d[0]->location}}</label>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+@endforeach
 @endsection
 
 @section('addtl_scripts')
@@ -267,6 +352,8 @@
 <script type="text/javascript" src="{{asset('js/jquery-2.0.0.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('js/jquery.smartWizard.js')}}"></script>
 <script src="{{asset('js/pace.min.js')}}"></script>
+<script src="{{asset('adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
+<script src="{{asset('adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBOkRKO79rw8RrYgfrMgqIz2du240Uyz6U&libraries=places&callback=initMap"
     async defer></script>
     <script>
@@ -380,7 +467,21 @@
         //     });
       }
     </script>
-
+<script type="text/javascript">
+    $(document).ready(function() {
+      // alert($('#page').text());
+      // alert($("#chooseStatus option:selected").val());
+        $('.dataTable').DataTable({ 
+            "lengthChange": false,
+            aoColumnDefs: [
+              {
+                 bSortable: false,
+                 aTargets: [ -1 ]
+              }
+            ]
+        });
+      });
+</script>
 
 <script>
  $(document).ready(function(e){
@@ -406,6 +507,34 @@
 
 </script>
 <script>
+$('.modeof').each(function(){
+  ChangeDrop(this);
+});
+
+$('.modeof').change(function(e){
+ChangeDrop(this);
+});
+
+function ChangeDrop(mode){
+var val=$(mode).val();
+  var div = $(mode).parent().find('.address')[0];
+// console.log(val);
+  if(val=="Delivery"){
+    $('.del').removeAttr('hidden');
+    $('.pick').attr('hidden', 'hidden'); 
+    // $('.del').removeClass('hidden');     
+    // console.log("delivery");
+  }
+  else if (val=="Pickup"){
+    $('.pick').removeAttr('hidden');
+    $('.del').attr('hidden', 'hidden');
+     // $('.pick').removeClass('hidden');
+     // console.log("pickup");
+  }     
+
+}
+</script>
+<!-- <script>
 $(document).ready(function(){
  var subtotal = document.getElementById('subtotal').textContent;
  var total=parseInt(subtotal) + 40;
@@ -415,5 +544,5 @@ $(document).ready(function(){
  $('#del_fee').val(fee);
  $('#del_fee1').val(fee);
 });
-</script>
+</script> -->
 @endsection

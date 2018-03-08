@@ -9,50 +9,45 @@ use App\Dish;
 use Auth;
 use App\User;
 use App\OrderMode;
+use App\Cook;
 class CartController extends Controller
 {
 public function cart() {
     if (Request::isMethod('post')) {
         $dish_id = Request::get('dish_id');
         $dishes = Dish::where('did', $dish_id)->get();
-        $delfee=40;
         $subtotal=Cart::subtotal();
-      
         $note=Request::get('sidenote');
-     
-   
        foreach($dishes as $d){
           $fname=$d->cook['first_name'];
           $lname=$d->cook['last_name'];
           $cookname=$fname.' '.$lname;
-          // dd($cookname);
+
         Cart::add(array('id' => $d->did, 'cook_id'=>$d->authorCook_id, 'cookname'=>$cookname, 'name' => $d->dish_name, 'qty' => 1, 'price' => $d->sellingPrice, 'sidenote' =>$note));
 
             }
-  
-        
-
-
-       // dd($alltotal);
+            // dd(Cart::Content());   
     }
-   return redirect()->route('user.index', compact('cartgroup'));
+   return redirect()->route('user.index');
 }
 
 public function updateCart(){
-        //increment the quantity
-   if (Request::get('dish_id') && (Request::get('increment')) == 1) {
-$item = Cart::search(function($key, $value) { return $key->id == Request::get('dish_id'); })->first();
-Cart::update($item->rowId, $item->qty + 1);
-}
-    //decrease
-
-    else if (Request::get('dish_id') && (Request::get('decrease')) == 1) {
-$item = Cart::search(function($key, $value) { return $key->id == Request::get('dish_id'); })->first();
-Cart::update($item->rowId, $item->qty - 1);
-}
+    //increment the quantity
+  if (Request::get('dish_id') && (Request::get('increment')) == 1) {
+      $item = Cart::search(function($key, $value) { 
+        return $key->id == Request::get('dish_id'); 
+         })->first();
+      Cart::update($item->rowId, $item->qty + 1);
+    }
+    //decrement the quantity
+  else if (Request::get('dish_id') && (Request::get('decrease')) == 1) {
+    $item = Cart::search(function($key, $value) { 
+      return $key->id == Request::get('dish_id');
+       })->first();
+    Cart::update($item->rowId, $item->qty - 1);
+  }
 
  return redirect()->route('user.index');
-
 }
 
 public function destroyCart(){
@@ -61,16 +56,12 @@ public function destroyCart(){
 }
 
 public function removeDish(){
-   
-if (Request::get('dish_id') && (Request::get('remove')) == 'true') {
-$item = Cart::search(function($key, $value){
- return $key->id == Request::get('dish_id'); 
-})->first();
- // $item = Cart::get($rowId[0]);
- Cart::remove($item->rowId);
-}
-
-
+    if (Request::get('dish_id') && (Request::get('remove')) == 'true') {
+      $item = Cart::search(function($key, $value){
+       return $key->id == Request::get('dish_id'); 
+      })->first();
+       Cart::remove($item->rowId);
+    }
 return redirect()->route('user.index'); 
 }
 
@@ -146,42 +137,20 @@ $item = Cart::search(function($key, $value){
 
 public function setDetails(Request $request){
   $user = Auth::id();
-  $dish=Input::get('dish');
+  // $dish=Input::get('dish');
   $cook_id=Input::get('cook_id');
   $mode = OrderMode::find(1);
-  // $dishes=collect($dish);
-    // dd(count($dish));
-  $dishes=array();
-  for($i=0; $i<count($dish); $i++){
-    // $dishh=$dishes[$i];
-    $dishes[$i]=Dish::where('did', $dish[$i])->get();
+  $cooks=array();
+for($i=0; $i<count($cook_id); $i++){
+   $cooks[$i]=Cook::where('id', $cook_id[$i])->get();
   }
-  // dd($dishh->toArray);
-// dd($dishes[0][0]['dish_name']);
-  // dd($dishes[0]);
+  $cooks=array_unique($cooks);
+
+
   $customer= User::where('id', $user)->get();
-  return view('user.eorderdetails', compact('customer', 'dishes', 'mode'));
+  return view('user.eorderdetails', compact('customer', 'dishes', 'cooks', 'mode'));
 }
- // }
-
-//  public function showDetails(Request $request){
-//    $user = Auth::id();
-//   $dish=Input::get('dish');
-//   $cook_id=Input::get('cook_id');
-//   $cooks=collect($cook_id);
-//   $dishes=collect($dish);
-//   $dshes=collect();
-//   for($i=0; $i<count($dishes); $i++){
-//       for($k=0; $k<count){
-
-//     // $dishh=$dishes[$i];
-//     $dshes[$i]=Dish::where('did', $dishes[$i])->get();
-// }
-//   }
-//   $customer= User::where('id', $user)->get();
-//    return view('user.eodetails', compact('customer', 'dshes'));
-//  }
-
+ 
 }
 
 
