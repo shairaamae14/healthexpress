@@ -28,45 +28,60 @@ class OrdersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request)
+public function show(Request $request)
     {
         $datetoday = Carbon::now('Asia/Manila')->format('Y-m-d');
-        $user = Auth::user();
-
+        $user = Auth::id();
+        $note;
+          
       if($request->input('chooseStatus')=='All'){
-            $orders= UserOrder::where('user_id', $user->id)->where('order_status', '!=', 'Completed')
+            $orders= UserOrder::where('user_id', $user)->where('order_status', '!=', 'Completed')
                             ->where('om_id', 1)->orderBy('order_date', 'desc')->get();
                 $page_title="All Ongoing Orders";
                 $note="NOTE: Cancelling of order/s will be allowed within 15 mins after placing your order.";
+             
       }
       else if($request->input('chooseStatus') == 'Completed'){
-        $orders=UserOrder::where('user_id', $user->id)->where('order_status', 'Completed')
+        $orders=UserOrder::where('user_id', $user)->where('order_status', 'Completed')
                             ->where('om_id', 1)->where('order_date', $datetoday)->orderBy('order_date', 'desc')->get();
                               $page_title="Completed";
                               $note="NOTE: All completed order within the day will be transfered to Order History the next day.";
+
+                             
       }
+      // else if($request->input('chooseStatus')== "Delivering"){
+          
+      // }
       else if(!$request->input('chooseStatus')){
-          $orders= UserOrder::where('user_id', $user->id)->where('order_status', '!=', 'Completed')
+          $orders= UserOrder::where('user_id', $user)->where('order_status', '!=', 'Completed')
                             ->where('om_id', 1)->orderBy('order_date', 'desc')->get();
                              $page_title="All Ongoing Orders";
                              $note="NOTE: Cancelling of order/s will be allowed within 15 mins after placing your order.";
+                           // dd($orders); 
+
       }
       else{
-       $orders= UserOrder::where('user_id', $user->id)->where('order_status', $request->input('chooseStatus'))->where('om_id', 1)->orderBy('order_date', 'desc')->get();
+       $orders= UserOrder::where('user_id', $user)->where('order_status', $request->input('chooseStatus'))->where('om_id', 1)->orderBy('order_date', 'desc')->get();
           if($page_title="Pending"){
             $page_title=$request->input('chooseStatus');
             $note="NOTE: Cancelling of order/s will be allowed within 15 mins after placing your order.";
           }
+          else if($page_title="Delivering"){
+              $page_title=$request->input('chooseStatus');
+          foreach($orders as $p){
+            if($p->mode_delivery=="Pickup"){
+            if($p->order_date!=$datetoday){
+                 $com= UserOrder::where('uo_id', $p->uo_id)
+                ->update(['order_status'=>"Completed"]);
+                }
+              }
+            }
+          }
           else if($page_title="Cooking"){
               $page_title=$request->input('chooseStatus');
           }
-          else{
-              $page_title=$request->input('chooseStatus');
-          }
-      }
+        }
 
-      
-     
              return view('user.orderhistory', compact('orders', 'page_title', 'note'));
          
     }
@@ -94,16 +109,17 @@ class OrdersController extends Controller
 
         if($mode->om_name == "Express Meal")
         {
-           $cooklat=Input::get('cooklat');
+        $cooklat=Input::get('cooklat');
         $cooklng=Input::get('cooklng');
         $dish_id=Input::get('dish');
         $sidenote=Input::get('sidenote');
         $name=Input::get('name');
         $totalqty=Input::get('qty');
         $om_id=1;
-        $mode_delivery="Delivery";
+        $mode_delivery=$request['modeof'];
+         $contactnum;
         $order_status="Pending";
-
+      if($mode_delivery=="Delivery"){
         if($request['address']=="default"){
           $lat=$request['cLat'];
           $long=$request['cLng'];
@@ -149,11 +165,14 @@ class OrdersController extends Controller
                    $totaldelfee+=$delcharge[$i];
                    }
                   
-                  // dd($totaldelfee);
-              //    $distance[$i] = collect();
-              // Session::push('distance', $distance); 
-              // dd($distance[0]);
+                }
          }
+          else{
+          $totaldelfee=0;
+           $address="Noaddres";
+        $contactnum=$request['contact_noP'];
+        }
+
         
       $userorder=UserOrder::join('users', 'users.id', '=', 'user_orders.user_id')
                             ->where('om_id', 1)
@@ -180,7 +199,7 @@ class OrdersController extends Controller
         $uo=UserOrder::where('user_id', $user->id)->where('om_id', $mode->id)->where('order_status', 'Initial')
                       ->where('mode_delivery', '')->get();
           if($uo->isEmpty()){
-            return view('user.paymentmethod', compact('items', 'clientToken', 'option', 'total', 'allcost', 'delfee', 'mode'));
+            return view('user.paymentmethod', compact('items', 'clientToken', 'option', 'total', 'allcost', 'delfee', 'mode', 'mode_delivery'));
             // dd("hello");
           }
           else {
@@ -214,6 +233,13 @@ class OrdersController extends Controller
         $status = 'Pending';
         $sidenote = $request->sidenote;
         $total_amount = $request['amount'];
+         $mode_delivery=$request['mode_delivery'];
+        if($mode_delivery=="Pickup"){
+          $delfee=0.00;
+        }
+        else{
+          $delfee=$request['delivery_fee'];
+        }
         // $allcost = str_replace("," , "" , $request->allcost);
         $allcost = 1000;
         $nonce = $request['payment_method_nonce'];
@@ -287,13 +313,13 @@ class OrdersController extends Controller
                             'dish_id' => $request['dish'][$index],
                             'address' =>$request['address'], 
                             'contact_no' => $request['contact'],
-                            'mode_delivery' => $request['mode_delivery'], 
-                            'delivery_fee' => $request['delivery_fee'],
+                           'mode_delivery' => $mode_delivery, 
+                            'delivery_fee' => $delfee,
                             'distance' => $request['distance'][$index],
                             'latitude' =>$request['lat'],
                             'longitude' =>$request['long']
                           ]);
-                       $dishes[$index]->cook->notify(new OrderedMeal($user_order));
+                       // $dishes[$index]->cook->notify(new OrderedMeal($user_order));
                           }   
                         Cart::destroy();
                          return redirect()->route('order.orderhistory');
@@ -345,8 +371,8 @@ class OrdersController extends Controller
                             'dish_id' => $request['dish'][$index],
                             'address' =>$request['address'], 
                             'contact_no' => $request['contact'],
-                            'mode_delivery' => $request['mode_delivery'], 
-                            'delivery_fee' => $request['delivery_fee'],
+                            'mode_delivery' => $mode_delivery, 
+                             'delivery_fee' => $delfee,
                             'distance' => $request['distance'][$index],
                             'latitude' =>$request['lat'],
                             'longitude' =>$request['long']
@@ -415,7 +441,14 @@ class OrdersController extends Controller
         $user_order = collect();
         $status = 'Pending';
         $dish = $request['dish'];
-        // dd($dish);
+        $mode_delivery=$request['mode_delivery'];
+        if($mode_delivery){
+          $delfee=0.00;
+        }
+        else{
+          $delfee=$request['delivery_fee'];
+        }
+        
         if($request['payment_mode'] == 'COD') {
             for ($index = 0; $index < count($dish); $index++) {
                $dishes[$index] = Dish::findOrFail($request['dish'][$index]);
@@ -431,13 +464,13 @@ class OrdersController extends Controller
                   'dish_id' => $request['dish'][$index],
                   'address' =>$request['address'], 
                   'contact_no' => $request['contact'],
-                  'mode_delivery' => $request['mode_delivery'], 
-                  'delivery_fee' => $request['delivery_fee'],
+                  'mode_delivery' => $mode_delivery,
+                  'delivery_fee' => $delfee,
                   'distance' => $request['distance'][$index],
                   'latitude' =>$request['lat'],
                   'longitude' =>$request['long']
                 ]);
-              $dishes[$index]->cook->notify(new OrderedMeal($user_order));
+              // $dishes[$index]->cook->notify(new OrderedMeal($user_order));
             }
 
         }

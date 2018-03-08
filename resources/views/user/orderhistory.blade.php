@@ -143,12 +143,14 @@
                     <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                         <thead>
                          <tr>
-                          <th style="border:none"><label class="text-center" style="font-size:20px; color:black;"><b>{{$page_title}}</b></label>
+                          <th style="border:none">
+                            <label class="text-center" style="font-size:20px; color:black;"><b>{{$page_title}}
+                            </b></label>
                           </th> 
-                          <th style="border:none"></th><th style="border:none"></th><th style="border:none"></th><th style="border:none"></th><th style="border:none">
+                          <th style="border:none"></th><th style="border:none"></th><th style="border:none"></th><th style="border:none"></th><th style="border:none"><th style="border:none"></th>
                           </th>
                           <th class="text-right" style="border:none">
-                               <form id ="sortorder" action ="{{route('user.order.sortOrder')}}" method ="post" style="height:45px; width:100%">
+                              <form id ="sortorder" action ="{{route('user.order.sortOrder')}}" method ="post" style="height:45px; width:100%">
                                 {{csrf_field()}}
                                <select id="chooseStatus" class="form-control" name="chooseStatus">
                                 <option value="none" class="w" selected disabled hidden>Sort Orders</option>
@@ -167,7 +169,8 @@
                                 <th class="text-left">Order</th>
                                 <th class="text-left">Amount</th>
                                 <th class="text-left">Date Ordered</th>
-                                <th class="text-left">Delivery Address</th>
+                                <th class="text-left">Mode of Delivery</th>
+                                <th class="text-left">Delivery/Pickup Address</th>
                                 <th class="text-left">Status</th>
                                 <th class="disabled-sorting text-left">Action</th>
                                 
@@ -178,14 +181,29 @@
                             <tr>
                               <td class="text-center">{{$order->totalQty}}</td>
                                   <td>
-                                  <label style="font-size:10px; margin-bottom:0px">Cook:{{$order->dishes->cook['first_name']}}&nbsp;{{$order->dishes->cook['last_name']}}</label><br>
-                                    <img src="{{url('./dish_imgs/'.$order->dishes['dish_img'])}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
-                                  {{$order->dishes['dish_name']}}<br>
+                                  <label style="font-size:10px; margin-bottom:0px">Cook:{{$order->dishes->cook->first_name}}&nbsp;{{$order->dishes->cook->last_name}}</label><br>
+                                    <img src="{{url('./dish_imgs/'.$order->dishes->dish_img)}}"  style="width:30px; height:30px; float:left; margin-right: 10px" class="img-responsive img-rounded imagesize" alt="Responsive image">
+                                  {{$order->dishes->dish_name}}<br>
                                 </td>
                                 <td>Php {{$order->totalAmount}}</td>
                                 <td class="text-center">{{$order->order_date}}</td>
+                                <td class="text-center">{{$order->mode_delivery}}</td>
+                                @if($order->mode_delivery=="Delivery")
                                 <td class="text-center">{{$order->address}}</td>
-                                <td class="text-center"><span class="badge" style="color:white; background-color:#66bb6a;">{{$order->order_status}}</span></td>
+                                @else
+                                 <td class="text-center">{{$order->dishes->cook->location}}</td>
+                                @endif
+                                  <td class="text-center">
+                                @if($order->mode_delivery=="Delivery")
+                              <span class="badge" style="color:white; background-color:#66bb6a;">{{$order->order_status}}</span>
+                                @else($order->mode_delivery=="Pickup")
+                                  @if($order->order_status!="Delivering")
+                                 <span class="badge" style="color:white; background-color:#66bb6a;">{{$order->order_status}}</span>
+                                  @else($order->order_status=="Delivering")
+                                    <span class="badge" style="color:white; background-color:#F7DC6F;">Ready</span>
+                                  @endif
+                                @endif
+                                </td>
                                 <td>
                                 @if($order->order_status=="Pending")
                                 @if($order->created_at->diffInMinutes(Carbon\Carbon::now())<=15)
@@ -199,6 +217,7 @@
                                 @endif
                                 @endif
                                 @if($order->order_status=="Delivering")
+                                @if($order->mode_delivery=="Delivery")
                                 <center>
                                 <form method="post" action="{{route('dish.orderReview')}}">
                                 <input type="hidden" name="_token" value="{{ csrf_token() }}">
@@ -209,6 +228,11 @@
                                 </button>
                                  </form>
                                  </center>
+                                @else($order->mode_delivery=="Pickup")
+                                <center>
+                                  <label  style="font-size:17px;">READY TO PICKUP</label>
+                                </center>
+                                @endif
                                 @endif
                                 @if($order->order_status=="Cooking")
                                 <center>
@@ -275,6 +299,13 @@
 <script src="{{asset('customer/assets/js/material-kit.js')}}" type="text/javascript"></script>
 <script src="{{asset('adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
+<!-- 
+  <link href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.css" rel="stylesheet"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.min.js"></script>
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.js"></script> -->
 
 <script type="text/javascript">
     $(document).ready(function() {
