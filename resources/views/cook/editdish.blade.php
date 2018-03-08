@@ -58,7 +58,7 @@ fieldset{
 @section('content')
 
 <!-- Content Wrapper. Contains page content -->
-<div class="content-wrapper">
+<div class="content-wrapper" id="content">
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>Dishes</h1>
@@ -145,7 +145,7 @@ fieldset{
         </div>
         <div class="form-group col-md-4">
             <input type="text" class="form-control" id="quantity" name="quantity" placeholder="Quantity" autofocus >
-            <label style="color:red" id="err"></label>
+            <label style="color:red" id="error"></label>
         </div>
         <div class="form-group col-md-3">
             <select class="form-control" id="preparation" name="preparation" style="width:100px;" autofocus>
@@ -173,7 +173,7 @@ fieldset{
                   <th style="width:150px">Option</th>
                 </tr>
                 @foreach($dish_ingredients as $di)
-                <tr class="iRow" id="iRow">
+                <tr class="iRow" id="remove{{$di->ding_id}}">
                     <input type="hidden" name="ding_id[]" value="{{$di->ding_id}}">
                     <td>{{$di->Shrt_Desc}}</td>
                     <input type="hidden" id="ingid{{$di->ding_id}}" name="ingids[]" value="{{$di->ding_id}}">
@@ -186,7 +186,7 @@ fieldset{
 
                     <td id="unitN{{$di->ding_id}}">{{$di->um_name}}</td>
                     <input type="hidden" id="umm{{$di->ding_id}}" name="umms[]" value="{{$di->um_id}}">
-                    <td><button type="button" id="remove" onClick="remove()" class="remove"><i class="fa fa-times"></i></button><button type="button" class="btn btn-flat fa fa-edit" style="background-color:#30BB6D; color:white; border:none; margin-top: 0px; line-height: 100%; float:right" data-toggle="modal" data-target="#myModal{{$di->ding_id}}" {{-- data-id="{{$di->ding_id}}" --}}></button></td>
+                    <td><button type="button" id="remove" data-toggle="modal" data-target="#confirm{{$di->ding_id}}" class="remove"><i class="fa fa-times"></i></button><button type="button" class="btn btn-flat fa fa-edit" style="background-color:#30BB6D; color:white; border:none; margin-top: 0px; line-height: 100%; float:right" data-toggle="modal" data-target="#myModal{{$di->ding_id}}" {{-- data-id="{{$di->ding_id}}" --}}></button></td>
                 </tr>
                 @endforeach
             </table>
@@ -282,6 +282,21 @@ fieldset{
         
     </div>
 </div>
+
+<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" class="confirm" aria-hidden="true" id="confirm{{$di->ding_id}}">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Are you sure you want to remove ingredient?</h4>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-default" data-dismiss="modal" onclick="remove({{$di->ding_id}})" id="modal-btn-yes">Yes</button>
+        <button type="button" class="btn btn-primary" data-dismiss="modal" id="modal-btn-no">No</button>
+      </div>
+    </div>
+  </div>
+</div>
 @endforeach
 <!-- end of modal -->
 
@@ -289,6 +304,7 @@ fieldset{
     </section>
     <!-- /.content -->
 </div>
+{{-- <div id="modals"></div> --}}
 <!-- /.content-wrapper -->
 
     <footer class="main-footer">
@@ -308,19 +324,6 @@ fieldset{
 <script type="text/javascript">
    
     var form = $("#example-advanced-form").show();
-
-    // $("form-group").change(function()
-    // {
-    //     alert("test");
-    // if($(".iRow"))
-    // {
-    //     $('.actions > ul > li:eq(1)').removeAttr("class");
-    //     $('.actions > ul > li:eq(1) > a').attr("href",'#next');
-        
-    // }
-    // });
-
-
  
     form.steps({
         headerTag: "h3",
@@ -462,29 +465,50 @@ fieldset{
 
 $(document).ready(function () {
    
-    $('#part').on('click','.remove', function() {
-          $(this).closest(".iRow").remove();
-          if($('#part').find('tr.iRow').length == 0)
-            {
-                $('.actions > ul > li:eq(1) > a').removeAttr('href');
-                $('.actions > ul > li:eq(1)').attr('class','disabled');
-                // $('.actions > ul > li:eq(1)').attr('hidden',true);
-            }
-      });
+    // $('#part').on('click','.confirm', function() {
+    //       $(this).closest(".iRow").remove();
+    //       if($('#part').find('tr.iRow').length == 0)
+    //         {
+    //             $('.actions > ul > li:eq(1) > a').removeAttr('href');
+    //             $('.actions > ul > li:eq(1)').attr('class','disabled');
+    //             // $('.actions > ul > li:eq(1)').attr('hidden',true);
+    //         }
+    // });
+
+
+
     $('#cancel').on('click', function() {
       window.location = '{{url("/cook/dishes")}}';
     });
 
-    });
+});
 
-    function del(id){
+    function remove(id){
+        // $('modal-btn-yes').modal('hide');
         $('#remove'+id).remove();
+        $('#myModal'+id).remove();
+        // $('#confirm'+id).remove();
+
         if($('#part').find('tr.iRow').length == 0)
             {
                 $('.actions > ul > li:eq(1) > a').removeAttr('href');
                 $('.actions > ul > li:eq(1)').attr('class','disabled');
                 // $('.actions > ul > li:eq(1)').attr('hidden',true);
             }
+            return false;
+    }
+
+    function del(rand,id){
+       $('#remove'+id).remove();
+       $('#modal'+rand).remove();
+
+        if($('#part').find('tr.iRow').length == 0)
+            {
+                $('.actions > ul > li:eq(1) > a').removeAttr('href');
+                $('.actions > ul > li:eq(1)').attr('class','disabled');
+                // $('.actions > ul > li:eq(1)').attr('hidden',true);
+            }
+        
     }
 
     function setAttributes(el, attrs) {
@@ -565,106 +589,117 @@ $(document).ready(function () {
         
 
         if(quan == null || quan == 0 || quan == ''){
-            document.getElementById('err').innerHTML+="This field is required";
+            $('#error').empty();
+            if($('#error').children().length == 0){
+                document.getElementById('error').innerHTML+="This field is required";
+            }
         }
         else{
+            // alert($('#part').find('tr#remove'+ingid).length == 1);
+            if($('#part').find('tr#remove'+ingid).length == 1){
 
-            $('.actions > ul > li:eq(1)').removeAttr("class");
-            $('.actions > ul > li:eq(1) > a').attr("href",'#next');
-            $('#err').empty();
-            var div = document.getElementById("part");
-            var div2 = document.getElementById('modals');
+                $('.actions > ul > li:eq(1)').removeAttr("class");
+                $('.actions > ul > li:eq(1) > a').attr("href",'#next');
+                $('#error').empty();
 
-             div.innerHTML += 
-                '<tr style="text-align:center" class="iRow" id="remove'+ingid+'">'+
-                        '<td multiple>'+ingred+'</td>'+
-                        '<input type="hidden" id="ingid" name="ingid[]" value="'+ingid+'">'+
-                        '<td multiple multiple id="qty'+ingid+'" name="qty[]">'+squan+'</td>'+
-                        '<input type="hidden" id="qtyy'+ingid+'" name="qtyy[]" value="'+quan+'">'+
-                        '<td multiple id="prep'+ingid+'" name="prep[]">'+prep+'</td>'+
-                        '<input type="hidden" id="prepp'+ingid+'" name="prepp[]" value="'+prepp+'">'+
-                        '<td multiple id="um'+ingid+'" name="unit[]">'+um+'</td>'+
-                        '<input type="hidden" id="umm'+ingid+'" name="umm[]" value="'+umm+'">'+
-                        '<td><button type="button" onclick="del('+ingid+')" class="remove"><i class="fa fa-times"></i></button><button type="button" class="btn btn-flat fa fa-edit" style="background-color:#30BB6D; color:white; border:none; margin-top: 0px; line-height: 100%; float:right" data-toggle="modal" data-target="#myModal'+ingid+'" ></button></td>'+
-                        '</tr>';
+                var div = document.getElementById("part");
+                var newdiv = document.getElementById("content");
+                var rand = Math.floor((Math.random() * 100) + 1);
 
-            div2.innerHTML += '<div class="modal fade" id="myModal'+ingid+'" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">'+
-                    '<div class="modal-dialog">'+
-                        '<div class="modal-content">'+
-                            '<div class="modal-header">'+
-                                '<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span class="sr-only">close</span></button>'+
-                                '<h4 class="modal-title" id="myModalLabel"><i class="fa fa-edit"></i><b>&nbsp;&nbsp;Change</b></h4>'+
-                            '</div>&nbsp;&nbsp;'+
-                            '<form method="post" action="changes('+ingid+')" enctype="multipart/form-data">'+
-                                '{{csrf_field()}} '+
-                            '<div class="modal-body">'+
-                            '<h4 class="modal-title" id="myModalLabel">&nbsp;&nbsp;<b>Ingredient Details</b></h4>'+
-                            '<div class="col-sm-12">'+
-                                '<div class="form-group label-floating has-success">'+
-                                    '<label class="control-label">Quantity</label>'+
-                                    '<input type="text" class="form-control" id="quantityN'+ingid+'" name="quantityN" value="'+squan+'" />'+
-                                    '<label style="color:red" id="err"></label>'+
+                $("<div id='modal"+rand+"'></div>").insertAfter("#content");
+                var div2 = document.getElementById("modal"+rand);
+                var confirm = document.getElementById("modals");
+
+                 div.innerHTML += 
+                    '<tr style="text-align:center" class="iRow" id="remove'+ingid+'">'+
+                            '<td multiple>'+ingred+'</td>'+
+                            '<input type="hidden" id="ingid" name="ingid[]" value="'+ingid+'">'+
+                            '<td multiple multiple id="qty'+ingid+'" name="qty[]">'+squan+'</td>'+
+                            '<input type="hidden" id="qtyy'+ingid+'" name="qtyy[]" value="'+quan+'">'+
+                            '<td multiple id="prep'+ingid+'" name="prep[]">'+prep+'</td>'+
+                            '<input type="hidden" id="prepp'+ingid+'" name="prepp[]" value="'+prepp+'">'+
+                            '<td multiple id="um'+ingid+'" name="unit[]">'+um+'</td>'+
+                            '<input type="hidden" id="umm'+ingid+'" name="umm[]" value="'+umm+'">'+
+                            '<td><button type="button" data-toggle="modal" data-target="#confirm'+rand+'" class="remove"><i class="fa fa-times"></i></button><button type="button" class="btn btn-flat fa fa-edit" style="background-color:#30BB6D; color:white; border:none; margin-top: 0px; line-height: 100%; float:right" data-toggle="modal" data-target="#myModal'+ingid+'" ></button></td>'+
+                            '</tr>';
+
+                div2.innerHTML += '<div class="modal fade" id="myModal'+ingid+'" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">'+
+                        '<div class="modal-dialog">'+
+                            '<div class="modal-content">'+
+                                '<div class="modal-header">'+
+                                    '<button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span> <span class="sr-only">close</span></button>'+
+                                    '<h4 class="modal-title" id="myModalLabel"><i class="fa fa-edit"></i><b>&nbsp;&nbsp;Change</b></h4>'+
+                                '</div>&nbsp;&nbsp;'+
+                                '<form method="post" action="changes('+ingid+')" enctype="multipart/form-data">'+
+                                    '{{csrf_field()}} '+
+                                '<div class="modal-body">'+
+                                '<h4 class="modal-title" id="myModalLabel">&nbsp;&nbsp;<b>Ingredient Details</b></h4>'+
+                                '<div class="col-sm-12">'+
+                                    '<div class="form-group label-floating has-success">'+
+                                        '<label class="control-label">Quantity</label>'+
+                                        '<input type="text" class="form-control" id="quantityN'+ingid+'" name="quantityN" value="'+squan+'" />'+
+                                    '</div>'+
                                 '</div>'+
-                            '</div>'+
-                            '<div class="col-sm-6">'+
-                                '<div class="form-group label-floating has-success">'+
-                                    '<label class="control-label">Preparation</label>'+
-                                    '<select class="form-control" id="preparationN'+ingid+'" name="preparationN[]" id="preparation" name="preparation" style="width:100px;" autofocus>'+
-                                        '@foreach($preps as $prep)'+
-                                            '@if('+prepp+' == $prep->p_id)'+
-                                            '<option selected value="{{ $prep->p_id }}">{{$prep->p_name}}</option>'+
-                                            '@else'+
-                                            '<option value="{{ $prep->p_id }}">{{$prep->p_name}}</option>'+ 
-                                            '@endif'+
-                                        '@endforeach'+
-                                    '</select>'+
+                                '<div class="col-sm-6">'+
+                                    '<div class="form-group label-floating has-success">'+
+                                        '<label class="control-label">Preparation</label>'+
+                                        '<select class="form-control" id="preparationN'+ingid+'" name="preparationN[]" id="preparation" name="preparation" style="width:100px;" autofocus>'+
+                                            '@foreach($preps as $prep)'+
+                                                '<option value="{{ $prep->p_id }}">{{$prep->p_name}}</option>'+ 
+                                            '@endforeach'+
+                                        '</select>'+
+                                    '</div>'+
                                 '</div>'+
-                            '</div>'+
-                            '<div class="col-sm-6">'+
-                                '<div class="form-group label-floating has-success">'+
-                                    '<label class="control-label">Unit of Measure</label>'+
-                                    '<select class="form-control" id="umN'+ingid+'" name="umN[]" style="width:150px;">'+
-                                        '@foreach($units as $um)'+
-                                            '@if('+umm+' == $um->um_id)'+
-                                            '<option selected value="{{ $um->um_id }}">{{$um->um_name}}</option>'+
-                                            '@else'+
-                                            '<option value="{{ $um->um_id }}">{{$um->um_name}}</option>'+
-                                            '@endif'+
-                                        '@endforeach'+
-                                    '</select>'+
+                                '<div class="col-sm-6">'+
+                                    '<div class="form-group label-floating has-success">'+
+                                        '<label class="control-label">Unit of Measure</label>'+
+                                        '<select class="form-control" id="umN'+ingid+'" name="umN[]" style="width:150px;">'+
+                                            '@foreach($units as $um)'+
+                                                '<option value="{{ $um->um_id }}">{{$um->um_name}}</option>'+
+                                            '@endforeach'+
+                                        '</select>'+
+                                    '</div>'+
                                 '</div>'+
-                            '</div>'+
 
+                                '</div>'+
+                                '<div class="modal-footer">'+
+                                    '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'+
+                                    '<button type="button" class="btn btn-success" data-dismiss="modal" onclick="changeappend('+ingid+')">Save Changes</button>'+
+                                '</div>'+
+                                '</form>'+
                             '</div>'+
-                            '<div class="modal-footer">'+
-                                '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'+
-                                '<button type="button" class="btn btn-success" data-dismiss="modal" onclick="changeappend('+ingid+')">Save Changes</button>'+
-                            '</div>'+
-                            '</form>'+
+                            
                         '</div>'+
-                        
-                    '</div>'+
-                '</div>';
+                    '</div>';
 
+                    confirm.innerHTML += '<div class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true" id="confirm'+rand+'">'+
+                      '<div class="modal-dialog modal-sm">'+
+                        '<div class="modal-content">'+
+                          '<div class="modal-header">'+
+                            '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+                            '<h4 class="modal-title" id="myModalLabel">Are you sure you want to remove ingredient?</h4>'+
+                          '</div>'+
+                          '<div class="modal-footer">'+
+                            '<button type="submit" class="btn btn-default" data-dismiss="modal" onclick="del('+rand+','+ingid+')" id="modal-btn-yes">Yes</button>'+
+                            '<button type="button" class="btn btn-primary" data-dismiss="modal" id="modal-btn-no">No</button>'+
+                          '</div>'+
+                        '</div>'+
+                      '</div>'+
+                    '</div>';
 
+             $('select').select2().select2('val', $('#ingredients option:eq(0)').val());
 
-
-
-
-
-
-
-
-
-         $('select').select2().select2('val', $('#ingredients option:eq(0)').val());
-
-         document.getElementById('quantity').value='';
-        $('#preparation option').prop('selected', function() {
-            return this.defaultSelected;
-        });
-        $('#um option').prop('selected', function() {
-            return this.defaultSelected;
-        });
+             document.getElementById('quantity').value='';
+            $('#preparation option').prop('selected', function() {
+                return this.defaultSelected;
+            });
+            $('#um option').prop('selected', function() {
+                return this.defaultSelected;
+            });
+        }
+        else{
+            alert('Ingredient already exists');
+        }
     }
 
         // return false;
