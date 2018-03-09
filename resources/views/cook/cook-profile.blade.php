@@ -189,31 +189,7 @@
         'remove':  'Remove',
         'error':   'Ooops, something wrong happened.'
     }
-       });<script type="text/javascript">
-  $(document).ready(function() {
-    $("#statlist li").click(function(){
-      var val=$(this).find("a").text();
-      $.ajax({
-      url: "{{route('status.change')}}",
-      method: "get",
-      data: {'data':val},
-      success: function(){
-        // location.reload();
-        if(val==" Accept Orders "){
-         $('.status').find(".dispstats").html("<i class='fa fa-circle text-success'></i>"+val+"<span class='caret'></span></a>");
-        }
-        else if(val==" Not Accepting "){
-            $('.status').find(".dispstats").html("<i class='fa fa-circle text-default'></i>"+val+"<span class='caret'></span></a>");
-        }
-       
-      }
-    });
-    });
-  });
-</script>
-    
-</script>
-<script type="text/javascript">
+       });
   $(document).ready(function() {
     $("#statlist li").click(function(){
       var val=$(this).find("a").text();
