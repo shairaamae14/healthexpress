@@ -25,7 +25,7 @@
 <div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
-        <h1>{{$page_title}}</h1>
+        <h1>All Orders</h1>
         <ol class="breadcrumb">
             <li class="active"><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
         </ol>
@@ -173,10 +173,11 @@
                 </thead>
                 <tbody>
                         @foreach($orders as $order)
+                         @foreach($order->dishes as $od)
                     <tr>
-                        <td>{{$order->dishes['dish_name']}}</td>
+                        <td>{{$od['dish_name']}}</td>
                         <td>{{$order->totalQty}}</td>
-                        <td>{{$order->payment->method_name}}</td>
+                        <td>{{$order->payment['method_name']}}</td>
                         <td>{{$order->totalAmount}}</td>
                         <td>
                             @if($order->sidenote)
@@ -186,6 +187,7 @@
                             @endif
                         </td>
                     </tr>
+                        @endforeach
                         @endforeach
                 </tbody>
             </table>
@@ -216,13 +218,6 @@
 <script src="{{asset('adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
 <!-- PACE -->
 <script src="{{asset('adminlte/plugins/pace/pace.js')}}"></script>
-<!-- daterangepicker -->
-<script src="{{asset('adminlte/bower_components/moment/min/moment.min.js')}}"></script>
-<script src="{{asset('adminlte/bower_components/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
-<!-- datepicker -->
-<script src="{{asset('adminlte/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
-<!-- Bootstrap WYSIHTML5 -->
-<script src="{{asset('adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}"></script>
 <!-- Slimscroll -->
 <script src="{{asset('adminlte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
 <!-- FastClick -->
@@ -233,11 +228,6 @@
 <!-- DataTables -->
 <script src="{{asset('adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
-<!-- jvectormap  -->
-<script src="{{asset('plugins/jvectormap/jquery-jvectormap-1.2.2.min.js')}}"></script>
-<script src="{{asset('plugins/jvectormap/jquery-jvectormap-world-mill-en.js')}}"></script>
-
-
 
 
  <script type="text/javascript">
@@ -258,6 +248,24 @@
             $('#sortorder').submit();
 
          });
+         $("#statlist li").click(function(){
+          var val=$(this).find("a").text();
+          $.ajax({
+          url: "{{route('status.change')}}",
+          method: "get",
+          data: {'data':val},
+          success: function(){
+            // location.reload();
+            if(val==" Accept Orders "){
+             $('.status').find(".dispstats").html("<i class='fa fa-circle text-success'></i>"+val+"<span class='caret'></span></a>");
+            }
+            else if(val==" Not Accepting "){
+                $('.status').find(".dispstats").html("<i class='fa fa-circle text-default'></i>"+val+"<span class='caret'></span></a>");
+            }
+           
+          }
+        });
+        });
     });
         function cooking(id){
                 var status= "Cooking";
@@ -315,11 +323,6 @@
         }
 
     </script>
-@endsectionr){
-                        console.log(xhr);
-                    }
-                });
-        }
 
-    </script>
+
 @endsection

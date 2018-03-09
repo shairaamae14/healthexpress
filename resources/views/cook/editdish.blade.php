@@ -1,12 +1,9 @@
 @extends('cook-layouts.cook-master')
-{{-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js" ></script> --}}
-{{-- <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.js" ></script> --}}
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
-{{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" /> --}}
-{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script> --}}
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.1/css/select2.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 <style>
@@ -414,16 +411,8 @@ fieldset{
         });
       
 </script>
-<script>
-  $.widget.bridge('uibutton', $.ui.button);
-</script>
 <!-- Bootstrap 3.3.7 -->
 <script src="{{asset('adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
-<!-- Sparkline -->
-<script src="{{asset('adminlte/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js')}}"></script>
-
-<!-- Bootstrap WYSIHTML5 -->
-<script src="{{asset('adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}"></script>
 <!-- Slimscroll -->
 <script src="{{asset('adminlte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
     <!-- FastClick -->
@@ -464,18 +453,24 @@ fieldset{
        });
 
 $(document).ready(function () {
-   
-    // $('#part').on('click','.confirm', function() {
-    //       $(this).closest(".iRow").remove();
-    //       if($('#part').find('tr.iRow').length == 0)
-    //         {
-    //             $('.actions > ul > li:eq(1) > a').removeAttr('href');
-    //             $('.actions > ul > li:eq(1)').attr('class','disabled');
-    //             // $('.actions > ul > li:eq(1)').attr('hidden',true);
-    //         }
-    // });
-
-
+      $("#statlist li").click(function(){
+      var val=$(this).find("a").text();
+      $.ajax({
+      url: "{{route('status.change')}}",
+      method: "get",
+      data: {'data':val},
+      success: function(){
+        // location.reload();
+        if(val==" Accept Orders "){
+         $('.status').find(".dispstats").html("<i class='fa fa-circle text-success'></i>"+val+"<span class='caret'></span></a>");
+        }
+        else if(val==" Not Accepting "){
+            $('.status').find(".dispstats").html("<i class='fa fa-circle text-default'></i>"+val+"<span class='caret'></span></a>");
+        }
+       
+      }
+    });
+    });
 
     $('#cancel').on('click', function() {
       window.location = '{{url("/cook/dishes")}}';
@@ -493,7 +488,7 @@ $(document).ready(function () {
             {
                 $('.actions > ul > li:eq(1) > a').removeAttr('href');
                 $('.actions > ul > li:eq(1)').attr('class','disabled');
-                // $('.actions > ul > li:eq(1)').attr('hidden',true);
+       
             }
             return false;
     }
@@ -506,7 +501,7 @@ $(document).ready(function () {
             {
                 $('.actions > ul > li:eq(1) > a').removeAttr('href');
                 $('.actions > ul > li:eq(1)').attr('class','disabled');
-                // $('.actions > ul > li:eq(1)').attr('hidden',true);
+              
             }
         
     }
@@ -772,28 +767,7 @@ $(document).ready(function () {
     }
 </script>
 
-<script>
 
-$(document).ready(function(){
-
-
-
-//When unchecking the checkbox
-$("#check-all").on('ifUnchecked', function (event) {
-  //Uncheck all checkboxes
-  $("input[type='checkbox']", ".user_permissions_table").iCheck("uncheck");
-});
-//When checking the checkbox
-$("#check-all").on('ifChecked', function (event) {
-  //Check all checkboxes
-  $("input[type='checkbox']", ".user_permissions_table").iCheck("check");
-});
-    
-
-   
-});
-  
-</script>
 @endsection
 
 

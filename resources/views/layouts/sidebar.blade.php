@@ -18,7 +18,6 @@
   font-weight: bold;
 }
 </style>
-
 <aside class="main-sidebar">
     <!-- sidebar: style can be found in sidebar.less -->
     <section class="sidebar">
@@ -93,12 +92,6 @@
             <span>Planned Meals</span>
           </a>
         </li>
-         <li>
-        <a href="{{route('cook.view.ratings')}}">
-            <i class="fa fa-star"></i>
-            <span>Ratings</span>
-          </a>
-        </li>
         @elseif(Route::currentRouteName() == 'cook.dishes' || Route::currentRouteName() == 'cook.dishes.add'
         || Route::currentRouteName() == 'cook.dishes.update' || Route::currentRouteName() == 'cook.dishes.show')
          <li>
@@ -129,12 +122,6 @@
           <a href="{{route('cook.pmdishes')}}">
             <i class="fa fa-calendar-check-o"></i>
             <span>Planned Meals</span>
-          </a>
-        </li>
-         <li>
-        <a href="{{route('cook.view.ratings')}}">
-            <i class="fa fa-star"></i>
-            <span>Ratings</span>
           </a>
         </li>
         @elseif(Route::currentRouteName() == 'cook.view.plan' || Route::currentRouteName() == 'cook.add.plan' ||
@@ -200,39 +187,10 @@
             <span>Planned Meals</span>
           </a>
         </li>
-         <li>
-         <a href="{{route('cook.view.ratings')}}">
-            <i class="fa fa-star"></i>
-            <span>Ratings</span>
-          </a>
-        </li>
         @endif
       </ul>
     </section>
     <!-- /.sidebar -->
   </aside>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js" ></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.js" ></script>
-<script type="text/javascript">
-  $(document).ready(function() {
-    $("#statlist li").click(function(){
-      var val=$(this).find("a").text();
-      $.ajax({
-      url: "{{route('status.change')}}",
-      method: "get",
-      data: {'data':val},
-      success: function(){
-        // location.reload();
-        if(val==" Accept Orders "){
-         $('.status').find(".dispstats").html("<i class='fa fa-circle text-success'></i>"+val+"<span class='caret'></span></a>");
-        }
-        else if(val==" Not Accepting "){
-            $('.status').find(".dispstats").html("<i class='fa fa-circle text-default'></i>"+val+"<span class='caret'></span></a>");
-        }
-       
-      }
-    });
-    });
-  });
-</script>
-    
+<!-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js" ></script> -->
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.25/angular.min.js"></script> -->

@@ -101,12 +101,6 @@ dt{
 </script>
 <!-- Bootstrap 3.3.7 -->
 <script src="{{asset('adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
-<!-- Sparkline -->
-<script src="{{asset('adminlte/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js')}}"></script>
-<!-- datepicker -->
-<script src="{{asset('adminlte/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
-<!-- Bootstrap WYSIHTML5 -->
-<script src="{{asset('adminlte/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js')}}"></script>
 <!-- Slimscroll -->
 <script src="{{asset('adminlte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js')}}"></script>
 <!-- FastClick -->
@@ -114,7 +108,8 @@ dt{
 <!-- AdminLTE App -->
 <script src="{{asset('adminlte/dist/js/adminlte.min.js')}}"></script>
 
-<script src="{{asset('js/app.js')}}"></script>
+<!-- <script src="{{asset('js/app.js')}}"></script> -->
+  
 <!-- DataTables -->
 <script src="{{asset('adminlte/bower_components/datatables.net/js/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('adminlte/bower_components/datatables.net-bs/js/dataTables.bootstrap.min.js')}}"></script>
@@ -130,6 +125,24 @@ dt{
               }
             ]
         });
+       $("#statlist li").click(function(){
+      var val=$(this).find("a").text();
+      $.ajax({
+      url: "{{route('status.change')}}",
+      method: "get",
+      data: {'data':val},
+      success: function(){
+        // location.reload();
+        if(val==" Accept Orders "){
+         $('.status').find(".dispstats").html("<i class='fa fa-circle text-success'></i>"+val+"<span class='caret'></span></a>");
+        }
+        else if(val==" Not Accepting "){
+            $('.status').find(".dispstats").html("<i class='fa fa-circle text-default'></i>"+val+"<span class='caret'></span></a>");
+        }
+       
+      }
+    });
+    });
   $(".ratingbox").closest('.rate').find('input[class=ratings]').each(function(index, data){
     var rating = $(this).val();
     // $(this).closest('.rate').find('.ratingbox').append(rating);
@@ -159,16 +172,7 @@ dt{
   </script>
   
 
-<script type="text/javascript">
-    
-    $(".delete").on('click', function(){
-     var id =  $(this).val();
-      window.location= './dishes/'+id+'/delete';
-    });
 
-    function viewdetails(){
-      var id = document.getElementById('viewDetails').value;
-      alert("hey");
-    }
-</script>
+
+    
 @endsection

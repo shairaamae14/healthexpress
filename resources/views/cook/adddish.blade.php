@@ -1,16 +1,14 @@
 @extends('cook-layouts.cook-master')
-{{-- <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.js"></script> --}}
+@section('heading')
 <script
   src="https://code.jquery.com/jquery-3.3.1.min.js"
   integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
   crossorigin="anonymous"></script>
-{{-- <script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.js" ></script> --}}
-{{-- <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" /> --}}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.1/css/select2.min.css" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-{{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.1/js/select2.min.js"></script> --}}
 
 
+@endsection
 <style>
 
 fieldset{
@@ -391,9 +389,7 @@ form.steps({
 
   </script>
 </script> 
-<script>
-  $.widget.bridge('uibutton', $.ui.button);
-</script>
+
 <!-- Bootstrap 3.3.7 -->
 <script src="{{asset('adminlte/bower_components/bootstrap/dist/js/bootstrap.min.js')}}"></script>
 <!-- Sparkline -->
@@ -435,7 +431,24 @@ $(document).ready(function () {
     $('#cancel').on('click', function() {
       window.location = '{{url("/cook/dishes")}}';
     });
-
+        $("#statlist li").click(function(){
+      var val=$(this).find("a").text();
+      $.ajax({
+      url: "{{route('status.change')}}",
+      method: "get",
+      data: {'data':val},
+      success: function(){
+        // location.reload();
+        if(val==" Accept Orders "){
+         $('.status').find(".dispstats").html("<i class='fa fa-circle text-success'></i>"+val+"<span class='caret'></span></a>");
+        }
+        else if(val==" Not Accepting "){
+            $('.status').find(".dispstats").html("<i class='fa fa-circle text-default'></i>"+val+"<span class='caret'></span></a>");
+        }
+       
+      }
+    });
+    });
 });
 
     function remove(rand,id){
@@ -677,6 +690,7 @@ $(document).ready(function () {
 
     }
 </script>
+
 
 @endsection
 
