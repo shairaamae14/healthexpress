@@ -16,7 +16,8 @@ window.Vue = require('vue');
  */
 
 Vue.component('example', require('./components/Example.vue'));
-
+Vue.component('notification', require('./components/Notification.vue'));
+Vue.component('usernotification', require('./components/UserNotification.vue'));
 const app = new Vue({
     el: '#app'
 });
