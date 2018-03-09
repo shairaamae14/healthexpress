@@ -434,6 +434,7 @@ class PlannedMController extends Controller
     public function changeDish(Request $request,$id){
       $id = Auth::id();
       $cid = $id;
+      $nocook;
 
           $user = Auth::user()->load('conditions.restrictions','allergies.tol_values');
           $ranges = [];
@@ -441,26 +442,26 @@ class PlannedMController extends Controller
           $dishes = collect();
           $comparisons = ['calories', 'protein', 'total_fat', 'carbohydrate', 'fibre', 'sodium','sat_fat', 'cholesterol'];
 
-          // $qstart = UserOrder::distinct()->select('planner_start')->where('user_id',$id)->where('order_status','Initial')->first();
-          // $qend = UserOrder::distinct()->select('planner_end')->where('user_id',$id)->where('order_status','Initial')->first();
-
-          // $start = $qstart->planner_start;
-
-          // $end = $qend->planner_end;
-          // dd($start);
-
           $start = Session::get('start');
-          $end = Session::get('end');
+          $planend = Session::get('end');
+          $end = date('Y-m-d',strtotime($planend. '+1 Days'));
+          // dd($start,$end);
 
-          // dd($start);
-
-          // $cook = Cook::where('id','!=',$cid)->inRandomOrder()->select('id')->take(1)->first();
           $cook = Cook::whereHas('dish', function($query) {
-                      $query->where('dish_type', 'Planned');
+                      $query->where('dish_type', 'Planneds');
                     })->inRandomOrder()->select('id')->where('id','!=',$cid)->take(1)->first();
 
-          $cookid = $cook->id;     
-          // dd($cook);
+
+          if($cook == null){
+            $nocook = "none";
+            $cookid = $cid;
+          }  
+          else{
+            $nocook = "null";
+            $cookid = $cook->id; 
+          }
+
+
           $delete = UserOrder::where('user_id', $id)->where('order_status', 'Initial')->delete();
 
           if(!$user->allergies->count() && !$user->conditions->count())
@@ -665,7 +666,7 @@ class PlannedMController extends Controller
         
 
           
-          return view('user.changemeal', compact('breakfast', 'lunch', 'dinner', 'besteaten', 'dishes', 'betype', 'start', 'end', 'cookid'))->with(['plans' => Plan::get(), 'cal'=> response()->json($dinner)]);
+          return view('user.changemeal', compact('breakfast', 'lunch', 'dinner', 'besteaten', 'dishes', 'betype', 'start', 'end', 'cookid', 'nocook'))->with(['plans' => Plan::get(), 'cal'=> response()->json($dinner)]);
           // return response()->json(['status'=>'success']);
     }
 
